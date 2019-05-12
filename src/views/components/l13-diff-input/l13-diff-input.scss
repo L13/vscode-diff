@@ -1,0 +1,82 @@
+:host {
+	position: relative;
+	user-select: none;
+	
+	> input {
+		background: var(--vscode-input-background);
+		border: none;
+		box-sizing: border-box;
+		color: var(--vscode-input-foreground);
+		display: block;
+		font-size: 0.8125rem;
+		outline: solid 1px var(--vscode-input-border, transparent);
+		outline-offset: -1px;
+		padding: 4px 35px 5px 7px;
+		width: 100%;
+		z-index: 0;
+	
+		&::selection {
+			background: var(--vscode-selection-background);
+		}
+		
+		&:focus {
+			outline-color: var(--vscode-focusBorder, transparent);
+		}
+			
+		&.-error {
+			outline-color: var(--vscode-inputValidation-errorBorder, #cc0000);
+		}
+	}
+	
+	> button {
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		height: 18px;
+		margin-top: -10px;
+		padding: 0 0 0 0;
+		position: absolute;
+		right: 7px;
+		top: 50%;
+		width: 21px;
+			
+		&::before {
+			background: var(--vscode-foreground);
+			content: '';
+			height: 100%;
+			left: 0;
+			-webkit-mask-image: url('folder.svg');
+			mask-image: url('folder.svg');
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
+		}
+		
+		&:hover {
+			
+			&::before {
+				background: var(--vscode-button-hoverBackground);
+			}
+		}
+		
+		&[disabled] {
+			opacity: 0.3;
+			cursor: default;
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-foreground) !important;
+				}
+			}
+		}
+	}
+}

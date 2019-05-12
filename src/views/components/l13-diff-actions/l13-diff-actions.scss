@@ -1,0 +1,117 @@
+:host {
+	cursor: default;
+	display: block;
+	text-align: center;
+	user-select: none;
+	
+	> button {
+		background: transparent;
+		border: 0;
+		height: 21px;
+		margin: 0 5px 0 5px;
+		padding: 0 0 0 0;
+		position: relative;
+		width: 21px;
+			
+		&::before {
+			content: '';
+			height: 100%;
+			left: 0;
+			background: var(--vscode-foreground);
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
+		}
+		
+		&:hover {
+			cursor: pointer;
+			
+			&::before {
+				background: var(--vscode-button-hoverBackground);
+			}
+		}
+		
+		&[disabled] {
+			opacity: 0.3;
+			cursor: default;
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-foreground) !important;
+				}
+			}
+		}
+		
+		&#l13_copy_left {
+			width: 42px;
+			
+			&::before {
+				-webkit-mask-image: url('copy-left.svg');
+				mask-image: url('copy-left.svg');
+			}
+		}
+		
+		&#l13_select_deleted {
+			
+			&::before {
+				-webkit-mask-image: url('select-deleted.svg');
+				mask-image: url('select-deleted.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-deletedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_select_modified {
+			
+			&::before {
+				-webkit-mask-image: url('select-modified.svg');
+				mask-image: url('select-modified.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-modifiedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_select_untracked {
+			
+			&::before {
+				-webkit-mask-image: url('select-untracked.svg');
+				mask-image: url('select-untracked.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-untrackedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_copy_right {
+			width: 42px;
+			
+			&::before {
+				-webkit-mask-image: url('copy-right.svg');
+				mask-image: url('copy-right.svg');
+			}
+		}
+	}
+}

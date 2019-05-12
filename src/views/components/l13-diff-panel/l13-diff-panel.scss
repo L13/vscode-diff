@@ -1,0 +1,35 @@
+:host {
+	background: var(--vscode-sideBar-background);
+	color: var(--vscode-foreground);
+	display: block;
+	position: relative;
+	width: 100%;
+	z-index: 1;
+	transition: box-shadow 0.3s;
+	
+	&.-shadow {
+		box-shadow: 0 5px 8px var(--vscode-widget-shadow);
+	}
+}
+
+l13-diff-loading {
+	animation: loading 2s linear infinite;
+	background: linear-gradient(90deg, transparent 0%, var(--vscode-progressBar-background) 2%, var(--vscode-progressBar-background) 8%, transparent 10%) no-repeat;
+	background-size: 50% 100%;
+	bottom: 0;
+	display: block;
+	height: 2px;
+	left: 0;
+	position: absolute;
+	right: 0;
+	width: 100%;
+}
+			
+@keyframes loading {
+	0% {
+		background-position: 0;
+	}
+	100% {
+		background-position: 200%;
+	}
+}

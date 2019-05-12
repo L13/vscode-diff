@@ -1,0 +1,14 @@
+.cache/**
+.vscode/**
+.vscode-test/**
+diff/**
+out/test/**
+plugins/**
+src/**
+test/**
+.gitignore
+gulpfile.js
+**/tsconfig.json
+**/tslint.json
+**/*.map
+**/*.ts

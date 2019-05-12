@@ -1,0 +1,31 @@
+:host {
+	display: block;
+	padding-right: 10px;
+	text-align: right;
+	user-select: none;
+}
+
+button {
+	background: var(--vscode-button-background);
+	box-sizing: border-box;
+	border: none;
+	color: var(--vscode-button-foreground);
+	cursor: pointer;
+	font-size: 0.8125rem;
+	padding: 2px 14px 2px 14px;
+	position: relative;
+	z-index: 1;
+	
+	&:hover {
+		background: var(--vscode-button-hoverBackground);
+	}
+	
+	&[disabled] {
+		opacity: 0.3;
+		cursor: default;
+		
+		&:hover {
+			background: var(--vscode-button-background) !important;
+		}
+	}
+}

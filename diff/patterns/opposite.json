@@ -1,0 +1,10 @@
+{
+	"folder-a": {
+		"filefolder-a": null,
+		"filefolder-b": ["a"]
+	},
+	"folder-b": {
+		"filefolder-a": ["a"],
+		"filefolder-b": null
+	}
+}

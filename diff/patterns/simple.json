@@ -1,0 +1,35 @@
+{
+	"folder-a": {
+		"node_modules": {
+			"test": {
+				"index.js": ["console.log('Hello world!');"]
+			}
+		},
+		"subfolder-a": null,
+		"subfolder-c": null,
+		"subfolder-d": {
+			"file-a.txt": ["a"],
+			"file-c.txt": ["c"],
+			"file-d.txt": ["d"],
+			"file-e.txt": ["e"]
+		},
+		"file-a.txt": ["a"],
+		"file-c.txt": ["c"],
+		"file-d.txt": ["d"],
+		"file-e.txt": ["e"]
+	},
+	"folder-b": {
+		"subfolder-b": null,
+		"subfolder-c": null,
+		"subfolder-d": {
+			"file-b.txt": ["b"],
+			"file-c.txt": ["c"],
+			"file-d.txt": ["dd"],
+			"file-e.txt": ["f"]
+		},
+		"file-b.txt": ["b"],
+		"file-c.txt": ["c"],
+		"file-d.txt": ["dd"],
+		"file-e.txt": ["f"]
+	}
+}

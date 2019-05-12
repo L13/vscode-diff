@@ -1,0 +1,52 @@
+:host {
+	display: block;
+	user-select: none;
+	
+	> button {
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		height: 21px;
+		padding: 0 0 0 0;
+		width: 21px;
+			
+		&::before {
+			background: var(--vscode-foreground);
+			content: '';
+			height: 100%;
+			left: 0;
+			-webkit-mask-image: url('swap.svg');
+			mask-image: url('swap.svg');
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
+		}
+		
+		&:hover {
+			
+			&::before {
+				background: var(--vscode-button-hoverBackground);
+			}
+		}
+		
+		&[disabled] {
+			opacity: 0.3;
+			cursor: default;
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-foreground) !important;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"name": "gulp-file2json",
+	"version": "0.13.0",
+	"description": "Wraps multiple file contents as a JSON map.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "L13RARY",
+	"license": "SEE LICENCE IN LICENCE.md"
+}

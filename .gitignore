@@ -1,0 +1,7 @@
+media
+out
+node_modules
+.cache
+.vscode-test/
+*.vsix
+diff/test/

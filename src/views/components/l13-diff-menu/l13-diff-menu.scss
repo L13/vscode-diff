@@ -1,0 +1,44 @@
+:host {
+	background: var(--vscode-sideBar-background);
+	box-shadow: 0px 5px 8px var(--vscode-widget-shadow, transparent);
+	box-sizing: border-box;
+	display: block;
+	
+	> l13-diff-menu-lists {
+		
+		> ul {
+			border-top: solid 1px var(--vscode-pickerGroup-border);
+			list-style-type: none;
+			margin: 0 0 0 0;
+			// outline: solid 1px var(--vscode-pickerGroup-border, transparent);
+			// outline-offset: -1px;
+			padding: 0 0 0 0;
+			
+			&:first-child {
+				border: none;
+			}
+			
+			&::before {
+				color: var(--vscode-pickerGroup-foreground);
+				content: attr(data-text);
+				float: right;
+				padding: 4px 10px 5px 10px;
+			}
+			
+			> li {
+				color: var(--vscode-foreground);
+				cursor: pointer;
+				margin: 0 0 0 0;
+				padding: 4px 10px 5px 10px;
+				user-select: none;
+				
+				&.-active,
+				&.-selected,
+				&:hover {
+					background: var(--vscode-list-hoverBackground);
+					color: var(--vscode-list-hoverForeground);
+				}
+			}
+		}
+	}
+}

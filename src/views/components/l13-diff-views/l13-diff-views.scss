@@ -1,0 +1,168 @@
+:host {
+	cursor: default;
+	display: block;
+	padding-left: 10px;
+	user-select: none;
+	
+	> input[type="checkbox"] {
+		-webkit-appearance: none;
+		appearance: none;
+		background: transparent;
+		cursor: pointer;
+		height: 21px;
+		margin: 0 10px 0 0;
+		padding: 0 0 0 0;
+		position: relative;
+		width: 21px;
+			
+		&::before {
+			background: var(--vscode-foreground);
+			content: '';
+			height: 100%;
+			left: 0;
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
+		}
+		
+		&:hover {
+			cursor: pointer;
+			
+			&::before {
+				background: var(--vscode-button-hoverBackground);
+			}
+		}
+		
+		&[disabled] {
+			opacity: 0.3;
+			cursor: default;
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-foreground) !important;
+				}
+			}
+		}
+		
+		&:checked::after {
+			background: 50% 50% no-repeat var(--vscode-settings-checkboxForeground);
+			content: '';
+			height: 10px;
+			-webkit-mask-image: url('checked.svg');
+			mask-image: url('checked.svg');
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			right: -5px;
+			position: absolute;
+			bottom: -5px;
+			width: 10px;
+		}
+		
+		&#l13_show_unchanged {
+			
+			&::before {
+				-webkit-mask-image: url('show-unchanged.svg');
+				mask-image: url('show-unchanged.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-button-hoverBackground);
+				}
+			}
+		}
+		
+		&#l13_show_deleted {
+			
+			&::before {
+				-webkit-mask-image: url('show-deleted.svg');
+				mask-image: url('show-deleted.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-deletedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_show_modified {
+			
+			&::before {
+				-webkit-mask-image: url('show-modified.svg');
+				mask-image: url('show-modified.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-modifiedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_show_untracked {
+			
+			&::before {
+				-webkit-mask-image: url('show-untracked.svg');
+				mask-image: url('show-untracked.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-gitDecoration-untrackedResourceForeground);
+				}
+			}
+		}
+	}
+}
+
+/*input[type=checkbox] {
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--vscode-settings-checkboxBackground);
+	border: solid 1px var(--vscode-settings-checkboxBorder, transparent);
+	border-radius: 3px;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 3px -5px 0;
+	padding: 8px;
+	position: relative;
+	
+	&:focus {
+		outline-color: var(--vscode-focusBorder, transparent);
+	}
+	
+	&:checked::after {
+		background: 50% 50% no-repeat;
+		background-size: 100% 100%;
+		content: '';
+		height: 100%;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		
+		@at-root .vscode-dark & {
+			background-image: url('./icons/checked-dark.svg');
+		}
+		
+		@at-root .vscode-light & {
+			background-image: url('./icons/checked-light.svg');
+		}
+	}
+}*/

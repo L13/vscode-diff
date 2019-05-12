@@ -1,0 +1,16 @@
+{
+	"folder-a": {
+		"subfolder-a": {
+			"subfolder-b": {
+				"subfolder-c": {
+					"subfolder-d": {
+						"file-a.txt": ["a"]
+					}
+				}
+			}
+		}
+	},
+	"folder-b": {
+		
+	}
+}
