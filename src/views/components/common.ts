@@ -8,13 +8,7 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 
 //	Initialize _________________________________________________________________
 
-window.addEventListener('load', () => {
-	
-	// vscode.postMessage({
-	// 	command: 'show:init',
-	// });
-	
-});
+
 
 //	Exports ____________________________________________________________________
 
