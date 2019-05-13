@@ -51,21 +51,28 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.input.addEventListener('focus', () => {
 			
 			if (this.list.childNodes.length && !this.list.querySelector('.-selected')) {
-				this.list.querySelector('l13-diff-list-row').classList.add('-selected');
+				const selection = <HTMLElement>this.list.querySelector('l13-diff-list-row');
+				selection.classList.add('-selected');
+				this.cacheSelectionHistory.push(selection);
 			}
 			
 		});
 		
 		this.input.addEventListener('keydown', (event) => {
 			
+			if (this.disabled) return;
+			
 			switch (event.key) {
-				// case 'Enter':
-				// 	if (menu && menu.parentNode) {
-				// 		const value = menu.getSelection();
-				// 		if (value) this.input.value = value;
-				// 		menu.remove();
-				// 	}
-				// 	break;
+				case 'Enter':
+					this.getIdsBySelection().forEach((id) => {
+						
+						vscode.postMessage({
+							command: 'open:diff',
+							diff: this.viewmodel.getDiffById(id),
+						});
+						
+					});
+					break;
 				case 'Escape':
 					this.unselect();
 					break;
@@ -186,23 +193,23 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.childNodes.length) return;
 		
-		const selection = this.list.querySelector('.-selected');
+		let lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 		
-		if (!selection) {
+		if (!lastSelection) {
 			const rows = this.list.querySelectorAll('l13-diff-list-row');
-			rows[rows.length - 1].classList.add('-selected');
+			lastSelection = <HTMLElement>rows[rows.length - 1];
+			lastSelection.classList.add('-selected');
+			this.cacheSelectionHistory.push(lastSelection);
 			return;
 		}
 		
-		let previousElementSibling = selection.previousElementSibling;
+		const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
 		
-		if (!previousElementSibling) {
-			const rows = this.list.querySelectorAll('l13-diff-list-row');
-			previousElementSibling = rows[rows.length - 1];
-		}
+		if (!previousElementSibling) return;
 		
 		if (!event.shiftKey) this.unselect();
 		
+		this.cacheSelectionHistory.push(previousElementSibling);
 		previousElementSibling.classList.add('-selected');
 		
 	}
@@ -211,17 +218,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.childNodes.length) return;
 		
-		const selection = this.list.querySelector('.-selected');
+		let lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 		
-		if (!selection) {
-			this.list.querySelector('l13-diff-list-row').classList.add('-selected');
+		if (!lastSelection) {
+			lastSelection = this.list.querySelector('l13-diff-list-row');
+			lastSelection.classList.add('-selected');
+			this.cacheSelectionHistory.push(lastSelection);
 			return;
 		}
 		
-		const nextElementSibling = selection.nextElementSibling || this.list.querySelector('l13-diff-list-row');
+		const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
+		
+		if (!nextElementSibling) return;
 		
 		if (!event.shiftKey) this.unselect();
 		
+		this.cacheSelectionHistory.push(nextElementSibling);
 		nextElementSibling.classList.add('-selected');
 		
 	}
