@@ -5,6 +5,22 @@
 	user-select: none;
 }
 
+input {
+	background: transparent;
+	border: none;
+	color: transparent;
+	height: 5px;
+	left: 0;
+	outline: none;
+	position: absolute;
+	top: 0;
+	width: 5px;
+}
+
+l13-diff-list-body {
+	display: block;
+}
+
 l13-diff-list-row {
 	display: flex;
 	

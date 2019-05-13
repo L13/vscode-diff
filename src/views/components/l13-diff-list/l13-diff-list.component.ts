@@ -30,6 +30,9 @@ const actionsService = new L13DiffActionsViewModelService();
 })
 export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
+	@L13Query('input')
+	private input:HTMLInputElement;
+	
 	@L13Query('l13-diff-list-body')
 	private list:HTMLElement;
 	
@@ -45,7 +48,44 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		super();
 		
+		this.input.addEventListener('focus', () => {
+			
+			if (this.list.childNodes.length && !this.list.querySelector('.-selected')) {
+				this.list.querySelector('l13-diff-list-row').classList.add('-selected');
+			}
+			
+		});
+		
+		this.input.addEventListener('keydown', (event) => {
+			
+			switch (event.key) {
+				// case 'Enter':
+				// 	if (menu && menu.parentNode) {
+				// 		const value = menu.getSelection();
+				// 		if (value) this.input.value = value;
+				// 		menu.remove();
+				// 	}
+				// 	break;
+				case 'Escape':
+					this.unselect();
+					break;
+				case 'ArrowUp':
+					// if (menu && !menu.parentNode) this.appendChild(menu);
+					this.selectPrevious(event);
+					break;
+				case 'ArrowDown':
+					// if (menu && !menu.parentNode) this.appendChild(menu);
+					this.selectNext(event);
+					break;
+			}
+			
+			this.input.value = '';
+			
+		});
+		
 		this.list.addEventListener('click', ({ target, metaKey, ctrlKey, shiftKey, offsetX }) => {
+			
+			this.input.focus();
 	
 			if (this.disabled) return;
 			
@@ -139,6 +179,50 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(parentNode);
 		this.cacheSelectedListItems = [];
 		actionsService.model('actions').enableCopy();
+		
+	}
+	
+	public selectPrevious (event:KeyboardEvent) {
+		
+		if (!this.list.childNodes.length) return;
+		
+		const selection = this.list.querySelector('.-selected');
+		
+		if (!selection) {
+			const rows = this.list.querySelectorAll('l13-diff-list-row');
+			rows[rows.length - 1].classList.add('-selected');
+			return;
+		}
+		
+		let previousElementSibling = selection.previousElementSibling;
+		
+		if (!previousElementSibling) {
+			const rows = this.list.querySelectorAll('l13-diff-list-row');
+			previousElementSibling = rows[rows.length - 1];
+		}
+		
+		if (!event.shiftKey) this.unselect();
+		
+		previousElementSibling.classList.add('-selected');
+		
+	}
+	
+	public selectNext (event:KeyboardEvent) {
+		
+		if (!this.list.childNodes.length) return;
+		
+		const selection = this.list.querySelector('.-selected');
+		
+		if (!selection) {
+			this.list.querySelector('l13-diff-list-row').classList.add('-selected');
+			return;
+		}
+		
+		const nextElementSibling = selection.nextElementSibling || this.list.querySelector('l13-diff-list-row');
+		
+		if (!event.shiftKey) this.unselect();
+		
+		nextElementSibling.classList.add('-selected');
 		
 	}
 	
