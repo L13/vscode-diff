@@ -51,9 +51,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.input.addEventListener('focus', () => {
 			
 			if (this.list.childNodes.length && !this.list.querySelector('.-selected')) {
-				const selection = <HTMLElement>this.list.querySelector('l13-diff-list-row');
-				selection.classList.add('-selected');
-				this.cacheSelectionHistory.push(selection);
+				this.selectFirst();
 			}
 			
 		});
@@ -189,52 +187,137 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	public selectFirst () {
+		
+		const element = <HTMLElement>this.list.querySelector('l13-diff-list-row');
+		element.classList.add('-selected');
+		this.cacheSelectionHistory.push(element);
+		this.scrollUp(element);
+		
+	}
+	
+	public scrollUp (element:HTMLElement) {
+		
+		const offsetTop = element.offsetTop;
+		
+		if (this.scrollTop > offsetTop) this.scrollTop = offsetTop;
+		
+	}
+	
 	public selectPrevious (event:KeyboardEvent) {
 		
-		if (!this.list.childNodes.length) return;
-		
-		let lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
-		
-		if (!lastSelection) {
-			const rows = this.list.querySelectorAll('l13-diff-list-row');
-			lastSelection = <HTMLElement>rows[rows.length - 1];
-			lastSelection.classList.add('-selected');
-			this.cacheSelectionHistory.push(lastSelection);
-			return;
+		if (isMacOs) {
+			if (!this.list.childNodes.length) return;
+			
+			const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+			
+			if (!lastSelection) return this.selectFirst();
+			
+			const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
+			
+			if (!previousElementSibling) {
+				if (!event.shiftKey) {
+					this.unselect();
+					lastSelection.classList.add('-selected');
+					this.cacheSelectionHistory.push(lastSelection);
+				}
+				this.scrollUp(lastSelection);
+				return;
+			}
+			
+			if (event.altKey) {
+				const nextSelection = <HTMLElement>this.list.querySelector('l13-diff-list-row');
+				if (event.shiftKey) {
+					const elements = this.list.querySelectorAll('l13-diff-list-row');
+					let useSelect = false;
+					Array.prototype.slice.call(elements).filter((element) => {
+						
+						if (useSelect || element === nextSelection || element === lastSelection) {
+							if (element === nextSelection || element === lastSelection) useSelect = !useSelect;
+							element.classList.add('-selected');
+							return true;
+						}
+						
+					});
+				} else {
+					this.unselect();
+					nextSelection.classList.add('-selected');
+				}
+				this.cacheSelectionHistory.push(nextSelection);
+				this.scrollUp(nextSelection);
+				return;
+			}
+			
+			if (!event.shiftKey) this.unselect();
+			
+			this.cacheSelectionHistory.push(previousElementSibling);
+			previousElementSibling.classList.add('-selected');
+			
+			this.scrollUp(previousElementSibling);
 		}
 		
-		const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
+	}
+	
+	public scrollDown (element:HTMLElement) {
 		
-		if (!previousElementSibling) return;
+		const offsetY = element.offsetHeight + element.offsetTop;
+		const offsetHeight = this.offsetHeight;
 		
-		if (!event.shiftKey) this.unselect();
-		
-		this.cacheSelectionHistory.push(previousElementSibling);
-		previousElementSibling.classList.add('-selected');
+		if (this.scrollTop + offsetHeight < offsetY) this.scrollTop = offsetY - offsetHeight;
 		
 	}
 	
 	public selectNext (event:KeyboardEvent) {
 		
-		if (!this.list.childNodes.length) return;
-		
-		let lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
-		
-		if (!lastSelection) {
-			lastSelection = this.list.querySelector('l13-diff-list-row');
-			lastSelection.classList.add('-selected');
-			this.cacheSelectionHistory.push(lastSelection);
-			return;
+		if (isMacOs) {
+			if (!this.list.childNodes.length) return;
+			
+			const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+			
+			if (!lastSelection) return this.selectFirst();
+			
+			const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
+			
+			if (!nextElementSibling) {
+				if (!event.shiftKey) {
+					this.unselect();
+					lastSelection.classList.add('-selected');
+					this.cacheSelectionHistory.push(lastSelection);
+				}
+				this.scrollDown(lastSelection);
+				return;
+			}
+			
+			if (event.altKey) {
+				const rows = this.list.querySelectorAll('l13-diff-list-row');
+				const nextSelection = <HTMLElement>rows[rows.length - 1];
+				if (event.shiftKey) {
+					let useSelect = false;
+					Array.prototype.slice.call(rows).filter((element) => {
+						
+						if (useSelect || element === nextSelection || element === lastSelection) {
+							if (element === nextSelection || element === lastSelection) useSelect = !useSelect;
+							element.classList.add('-selected');
+							return true;
+						}
+						
+					});
+				} else {
+					this.unselect();
+					nextSelection.classList.add('-selected');
+				}
+				this.cacheSelectionHistory.push(nextSelection);
+				this.scrollDown(nextSelection);
+				return;
+			}
+			
+			if (!event.shiftKey) this.unselect();
+			
+			this.cacheSelectionHistory.push(nextElementSibling);
+			nextElementSibling.classList.add('-selected');
+			
+			this.scrollDown(nextElementSibling);
 		}
-		
-		const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
-		
-		if (!nextElementSibling) return;
-		
-		if (!event.shiftKey) this.unselect();
-		
-		this.cacheSelectionHistory.push(nextElementSibling);
-		nextElementSibling.classList.add('-selected');
 		
 	}
 	
