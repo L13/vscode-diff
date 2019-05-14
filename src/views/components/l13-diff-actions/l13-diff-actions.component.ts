@@ -55,9 +55,9 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		setLabelText(this.selectUntracked, 'Select all untracked files');
 		setLabelText(this.copyLeft, 'Copy selection to the right folder');
 		
-		this.selectDeleted.addEventListener('click', () => this.list.select('deleted'));
-		this.selectModified.addEventListener('click', () => this.list.select('modified'));
-		this.selectUntracked.addEventListener('click', () => this.list.select('untracked'));
+		this.selectDeleted.addEventListener('click', () => this.list.selectByStatus('deleted'));
+		this.selectModified.addEventListener('click', () => this.list.selectByStatus('modified'));
+		this.selectUntracked.addEventListener('click', () => this.list.selectByStatus('untracked'));
 		
 		this.copyLeft.addEventListener('click', () => this.list.copy('left'));
 		this.copyRight.addEventListener('click', () => this.list.copy('right'));
