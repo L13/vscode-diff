@@ -6,7 +6,7 @@ import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.componen
 import { L13DiffMenuViewModelService } from './l13-diff-menu.service';
 import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 
-import { removeChildren } from '../common';
+import { removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -110,15 +110,11 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		
 		if (elementActive) {
 			if (listElements.length === 1) return;
+			
 			const index = Array.prototype.indexOf.call(listElements, elementActive);
-			let elementPrevious = listElements[index - 1];
-			if (elementPrevious) {
-				const offsetTop = elementPrevious.offsetTop;
-				if (this.scrollTop > offsetTop) this.scrollTop = offsetTop;
-			} else {
-				elementPrevious = listElements[listElements.length - 1];
-				this.scrollTop = elementPrevious.offsetTop + elementPrevious.offsetHeight - this.offsetHeight;
-			}
+			const elementPrevious = listElements[index - 1] || listElements[listElements.length - 1];
+			
+			scrollElementIntoView(this, elementPrevious);
 			elementActive.classList.remove('-active');
 			elementPrevious.classList.add('-active');
 		} else listElements[listElements.length - 1].classList.add('-active');
@@ -135,16 +131,11 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		
 		if (elementActive) {
 			if (listElements.length === 1) return;
+			
 			const index = Array.prototype.indexOf.call(listElements, elementActive);
-			let elementNext = listElements[index + 1];
-			if (elementNext) {
-				const offsetY = elementNext.offsetHeight + elementNext.offsetTop;
-				const offsetHeight = this.offsetHeight;
-				if (this.scrollTop + offsetHeight < offsetY) this.scrollTop = offsetY - offsetHeight;
-			} else {
-				elementNext = listElements[0];
-				this.scrollTop = 0;
-			}
+			const elementNext = listElements[index + 1] || listElements[0];
+			
+			scrollElementIntoView(this, elementNext);
 			elementActive.classList.remove('-active');
 			elementNext.classList.add('-active');
 		} else listElements[0].classList.add('-active');

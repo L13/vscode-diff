@@ -53,5 +53,19 @@ export function removeChildren (node:Node) {
 	
 }
 
+export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) {
+		
+	const offsetTop = element.offsetTop;
+	const offsetHeight = parent.offsetHeight;
+	const scrollTop = parent.scrollTop;
+	
+	if (scrollTop > offsetTop) {
+		parent.scrollTop = offsetTop;
+	} else if (scrollTop + offsetHeight < offsetTop + element.offsetHeight) {
+		parent.scrollTop = (offsetTop + element.offsetHeight) - offsetHeight;
+	}
+	
+}
+
 //	Functions __________________________________________________________________
 

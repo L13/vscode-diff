@@ -3,7 +3,7 @@ export default {
 	"l13-diff-actions/l13-diff-actions.html": "<button id=\"l13_copy_right\" (click)=\"copyRight()\" [disabled]=\"copyDisabled\"></button>\n<button id=\"l13_select_deleted\" (click)=\"selectDeleted()\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_modified\" (click)=\"selectModified()\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_untracked\" (click)=\"selectUntracked()\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_copy_left\" (click)=\"copyLeft()\" [disabled]=\"copyDisabled\"></button>",
 	"l13-diff-compare/l13-diff-compare.html": "<button [disabled]=\"disabled\">Compare</button>",
 	"l13-diff-input/l13-diff-input.html": "<input type=\"text\" [(model)]=\"value\" [disabled]=\"disabled\">\n<button (click)=\"openDialog()\" [disabled]=\"disabled\"></button>\n<slot></slot>",
-	"l13-diff-list/l13-diff-list.html": "<input type=\"text\">\n<l13-diff-list-body></l13-diff-list-body>",
+	"l13-diff-list/l13-diff-list.html": "<l13-diff-list-body></l13-diff-list-body>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",
 	"l13-diff-swap/l13-diff-swap.html": "<button [disabled]=\"disabled\"></button>",
