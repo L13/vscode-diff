@@ -27,15 +27,13 @@ l13-diff-list-row {
 	&:hover {
 		background: var(--vscode-list-hoverBackground);
 		color: var(--vscode-list-hoverForeground);
-		// outline: solid 2px var(--vscode-editor-lineHighlightBorder);
-		// outline-offset: -2px;
 	}
 	
 	&.-selected {
-		background: var(--vscode-list-activeSelectionBackground);
+		background: var(--vscode-list-activeSelectionBackground) !important;
 		color: var(--vscode-list-activeSelectionForeground) !important;
 			
-		.l13-diff_list-file::before {
+		l13-diff-list-file::before {
 			background: var(--vscode-list-activeSelectionForeground) !important;
 		}
 		
