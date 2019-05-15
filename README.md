@@ -7,6 +7,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in L13 Diff 0.14.0
 
 * Added keyboard support for selection in list view.
+* Fixed some view bugs.
 
 ## Features
 
@@ -55,6 +56,11 @@ Windows / Linux
 * `ctrl+l ctrl+l` - L13 Diff
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
+
+## Input Keyboard Shortcuts
+
+* `up/down` - Move cursor to previous/next list item
+* `enter` - If menu is open, selected item will be filled in, otherwise a compare starts.
 
 ## List Keyboard Shortcuts
 

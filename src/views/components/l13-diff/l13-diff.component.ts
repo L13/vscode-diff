@@ -65,7 +65,10 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		menu.vmId = 'menu';
 		
 		this.left.menu = menu;
+		this.left.list = this.list;
+		
 		this.right.menu = menu;
+		this.right.list = this.list;
 			
 		this.swap.left = this.left;
 		this.swap.right = this.right;

@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
+
+import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
@@ -36,6 +38,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 	
 	public menu:L13DiffMenuComponent;
 	
+	public list:L13DiffListComponent;
+	
 	public constructor () {
 		
 		super();
@@ -68,10 +72,12 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 			switch (event.key) {
 				case 'Enter':
-					if (menu && menu.parentNode) {
-						const value = menu.getSelection();
-						if (value) this.input.value = value;
-						menu.remove();
+					if (menu) {
+						if (menu.parentNode) {
+							const value = menu.getSelection();
+							if (value) this.viewmodel.value = value;
+							menu.remove();
+						} else this.list.viewmodel.compare();
 					}
 					break;
 				case 'Tab':
