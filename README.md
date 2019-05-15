@@ -44,7 +44,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
 
-## Keyboard Shortcuts
+## Global Keyboard Shortcuts
 
 macOS
 
@@ -55,3 +55,38 @@ Windows / Linux
 * `ctrl+l ctrl+l` - L13 Diff
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
+
+## List Keyboard Shortcuts
+
+Most keyboard shortcuts for the list view are working like your native Finder/Explorer.
+
+All platforms
+
+* `enter` - Open diff or file
+* `ctrl+enter` - Open diff or file to side
+
+macOS
+
+* `up/down` - Move cursor to previous/next list item
+* `alt+up/down` - Move cursor to start/end of page
+* `shift+up/down` - Add previous/next list item to selection
+* `shift+alt+up/down` - Add to selection until start/end of page
+* `home/end` - Scroll to start/end of page
+* `page up/down` - Scroll to previous/next viewport of page
+
+Windows
+
+* `up/down` - Move cursor to previous/next list item
+* `shift+up/down` - Add previous/next list item to selection
+* `home/end` - Move cursor to start/end of page
+* `page up/down` - Move cursor to previous/next viewport of page
+* `shift+home/end` - Add to selection until start/end of page
+* `shift+page up/down` - Add to selection to previous/next viewport of page
+* `shift+meta+up/down` - Add to selection until start/end of page
+
+Linux
+
+* `up/down` - Move cursor to previous/next list item
+* `home/end` - Move cursor to start/end of page
+* `shift+up/down` - Add previous/next list item to selection
+* `shift+home/end` - Added to selection to start/end

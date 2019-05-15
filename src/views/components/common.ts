@@ -8,15 +8,26 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 
 //	Initialize _________________________________________________________________
 
-
+ // Fixes async dom loading bug on windows in a virtual machine?!?
+window.addEventListener('load', () => {
+	
+	const body = document.body;
+	
+	isMacOs = !!body.classList.contains('platform-mac');
+	isWindows = !!body.classList.contains('platform-win');
+	isOtherPlatform = !!body.classList.contains('platform-other');
+	
+	body.appendChild(document.createElement('l13-diff'));
+	
+});
 
 //	Exports ____________________________________________________________________
 
 export const vscode = acquireVsCodeApi();
 
-export const isMacOs = !!document.body.classList.contains('platform-mac');
-export const isWindows = !!document.body.classList.contains('platform-win');
-export const isOtherPlatform = !!document.body.classList.contains('platform-other');
+export let isMacOs = false;
+export let isWindows = false;
+export let isOtherPlatform = false;
 
 export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
 	

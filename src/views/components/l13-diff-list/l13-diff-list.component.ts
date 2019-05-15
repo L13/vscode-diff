@@ -73,7 +73,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.getIdsBySelection().forEach((id) => {
 						
 						vscode.postMessage({
-							command: 'open:diff',
+							command: event.ctrlKey ? 'open:diffToSide' : 'open:diff',
 							diff: this.viewmodel.getDiffById(id),
 						});
 						
