@@ -8,7 +8,7 @@ import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
-import { parseIcons, setLabelText, changePlatform } from '../common';
+import { changePlatform, parseIcons, setLabelText } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -71,7 +71,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			const menu = this.menu;
 			
 			switch (key) {
-				case 'F12':
+				case 'F12': // Debug Mode
 					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
 				case 'Enter':

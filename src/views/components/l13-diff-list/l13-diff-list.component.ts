@@ -8,7 +8,7 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 
-import { isMacOs, isMetaKey, isOtherPlatform, isWindows, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
+import { changePlatform, isMacOs, isMetaKey, isOtherPlatform, isWindows, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -66,6 +66,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			switch (event.key) {
+				case 'F12': // Debug Mode
+					if (event.metaKey && event.ctrlKey && event.altKey && event.shiftKey) changePlatform();
+					break;
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
 						
