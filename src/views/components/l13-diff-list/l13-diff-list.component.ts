@@ -220,14 +220,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (isMacOs) {
 			if (!this.list.firstChild) return;
 			
-			const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+			const length = this.cacheSelectionHistory.length;
+			const lastSelection = this.cacheSelectionHistory[length - 1];
 			
 			if (!lastSelection) return this.selectFirst();
 			
 			const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
 			
 			if (!previousElementSibling) {
-				if (!shiftKey && this.cacheSelectionHistory.length > 1) {
+				if (!shiftKey && length > 1) {
 					this.unselect();
 					lastSelection.classList.add('-selected');
 					this.cacheSelectionHistory.push(lastSelection);
@@ -325,7 +326,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const elements = this.list.querySelectorAll('.-selected');
 	
-		if (elements) elements.forEach((element) => element.classList.remove('-selected'));
+		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
 		
 		actionsService.model('actions').disableCopy();
 		
