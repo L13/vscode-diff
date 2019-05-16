@@ -66,13 +66,13 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 		});
 		
-		this.input.addEventListener('keydown', (event) => {
+		this.input.addEventListener('keydown', ({ key, metaKey, ctrlKey, altKey, shiftKey }) => {
 			
 			const menu = this.menu;
 			
-			switch (event.key) {
+			switch (key) {
 				case 'F12':
-					if (event.metaKey) changePlatform();
+					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
 				case 'Enter':
 					if (menu) {
