@@ -55,14 +55,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		// this.addEventListener('focus', () => {
+		this.addEventListener('focus', () => {
 			
-		// 	if (this.list.firstChild && !this.cacheSelectionHistory.length) {
-		// 		this.selectFirst();
-		// 		actionsService.model('actions').enableCopy();
-		// 	}
+			if (this.list.firstChild && !this.cacheSelectionHistory.length) this.selectItem(this.getFirstItem());
 			
-		// });
+		});
 		
 		this.addEventListener('keydown', (event) => {
 			
@@ -225,9 +222,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectFirst () {
-		
-		const element = <HTMLElement>this.list.querySelector('l13-diff-list-row');
+	private selectItem (element:HTMLElement) {
 		
 		element.classList.add('-selected');
 		
@@ -238,89 +233,89 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	private selectNoneItem (element:HTMLElement, shiftKey:boolean, length:number) {
+		
+		if (!shiftKey && length > 1) {
+			this.unselect();
+			element.classList.add('-selected');
+			this.cacheSelectionHistory.push(element);
+		}
+		
+		scrollElementIntoView(this, element);
+		actionsService.model('actions').enableCopy();
+		
+	}
+	
+	private selectPreviousOrNextItem (element:HTMLElement, shiftKey:boolean) {
+		
+		if (!shiftKey) this.unselect();
+		
+		this.cacheSelectionHistory.push(element);
+		element.classList.add('-selected');
+		scrollElementIntoView(this, element);
+		actionsService.model('actions').enableCopy();
+		
+	}
+	
+	private getFirstItem () {
+		
+		return <HTMLElement>this.list.querySelector('l13-diff-list-row');
+		
+	}
+	
+	private getLastItem () {
+		
+		const rows = this.list.querySelectorAll('l13-diff-list-row');
+		
+		return <HTMLElement>rows[rows.length - 1];
+		
+	}
+	
+	private selectFirstOrLastItem (from:HTMLElement, to:HTMLElement, shiftKey:boolean) {
+		
+		if (!shiftKey) {
+			this.unselect();
+			to.classList.add('-selected');
+		} else {
+			if (isWindows) {
+				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
+				if (this.cacheSelectionHistory.length > 1) {
+					this.cacheSelectionHistory.pop();
+					from = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+				}
+			}
+			this.cacheSelectedListItems = this.selectRange(from, to);
+		}
+		
+		this.cacheSelectionHistory.push(to);
+		scrollElementIntoView(this, to);
+		actionsService.model('actions').enableCopy();
+		
+	}
+	
 	private selectPrevious ({ altKey, shiftKey, key }:KeyboardEvent) {
 		
 		if (!this.list.firstChild) return;
 		
+		const length = this.cacheSelectionHistory.length;
+		const lastSelection = this.cacheSelectionHistory[length - 1];
+		
+		if (!lastSelection) return this.selectItem(this.getLastItem());
+		
+		const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
+		
 		if (isMacOs) {
-			
-			const length = this.cacheSelectionHistory.length;
-			const lastSelection = this.cacheSelectionHistory[length - 1];
-			
-			if (!lastSelection) return this.selectFirst();
-			
-			const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
-			
-			if (!previousElementSibling) {
-				if (!shiftKey && length > 1) {
-					this.unselect();
-					lastSelection.classList.add('-selected');
-					this.cacheSelectionHistory.push(lastSelection);
-				}
-				scrollElementIntoView(this, lastSelection);
-				actionsService.model('actions').enableCopy();
-				return;
-			}
-			
-			if (altKey) {
-				const firstRow = <HTMLElement>this.list.querySelector('l13-diff-list-row');
-				if (!shiftKey) {
-					this.unselect();
-					firstRow.classList.add('-selected');
-				} else this.selectRange(firstRow, lastSelection);
-				this.cacheSelectionHistory.push(firstRow);
-				scrollElementIntoView(this, firstRow);
-				actionsService.model('actions').enableCopy();
-				return;
-			}
-			
-			if (!shiftKey) this.unselect();
-			
-			this.cacheSelectionHistory.push(previousElementSibling);
-			previousElementSibling.classList.add('-selected');
-			
-			scrollElementIntoView(this, previousElementSibling);
-			actionsService.model('actions').enableCopy();
-		} else if (isWindows) {
-			//
+			if (!previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
+			else this.selectPreviousOrNextItem(previousElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowUp') {
-				const length = this.cacheSelectionHistory.length;
-				const lastSelection = this.cacheSelectionHistory[length - 1];
-				
-				if (!lastSelection) return this.selectFirst();
-				
-				const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
-				
-				if (!previousElementSibling) {
-					if (!shiftKey && length > 1) {
-						this.unselect();
-						lastSelection.classList.add('-selected');
-						this.cacheSelectionHistory.push(lastSelection);
-					}
-					scrollElementIntoView(this, lastSelection);
-					actionsService.model('actions').enableCopy();
-					return;
-				}
-				
-				if (!shiftKey) this.unselect();
-				
-				this.cacheSelectionHistory.push(previousElementSibling);
-				previousElementSibling.classList.add('-selected');
-				
-				scrollElementIntoView(this, previousElementSibling);
-				actionsService.model('actions').enableCopy();
-			} else {
-				const length = this.cacheSelectionHistory.length;
-				const lastSelection = this.cacheSelectionHistory[length - 1];
-				const firstRow = <HTMLElement>this.list.querySelector('l13-diff-list-row');
-				if (!shiftKey) {
-					this.unselect();
-					firstRow.classList.add('-selected');
-				} else this.selectRange(firstRow, lastSelection);
-				this.cacheSelectionHistory.push(firstRow);
-				scrollElementIntoView(this, firstRow);
-				actionsService.model('actions').enableCopy();
+				if (!previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else this.selectPreviousOrNextItem(previousElementSibling, shiftKey);
+			} else if (isWindows && key === 'PageUp') {
+				//
+			} else if (key === 'Home') {
+				this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			}
 		}
 		
@@ -330,89 +325,25 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.firstChild) return;
 		
+		const length = this.cacheSelectionHistory.length;
+		const lastSelection = this.cacheSelectionHistory[length - 1];
+		
+		if (!lastSelection) return this.selectItem(this.getFirstItem());
+		
+		const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
+		
 		if (isMacOs) {
-			const length = this.cacheSelectionHistory.length;
-			const lastSelection = this.cacheSelectionHistory[length - 1];
-			
-			if (!lastSelection) return this.selectFirst();
-			
-			const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
-			
-			if (!nextElementSibling) {
-				if (!shiftKey && length > 1) {
-					this.unselect();
-					lastSelection.classList.add('-selected');
-					this.cacheSelectionHistory.push(lastSelection);
-				}
-				scrollElementIntoView(this, lastSelection);
-				actionsService.model('actions').enableCopy();
-				return;
-			}
-			
-			if (altKey) {
-				const rows = this.list.querySelectorAll('l13-diff-list-row');
-				const lastRow = <HTMLElement>rows[rows.length - 1];
-				if (!shiftKey) {
-					this.unselect();
-					lastRow.classList.add('-selected');
-				} else this.selectRange(lastSelection, lastRow);
-				this.cacheSelectionHistory.push(lastRow);
-				scrollElementIntoView(this, lastRow);
-				actionsService.model('actions').enableCopy();
-				return;
-			}
-			
-			if (!shiftKey) this.unselect();
-			
-			this.cacheSelectionHistory.push(nextElementSibling);
-			nextElementSibling.classList.add('-selected');
-			
-			scrollElementIntoView(this, nextElementSibling);
-			actionsService.model('actions').enableCopy();
-		} else if (isWindows) {
-			//
+			if (!nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
+			else this.selectPreviousOrNextItem(nextElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowDown') {
-				const length = this.cacheSelectionHistory.length;
-				const lastSelection = this.cacheSelectionHistory[length - 1];
-				
-				if (!lastSelection) return this.selectFirst();
-				
-				const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
-				
-				if (!nextElementSibling) {
-					if (!shiftKey && length > 1) {
-						this.unselect();
-						lastSelection.classList.add('-selected');
-						this.cacheSelectionHistory.push(lastSelection);
-					}
-					scrollElementIntoView(this, lastSelection);
-					actionsService.model('actions').enableCopy();
-					return;
-				}
-				
-				if (!shiftKey) this.unselect();
-			
-				this.cacheSelectionHistory.push(nextElementSibling);
-				nextElementSibling.classList.add('-selected');
-				
-				scrollElementIntoView(this, nextElementSibling);
-				actionsService.model('actions').enableCopy();
-			} else {
-				const length = this.cacheSelectionHistory.length;
-				const lastSelection = this.cacheSelectionHistory[length - 1];
-				
-				const rows = this.list.querySelectorAll('l13-diff-list-row');
-				const lastRow = <HTMLElement>rows[rows.length - 1];
-				
-				if (!shiftKey) {
-					this.unselect();
-					lastRow.classList.add('-selected');
-				} else this.selectRange(lastSelection, lastRow);
-				
-				this.cacheSelectionHistory.push(lastRow);
-				scrollElementIntoView(this, lastRow);
-				actionsService.model('actions').enableCopy();
+				if (!nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else this.selectPreviousOrNextItem(nextElementSibling, shiftKey);
+			} else if (isWindows && key === 'PageDown') {
+				//
+			} else if (key === 'End') {
+				this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 			}
 		}
 		
