@@ -7,7 +7,6 @@ Compare two folders in Visual Studio Code.
 ## What's new in L13 Diff 0.14.0
 
 * Added keyboard support for selection in list view.
-* Fixed some view bugs.
 
 ## Features
 
@@ -57,14 +56,14 @@ Windows / Linux
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
-## Input Keyboard Shortcuts
+## Input/Menu Keyboard Shortcuts
 
-* `up/down` - Move cursor to previous/next list item
-* `enter` - If menu is open, selected item will be filled in, otherwise a compare starts.
+* `up/down` - Move cursor to previous/next list item in menu.
+* `enter` - If menu is visible, selected item will be filled in, otherwise a compare starts.
 
 ## List Keyboard Shortcuts
 
-Most keyboard shortcuts for the list view are working like your native Finder/Explorer.
+The keyboard shortcuts for the list view are working like the native Finder/Explorer applications on the OS where Visual Studio Code is installed.
 
 All platforms
 
@@ -95,4 +94,4 @@ Linux
 * `up/down` - Move cursor to previous/next list item
 * `home/end` - Move cursor to start/end of page
 * `shift+up/down` - Add previous/next list item to selection
-* `shift+home/end` - Added to selection to start/end
+* `shift+home/end` - Added to selection until start/end of page

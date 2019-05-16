@@ -29,6 +29,30 @@ export let isMacOs = false;
 export let isWindows = false;
 export let isOtherPlatform = false;
 
+// Only for testing platform features
+
+export function changePlatform () {
+	
+	let platform;
+	
+	if (isMacOs) {
+		isMacOs = false;
+		isWindows = true;
+		platform = 'Windows';
+	} else if (isWindows) {
+		isWindows = false;
+		isOtherPlatform = true;
+		platform = 'Linux';
+	} else {
+		isOtherPlatform = false;
+		isMacOs = true;
+		platform = 'macOS';
+	}
+	
+	console.log(`Changed platform to '${platform}'`);
+	
+}
+
 export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
 	
 	return isMacOs && metaKey || !isMacOs && ctrlKey;
