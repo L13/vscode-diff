@@ -312,13 +312,98 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				if (!lastSelection) this.selectItem(this.getLastItem());
 			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
-			} else if (isWindows && key === 'PageUp') {
-				//
+			} else if (key === 'PageUp') {
+				this.selectPreviousPageItem(lastSelection, shiftKey);
 			} else if (key === 'Home') {
 				if (!lastSelection) this.selectItem(this.getFirstItem());
 				else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			}
 		}
+		
+	}
+	
+	private selectPreviousPageItem (lastSelection:HTMLElement, shiftKey:boolean) {
+		
+		const viewStart = this.scrollTop - 1;
+		const viewHeight = this.offsetHeight;
+		
+		let currentElement = this.getLastItem();
+		
+		if (!currentElement) return;
+		
+		let previousElementSibling:HTMLElement;
+		
+		while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
+			if (previousElementSibling.offsetTop > viewStart) {
+				currentElement = previousElementSibling;
+				continue;
+			}
+			break;
+		}
+		
+		if (currentElement.classList.contains('-selected')) {
+			const nextViewStart = viewStart - viewHeight;
+			while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
+				if (previousElementSibling.offsetTop > nextViewStart) {
+					currentElement = previousElementSibling;
+					continue;
+				}
+				break;
+			}
+		}
+		
+		if (!shiftKey) {
+			this.unselect();
+			currentElement.classList.add('-selected');
+		} else {
+			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
+		}
+		
+		this.cacheSelectionHistory.push(currentElement);
+		scrollElementIntoView(this, currentElement);
+		
+	}
+	
+	private selectNextPageItem (lastSelection:HTMLElement, shiftKey:boolean) {
+		
+		const viewStart = this.scrollTop;
+		const viewHeight = this.offsetHeight;
+		const viewEnd = viewStart + viewHeight + 1; // Why does + 1 fixes the issue???
+		
+		let currentElement = this.getFirstItem();
+		
+		if (!currentElement) return;
+		
+		let nextElementSibling:HTMLElement;
+		
+		while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
+			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
+				currentElement = nextElementSibling;
+				continue;
+			}
+			break;
+		}
+		
+		if (currentElement.classList.contains('-selected')) {
+			const nextViewEnd = viewEnd + viewHeight;
+			while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
+				if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < nextViewEnd) {
+					currentElement = nextElementSibling;
+					continue;
+				}
+				break;
+			}
+		}
+		
+		if (!shiftKey) {
+			this.unselect();
+			currentElement.classList.add('-selected');
+		} else {
+			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
+		}
+		
+		this.cacheSelectionHistory.push(currentElement);
+		scrollElementIntoView(this, currentElement);
 		
 	}
 	
@@ -334,8 +419,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				if (!lastSelection) this.selectItem(this.getFirstItem());
 				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
-			} else if (isWindows && key === 'PageDown') {
-				//
+			} else if (key === 'PageDown') {
+				this.selectNextPageItem(lastSelection, shiftKey);
 			} else if (key === 'End') {
 				if (!lastSelection) this.selectItem(this.getLastItem());
 				else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
