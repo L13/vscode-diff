@@ -18,7 +18,7 @@ Compare two folders in Visual Studio Code.
 * Select all files and folders by status.
 * Toggle the view by status.
 * Double click an item in the list to open the diff or the file.
-* Mouse and keyboard support like in your the native Finder/Explorer.
+* Mouse and keyboard support for selecting items in list.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -63,8 +63,6 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ## List Keyboard Shortcuts
 
-The keyboard shortcuts for the list view are working like in the native Finder/Explorer applications on the OS where Visual Studio Code is running.
-
 All platforms
 
 * `enter` - Open diff or file.
@@ -84,13 +82,11 @@ Windows / Linux
 * `up/down` - Move cursor to previous/next list item.
 * `shift+up/down` - Add previous/next list item to selection.
 * `home/end` - Move cursor to start/end of list view.
-* `page up/down` - Move cursor to previous/next viewport of list view.
 * `shift+home/end` - Add to selection until start/end of list view.
+* `page up/down` - Move cursor to previous/next viewport of list view.
 * `shift+page up/down` - Add to selection to previous/next viewport of list view.
 
 ## List Mouse Shortcuts
-
-The mouse shortcuts for the list view are working like in the native Finder/Explorer applications on the OS where Visual Studio Code is running.
 
 All platforms
 
@@ -100,8 +96,8 @@ All platforms
 
 macOS
 
-* `meta+click` - Add or remove a file or folder to the current selection.
+* `meta+click` - Add or remove a file or folder to or from the current selection.
 
 Windows / Linux
 
-* `ctrl+click` - Add or remove a file or folder to the current selection.
+* `ctrl+click` - Add or remove a file or folder to or from the current selection.

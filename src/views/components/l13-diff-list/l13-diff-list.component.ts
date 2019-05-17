@@ -62,8 +62,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			this.list.classList.add('-focus');
 			
-			if (this.list.firstChild && !this.cacheSelectionHistory.length) this.selectItem(this.getFirstItem());
-			
 		});
 		
 		this.addEventListener('blur', () => {
@@ -79,6 +77,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			switch (event.key) {
 				case 'F12': // Debug Mode
 					if (event.metaKey && event.ctrlKey && event.altKey && event.shiftKey) changePlatform();
+					break;
+				case 'Escape':
+					this.unselect();
 					break;
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
@@ -294,8 +295,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const length = this.cacheSelectionHistory.length;
 		const lastSelection = this.cacheSelectionHistory[length - 1];
 		
-		if (!lastSelection) return this.selectItem(this.getLastItem());
-		
 		if (direction === NEXT) this.selectNext(event, lastSelection);
 		else this.selectPrevious(event, lastSelection);
 		
@@ -303,20 +302,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectPrevious ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
 		
-		const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
-		
 		if (isMacOs) {
-			if (!previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			if (!lastSelection) this.selectItem(altKey ? this.getFirstItem() : this.getLastItem());
+			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
-			else this.selectPreviousOrNextItem(previousElementSibling, shiftKey);
+			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowUp') {
-				if (!previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
-				else this.selectPreviousOrNextItem(previousElementSibling, shiftKey);
+				if (!lastSelection) this.selectItem(this.getLastItem());
+			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
 			} else if (isWindows && key === 'PageUp') {
 				//
 			} else if (key === 'Home') {
-				this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
+				if (!lastSelection) this.selectItem(this.getFirstItem());
+				else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			}
 		}
 		
@@ -324,20 +324,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectNext ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
 		
-		const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
-		
 		if (isMacOs) {
-			if (!nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			if (!lastSelection) this.selectItem(altKey ? this.getLastItem() : this.getFirstItem());
+			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
-			else this.selectPreviousOrNextItem(nextElementSibling, shiftKey);
+			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowDown') {
-				if (!nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
-				else this.selectPreviousOrNextItem(nextElementSibling, shiftKey);
+				if (!lastSelection) this.selectItem(this.getFirstItem());
+				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
 			} else if (isWindows && key === 'PageDown') {
 				//
 			} else if (key === 'End') {
-				this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
+				if (!lastSelection) this.selectItem(this.getLastItem());
+				else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 			}
 		}
 		
