@@ -18,7 +18,7 @@ Compare two folders in Visual Studio Code.
 * Select all files and folders by status.
 * Toggle the view by status.
 * Double click an item in the list to open the diff or the file.
-* Select files and folders with meta/ctrl, shift and mouse click in the list like in the native Finder/Explorer.
+* Mouse and keyboard support like in your the native Finder/Explorer.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -34,7 +34,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 
 ## Available Commands
 
-* `L13 Diff` - Open the diff panel
+* `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders by dialog or context menu.
 * `L13 Diff: Clear History` - Clear the history of recently used files and folders.
 
@@ -63,35 +63,45 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ## List Keyboard Shortcuts
 
-The keyboard shortcuts for the list view are working like the native Finder/Explorer applications on the OS where Visual Studio Code is installed.
+The keyboard shortcuts for the list view are working like in the native Finder/Explorer applications on the OS where Visual Studio Code is running.
 
 All platforms
 
-* `enter` - Open diff or file
-* `ctrl+enter` - Open diff or file to side
+* `enter` - Open diff or file.
+* `ctrl+enter` - Open diff or file to side.
 
 macOS
 
-* `up/down` - Move cursor to previous/next list item
-* `alt+up/down` - Move cursor to start/end of page
-* `shift+up/down` - Add previous/next list item to selection
-* `shift+alt+up/down` - Add to selection until start/end of page
-* `home/end` - Scroll to start/end of page
-* `page up/down` - Scroll to previous/next viewport of page
+* `up/down` - Move cursor to previous/next list item.
+* `alt+up/down` - Move cursor to start/end of list view.
+* `shift+up/down` - Add previous/next list item to selection.
+* `shift+alt+up/down` - Add to selection until start/end of list view.
+* `home/end` - Scroll to start/end of list view.
+* `page up/down` - Scroll to previous/next viewport of list view.
 
-Windows
+Windows / Linux
 
-* `up/down` - Move cursor to previous/next list item
-* `shift+up/down` - Add previous/next list item to selection
-* `home/end` - Move cursor to start/end of page
-* `page up/down` - Move cursor to previous/next viewport of page
-* `shift+home/end` - Add to selection until start/end of page
-* `shift+page up/down` - Add to selection to previous/next viewport of page
-* `shift+meta+up/down` - Add to selection until start/end of page
+* `up/down` - Move cursor to previous/next list item.
+* `shift+up/down` - Add previous/next list item to selection.
+* `home/end` - Move cursor to start/end of list view.
+* `page up/down` - Move cursor to previous/next viewport of list view.
+* `shift+home/end` - Add to selection until start/end of list view.
+* `shift+page up/down` - Add to selection to previous/next viewport of list view.
 
-Linux
+## List Mouse Shortcuts
 
-* `up/down` - Move cursor to previous/next list item
-* `home/end` - Move cursor to start/end of page
-* `shift+up/down` - Add previous/next list item to selection
-* `shift+home/end` - Added to selection until start/end of page
+The mouse shortcuts for the list view are working like in the native Finder/Explorer applications on the OS where Visual Studio Code is running.
+
+All platforms
+
+* `click` - Select a file or folder in the list view.
+* `double click` - Open a diff or file.
+* `shift+click` - Add files and folders from the last selected item to the current selected item in the list view.
+
+macOS
+
+* `meta+click` - Add or remove a file or folder to the current selection.
+
+Windows / Linux
+
+* `ctrl+click` - Add or remove a file or folder to the current selection.
