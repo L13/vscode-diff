@@ -3,11 +3,41 @@
 	overflow: auto;
 	margin: 0 0 0 0;
 	user-select: none;
+	
+	// "list.activeSelectionBackground": "#313233",
+	// "list.activeSelectionForeground": "#cbcccd",
+	// "list.dropBackground": "#05507c",
+	// "list.errorForeground": "#f20013",
+	// "list.focusBackground": "#05507c",
+	// "list.focusForeground": "#ffffff",
+	// "list.highlightForeground": "#ffffff",
+	// "list.hoverBackground": "#05507c",
+	// "list.hoverForeground": "#ffffff",
+	// "list.inactiveFocusBackground": "#313233",
+	// "list.inactiveSelectionBackground": "#313233",
+	// "list.inactiveSelectionForeground": "#cbcccd",
+	// "list.invalidItemForeground": "#f20013",
+	// "list.warningForeground": "#e68300",
 }
 
 l13-diff-list-body {
 	display: block;
 	width: 100%;
+	
+	&.-focus {
+		
+		l13-diff-list-row {
+			
+			&.-selected {
+				background: var(--vscode-list-activeSelectionBackground) !important;
+				color: var(--vscode-list-activeSelectionForeground) !important;
+					
+				l13-diff-list-file::before {
+					background: var(--vscode-list-activeSelectionForeground) !important;
+				}
+			}
+		}
+	}
 }
 
 l13-diff-list-row {
@@ -20,11 +50,11 @@ l13-diff-list-row {
 	}
 	
 	&.-selected {
-		background: var(--vscode-list-activeSelectionBackground) !important;
-		color: var(--vscode-list-activeSelectionForeground) !important;
+		background: var(--vscode-list-inactiveSelectionBackground) !important;
+		color: var(--vscode-list-inactiveSelectionForeground) !important;
 			
 		l13-diff-list-file::before {
-			background: var(--vscode-list-activeSelectionForeground) !important;
+			background: var(--vscode-list-inactiveSelectionForeground) !important;
 		}
 		
 		// &:hover {

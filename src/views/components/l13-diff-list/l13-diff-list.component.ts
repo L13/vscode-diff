@@ -18,6 +18,9 @@ const slice = Array.prototype.slice;
 
 const actionsService = new L13DiffActionsViewModelService();
 
+enum Direction { PREVIOUS, NEXT }
+const { PREVIOUS, NEXT } = Direction;
+
 //	Initialize _________________________________________________________________
 
 
@@ -57,7 +60,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.addEventListener('focus', () => {
 			
+			this.list.classList.add('-focus');
+			
 			if (this.list.firstChild && !this.cacheSelectionHistory.length) this.selectItem(this.getFirstItem());
+			
+		});
+		
+		this.addEventListener('blur', () => {
+			
+			this.list.classList.remove('-focus');
 			
 		});
 		
@@ -83,35 +94,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.unselect();
 					break;
 				case 'ArrowUp':
-					this.selectPrevious(event);
-					event.preventDefault();
+					this.selectPreviousOrNext(PREVIOUS, event);
 					break;
 				case 'ArrowDown':
-					this.selectNext(event);
-					event.preventDefault();
+					this.selectPreviousOrNext(NEXT, event);
 					break;
 				case 'PageUp':
-					if (isWindows) {
-						this.selectPrevious(event);
-						event.preventDefault();
-					}
+					if (isWindows) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
 				case 'PageDown':
-					if (isWindows) {
-						this.selectNext(event);
-						event.preventDefault();
-					}
+					if (isWindows) this.selectPreviousOrNext(NEXT, event);
 				case 'Home':
-					if (!isMacOs) {
-						this.selectPrevious(event);
-						event.preventDefault();
-					}
+					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
 				case 'End':
-					if (!isMacOs) {
-						this.selectNext(event);
-						event.preventDefault();
-					}
+					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
 					break;
 			}
 			
@@ -192,11 +189,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectListItem (parentNode:HTMLElement) {
+	private selectListItem (element:HTMLElement) {
 	
-		parentNode.classList.add('-selected');
+		element.classList.add('-selected');
 		
-		this.cacheSelectionHistory.push(parentNode);
+		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
 		
 		actionsService.model('actions').enableCopy();
@@ -228,11 +225,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	private selectItem (element:HTMLElement) {
 		
 		element.classList.add('-selected');
-		
 		this.cacheSelectionHistory.push(element);
 		scrollElementIntoView(this, element);
-		
-		actionsService.model('actions').enableCopy();
 		
 	}
 	
@@ -245,7 +239,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		scrollElementIntoView(this, element);
-		actionsService.model('actions').enableCopy();
 		
 	}
 	
@@ -256,7 +249,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		element.classList.add('-selected');
 		scrollElementIntoView(this, element);
-		actionsService.model('actions').enableCopy();
 		
 	}
 	
@@ -292,18 +284,27 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheSelectionHistory.push(to);
 		scrollElementIntoView(this, to);
-		actionsService.model('actions').enableCopy();
 		
 	}
 	
-	private selectPrevious ({ altKey, shiftKey, key }:KeyboardEvent) {
+	private selectPreviousOrNext (direction:Direction, event:KeyboardEvent) {
 		
 		if (!this.list.firstChild) return;
+		
+		actionsService.model('actions').enableCopy();
+		event.preventDefault();
 		
 		const length = this.cacheSelectionHistory.length;
 		const lastSelection = this.cacheSelectionHistory[length - 1];
 		
 		if (!lastSelection) return this.selectItem(this.getLastItem());
+		
+		if (direction === NEXT) this.selectNext(event, lastSelection);
+		else this.selectPrevious(event, lastSelection);
+		
+	}
+	
+	private selectPrevious ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
 		
 		const previousElementSibling = <HTMLElement>lastSelection.previousElementSibling;
 		
@@ -324,14 +325,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectNext ({ altKey, shiftKey, key }:KeyboardEvent) {
-		
-		if (!this.list.firstChild) return;
-		
-		const length = this.cacheSelectionHistory.length;
-		const lastSelection = this.cacheSelectionHistory[length - 1];
-		
-		if (!lastSelection) return this.selectItem(this.getFirstItem());
+	private selectNext ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
 		
 		const nextElementSibling = <HTMLElement>lastSelection.nextElementSibling;
 		
