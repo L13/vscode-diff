@@ -90,9 +90,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						
 					});
 					break;
-				case 'Escape':
-					this.unselect();
-					break;
 				case 'ArrowUp':
 					this.selectPreviousOrNext(PREVIOUS, event);
 					break;
@@ -100,10 +97,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.selectPreviousOrNext(NEXT, event);
 					break;
 				case 'PageUp':
-					if (isWindows) this.selectPreviousOrNext(PREVIOUS, event);
+					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
 				case 'PageDown':
-					if (isWindows) this.selectPreviousOrNext(NEXT, event);
+					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
 				case 'Home':
 					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
