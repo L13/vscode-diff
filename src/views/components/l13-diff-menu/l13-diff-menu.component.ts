@@ -54,6 +54,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 			if (parentNode instanceof L13DiffInputComponent) {
 				if (target.nodeName === 'LI') {
 					parentNode.viewmodel.value = target.textContent;
+					parentNode.focus();
 					this.remove();
 				} else parentNode.focus();
 			}

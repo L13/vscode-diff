@@ -200,23 +200,20 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectRange (from:HTMLElement, to:HTMLElement) {
 		
-		if (from === to) {
+		const elements:HTMLElement[] = [];
+		
+		[from, to] = from.offsetTop < to.offsetTop ? [from, to] : [to, from];
+		
+		while (from !== to) {
 			from.classList.add('-selected');
-			return [from];
+			elements[elements.length] = from;
+			from = <HTMLElement>from.nextElementSibling;
 		}
 		
-		const elements = this.list.querySelectorAll('l13-diff-list-row');
-		let useSelect = false;
+		to.classList.add('-selected');
+		elements[elements.length] = to;
 		
-		return slice.call(elements).filter((element) => {
-								
-			if (useSelect || element === from || element === to) {
-				if (element === from || element === to) useSelect = !useSelect;
-				element.classList.add('-selected');
-				return true;
-			}
-			
-		});
+		return elements;
 		
 	}
 	
@@ -234,18 +231,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			this.unselect();
 			element.classList.add('-selected');
 			this.cacheSelectionHistory.push(element);
+			actionsService.model('actions').enableCopy();
 		}
 		
-		scrollElementIntoView(this, element);
-		
-	}
-	
-	private selectPreviousOrNextItem (element:HTMLElement, shiftKey:boolean) {
-		
-		if (!shiftKey) this.unselect();
-		
-		this.cacheSelectionHistory.push(element);
-		element.classList.add('-selected');
 		scrollElementIntoView(this, element);
 		
 	}
@@ -264,11 +252,55 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	private getPreviousPageItem (currentElement:HTMLElement, viewStart:number) {
+		
+		let previousElementSibling:HTMLElement;
+		
+		while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
+			if (previousElementSibling.offsetTop > viewStart) {
+				currentElement = previousElementSibling;
+				continue;
+			}
+			break;
+		}
+		
+		return currentElement;
+		
+	}
+	
+	private getNextPageItem (currentElement:HTMLElement, viewEnd:number) {
+		
+		let nextElementSibling:HTMLElement;
+		
+		while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
+			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
+				currentElement = nextElementSibling;
+				continue;
+			}
+			break;
+		}
+		
+		return currentElement;
+		
+	}
+	
+	private selectPreviousOrNextItem (element:HTMLElement, shiftKey:boolean) {
+		
+		if (!shiftKey) this.unselect();
+		
+		this.cacheSelectionHistory.push(element);
+		element.classList.add('-selected');
+		scrollElementIntoView(this, element);
+		actionsService.model('actions').enableCopy();
+		
+	}
+	
 	private selectFirstOrLastItem (from:HTMLElement, to:HTMLElement, shiftKey:boolean) {
 		
 		if (!shiftKey) {
 			this.unselect();
 			to.classList.add('-selected');
+			actionsService.model('actions').enableCopy();
 		} else {
 			if (isWindows) {
 				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
@@ -285,6 +317,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	private selectPreviousOrNextPageItem (currentElement:HTMLElement, lastSelection:HTMLElement, shiftKey:boolean) {
+		
+		if (!shiftKey) {
+			this.unselect();
+			currentElement.classList.add('-selected');
+			actionsService.model('actions').enableCopy();
+		} else {
+			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
+		}
+		
+		this.cacheSelectionHistory.push(currentElement);
+		scrollElementIntoView(this, currentElement);
+		
+	}
+	
 	private selectPreviousOrNext (direction:Direction, event:KeyboardEvent) {
 		
 		if (!this.list.firstChild) return;
@@ -292,8 +339,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		actionsService.model('actions').enableCopy();
 		event.preventDefault();
 		
-		const length = this.cacheSelectionHistory.length;
-		const lastSelection = this.cacheSelectionHistory[length - 1];
+		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 		
 		if (direction === NEXT) this.selectNext(event, lastSelection);
 		else this.selectPrevious(event, lastSelection);
@@ -313,97 +359,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
 			} else if (key === 'PageUp') {
-				this.selectPreviousPageItem(lastSelection, shiftKey);
+				const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
+				let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
+				if (!lastSelection) this.selectItem(currentElement);
+				if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
+				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
 			} else if (key === 'Home') {
 				if (!lastSelection) this.selectItem(this.getFirstItem());
 				else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			}
 		}
-		
-	}
-	
-	private selectPreviousPageItem (lastSelection:HTMLElement, shiftKey:boolean) {
-		
-		const viewStart = this.scrollTop - 1;
-		const viewHeight = this.offsetHeight;
-		
-		let currentElement = this.getLastItem();
-		
-		if (!currentElement) return;
-		
-		let previousElementSibling:HTMLElement;
-		
-		while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
-			if (previousElementSibling.offsetTop > viewStart) {
-				currentElement = previousElementSibling;
-				continue;
-			}
-			break;
-		}
-		
-		if (currentElement.classList.contains('-selected')) {
-			const nextViewStart = viewStart - viewHeight;
-			while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
-				if (previousElementSibling.offsetTop > nextViewStart) {
-					currentElement = previousElementSibling;
-					continue;
-				}
-				break;
-			}
-		}
-		
-		if (!shiftKey) {
-			this.unselect();
-			currentElement.classList.add('-selected');
-		} else {
-			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
-		}
-		
-		this.cacheSelectionHistory.push(currentElement);
-		scrollElementIntoView(this, currentElement);
-		
-	}
-	
-	private selectNextPageItem (lastSelection:HTMLElement, shiftKey:boolean) {
-		
-		const viewStart = this.scrollTop;
-		const viewHeight = this.offsetHeight;
-		const viewEnd = viewStart + viewHeight + 1; // Why does + 1 fixes the issue???
-		
-		let currentElement = this.getFirstItem();
-		
-		if (!currentElement) return;
-		
-		let nextElementSibling:HTMLElement;
-		
-		while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
-			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
-				currentElement = nextElementSibling;
-				continue;
-			}
-			break;
-		}
-		
-		if (currentElement.classList.contains('-selected')) {
-			const nextViewEnd = viewEnd + viewHeight;
-			while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
-				if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < nextViewEnd) {
-					currentElement = nextElementSibling;
-					continue;
-				}
-				break;
-			}
-		}
-		
-		if (!shiftKey) {
-			this.unselect();
-			currentElement.classList.add('-selected');
-		} else {
-			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
-		}
-		
-		this.cacheSelectionHistory.push(currentElement);
-		scrollElementIntoView(this, currentElement);
 		
 	}
 	
@@ -420,7 +385,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
 			} else if (key === 'PageDown') {
-				this.selectNextPageItem(lastSelection, shiftKey);
+				const viewHeight = this.offsetHeight;
+				const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
+				let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
+				if (!lastSelection) this.selectItem(currentElement);
+				if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
+				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
 			} else if (key === 'End') {
 				if (!lastSelection) this.selectItem(this.getLastItem());
 				else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
@@ -473,6 +443,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public update () {
 		
 		super.update();
+		this.focus();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
 		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.showFiteredListItemViews();
