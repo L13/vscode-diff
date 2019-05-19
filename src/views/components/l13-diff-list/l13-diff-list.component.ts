@@ -12,8 +12,6 @@ import { changePlatform, isMacOs, isMetaKey, isOtherPlatform, isWindows, parseIc
 import styles from '../styles';
 import templates from '../templates';
 
-const slice = Array.prototype.slice;
-
 //	Variables __________________________________________________________________
 
 const actionsService = new L13DiffActionsViewModelService();
@@ -225,9 +223,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectNoneItem (element:HTMLElement, shiftKey:boolean, length:number) {
+	private selectNoneItem (element:HTMLElement, shiftKey:boolean) {
 		
-		if (!shiftKey && length > 1) {
+		if (!shiftKey && this.cacheSelectionHistory.length > 1) {
 			this.unselect();
 			element.classList.add('-selected');
 			this.cacheSelectionHistory.push(element);
@@ -348,13 +346,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getFirstItem() : this.getLastItem());
-			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowUp') {
 				if (!lastSelection) this.selectItem(this.getLastItem());
-			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
 			} else if (key === 'PageUp') {
 				const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
@@ -374,13 +372,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getLastItem() : this.getFirstItem());
-			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
 		} else {
 			if (key === 'ArrowDown') {
 				if (!lastSelection) this.selectItem(this.getFirstItem());
-				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey, length);
+				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
 			} else if (key === 'PageDown') {
 				const viewHeight = this.offsetHeight;
