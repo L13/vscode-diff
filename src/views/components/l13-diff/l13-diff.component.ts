@@ -115,6 +115,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			command: 'init:paths',
 		});
 		
+		listService.model('list').on('compared', () => this.list.focus());
+		listService.model('list').on('copied', () => this.list.focus());
+		
 	}
 	
 }

@@ -240,15 +240,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getFirstItem () {
 		
-		return <HTMLElement>this.list.querySelector('l13-diff-list-row');
+		return <HTMLElement>this.list.firstElementChild;
 		
 	}
 	
 	private getLastItem () {
 		
-		const rows = this.list.querySelectorAll('l13-diff-list-row');
-		
-		return <HTMLElement>rows[rows.length - 1];
+		return <HTMLElement>this.list.lastElementChild;
 		
 	}
 	
@@ -443,7 +441,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public update () {
 		
 		super.update();
-		this.focus();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
 		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.showFiteredListItemViews();
