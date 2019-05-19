@@ -9,12 +9,12 @@
 		color: var(--vscode-input-foreground);
 		display: block;
 		font-size: 0.8125rem;
-		outline: solid 1px var(--vscode-input-border, transparent);
+		outline: solid 1px var(--l13-input-border);
 		outline-offset: -1px;
 		padding: 4px 35px 5px 7px;
 		width: 100%;
 		z-index: 0;
-	
+		
 		&::selection {
 			background: var(--vscode-selection-background, var(--l13-selection-background));
 		}
@@ -22,7 +22,7 @@
 		&:focus {
 			outline-color: var(--vscode-focusBorder, transparent);
 		}
-			
+		
 		&.-error {
 			outline-color: var(--vscode-inputValidation-errorBorder, #cc0000);
 		}
