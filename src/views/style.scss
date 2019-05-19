@@ -14,21 +14,10 @@ body {
 	&.vscode-dark {
 		// Fixes the missing selection color if default dark theme is selected
 		--l13-selection-background: #6689af;
-		// Fixes the high contrast border echo in the color theme preview
-		--l13-input-border: transparent;
 	}
 	
 	&.vscode-light {
 		// Fixes the missing selection color if default light theme is selected
 		--l13-selection-background: #b4d7fd;
-		// Fixes the high contrast border echo in the color theme preview
-		--l13-input-border: transparent;
-	}
-	
-	&.vscode-high-contrast {
-		// Fixes the missing selection color if default light theme is selected
-		--l13-selection-background: #b4d7fd;
-		// Fixes the high contrast border echo in the color theme preview
-		--l13-input-border: var(--vscode-input-border);
 	}
 }
