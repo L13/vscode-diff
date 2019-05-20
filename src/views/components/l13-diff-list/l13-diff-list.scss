@@ -29,11 +29,11 @@ l13-diff-list-body {
 		l13-diff-list-row {
 			
 			&.-selected {
-				background: var(--vscode-list-activeSelectionBackground) !important;
-				color: var(--vscode-list-activeSelectionForeground) !important;
+				background: var(--vscode-list-activeSelectionBackground);
+				color: var(--vscode-list-activeSelectionForeground);
 					
 				l13-diff-list-file::before {
-					background: var(--vscode-list-activeSelectionForeground) !important;
+					background: var(--vscode-list-activeSelectionForeground);
 				}
 			}
 		}
@@ -50,11 +50,12 @@ l13-diff-list-row {
 	}
 	
 	&.-selected {
-		background: var(--vscode-list-inactiveSelectionBackground) !important;
-		color: var(--vscode-list-inactiveSelectionForeground) !important;
+		background: var(--vscode-list-inactiveSelectionBackground);
+		color: var(--vscode-list-inactiveSelectionForeground);
 			
 		l13-diff-list-file::before {
-			background: var(--vscode-list-inactiveSelectionForeground) !important;
+			// Fixes icon which disappears if list loses focus ?!?
+			background: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
 		}
 		
 		// &:hover {
