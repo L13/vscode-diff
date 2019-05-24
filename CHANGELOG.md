@@ -13,6 +13,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Fixed invisible checkbox icon for light themes.
 - Fixed scroll into view bug for menu component.
 - Fixed a bug if files are selected but copy buttons were still disabled.
+- Fixed wrong year in changelog.
 
 ## [0.13.0] - 2019-05-12
 - Initial release

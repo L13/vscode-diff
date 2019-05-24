@@ -6,7 +6,7 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in L13 Diff 0.14.0
 
-* Added keyboard support for selection in list view.
+* Added keyboard support for selecting items in the list view.
 
 ## Features
 
@@ -56,48 +56,38 @@ Windows / Linux
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
-## Input/Menu Keyboard Shortcuts
+## Input/Menu Mouse/Keyboard Shortcuts
 
-* `up/down` - Move cursor to previous/next list item in menu.
-* `enter` - If menu is visible, selected item will be filled in, otherwise a compare starts.
+* `click` - Select a list item in the menu and use it in the input field.
+* `up/down` - Move the cursor to the previous/next list item in menu.
+* `enter` - If the menu is visible, the selected list item will be filled in, otherwise a compare starts.
 
-## List Keyboard Shortcuts
-
-All platforms
-
-* `enter` - Open diff or file.
-* `ctrl+enter` - Open diff or file to side.
-
-macOS
-
-* `up/down` - Move cursor to previous/next list item.
-* `alt+up/down` - Move cursor to start/end of list view.
-* `shift+up/down` - Add previous/next list item to selection.
-* `shift+alt+up/down` - Add to selection until start/end of list view.
-* `home/end` - Scroll to start/end of list view.
-* `page up/down` - Scroll to previous/next viewport of list view.
-
-Windows / Linux
-
-* `up/down` - Move cursor to previous/next list item.
-* `shift+up/down` - Add previous/next list item to selection.
-* `home/end` - Move cursor to start/end of list view.
-* `shift+home/end` - Add to selection until start/end of list view.
-* `page up/down` - Move cursor to previous/next viewport of list view.
-* `shift+page up/down` - Add to selection to previous/next viewport of list view.
-
-## List Mouse Shortcuts
+## List Mouse/Keyboard Shortcuts
 
 All platforms
 
 * `click` - Select a file or folder in the list view.
 * `double click` - Open a diff or file.
 * `shift+click` - Add files and folders from the last selected item to the current selected item in the list view.
+* `enter` - Open diff or file.
+* `ctrl+enter` - Open diff or file to side.
 
 macOS
 
 * `meta+click` - Add or remove a file or folder to or from the current selection.
+* `up/down` - Move the cursor to the previous/next list item.
+* `alt+up/down` - Move the cursor to the start/end of list view.
+* `shift+up/down` - Add the previous/next list item to the selection.
+* `shift+alt+up/down` - Add all list items until start/end of the list view to the selection.
+* `home/end` - Scroll to the start/end of the list view.
+* `page up/down` - Scroll to the previous/next viewport of the list view.
 
 Windows / Linux
 
 * `ctrl+click` - Add or remove a file or folder to or from the current selection.
+* `up/down` - Move the cursor to the previous/next list item.
+* `shift+up/down` - Add the previous/next list item to the selection.
+* `home/end` - Move the cursor to the start/end of list view.
+* `shift+home/end` - Add all list items until start/end of the list view to the selection.
+* `page up/down` - Move the cursor to the start/end of the previous/next viewport of the list view.
+* `shift+page up/down` - Add all list items of the previous/next viewport to the selection.
