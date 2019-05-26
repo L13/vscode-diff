@@ -21,13 +21,13 @@ import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
-const listService = new L13DiffListViewModelService();
-const viewsService = new L13DiffViewsViewModelService();
+const listVM = new L13DiffListViewModelService().model('list');
+const viewsVM = new L13DiffViewsViewModelService().model('views');
 
 //	Initialize _________________________________________________________________
 
-listService.model('list').addFilter(viewsService.model('views'));
-viewsService.model('views').on('update', () => listService.model('list').filter());
+listVM.addFilter(viewsVM);
+viewsVM.on('update', () => listVM.filter());
 
 //	Exports ____________________________________________________________________
 
@@ -115,8 +115,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			command: 'init:paths',
 		});
 		
-		listService.model('list').on('compared', () => this.list.focus());
-		listService.model('list').on('copied', () => this.list.focus());
+		listVM.on('compared', () => this.list.focus());
+		listVM.on('copied', () => this.list.focus());
 		
 	}
 	

@@ -285,10 +285,8 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) :void {
 	
 	const elements = component[SHADOW_ROOT].querySelectorAll('*');
 	
-	if (elements) {
+	if (elements.length) {
 		elements.forEach((element:Element) => {
-			
-			if (element.nodeName === 'STYLE' || element.nodeName === 'SCRIPT') return;
 			
 			const attributes = getAttributes(element);
 			

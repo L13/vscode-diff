@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.15.0] - 2019-06-29
+
+### Added
+- Added search/filter for list view. Please see README.md
+
+### Fixed
+- Fixed menu visiblity if path was selected and input was clicked again, but menu did not appear.
+
 ## [0.14.0] - 2019-05-26
 
 ### Added
