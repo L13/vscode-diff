@@ -8,11 +8,12 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 
 ### Fixed
 - Fixed menu visiblity if path was selected and input was clicked again, but menu did not appear.
+- Fixed auto link feature of markdown in changelog for VS Code Marketplace.
 
 ## [0.14.0] - 2019-05-26
 
 ### Added
-- Added keyboard support for selection in list view. Please see README.md
+- Added keyboard support for selection in list view. Please see [README.md](./README.md)
 
 ### Fixed
 - Fixed a bug if an item was select in the menu with enter, but value was not set.
