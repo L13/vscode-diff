@@ -58,9 +58,9 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ## Input/Menu Mouse/Keyboard Shortcuts
 
-* `click` - Select a list item in the menu and use it in the input field.
+* `click` - Select a path in the menu.
 * `up/down` - Move the cursor to the previous/next list item in menu.
-* `enter` - If the menu is visible, the selected list item will be filled in, otherwise a compare starts.
+* `enter` - If the menu is visible, the selected path will be filled in, otherwise a compare starts.
 
 ## List Mouse/Keyboard Shortcuts
 
@@ -80,7 +80,7 @@ macOS
 * `shift+up/down` - Add the previous/next list item to the selection.
 * `shift+alt+up/down` - Add all list items until start/end of the list view to the selection.
 * `home/end` - Scroll to the start/end of the list view.
-* `page up/down` - Scroll to the previous/next viewport of the list view.
+* `page up/down` - Scroll to the previous/next page of the list view.
 
 Windows / Linux
 
@@ -89,5 +89,5 @@ Windows / Linux
 * `shift+up/down` - Add the previous/next list item to the selection.
 * `home/end` - Move the cursor to the start/end of list view.
 * `shift+home/end` - Add all list items until start/end of the list view to the selection.
-* `page up/down` - Move the cursor to the start/end of the previous/next viewport of the list view.
-* `shift+page up/down` - Add all list items of the previous/next viewport to the selection.
+* `page up/down` - Move the cursor to the start/end of the previous/next page of the list view.
+* `shift+page up/down` - Add all list items of the previous/next page to the selection.
