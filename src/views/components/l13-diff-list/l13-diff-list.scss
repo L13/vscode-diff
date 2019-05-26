@@ -1,26 +1,61 @@
 :host {
 	display: block;
 	overflow: auto;
-	padding: 10px 0 0 0;
+	margin: 0 0 0 0;
 	user-select: none;
+	
+	// "list.activeSelectionBackground": "#313233",
+	// "list.activeSelectionForeground": "#cbcccd",
+	// "list.dropBackground": "#05507c",
+	// "list.errorForeground": "#f20013",
+	// "list.focusBackground": "#05507c",
+	// "list.focusForeground": "#ffffff",
+	// "list.highlightForeground": "#ffffff",
+	// "list.hoverBackground": "#05507c",
+	// "list.hoverForeground": "#ffffff",
+	// "list.inactiveFocusBackground": "#313233",
+	// "list.inactiveSelectionBackground": "#313233",
+	// "list.inactiveSelectionForeground": "#cbcccd",
+	// "list.invalidItemForeground": "#f20013",
+	// "list.warningForeground": "#e68300",
+}
+
+l13-diff-list-body {
+	display: block;
+	width: 100%;
+	
+	&.-focus {
+		
+		l13-diff-list-row {
+			
+			&.-selected {
+				background: var(--vscode-list-activeSelectionBackground);
+				color: var(--vscode-list-activeSelectionForeground);
+					
+				l13-diff-list-file::before {
+					background: var(--vscode-list-activeSelectionForeground);
+				}
+			}
+		}
+	}
 }
 
 l13-diff-list-row {
 	display: flex;
+	width: 100%;
 	
 	&:hover {
 		background: var(--vscode-list-hoverBackground);
 		color: var(--vscode-list-hoverForeground);
-		// outline: solid 2px var(--vscode-editor-lineHighlightBorder);
-		// outline-offset: -2px;
 	}
 	
 	&.-selected {
-		background: var(--vscode-list-activeSelectionBackground);
-		color: var(--vscode-list-activeSelectionForeground) !important;
+		background: var(--vscode-list-inactiveSelectionBackground);
+		color: var(--vscode-list-inactiveSelectionForeground);
 			
-		.l13-diff_list-file::before {
-			background: var(--vscode-list-activeSelectionForeground) !important;
+		l13-diff-list-file::before {
+			// Fixes icon which disappears if list loses focus ?!?
+			background: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
 		}
 		
 		// &:hover {
@@ -56,6 +91,7 @@ l13-diff-list-row {
 	
 l13-diff-list-file {
 	box-sizing: border-box;
+	overflow: hidden;
 	padding: 2px 10px 3px 38px;
 	position: relative;
 	width: 50%;

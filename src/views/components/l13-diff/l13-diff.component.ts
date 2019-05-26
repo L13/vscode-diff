@@ -65,7 +65,10 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		menu.vmId = 'menu';
 		
 		this.left.menu = menu;
+		this.left.list = this.list;
+		
 		this.right.menu = menu;
+		this.right.list = this.list;
 			
 		this.swap.left = this.left;
 		this.swap.right = this.right;
@@ -111,6 +114,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		vscode.postMessage({
 			command: 'init:paths',
 		});
+		
+		listService.model('list').on('compared', () => this.list.focus());
+		listService.model('list').on('copied', () => this.list.focus());
 		
 	}
 	

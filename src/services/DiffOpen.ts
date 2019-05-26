@@ -28,8 +28,11 @@ export class DiffOpen {
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
 			switch (message.command) {
+				case 'open:diffToSide':
+					this.open(message, true);
+					break;
 				case 'open:diff':
-					this.open(message);
+					this.open(message, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false));
 					break;
 			}
 			
@@ -46,7 +49,7 @@ export class DiffOpen {
 		
 	}
 	
-	private openFile (file:File) :void {
+	private openFile (file:File, openToSide:boolean) :void {
 		
 		fs.lstat(file.path, (error, stat) => {
 			
@@ -54,7 +57,6 @@ export class DiffOpen {
 			
 			if (stat.isFile()) {
 				const pathname = vscode.Uri.file(file.path);
-				const openToSide = !!vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 				vscode.commands.executeCommand('vscode.open', pathname, {
 					// preserveFocus: false,
 					preview: false,
@@ -66,7 +68,7 @@ export class DiffOpen {
 		
 	}
 	
-	private openDiff (diff:Diff) :void {
+	private openDiff (diff:Diff, openToSide:boolean) :void {
 		
 		const fileA:File = <File>diff.fileA;
 		
@@ -83,7 +85,6 @@ export class DiffOpen {
 					if (statB.isFile()) {
 						const left = vscode.Uri.file(fileA.path);
 						const right = vscode.Uri.file(fileB.path);
-						const openToSide = !!vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 						vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.relative} (${fileA.folder} ↔ ${fileB.folder})`, {
 							// preserveFocus: false,
 							preview: false,
@@ -98,20 +99,20 @@ export class DiffOpen {
 		
 	}
 	
-	private open (message:any) :void {
+	private open (message:any, openToSide:boolean) :void {
 		
 		const diff:Diff = message.diff;
 		
 		switch (diff.status) {
 			case 'deleted':
-				this.openFile(<File>diff.fileA);
+				this.openFile(<File>diff.fileA, openToSide);
 				break;
 			case 'modified':
 			case 'unchanged':
-				this.openDiff(diff);
+				this.openDiff(diff, openToSide);
 				break;
 			case 'untracked':
-				this.openFile(<File>diff.fileB);
+				this.openFile(<File>diff.fileB, openToSide);
 				break;
 		}
 		
