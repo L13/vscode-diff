@@ -8,11 +8,16 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 
 //	Initialize _________________________________________________________________
 
+ // Fixes async dom loading bug on windows in a virtual machine?!?
 window.addEventListener('load', () => {
 	
-	// vscode.postMessage({
-	// 	command: 'show:init',
-	// });
+	const body = document.body;
+	
+	isMacOs = !!body.classList.contains('platform-mac');
+	isWindows = !!body.classList.contains('platform-win');
+	isOtherPlatform = !!body.classList.contains('platform-other');
+	
+	body.appendChild(document.createElement('l13-diff'));
 	
 });
 
@@ -20,9 +25,33 @@ window.addEventListener('load', () => {
 
 export const vscode = acquireVsCodeApi();
 
-export const isMacOs = !!document.body.classList.contains('platform-mac');
-export const isWindows = !!document.body.classList.contains('platform-win');
-export const isOtherPlatform = !!document.body.classList.contains('platform-other');
+export let isMacOs = false;
+export let isWindows = false;
+export let isOtherPlatform = false;
+
+// Only for testing platform features
+
+export function changePlatform () {
+	
+	let platform;
+	
+	if (isMacOs) {
+		isMacOs = false;
+		isWindows = true;
+		platform = 'Windows';
+	} else if (isWindows) {
+		isWindows = false;
+		isOtherPlatform = true;
+		platform = 'Linux';
+	} else {
+		isOtherPlatform = false;
+		isMacOs = true;
+		platform = 'macOS';
+	}
+	
+	console.log(`Changed platform to '${platform}'`);
+	
+}
 
 export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
 	
@@ -56,6 +85,20 @@ export function removeChildren (node:Node) {
 	let child;
 	
 	while ((child = node.lastChild)) child.remove();
+	
+}
+
+export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) {
+		
+	const offsetTop = element.offsetTop;
+	const offsetHeight = parent.offsetHeight;
+	const scrollTop = parent.scrollTop;
+	
+	if (scrollTop > offsetTop) {
+		parent.scrollTop = offsetTop;
+	} else if (scrollTop + offsetHeight < offsetTop + element.offsetHeight) {
+		parent.scrollTop = (offsetTop + element.offsetHeight) - offsetHeight;
+	}
 	
 }
 

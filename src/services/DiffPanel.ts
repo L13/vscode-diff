@@ -153,11 +153,9 @@ export class DiffPanel {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>L13 Diff</title>
 				<link rel="stylesheet" nonce="${nonceToken}" href="${styleUri}">
-			</head>
-			<body class="platform-${platform} -l13">
 				<script nonce="${nonceToken}" src="${scriptUri}"></script>
-				<l13-diff></l13-diff>
-			</body>
+			</head>
+			<body class="platform-${platform}"></body>
 		</html>`;
 		
 	}

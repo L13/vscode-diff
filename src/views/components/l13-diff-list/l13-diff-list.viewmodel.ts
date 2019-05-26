@@ -81,6 +81,7 @@ export class L13DiffListViewModel extends ViewModel {
 					this.data.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
 					this.items = this.data.diffs;
 					this.filter();
+					this.dispatchEvent('compared');
 					break;
 				case 'copy:left':
 				case 'copy:right':
@@ -96,6 +97,7 @@ export class L13DiffListViewModel extends ViewModel {
 					});
 					updateCopiedParentFolders(this.items, diffs);
 					this.items = this.items.slice(); // Refreshs the view
+					this.dispatchEvent('copied');
 					break;
 			}
 			

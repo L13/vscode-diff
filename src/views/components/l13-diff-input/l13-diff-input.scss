@@ -16,7 +16,7 @@
 		z-index: 0;
 	
 		&::selection {
-			background: var(--vscode-selection-background);
+			background: var(--vscode-selection-background, var(--l13-selection-background));
 		}
 		
 		&:focus {

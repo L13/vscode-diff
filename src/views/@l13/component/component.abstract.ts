@@ -417,11 +417,11 @@ function createStyles (styles:string[]) :DocumentFragment {
 	
 }
 
-function createTemplate (template:string, useSlot:boolean = true) :HTMLTemplateElement {
+function createTemplate (template:string) :HTMLTemplateElement {
 		
 	const templateElement = <HTMLTemplateElement>document.createElement('TEMPLATE');
 	
-	templateElement.innerHTML = template + (useSlot ? '<slot></slot>' : '');
+	templateElement.innerHTML = template;
 	
 	return templateElement;
 	
