@@ -72,9 +72,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			switch (event.key) {
+			const { key, metaKey, ctrlKey, altKey, shiftKey } = event;
+			
+			switch (key) {
 				case 'F12': // Debug Mode
-					if (event.metaKey && event.ctrlKey && event.altKey && event.shiftKey) changePlatform();
+					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
 				case 'Escape':
 					this.unselect();
@@ -83,7 +85,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.getIdsBySelection().forEach((id) => {
 						
 						vscode.postMessage({
-							command: event.ctrlKey ? 'open:diffToSide' : 'open:diff',
+							command: ctrlKey ? 'open:diffToSide' : 'open:diff',
 							diff: this.viewmodel.getDiffById(id),
 						});
 						
@@ -106,6 +108,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'End':
 					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
 					break;
+				default:
+					if (metaKey || ctrlKey) {
+						switch (key) {
+							case 'a':
+								if (isMetaKey(ctrlKey, metaKey)) this.selectAll();
+								break;
+						}
+					}
 			}
 			
 		});
@@ -401,7 +411,23 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const elements = this.list.querySelectorAll(`l13-diff-list-row.-${type}`);
 		
-		if (elements) elements.forEach((element) => element.classList.add('-selected'));
+		if (elements.length) {
+			elements.forEach((element) => element.classList.add('-selected'));
+			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+		}
+		
+		this.detectCopy();
+		
+	}
+	
+	public selectAll () {
+		
+		const elements = this.list.querySelectorAll(`l13-diff-list-row`);
+		
+		if (elements.length) {
+			elements.forEach((element) => element.classList.add('-selected'));
+			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+		}
 		
 		this.detectCopy();
 		

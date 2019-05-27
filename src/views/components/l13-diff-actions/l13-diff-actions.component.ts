@@ -6,7 +6,7 @@ import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
 import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 
-import { parseIcons, setLabelText } from '../common';
+import { isMetaKey, parseIcons, setLabelText } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -55,9 +55,9 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		setLabelText(this.selectUntracked, 'Select all untracked files');
 		setLabelText(this.copyLeft, 'Copy selection to the right folder');
 		
-		this.selectDeleted.addEventListener('click', () => this.list.selectByStatus('deleted'));
-		this.selectModified.addEventListener('click', () => this.list.selectByStatus('modified'));
-		this.selectUntracked.addEventListener('click', () => this.list.selectByStatus('untracked'));
+		this.selectDeleted.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('deleted', isMetaKey(ctrlKey, metaKey)));
+		this.selectModified.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('modified', isMetaKey(ctrlKey, metaKey)));
+		this.selectUntracked.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('untracked', isMetaKey(ctrlKey, metaKey)));
 		
 		this.copyLeft.addEventListener('click', () => this.list.copy('left'));
 		this.copyRight.addEventListener('click', () => this.list.copy('right'));
