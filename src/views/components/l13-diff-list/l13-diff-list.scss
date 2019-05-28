@@ -75,6 +75,14 @@ l13-diff-list-row {
 		
 	// }
 	
+	// &.-ignored {
+		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
+	// }
+	
+	// &.-conflicting {
+		// color: var(--vscode-gitDecoration-conflictingResourceForeground);
+	// }
+	
 	&.-untracked {
 		color: var(--vscode-gitDecoration-untrackedResourceForeground);
 	}

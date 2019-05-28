@@ -4,7 +4,8 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.15.0] - 2019-06-29
 
 ### Added
-- Added search/filter for list view. Please see README.md
+- Added search/filter for list view.
+- Added select all in list view with keyboard shortcut or button.
 
 ### Fixed
 - Fixed menu visiblity if path was selected and input was clicked again, but menu did not appear.
@@ -13,7 +14,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.14.0] - 2019-05-26
 
 ### Added
-- Added keyboard support for selection in list view. Please see [README.md](./README.md)
+- Added keyboard support for selecting items in the list view.
 
 ### Fixed
 - Fixed a bug if an item was select in the menu with enter, but value was not set.

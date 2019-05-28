@@ -105,6 +105,21 @@
 			}
 		}
 		
+		&#l13_select_all {
+			
+			&::before {
+				-webkit-mask-image: url('select-all.svg');
+				mask-image: url('select-all.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-button-hoverBackground);
+				}
+			}
+		}
+		
 		&#l13_copy_right {
 			width: 42px;
 			
