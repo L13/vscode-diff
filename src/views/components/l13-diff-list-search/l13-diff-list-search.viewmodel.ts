@@ -7,7 +7,6 @@ import { ListFilter } from '../l13-diff-list/l13-diff-list.interface';
 //	Variables __________________________________________________________________
 
 const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
-const SEARCHTERM = Symbol.for('searchterm');
 
 type Cache = {
 	searchterm:string,
@@ -33,22 +32,15 @@ export class L13DiffListSearchViewModel extends ViewModel implements ListFilter 
 		filteredItems: [],
 	};
 	
-	public [SEARCHTERM]:string = '';
-	
 	public disabled:boolean = false;
 	
 	public useRegExp:boolean = false;
 	
-	public get searchterm () :string {
-		
-		return this[SEARCHTERM];
-		
-	}
+	public searchterm:string = '';
 	
-	public set searchterm (value:string) {
+	public clearSearchterm () {
 		
-		this[SEARCHTERM] = value;
-		this.requestUpdate();
+		this.searchterm = '';
 		
 	}
 	
@@ -84,7 +76,11 @@ export class L13DiffListSearchViewModel extends ViewModel implements ListFilter 
 		let regexp = cache.regexp;
 		
 		if (cache.searchterm !== searchterm || cache.useRegExp !== useRegExp) {
-			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm));
+			try {
+				cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm));
+			} catch (error) {
+				//
+			}
 		}
 		
 		cache.items = items;

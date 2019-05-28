@@ -12,6 +12,7 @@ import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
+import { L13DiffListSearchViewModelService } from '../l13-diff-list-search/l13-diff-list-search.service';
 import { L13DiffListViewModelService } from '../l13-diff-list/l13-diff-list.service';
 import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
 
@@ -23,11 +24,15 @@ import templates from '../templates';
 
 const listVM = new L13DiffListViewModelService().model('list');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
+const searchVM = new L13DiffListSearchViewModelService().model('search');
 
 //	Initialize _________________________________________________________________
 
 listVM.addFilter(viewsVM);
+listVM.addFilter(searchVM);
+
 viewsVM.on('update', () => listVM.filter());
+searchVM.on('update', () => listVM.filter());
 
 //	Exports ____________________________________________________________________
 

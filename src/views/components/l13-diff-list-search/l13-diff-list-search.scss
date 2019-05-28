@@ -2,3 +2,71 @@
 	display: block;
 	user-select: none;
 }
+
+input[type="text"] {
+	background: var(--vscode-input-background);
+	border: none;
+	box-sizing: border-box;
+	color: var(--vscode-input-foreground);
+	font-size: 0.8125rem;
+	outline: solid 1px var(--vscode-input-border, transparent);
+	outline-offset: -1px;
+	padding: 4px 7px 5px 7px;
+	z-index: 0;
+
+	&::selection {
+		background: var(--vscode-selection-background, var(--l13-selection-background));
+	}
+	
+	&:focus {
+		outline-color: var(--vscode-focusBorder, transparent);
+	}
+		
+	&.-error {
+		outline-color: var(--vscode-inputValidation-errorBorder, #cc0000);
+	}
+}
+
+input[type=checkbox] {
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--vscode-settings-checkboxBackground);
+	border: solid 1px var(--vscode-settings-checkboxBorder, transparent);
+	border-radius: 3px;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 3px -5px 0;
+	padding: 8px;
+	position: relative;
+	
+	&:focus {
+		outline: solid 1px var(--vscode-focusBorder, transparent);
+	}
+	
+	&:checked {
+		
+		&::after {
+			background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+			-webkit-mask-image: url('checked.svg');
+			mask-image: url('checked.svg');
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			content: '';
+			height: 100%;
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 100%;
+			
+			// @at-root .vscode-dark & {
+			// 	background-image: url('./icons/checked-dark.svg');
+			// }
+			
+			// @at-root .vscode-light & {
+			// 	background-image: url('./icons/checked-light.svg');
+			// }
+	}
+	}
+}
