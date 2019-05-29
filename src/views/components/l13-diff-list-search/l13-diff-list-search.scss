@@ -27,38 +27,148 @@ input[type="text"] {
 	}
 }
 
+// inputOption.activeBorder
+// opacity: 0.7;
+
 input[type=checkbox] {
+	box-sizing: border-box;
 	-webkit-appearance: none;
 	appearance: none;
-	background: var(--vscode-settings-checkboxBackground);
-	border: solid 1px var(--vscode-settings-checkboxBorder, transparent);
-	border-radius: 3px;
-	cursor: pointer;
 	display: inline-block;
-	margin: 0 3px -5px 0;
-	padding: 8px;
+	height: 20px;
+	margin: 0 0 0 0;
+	outline: solid 1px transparent;
+	outline-offset: -1px;
+	padding: 0 0 0 0;
 	position: relative;
+	width: 20px;
 	
+	&:focus {
+		outline-color: var(--vscode-focusBorder, transparent);
+	}
+		
+	&::after {
+		background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+		-webkit-mask-position: 50% 50%;
+		mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		content: '';
+		height: 100%;
+		left: 0;
+		opacity: 0.7;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+	
+	&#l13_case_sensitive::after {
+		-webkit-mask-image: url('case-sensitive.svg');
+		mask-image: url('case-sensitive.svg');
+	}
+	
+	&#l13_use_regexp::after {
+		-webkit-mask-image: url('regexp.svg');
+		mask-image: url('regexp.svg');
+	}
+	
+	&:checked {
+		outline-color: var(--vscode-inputOption-activeBorder);
+		
+		&::after {
+			opacity: 1;
+		}
+	}
+}
+
+button {
+	background: transparent;
+	border: 0;
+	height: 20px;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	position: relative;
+	width: 20px;
+		
+	&::before {
+		content: '';
+		height: 100%;
+		left: 0;
+		background: var(--vscode-foreground);
+		-webkit-mask-position: 50% 50%;
+		mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
 	}
 	
-	&:checked {
+	&:hover {
+		cursor: pointer;
 		
-		&::after {
-			background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
-			-webkit-mask-image: url('checked.svg');
-			mask-image: url('checked.svg');
-			-webkit-mask-position: 50% 50%;
-			mask-position: 50% 50%;
-			-webkit-mask-repeat: no-repeat;
-			mask-repeat: no-repeat;
-			content: '';
-			height: 100%;
-			left: 0;
-			position: absolute;
-			top: 0;
-			width: 100%;
+		// &::before {
+		// 	background: var(--vscode-button-hoverBackground);
+		// }
+	}
+	
+	&[disabled] {
+		opacity: 0.3;
+		cursor: default;
+		
+		&:hover {
+			
+			&::before {
+				background: var(--vscode-foreground) !important;
+			}
+		}
+	}
+	
+	&#l13_close {
+		
+		&::before {
+			-webkit-mask-image: url('close.svg');
+			mask-image: url('close.svg');
+		}
+	}
+}
+
+// input[type=checkbox] {
+// 	-webkit-appearance: none;
+// 	appearance: none;
+// 	background: var(--vscode-settings-checkboxBackground);
+// 	border: solid 1px var(--vscode-settings-checkboxBorder, transparent);
+// 	border-radius: 3px;
+// 	cursor: pointer;
+// 	display: inline-block;
+// 	margin: 0 3px -5px 0;
+// 	padding: 8px;
+// 	position: relative;
+	
+// 	&:focus {
+// 		outline: solid 1px var(--vscode-focusBorder, transparent);
+// 	}
+	
+// 	&:checked {
+		
+// 		&::after {
+// 			background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+// 			-webkit-mask-image: url('checked.svg');
+// 			mask-image: url('checked.svg');
+// 			-webkit-mask-position: 50% 50%;
+// 			mask-position: 50% 50%;
+// 			-webkit-mask-repeat: no-repeat;
+// 			mask-repeat: no-repeat;
+// 			content: '';
+// 			height: 100%;
+// 			left: 0;
+// 			position: absolute;
+// 			top: 0;
+// 			width: 100%;
 			
 			// @at-root .vscode-dark & {
 			// 	background-image: url('./icons/checked-dark.svg');
@@ -67,6 +177,6 @@ input[type=checkbox] {
 			// @at-root .vscode-light & {
 			// 	background-image: url('./icons/checked-light.svg');
 			// }
-	}
-	}
-}
+// 		}
+// 	}
+// }
