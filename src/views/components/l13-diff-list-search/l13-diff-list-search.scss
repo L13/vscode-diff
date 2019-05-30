@@ -1,6 +1,7 @@
 :host {
 	display: block;
 	user-select: none;
+	position: relative;
 }
 
 input[type="text"] {
@@ -8,10 +9,13 @@ input[type="text"] {
 	border: none;
 	box-sizing: border-box;
 	color: var(--vscode-input-foreground);
+	display: block;
 	font-size: 0.8125rem;
 	outline: solid 1px var(--vscode-input-border, transparent);
 	outline-offset: -1px;
+	margin: 0 25px 0 0;
 	padding: 4px 7px 5px 7px;
+	width: calc(100% - 25px);
 	z-index: 0;
 
 	&::selection {
@@ -40,7 +44,8 @@ input[type=checkbox] {
 	outline: solid 1px transparent;
 	outline-offset: -1px;
 	padding: 0 0 0 0;
-	position: relative;
+	position: absolute;
+	top: 3px;
 	width: 20px;
 	
 	&:focus {
@@ -62,14 +67,22 @@ input[type=checkbox] {
 		width: 100%;
 	}
 	
-	&#l13_case_sensitive::after {
-		-webkit-mask-image: url('case-sensitive.svg');
-		mask-image: url('case-sensitive.svg');
+	&#l13_case_sensitive {
+		right: 55px;
+		
+		&::after {
+			-webkit-mask-image: url('case-sensitive.svg');
+			mask-image: url('case-sensitive.svg');
+		}
 	}
 	
-	&#l13_use_regexp::after {
-		-webkit-mask-image: url('regexp.svg');
-		mask-image: url('regexp.svg');
+	&#l13_use_regexp {
+		right: 30px;
+		
+		&::after {
+			-webkit-mask-image: url('regexp.svg');
+			mask-image: url('regexp.svg');
+		}
 	}
 	
 	&:checked {
@@ -87,7 +100,9 @@ button {
 	height: 20px;
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
-	position: relative;
+	position: absolute;
+	right: 3px;
+	top: 3px;
 	width: 20px;
 		
 	&::before {

@@ -7,7 +7,7 @@ import { L13DiffListSearchViewModel } from './l13-diff-list-search.viewmodel';
 
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 
-import { parseIcons, setLabelText } from '../common';
+import { parseIcons, setLabelText, isMetaKey } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -29,27 +29,54 @@ import templates from '../templates';
 })
 export class L13DiffListSearchComponent extends L13Element<L13DiffListSearchViewModel> {
 	
+	@L13Query('#l13_searchterm')
+	private inputSearchterm:HTMLInputElement;
+	
+	@L13Query('#l13_case_sensitive')
+	private inputCaseSensitive:HTMLInputElement;
+	
+	@L13Query('#l13_use_regexp')
+	private inputRegExp:HTMLInputElement;
+	
 	@L13Query('button')
 	private button:HTMLButtonElement;
-	
-	public left:L13DiffInputComponent;
-	
-	public right:L13DiffInputComponent;
 	
 	public constructor () {
 		
 		super();
 		
-		setLabelText(this.button, 'Swap left and right input fields');
+		setLabelText(this.inputCaseSensitive, 'Match Case (⌥⌘C)');
+		setLabelText(this.inputRegExp, 'Use Regular Expression (⌥⌘R)');
+		setLabelText(this.button, 'Close (Escape)');
 		
-		this.button.addEventListener('click', () => {
+		this.inputSearchterm.addEventListener('keydown', ({ key, keyCode, metaKey, ctrlKey, altKey }) => {
 			
-			const value = this.left.viewmodel.value;
-			
-			this.left.viewmodel.value = this.right.viewmodel.value;
-			this.right.viewmodel.value = value;
+			switch (key) {
+				case 'Escape':
+					this.close();
+					break;
+				default:
+					if (isMetaKey(ctrlKey, metaKey) && altKey) {
+						switch (keyCode) {
+							case 67: // c
+								this.inputCaseSensitive.checked = !this.inputCaseSensitive.checked;
+								break;
+							case 82: // r
+								this.inputRegExp.checked = !this.inputRegExp.checked;
+								break;
+						}
+					}
+			}
 			
 		});
+		
+		this.button.addEventListener('click', () => this.close());
+		
+	}
+	
+	public close () {
+		
+		this.viewmodel.clearSearchterm();
 		
 	}
 	
