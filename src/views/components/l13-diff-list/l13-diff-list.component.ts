@@ -163,14 +163,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.list.addEventListener('dblclick', ({ target }) => {
+		this.list.addEventListener('dblclick', ({ target, altKey }) => {
 			
 			if (this.disabled) return;
 			
 			const id = (<HTMLElement>(<HTMLElement>target).parentNode).getAttribute('data-id');
 			
 			vscode.postMessage({
-				command: 'open:diff',
+				command: altKey ? 'open:diffToSide' : 'open:diff',
 				diff: this.viewmodel.getDiffById(id),
 			});
 			
