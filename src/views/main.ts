@@ -22,9 +22,9 @@ import './components/l13-diff-list/l13-diff-list.component';
 import './components/l13-diff-list/l13-diff-list.service';
 import './components/l13-diff-list/l13-diff-list.viewmodel';
 
-import './components/l13-diff-list-search/l13-diff-list-search.component';
-import './components/l13-diff-list-search/l13-diff-list-search.service';
-import './components/l13-diff-list-search/l13-diff-list-search.viewmodel';
+import './components/l13-diff-search/l13-diff-search.component';
+import './components/l13-diff-search/l13-diff-search.service';
+import './components/l13-diff-search/l13-diff-search.viewmodel';
 
 import './components/l13-diff-menu/l13-diff-menu.component';
 import './components/l13-diff-menu/l13-diff-menu.service';

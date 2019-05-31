@@ -59,10 +59,16 @@ l13-diff-actions {
 	width: 34%;
 }
 
-l13-diff-list-search {
-	// position: absolute;
-	// right: 0;
-	// top: 0;
+l13-diff-widgets {
+	display: block;
+	position: relative;
+	z-index: 1;
+}
+
+l13-diff-search {
+	position: absolute;
+	right: 28px;
+	top: 0;
 }
 
 l13-diff-list {
@@ -72,6 +78,10 @@ l13-diff-list {
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
 		outline-offset: -1px;
+	}
+	
+	&.-widgets {
+		margin-top: 34px;
 	}
 }
 

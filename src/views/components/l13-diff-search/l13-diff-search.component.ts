@@ -2,12 +2,10 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffListSearchViewModelService } from './l13-diff-list-search.service';
-import { L13DiffListSearchViewModel } from './l13-diff-list-search.viewmodel';
+import { L13DiffSearchViewModelService } from './l13-diff-search.service';
+import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
-import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
-
-import { parseIcons, setLabelText, isMetaKey } from '../common';
+import { isMetaKey, parseIcons, setLabelText } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -22,12 +20,12 @@ import templates from '../templates';
 //	Exports ____________________________________________________________________
 
 @L13Component({
-	name: 'l13-diff-list-search',
-	service: L13DiffListSearchViewModelService,
-	styles: [parseIcons(styles['l13-diff-list-search/l13-diff-list-search.css'])],
-	template: templates['l13-diff-list-search/l13-diff-list-search.html'],
+	name: 'l13-diff-search',
+	service: L13DiffSearchViewModelService,
+	styles: [parseIcons(styles['l13-diff-search/l13-diff-search.css'])],
+	template: templates['l13-diff-search/l13-diff-search.html'],
 })
-export class L13DiffListSearchComponent extends L13Element<L13DiffListSearchViewModel> {
+export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	@L13Query('#l13_searchterm')
 	private inputSearchterm:HTMLInputElement;

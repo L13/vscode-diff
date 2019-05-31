@@ -13,6 +13,7 @@ const SEARCHTERM = Symbol.for('searchterm');
 type Cache = {
 	searchterm:string,
 	useRegExp:boolean,
+	useCaseSensitive:boolean,
 	regexp:RegExp,
 	items:Diff[],
 	filteredItems:Diff[],
@@ -24,11 +25,12 @@ type Cache = {
 
 //	Exports ____________________________________________________________________
 
-export class L13DiffListSearchViewModel extends ViewModel implements ListFilter {
+export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
 	
 	private cache:Cache = {
 		searchterm: '',
 		useRegExp: false,
+		useCaseSensitive: false,
 		regexp: null,
 		items: [],
 		filteredItems: [],
@@ -37,6 +39,8 @@ export class L13DiffListSearchViewModel extends ViewModel implements ListFilter 
 	public disabled:boolean = false;
 	
 	public useRegExp:boolean = false;
+	
+	public useCaseSensitive:boolean = false;
 	
 	private [SEARCHTERM]:string = '';
 	
@@ -80,27 +84,28 @@ export class L13DiffListSearchViewModel extends ViewModel implements ListFilter 
 		const cache = this.cache;
 		const searchterm = this.searchterm;
 		const useRegExp = this.useRegExp;
+		const useCaseSensitive = this.useCaseSensitive;
 		
 		if (items === cache.items
 			&& cache.searchterm === searchterm
 			&& cache.useRegExp === useRegExp
+			&& cache.useCaseSensitive === useCaseSensitive
 			) {
 			return cache.filteredItems;
 		}
 		
 		let regexp = cache.regexp;
 		
-		if (cache.searchterm !== searchterm || cache.useRegExp !== useRegExp) {
-			try {
-				cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm));
-			} catch (error) {
-				//
-			}
+		try {
+			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
+		} catch (error) {
+			//
 		}
 		
 		cache.items = items;
 		cache.searchterm = searchterm;
 		cache.useRegExp = useRegExp;
+		cache.useCaseSensitive = useCaseSensitive;
 		
 		return cache.filteredItems = items.filter((diff:Diff) => regexp.test(diff.id));
 		
