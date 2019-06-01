@@ -101,6 +101,8 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 	private resizeMove = (event:MouseEvent) => {
 		
+		if (!event.which) return this.resizeUp();
+		
 		const width = this.right + this.resizerOffsetX - event.clientX;
 		
 		this.style.width = width + 'px';
@@ -111,6 +113,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		document.removeEventListener('mousemove', this.resizeMove);
 		document.removeEventListener('mouseup', this.resizeUp);
+		
 		document.body.classList.remove('-unselectable');
 		
 	}
