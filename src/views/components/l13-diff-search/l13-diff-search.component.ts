@@ -54,6 +54,10 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		setLabelText(this.inputRegExp, 'Use Regular Expression (⌥⌘R)');
 		setLabelText(this.button, 'Close (Escape)');
 		
+		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
+		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
+		
+		this.inputSearchterm.placeholder = 'Find';
 		this.inputSearchterm.addEventListener('keydown', ({ key, keyCode, metaKey, ctrlKey, altKey }) => {
 			
 			switch (key) {
@@ -87,6 +91,8 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		this.right = this.getBoundingClientRect().right;
 		this.resizerOffsetX = event.offsetX;
+		
+		event.preventDefault();
 		
 		document.addEventListener('mousemove', this.resizeMove);
 		document.addEventListener('mouseup', this.resizeUp);
