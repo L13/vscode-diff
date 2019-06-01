@@ -56,7 +56,7 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		setLabelText(this.selectDeleted, 'Select all deleted files');
 		setLabelText(this.selectModified, 'Select all modfied files');
 		setLabelText(this.selectUntracked, 'Select all untracked files');
-		setLabelText(this.selectAll, 'Select all files');
+		setLabelText(this.selectAll, 'Select all files', { key: 'Ctrl+A', mac: 'Cmd+A' });
 		setLabelText(this.copyLeft, 'Copy selection to the right folder');
 		
 		this.selectDeleted.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('deleted', isMetaKey(ctrlKey, metaKey)));

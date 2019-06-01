@@ -50,9 +50,9 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		super();
 		
-		setLabelText(this.inputCaseSensitive, 'Match Case (⌥⌘C)');
-		setLabelText(this.inputRegExp, 'Use Regular Expression (⌥⌘R)');
-		setLabelText(this.button, 'Close (Escape)');
+		setLabelText(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+C' });
+		setLabelText(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
+		setLabelText(this.button, 'Close', { key: 'Escape' });
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
@@ -68,10 +68,12 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 					if (isMetaKey(ctrlKey, metaKey) && altKey) {
 						switch (keyCode) {
 							case 67: // c
-								this.inputCaseSensitive.checked = !this.inputCaseSensitive.checked;
+								this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
+								this.viewmodel.requestUpdate();
 								break;
 							case 82: // r
-								this.inputRegExp.checked = !this.inputRegExp.checked;
+								this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
+								this.viewmodel.requestUpdate();
 								break;
 						}
 					}

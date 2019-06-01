@@ -5,6 +5,20 @@ import icons from './icons';
 //	Variables __________________________________________________________________
 
 const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
+const findKey = /([a-zA-Z]+)\+/g;
+
+const keys = {
+	ArrowUp: '⇧',
+	// ArrowDown: '⇧',
+	Ctrl: '⌃',
+	Cmd: '⌘',
+	Alt: '⌥',
+};
+
+type Shortcut = {
+	key:string,
+	mac?:string,
+};
 
 //	Initialize _________________________________________________________________
 
@@ -74,7 +88,9 @@ export function parseIcons (text:string) {
 	
 }
 
-export function setLabelText (element:HTMLElement, labelText:string) {
+export function setLabelText (element:HTMLElement, labelText:string, shortcut:Shortcut = null) {
+	
+	if (shortcut) labelText += ` (${replaceKeyboardShortcuts(shortcut)})`;
 	
 	element.setAttribute('aria-label', labelText);
 	element.setAttribute('title', labelText);
@@ -105,3 +121,8 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 
 //	Functions __________________________________________________________________
 
+function replaceKeyboardShortcuts ({ key, mac }:Shortcut) :string {
+	
+	return !isMacOs ? key : (mac || key).replace(findKey, (match, value) => (<any>keys)[value] || match);
+	
+}
