@@ -10,13 +10,14 @@ import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.co
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffListViewModelService } from '../l13-diff-list/l13-diff-list.service';
 import { L13DiffSearchViewModelService } from '../l13-diff-search/l13-diff-search.service';
 import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
 
-import { vscode } from '../common';
+import { isMetaKey, vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -62,12 +63,18 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
 	
+	@L13Query('l13-diff-widgets')
+	private widgets:HTMLElement;
+	
 	public constructor () {
 		
 		super();
 		
 		const menu = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
 		menu.vmId = 'menu';
+		
+		const search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
+		search.vmId = 'search';
 		
 		this.left.menu = menu;
 		this.left.list = this.list;
@@ -93,6 +100,18 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			}
 			
 		});
+		
+		window.addEventListener('keydown', ({ key, ctrlKey, metaKey }) => {
+			
+			if (key === 'f' && isMetaKey(ctrlKey, metaKey)) {
+				this.widgets.appendChild(search);
+				this.list.classList.add('-widgets');
+				search.focus();
+			}
+			
+		});
+		
+		search.addEventListener('close', () => this.list.classList.remove('-widgets'));
 		
 		let init = (event:MessageEvent) => {
 				

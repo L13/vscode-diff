@@ -109,9 +109,17 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 	}
 	
+	public focus () {
+		
+		this.inputSearchterm.focus();
+		
+	}
+	
 	public close () {
 		
 		this.viewmodel.clearSearchterm();
+		this.remove();
+		this.dispatchEvent(new CustomEvent('close'));
 		
 	}
 	
