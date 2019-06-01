@@ -101,17 +101,32 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		search.addEventListener('animationend', () => {
+			
+			if (search.classList.contains('-moveout')) {
+				search.classList.remove('-moveout');
+				search.remove();
+			} else search.classList.remove('-movein');
+			
+		});
+		
 		window.addEventListener('keydown', ({ key, ctrlKey, metaKey }) => {
 			
 			if (key === 'f' && isMetaKey(ctrlKey, metaKey)) {
 				this.widgets.appendChild(search);
 				this.list.classList.add('-widgets');
+				search.classList.add('-movein');
 				search.focus();
 			}
 			
 		});
 		
-		search.addEventListener('close', () => this.list.classList.remove('-widgets'));
+		search.addEventListener('close', () => {
+			
+			this.list.classList.remove('-widgets');
+			search.classList.add('-moveout');
+			
+		});
 		
 		let init = (event:MessageEvent) => {
 				

@@ -6,14 +6,16 @@
 }
 
 l13-diff-panel {
+	background: var(--vscode-sideBar-background);
 	position: relative;
 	z-index: 1;
 }
 
 l13-diff-folders {
+	background: var(--vscode-sideBar-background);
 	display: flex;
 	position: relative;
-	z-index: 2;
+	z-index: 3;
 }
 	
 l13-diff-input {
@@ -21,7 +23,7 @@ l13-diff-input {
 	margin: 10px 10px 10px 16px;
 	position: relative;
 	width: 50%;
-	z-index: 0;
+	z-index: 2;
 	
 	&:first-child {
 		margin: 10px 15px 10px 10px;
@@ -33,21 +35,22 @@ l13-diff-menu {
 	position: absolute;
 	overflow: auto;
 	width: 100%;
-	z-index: 3;
+	z-index: 4;
 }
 
 l13-diff-swap {
 	position: absolute;
 	left: calc(50% - 10px);
 	top: 10px;
-	z-index: 1;
+	z-index: 2;
 }
 
 l13-diff-tools {
+	background: var(--vscode-sideBar-background);
 	display: flex;
-	margin: 0 0 7px 0;
+	padding: 0 0 7px 0;
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 }
 	
 l13-diff-views,
@@ -69,11 +72,38 @@ l13-diff-search {
 	position: absolute;
 	right: 28px;
 	top: 0;
+	
+	&.-movein {
+		animation: movein 0.1s linear;
+	}
+	
+	&.-moveout {
+		animation: moveout 0.1s linear;
+	}
+}
+			
+@keyframes movein {
+	0% {
+		top: -42px;
+	}
+	100% {
+		top: 0;
+	}
+}
+			
+@keyframes moveout {
+	0% {
+		top: 0;
+	}
+	100% {
+		top: -42px;
+	}
 }
 
 l13-diff-list {
 	position: relative;
 	z-index: 0;
+	transition: margin-top 0.1s linear;
 	
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
