@@ -11,6 +11,13 @@ body {
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	
+	&.-unselectable * {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	
 	&.vscode-dark {
 		// Fixes the missing selection color if default dark theme is selected
 		--l13-selection-background: #6689af;

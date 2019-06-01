@@ -27,6 +27,9 @@ import templates from '../templates';
 })
 export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
+	@L13Query('#l13_resizer')
+	private resizer:HTMLElement;
+	
 	@L13Query('#l13_searchterm')
 	private inputSearchterm:HTMLInputElement;
 	
@@ -38,6 +41,10 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	@L13Query('button')
 	private button:HTMLButtonElement;
+		
+	private right:number = 0;
+	
+	private resizerOffsetX:number = 0;
 	
 	public constructor () {
 		
@@ -69,6 +76,36 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		});
 		
 		this.button.addEventListener('click', () => this.close());
+		
+		this.resizer.addEventListener('mousedown', this.resizeDown);
+		
+	}
+		
+	private resizeDown = (event:MouseEvent) => {
+		
+		document.body.classList.add('-unselectable');
+		
+		this.right = this.getBoundingClientRect().right;
+		this.resizerOffsetX = event.offsetX;
+		
+		document.addEventListener('mousemove', this.resizeMove);
+		document.addEventListener('mouseup', this.resizeUp);
+		
+	}
+		
+	private resizeMove = (event:MouseEvent) => {
+		
+		const width = this.right + this.resizerOffsetX - event.clientX;
+		
+		this.style.width = width + 'px';
+		
+	}
+		
+	private resizeUp = () => {
+		
+		document.removeEventListener('mousemove', this.resizeMove);
+		document.removeEventListener('mouseup', this.resizeUp);
+		document.body.classList.remove('-unselectable');
 		
 	}
 	
