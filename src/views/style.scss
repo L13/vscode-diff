@@ -21,10 +21,14 @@ body {
 	&.vscode-dark {
 		// Fixes the missing selection color if default dark theme is selected
 		--l13-selection-background: #6689af;
+		--l13-searchWidget-borderColor: #454545;
+		--l13-searchButton-backgroundColor-hover: hsla(0, 0%, 100%, 0.1);
 	}
 	
 	&.vscode-light {
 		// Fixes the missing selection color if default light theme is selected
 		--l13-selection-background: #b4d7fd;
+		--l13-searchWidget-borderColor: #c8c8c8;
+		--l13-searchButton-backgroundColor-hover: rgba(0, 0 ,0 , 0.1);
 	}
 }
