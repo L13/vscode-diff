@@ -3,7 +3,7 @@ export default {
 	"l13-diff-actions/l13-diff-actions.html": "<button id=\"l13_copy_right\" [disabled]=\"copyDisabled\"></button>\n<button id=\"l13_select_deleted\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_modified\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_untracked\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_all\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_copy_left\" [disabled]=\"copyDisabled\"></button>",
 	"l13-diff-compare/l13-diff-compare.html": "<button [disabled]=\"disabled\">Compare</button>",
 	"l13-diff-input/l13-diff-input.html": "<input type=\"text\" [(model)]=\"value\" [disabled]=\"disabled\">\n<button (click)=\"openDialog()\" [disabled]=\"disabled\"></button>\n<slot></slot>",
-	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts>\n\t<dl>\n\t\t<dt>Filter Diff Result</dt>\n\t\t<dd>\n\t\t\t<div class=\"-keybinding\" title=\"Command+F\"><span class=\"-key\">⌘</span><span class=\"-key\">F</span></div>\n\t\t</dd>\n\t</dl>\n</l13-diff-shortcuts>",
+	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts></l13-diff-shortcuts>",
 	"l13-diff-list/l13-diff-list.html": "<slot></slot><l13-diff-list-body></l13-diff-list-body>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",

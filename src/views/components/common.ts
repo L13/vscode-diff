@@ -7,14 +7,6 @@ import icons from './icons';
 const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 const findKey = /([a-zA-Z]+)\+/g;
 
-const keys = {
-	ArrowUp: '⇧',
-	// ArrowDown: '⇧',
-	Ctrl: '⌃',
-	Cmd: '⌘',
-	Alt: '⌥',
-};
-
 type Shortcut = {
 	key:string,
 	mac?:string,
@@ -38,6 +30,13 @@ window.addEventListener('load', () => {
 //	Exports ____________________________________________________________________
 
 export const vscode = acquireVsCodeApi();
+
+export const keysymbols = {
+	Shift: '⇧',
+	Ctrl: '⌃',
+	Cmd: '⌘',
+	Alt: '⌥',
+};
 
 export let isMacOs = false;
 export let isWindows = false;
@@ -123,6 +122,6 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 
 function replaceKeyboardShortcuts ({ key, mac }:Shortcut) :string {
 	
-	return !isMacOs ? key : (mac || key).replace(findKey, (match, value) => (<any>keys)[value] || match);
+	return !isMacOs ? key : (mac || key).replace(findKey, (match, value) => (<any>keysymbols)[value] || match);
 	
 }
