@@ -7,6 +7,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added search widget to filter diff result.
 - Added select all in list view with keyboard shortcut `ctrl/meta+a` or button.
 - Added `alt+dblclick` to open diff or file to side.
+- Added welcome screen for keyboard shortcuts.
 
 ### Fixed
 - Fixed menu visiblity if path was selected and input was clicked again, but menu did not appear.

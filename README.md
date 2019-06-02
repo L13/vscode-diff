@@ -4,9 +4,12 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.14.0
+## What's new in L13 Diff 0.15.0
 
-* Added keyboard support for selecting items in the list view.
+- Added search widget to filter diff result.
+- Added select all in list view with keyboard shortcut `ctrl/meta+a` or button.
+- Added `alt+dblclick` to open diff or file to side.
+- Added welcome screen for keyboard shortcuts.
 
 ## Features
 
@@ -19,6 +22,7 @@ Compare two folders in Visual Studio Code.
 * Toggle the view by status.
 * Double click an item in the list to open the diff or the file.
 * Mouse and keyboard support for selecting items in list.
+* Search for pathnames to filter diff result.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
