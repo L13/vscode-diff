@@ -3,9 +3,9 @@
 	color: var(--vscode-foreground);
 	display: block;
 	position: relative;
+	transition: box-shadow 0.3s;
 	width: 100%;
 	z-index: 1;
-	transition: box-shadow 0.3s;
 	
 	&.-shadow {
 		box-shadow: 0 5px 8px var(--vscode-widget-shadow);

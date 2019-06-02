@@ -1,14 +1,14 @@
 :host {
 	background: var(--vscode-editorWidget-background);
+	box-shadow: 0 2px 8px var(--vscode-widget-shadow);
 	box-sizing: border-box;
 	display: block;
-	user-select: none;
+	height: 34px;
+	max-width: calc(100% - 38px);
+	min-width: 232px;
 	padding: 4px 4px 5px 8px;
 	position: relative;
-	min-width: 232px;
-	max-width: calc(100% - 38px);
-	height: 34px;
-	box-shadow: 0 2px 8px var(--vscode-widget-shadow);
+	user-select: none;
 }
 
 #l13_resizer {
@@ -51,9 +51,9 @@ input[type="text"] {
 }
 
 input[type=checkbox] {
-	box-sizing: border-box;
 	-webkit-appearance: none;
 	appearance: none;
+	box-sizing: border-box;
 	display: inline-block;
 	height: 20px;
 	margin: 0 0 0 0;
@@ -70,13 +70,13 @@ input[type=checkbox] {
 		
 	&::after {
 		background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+		content: '';
+		height: 100%;
+		left: 0;
 		-webkit-mask-position: 50% 50%;
 		mask-position: 50% 50%;
 		-webkit-mask-repeat: no-repeat;
 		mask-repeat: no-repeat;
-		content: '';
-		height: 100%;
-		left: 0;
 		opacity: 0.7;
 		position: absolute;
 		top: 0;
@@ -122,10 +122,10 @@ button {
 	width: 20px;
 		
 	&::before {
+		background: var(--vscode-foreground);
 		content: '';
 		height: 100%;
 		left: 0;
-		background: var(--vscode-foreground);
 		-webkit-mask-position: 50% 50%;
 		mask-position: 50% 50%;
 		-webkit-mask-repeat: no-repeat;

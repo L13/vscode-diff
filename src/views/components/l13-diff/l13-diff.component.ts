@@ -8,6 +8,7 @@ import { L13DiffViewModel } from './l13-diff.viewmodel';
 import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
 import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
@@ -63,6 +64,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
 	
+	@L13Query('l13-diff-intro')
+	private intro:L13DiffIntroComponent;
+	
 	@L13Query('l13-diff-widgets')
 	private widgets:HTMLElement;
 	
@@ -113,9 +117,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		window.addEventListener('keydown', ({ key, ctrlKey, metaKey }) => {
 			
 			if (key === 'f' && isMetaKey(ctrlKey, metaKey)) {
-				this.widgets.appendChild(search);
-				this.list.classList.add('-widgets');
-				search.classList.add('-movein');
+				if (!search.parentNode) {
+					this.widgets.appendChild(search);
+					this.list.classList.add('-widgets');
+					search.classList.add('-movein');
+				}
 				search.focus();
 			}
 			
@@ -156,6 +162,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		listVM.on('compared', () => this.list.focus());
 		listVM.on('copied', () => this.list.focus());
+		listVM.on('filtered', () => this.intro.style.display = listVM.filteredItems.length ? 'none' : 'block');
+		
 		
 	}
 	

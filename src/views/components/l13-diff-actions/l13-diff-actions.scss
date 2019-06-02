@@ -14,10 +14,10 @@
 		width: 21px;
 			
 		&::before {
+			background: var(--vscode-foreground);
 			content: '';
 			height: 100%;
 			left: 0;
-			background: var(--vscode-foreground);
 			-webkit-mask-position: 50% 50%;
 			mask-position: 50% 50%;
 			-webkit-mask-repeat: no-repeat;
@@ -40,8 +40,8 @@
 		}
 		
 		&[disabled] {
-			opacity: 0.3;
 			cursor: default;
+			opacity: 0.3;
 			
 			&:hover {
 				

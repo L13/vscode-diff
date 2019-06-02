@@ -18,6 +18,10 @@ import './components/l13-diff-input/l13-diff-input.component';
 import './components/l13-diff-input/l13-diff-input.service';
 import './components/l13-diff-input/l13-diff-input.viewmodel';
 
+import './components/l13-diff-intro/l13-diff-intro.component';
+import './components/l13-diff-intro/l13-diff-intro.service';
+import './components/l13-diff-intro/l13-diff-intro.viewmodel';
+
 import './components/l13-diff-list/l13-diff-list.component';
 import './components/l13-diff-list/l13-diff-list.service';
 import './components/l13-diff-list/l13-diff-list.viewmodel';
