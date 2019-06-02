@@ -6,9 +6,9 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in L13 Diff 0.15.0
 
-- Added search widget to filter diff result.
-- Added select all in list view with keyboard shortcut `ctrl/meta+a` or button.
-- Added `alt+dblclick` to open diff or file to side.
+- Added search widget (`Ctrl/Cmd + F`) to filter diff result.
+- Added select all in list view with keyboard shortcut `Ctrl/Cmd + A` or button.
+- Added `Alt + Double Click` to open diff or file to side.
 - Added welcome screen for keyboard shortcuts.
 
 ## Features
@@ -52,46 +52,46 @@ Toggle the view, select files by status or copy files from left to right or vice
 
 macOS
 
-* `meta+l meta+l` - L13 Diff
+* `Cmd + L Cmd + L` - Open the diff panel.
 
 Windows / Linux
 
-* `ctrl+l ctrl+l` - L13 Diff
+* `Ctrl + L Ctrl + L` - Open the diff panel.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
 ## Input/Menu Mouse/Keyboard Shortcuts
 
-* `click` - Select a path in the menu.
-* `up/down` - Move the cursor to the previous/next list item in menu.
-* `enter` - If the menu is visible, the selected path will be filled in, otherwise a compare starts.
+* `Click` - Select a path in the menu.
+* `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in menu.
+* `Enter` - If the menu is visible, the selected path will be filled in, otherwise a compare starts.
 
 ## List Mouse/Keyboard Shortcuts
 
 All platforms
 
-* `click` - Select a file or folder in the list view.
-* `double click` - Open a diff or file.
-* `shift+click` - Add files and folders from the last selected item to the current selected item in the list view.
-* `enter` - Open diff or file.
-* `ctrl+enter` - Open diff or file to side.
+* `Click` - Select a file or folder in the list view.
+* `Double Click` - Open a diff or file.
+* `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
+* `Enter` - Open diff or file.
+* `Ctrl + Enter` - Open diff or file to side.
 
 macOS
 
-* `meta+click` - Add or remove a file or folder to or from the current selection.
-* `up/down` - Move the cursor to the previous/next list item.
-* `alt+up/down` - Move the cursor to the start/end of list view.
-* `shift+up/down` - Add the previous/next list item to the selection.
-* `shift+alt+up/down` - Add all list items until start/end of the list view to the selection.
-* `home/end` - Scroll to the start/end of the list view.
-* `page up/down` - Scroll to the previous/next page of the list view.
+* `Cmd + Click` - Add or remove a file or folder to or from the current selection.
+* `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item.
+* `Alt + ArrowUp/ArrowDown` - Move the cursor to the start/end of list view.
+* `Shift + ArrowUp/ArrowDown` - Add the previous/next list item to the selection.
+* `Shift + Alt + ArrowUp/ArrowDown` - Add all list items until start/end of the list view to the selection.
+* `Home/End` - Scroll to the start/end of the list view.
+* `PageUp/PageDown` - Scroll to the previous/next page of the list view.
 
 Windows / Linux
 
-* `ctrl+click` - Add or remove a file or folder to or from the current selection.
-* `up/down` - Move the cursor to the previous/next list item.
-* `shift+up/down` - Add the previous/next list item to the selection.
-* `home/end` - Move the cursor to the start/end of list view.
-* `shift+home/end` - Add all list items until start/end of the list view to the selection.
-* `page up/down` - Move the cursor to the start/end of the previous/next page of the list view.
-* `shift+page up/down` - Add all list items of the previous/next page to the selection.
+* `Ctrl + Click` - Add or remove a file or folder to or from the current selection.
+* `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item.
+* `Shift + ArrowUp/ArrowDown` - Add the previous/next list item to the selection.
+* `Home/End` - Move the cursor to the start/end of list view.
+* `Shift + Home/End` - Add all list items until start/end of the list view to the selection.
+* `PageUp/PageDown` - Move the cursor to the start/end of the previous/next page of the list view.
+* `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
