@@ -14,14 +14,14 @@ l13-diff-shortcuts {
 }
 
 dl {
-	color: hsla(0,0%,100%,.6);
+	color: var(--l13-intro-color);
 	cursor: default;
 	display: table-row;
 	opacity: 0.8;
 }
 
 dt {
-	color: hsla(0,0%,100%,.6);
+	color: var(--l13-intro-color);
 	display: table-cell;
 	letter-spacing: .04em;
 	padding: 0 5px 0 0;
@@ -41,12 +41,12 @@ div.-keybinding {
 }
 
 span.-key {
-	background-color: hsla(0,0%,50%,.17);
-    border: 1px solid rgba(51,51,51,.6);
-    border-bottom-color: rgba(68,68,68,.6);
+	background-color: var(--l13-intro-keyBackgroundColor);
+    border: 1px solid var(--l13-intro-keyBorderColor);
+    border-bottom-color: var(--l13-intro-shadow);
 	border-radius: 3px;
-	box-shadow: inset 0 -1px 0 rgba(68,68,68,.6);
-    color: #ccc;
+	box-shadow: inset 0 -1px 0 var(--l13-intro-shadow);
+    color: var(--l13-intro-color);
 	display: inline-block;
 	font-size: 11px;
 	line-height: 10px;
