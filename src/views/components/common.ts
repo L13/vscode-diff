@@ -1,71 +1,27 @@
 //	Imports ____________________________________________________________________
 
+import { detectPlatform, isMacOs } from '../@l13/core';
+
 import icons from './icons';
 
 //	Variables __________________________________________________________________
 
 const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
-const findKey = /([a-zA-Z]+)\+/g;
-
-type Shortcut = {
-	key:string,
-	mac?:string,
-};
 
 //	Initialize _________________________________________________________________
 
  // Fixes async dom loading bug on windows in a virtual machine?!?
 window.addEventListener('load', () => {
 	
-	const body = document.body;
+	detectPlatform();
 	
-	isMacOs = !!body.classList.contains('platform-mac');
-	isWindows = !!body.classList.contains('platform-win');
-	isOtherPlatform = !!body.classList.contains('platform-other');
-	
-	body.appendChild(document.createElement('l13-diff'));
+	document.body.appendChild(document.createElement('l13-diff'));
 	
 });
 
 //	Exports ____________________________________________________________________
 
 export const vscode = acquireVsCodeApi();
-
-export const keysymbols = {
-	Shift: '⇧',
-	Ctrl: '⌃',
-	Cmd: '⌘',
-	Alt: '⌥',
-};
-
-export let isMacOs = false;
-export let isWindows = false;
-export let isOtherPlatform = false;
-
-// Only for testing platform features
-
-export function changePlatform () {
-	
-	let platform;
-	
-	if (isMacOs) {
-		isMacOs = false;
-		isWindows = true;
-		platform = 'Windows';
-	} else if (isWindows) {
-		isWindows = false;
-		isOtherPlatform = true;
-		platform = 'Linux';
-	} else {
-		isOtherPlatform = false;
-		isMacOs = true;
-		platform = 'macOS';
-	}
-	
-// tslint:disable-next-line: no-console
-	console.log(`Changed platform to '${platform}'`);
-	
-}
 
 export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
 	
@@ -84,15 +40,6 @@ export function parseIcons (text:string) {
 		return match;
 	
 	});
-	
-}
-
-export function setLabelText (element:HTMLElement, labelText:string, shortcut:Shortcut = null) {
-	
-	if (shortcut) labelText += ` (${replaceKeyboardShortcuts(shortcut)})`;
-	
-	element.setAttribute('aria-label', labelText);
-	element.setAttribute('title', labelText);
 	
 }
 
@@ -119,9 +66,3 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 }
 
 //	Functions __________________________________________________________________
-
-function replaceKeyboardShortcuts ({ key, mac }:Shortcut) :string {
-	
-	return !isMacOs ? key : (mac || key).replace(findKey, (match, value) => (<any>keysymbols)[value] || match);
-	
-}

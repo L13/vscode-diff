@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
@@ -114,16 +114,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		window.addEventListener('keydown', ({ key, ctrlKey, metaKey }) => {
+		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
 			
-			if (key === 'f' && isMetaKey(ctrlKey, metaKey)) {
-				if (!search.parentNode) {
-					this.widgets.appendChild(search);
-					this.list.classList.add('-widgets');
-					search.classList.add('-movein');
-				}
-				search.focus();
+			if (!search.parentNode) {
+				this.widgets.appendChild(search);
+				this.list.classList.add('-widgets');
+				search.classList.add('-movein');
 			}
+			search.focus();
 			
 		});
 		

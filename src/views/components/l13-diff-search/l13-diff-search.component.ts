@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
-import { isMetaKey, parseIcons, setLabelText } from '../common';
+import { isMetaKey, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -50,34 +50,28 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		super();
 		
-		setLabelText(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+C' });
-		setLabelText(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
-		setLabelText(this.button, 'Close', { key: 'Escape' });
+		setLabel(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+C' });
+		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
+		setLabel(this.button, 'Close', { key: 'Escape' });
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		
 		this.inputSearchterm.placeholder = 'Find';
-		this.inputSearchterm.addEventListener('keydown', ({ key, keyCode, metaKey, ctrlKey, altKey }) => {
+		
+		addKeyListener(this.inputSearchterm, { key: 'Escape' }, () => this.close());
+		
+		addKeyListener(this.inputSearchterm, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, () => {
 			
-			switch (key) {
-				case 'Escape':
-					this.close();
-					break;
-				default:
-					if (isMetaKey(ctrlKey, metaKey) && altKey) {
-						switch (keyCode) {
-							case 67: // c
-								this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
-								this.viewmodel.requestUpdate();
-								break;
-							case 82: // r
-								this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
-								this.viewmodel.requestUpdate();
-								break;
-						}
-					}
-			}
+			this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
+			this.viewmodel.requestUpdate();
+			
+		});
+		
+		addKeyListener(this.inputSearchterm, { key: 'Alt+R', mac: 'Cmd+Alt+R' }, () => {
+			
+			this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
+			this.viewmodel.requestUpdate();
 			
 		});
 		

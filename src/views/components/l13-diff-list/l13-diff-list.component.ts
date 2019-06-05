@@ -1,14 +1,14 @@
 //	Imports ____________________________________________________________________
 
 import { Diff, File } from '../../../types';
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 
-import { changePlatform, isMacOs, isMetaKey, isOtherPlatform, isWindows, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
+import { isMetaKey, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -56,17 +56,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.addEventListener('focus', () => {
-			
-			this.list.classList.add('-focus');
-			
-		});
+		this.addEventListener('focus', () => this.list.classList.add('-focus'));
+		this.addEventListener('blur', () => this.list.classList.remove('-focus'));
 		
-		this.addEventListener('blur', () => {
-			
-			this.list.classList.remove('-focus');
-			
-		});
+		addKeyListener(this, { key: 'Ctrl+A', mac: 'Cmd+A' }, () => this.selectAll());
 		
 		this.addEventListener('keydown', (event) => {
 			
@@ -108,14 +101,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'End':
 					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
 					break;
-				default:
-					if (metaKey || ctrlKey) {
-						switch (key) {
-							case 'a':
-								if (isMetaKey(ctrlKey, metaKey)) this.selectAll();
-								break;
-						}
-					}
 			}
 			
 		});

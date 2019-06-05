@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { changePlatform, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
@@ -8,7 +8,7 @@ import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
-import { changePlatform, parseIcons, setLabelText } from '../common';
+import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -44,7 +44,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		super();
 		
-		setLabelText(this.button, 'Open dialog to pick a file or folder');
+		setLabel(this.button, 'Open dialog to pick a file or folder');
 		
 		this.input.addEventListener('focus', async () => {
 			

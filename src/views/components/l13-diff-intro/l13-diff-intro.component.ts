@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { detectKeybinding, getKeyLabel, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
 import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
-import { isMacOs, keysymbols, parseIcons } from '../common';
+import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -15,6 +15,7 @@ type Shortcut = {
 	description:string,
 	key:string,
 	mac?:string,
+	win?:string,
 };
 
 const keyboardShortcuts:Shortcut[] = [
@@ -64,9 +65,9 @@ function createShortcutViews (shortcuts:Shortcut[]) {
 	
 }
 
-function createShortcutView ({ description, key, mac }:Shortcut) {
+function createShortcutView ({ description, key, mac, win }:Shortcut) {
 	
-	key = mac || key;
+	key = detectKeybinding({ key, mac, win });
 	
 	const dl = document.createElement('DL');
 	const dt = document.createElement('DT');
@@ -93,7 +94,7 @@ function createShortcutKeys (key:string) :DocumentFragment {
 		
 		const span = document.createElement('SPAN');
 		
-		span.textContent = !isMacOs ? value : (<any>keysymbols)[value] || value;
+		span.textContent = getKeyLabel(value);
 		span.className = '-key';
 		
 		fragment.appendChild(span);

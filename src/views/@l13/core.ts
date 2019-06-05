@@ -19,5 +19,9 @@ export * from './component/view-model.abstract';
 export * from './events/event-dispatcher.class';
 export * from './events/event.class';
 
+export * from './keybindings/keybindings';
+
+export * from './os/platforms';
+
 //	Functions __________________________________________________________________
 
