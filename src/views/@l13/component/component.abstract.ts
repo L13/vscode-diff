@@ -7,6 +7,7 @@ import { ViewModel } from './view-model.abstract';
 //	Variables __________________________________________________________________
 
 const BINDINGS = Symbol.for('bindings');
+const CLASSNAMES = Symbol.for('classnames');
 const CONDITIONALS = Symbol.for('conditionals');
 const QUERIES = Symbol.for('queries');
 const SERVICE = Symbol.for('service');
@@ -62,11 +63,26 @@ export function L13Query (rule:string) {
 	
 }
 
+export function L13Class (classNames:object) {
+	
+	// tslint:disable-next-line: only-arrow-functions tslint:disable-next-line: ban-types
+	return function (prototype:any, name:string) {
+		
+		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map();
+		
+		prototype[CLASSNAMES].set(name, classNames);
+		
+	};
+	
+}
+
 export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
 	private [BINDINGS]:Map<Element, Map<string, string>> = new Map();
 			
 	private [CONDITIONALS]:Map<Element, { cmd:string, comment:Comment }> = new Map();
+	
+	private [CLASSNAMES]:Map<string, object>;
 	
 	private [QUERIES]:Map<string, string>;
 	
@@ -163,15 +179,16 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 			}
 		}
 		
-	}
-	
-}
-
-export function l13Class (element:HTMLElement, classNames:() => object) {
-	
-	for (const [className, use] of Object.entries(classNames())) {
-		if (use) element.classList.add(className);
-		else element.classList.remove(className);
+		if (this[CLASSNAMES]) {
+			for (const [name, classNames] of this[CLASSNAMES]) {
+				const element = (<any>this)[name];
+				for (const [className, path] of Object.entries(classNames)) {
+					if (get(viewmodel, path)) element.classList.add(className);
+					else element.classList.remove(className);
+				}
+			}
+		}
+		
 	}
 	
 }

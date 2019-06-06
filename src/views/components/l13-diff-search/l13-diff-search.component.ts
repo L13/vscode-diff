@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { addKeyListener, l13Class, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { addKeyListener, L13Class, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
@@ -31,6 +31,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	private resizer:HTMLElement;
 	
 	@L13Query('#l13_searchterm')
+	@L13Class({ '-error': 'error' })
 	private inputSearchterm:HTMLInputElement;
 	
 	@L13Query('#l13_case_sensitive')
@@ -126,14 +127,6 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		this.viewmodel.clearSearchterm();
 		this.dispatchEvent(new CustomEvent('close'));
-		
-	}
-	
-	public update () {
-		
-		super.update();
-		
-		l13Class(this.inputSearchterm, () => ({ '-error': this.viewmodel.error }));
 		
 	}
 	
