@@ -21,13 +21,13 @@ l13-diff-folders {
 	
 l13-diff-input {
 	box-sizing: border-box;
-	margin: 10px 10px 10px 16px;
+	margin: 10px 10px 0 16px;
 	position: relative;
 	width: 50%;
 	z-index: 2;
 	
 	&:first-child {
-		margin: 10px 15px 10px 10px;
+		margin: 10px 15px 0 10px;
 	}
 }
 	
@@ -49,7 +49,7 @@ l13-diff-swap {
 l13-diff-tools {
 	background: var(--vscode-sideBar-background);
 	display: flex;
-	padding: 0 0 7px 0;
+	padding: 10px 0 7px 0;
 	position: relative;
 	z-index: 2;
 }
