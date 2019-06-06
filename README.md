@@ -71,14 +71,17 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 All platforms
 
 * `Click` - Select a file or folder in the list view.
-* `Double Click` - Open a diff or file.
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
+* `Double Click` - Open a diff or file.
+* `Alt + Double Click` - Open diff or file to side.
 * `Enter` - Open diff or file.
 * `Ctrl + Enter` - Open diff or file to side.
+* `Escape` - Unselect all items in the list view.
 
 macOS
 
 * `Cmd + Click` - Add or remove a file or folder to or from the current selection.
+* `Cmd + A` - Select all items in the list view.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item.
 * `Alt + ArrowUp/ArrowDown` - Move the cursor to the start/end of list view.
 * `Shift + ArrowUp/ArrowDown` - Add the previous/next list item to the selection.
@@ -89,9 +92,28 @@ macOS
 Windows / Linux
 
 * `Ctrl + Click` - Add or remove a file or folder to or from the current selection.
+* `Ctrl + A` - Select all items in the list view.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item.
 * `Shift + ArrowUp/ArrowDown` - Add the previous/next list item to the selection.
 * `Home/End` - Move the cursor to the start/end of list view.
 * `Shift + Home/End` - Add all list items until start/end of the list view to the selection.
 * `PageUp/PageDown` - Move the cursor to the start/end of the previous/next page of the list view.
 * `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
+
+## Search Widget Keyboard Shortcuts
+
+All platforms
+
+* `Escape` - Hide search widget.
+
+macOS
+
+* `Cmd + F` - Show search widget.
+* `Cmd + Alt + C` - Toggle match case.
+* `Cmd + Alt + R` - Toggle use regular expression.
+
+Windows / Linux
+
+* `Ctrl + F` - Show search widget.
+* `Alt + C` - Toggle match case.
+* `Alt + R` - Toggle use regular expression.
