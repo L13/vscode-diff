@@ -9,6 +9,7 @@
 	padding: 4px 4px 5px 8px;
 	position: relative;
 	user-select: none;
+	width: 232px;
 }
 
 #l13_resizer {
@@ -22,6 +23,24 @@
 	width: 3px;
 }
 
+div.l13-input {
+	margin: 0 22px 0 0;
+	position: relative;
+}
+
+div.l13-message {
+	background: var(--vscode-inputValidation-errorBackground);
+	box-sizing: border-box;
+	border: solid 1px var(--vscode-inputValidation-errorBorder);
+	color: var(--vscode-inputValidation-errorForeground);
+    font-size: 12px;
+    line-height: 17px;
+    margin: -1px 0 0 0;
+    padding: .4em .4em .4em .4em;
+    width: 100%;
+    // word-wrap: break-word;
+}
+
 input[type="text"] {
 	background: var(--vscode-input-background);
 	border: none;
@@ -32,9 +51,9 @@ input[type="text"] {
 	height: 25px;
 	outline: solid 1px var(--vscode-input-border, transparent);
 	outline-offset: -1px;
-	margin: 0 22px 0 0;
+	margin: 0 0 0 0;
 	padding: 4px 46px 5px 7px;
-	width: calc(100% - 25px);
+	width: 100%;
 	z-index: 0;
 
 	&::selection {
@@ -44,9 +63,9 @@ input[type="text"] {
 	&:focus {
 		outline-color: var(--vscode-focusBorder, transparent);
 	}
-		
-	&.-error {
-		outline-color: var(--vscode-inputValidation-errorBorder, #cc0000);
+	
+	&.-error{
+		outline-color: var(--vscode-inputValidation-errorBorder);
 	}
 }
 
@@ -61,7 +80,7 @@ input[type=checkbox] {
 	outline-offset: -1px;
 	padding: 0 0 0 0;
 	position: absolute;
-	top: 7px;
+	top: 3px;
 	width: 20px;
 	
 	&:focus {
@@ -84,7 +103,7 @@ input[type=checkbox] {
 	}
 	
 	&#l13_case_sensitive {
-		right: 53px;
+		right: 27px;
 		
 		&::after {
 			-webkit-mask-image: url('case-sensitive.svg');
@@ -93,7 +112,7 @@ input[type=checkbox] {
 	}
 	
 	&#l13_use_regexp {
-		right: 31px;
+		right: 5px;
 		
 		&::after {
 			-webkit-mask-image: url('regexp.svg');

@@ -1,5 +1,8 @@
 <div id="l13_resizer"></div>
-<input id="l13_searchterm" type="text" [(model)]="searchterm" [disabled]="disabled">
-<input id="l13_case_sensitive" type="checkbox" [(model)]="useCaseSensitive" [disabled]="disabled">
-<input id="l13_use_regexp" type="checkbox" [(model)]="useRegExp" [disabled]="disabled">
+<div class="l13-input">
+	<input id="l13_searchterm" type="text" [(model)]="searchterm" [disabled]="disabled">
+	<input id="l13_case_sensitive" type="checkbox" [(model)]="useCaseSensitive" [disabled]="disabled">
+	<input id="l13_use_regexp" type="checkbox" [(model)]="useRegExp" [disabled]="disabled">
+	<div class="l13-message" [if]="error">{{ error }}</div>
+</div>
 <button id="l13_close" [disabled]="disabled"></button>

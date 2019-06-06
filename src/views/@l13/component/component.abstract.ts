@@ -167,6 +167,15 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
 }
 
+export function l13Class (element:HTMLElement, classNames:() => object) {
+	
+	for (const [className, use] of Object.entries(classNames())) {
+		if (use) element.classList.add(className);
+		else element.classList.remove(className);
+	}
+	
+}
+
 //	Functions __________________________________________________________________
 
 function hasParentClass (child:any, parent:any) :boolean {

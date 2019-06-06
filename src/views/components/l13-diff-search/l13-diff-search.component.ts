@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { addKeyListener, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { addKeyListener, l13Class, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
-import { isMetaKey, parseIcons } from '../common';
+import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -84,6 +84,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	private resizeDown = (event:MouseEvent) => {
 		
 		document.body.classList.add('-unselectable');
+		document.body.style.cursor = 'col-resize';
 		
 		this.right = this.getBoundingClientRect().right;
 		this.resizerOffsetX = event.offsetX;
@@ -111,6 +112,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.removeEventListener('mouseup', this.resizeUp);
 		
 		document.body.classList.remove('-unselectable');
+		document.body.style.cursor = '';
 		
 	}
 	
@@ -123,8 +125,15 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	public close () {
 		
 		this.viewmodel.clearSearchterm();
-		// this.remove();
 		this.dispatchEvent(new CustomEvent('close'));
+		
+	}
+	
+	public update () {
+		
+		super.update();
+		
+		l13Class(this.inputSearchterm, () => ({ '-error': this.viewmodel.error }));
 		
 	}
 	

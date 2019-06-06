@@ -9,6 +9,7 @@ import { ListFilter } from '../l13-diff-list/l13-diff-list.interface';
 const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 const SEARCHTERM = Symbol.for('searchterm');
+const ERROR = Symbol.for('error');
 
 type Cache = {
 	searchterm:string,
@@ -50,9 +51,28 @@ export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
 		
 	}
 	
-	public set searchterm (val) {
+	public set searchterm (value) {
 		
-		this[SEARCHTERM] = val;
+		this[SEARCHTERM] = value;
+		if (!value) {
+			this.error = null;
+			this.cache.searchterm = '';
+		}
+		this.requestUpdate();
+		
+	}
+	
+	private [ERROR]:null|string = '';
+	
+	public get error () {
+		
+		return this[ERROR];
+		
+	}
+	
+	public set error (value) {
+		
+		this[ERROR] = value;
 		this.requestUpdate();
 		
 	}
@@ -98,8 +118,9 @@ export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
 		
 		try {
 			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
+			this.error = null;
 		} catch (error) {
-			//
+			this.error = error.message;
 		}
 		
 		cache.items = items;
