@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 
@@ -12,16 +12,25 @@
 
 //	Exports ____________________________________________________________________
 
-export * from './component/component.abstract';
-export * from './component/view-model-service.abstract';
-export * from './component/view-model.abstract';
-
-export * from './events/event-dispatcher.class';
-export * from './events/event.class';
-
-export * from './keybindings/keybindings';
-
-export * from './os/platforms';
+export class L13DiffIntroViewModel extends ViewModel {
+	
+	public disabled:boolean = false;
+	
+	public disable () :void {
+		
+		this.disabled = true;
+		this.requestUpdate();
+		
+	}
+	
+	public enable () :void {
+		
+		this.disabled = false;
+		this.requestUpdate();
+		
+	}
+	
+}
 
 //	Functions __________________________________________________________________
 

@@ -1,0 +1,56 @@
+:host {
+	background: var(--l13-intro-backgroundUrl) no-repeat;
+	background-size: 260px 260px;
+	background-position: 50% 0;
+	padding: 270px 0 0 0;
+	display: block;
+	min-width: 260px;
+	text-align: center;
+	user-select: none;
+}
+
+l13-diff-shortcuts {
+	display: inline-table;
+}
+
+dl {
+	color: var(--l13-intro-color);
+	cursor: default;
+	display: table-row;
+	opacity: 0.8;
+}
+
+dt {
+	color: var(--l13-intro-color);
+	display: table-cell;
+	letter-spacing: .04em;
+	padding: 0 5px 0 0;
+	text-align: right;
+}
+
+dd {
+	display: table-cell;
+	padding: 0 0 0 5px;
+	text-align: left;
+}
+
+div.-keybinding {
+	align-items: center;
+	display: flex;
+	line-height: 10px;
+}
+
+span.-key {
+	background-color: var(--l13-intro-keyBackgroundColor);
+    border: 1px solid var(--l13-intro-keyBorderColor);
+    border-bottom-color: var(--l13-intro-shadow);
+	border-radius: 3px;
+	box-shadow: inset 0 -1px 0 var(--l13-intro-shadow);
+    color: var(--l13-intro-color);
+	display: inline-block;
+	font-size: 11px;
+	line-height: 10px;
+	margin: 0 2px;
+    padding: 3px 5px;
+	vertical-align: middle;
+}

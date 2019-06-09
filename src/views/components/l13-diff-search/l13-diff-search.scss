@@ -1,0 +1,185 @@
+:host {
+	background: var(--vscode-editorWidget-background);
+	box-shadow: 0 2px 8px var(--vscode-widget-shadow);
+	box-sizing: border-box;
+	display: block;
+	height: 34px;
+	max-width: calc(100% - 38px);
+	min-width: 232px;
+	padding: 4px 4px 5px 8px;
+	position: relative;
+	user-select: none;
+	width: 232px;
+}
+
+#l13_resizer {
+	background: var(--vscode-editorWidget-resizeBorder, var(--l13-searchWidget-borderColor));
+	cursor: col-resize;
+	display: block;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 3px;
+}
+
+div.l13-input {
+	margin: 0 22px 0 0;
+	position: relative;
+}
+
+div.l13-message {
+	background: var(--vscode-inputValidation-errorBackground);
+	box-sizing: border-box;
+	border: solid 1px var(--vscode-inputValidation-errorBorder);
+	color: var(--vscode-inputValidation-errorForeground);
+    font-size: 12px;
+    line-height: 17px;
+    margin: -1px 0 0 0;
+    padding: .4em .4em .4em .4em;
+    width: 100%;
+    // word-wrap: break-word;
+}
+
+input[type="text"] {
+	background: var(--vscode-input-background);
+	border: none;
+	box-sizing: border-box;
+	color: var(--vscode-input-foreground);
+	display: block;
+	font-size: 0.8125rem;
+	height: 25px;
+	outline: solid 1px var(--vscode-input-border, transparent);
+	outline-offset: -1px;
+	margin: 0 0 0 0;
+	padding: 4px 46px 5px 7px;
+	width: 100%;
+	z-index: 0;
+
+	&::selection {
+		background: var(--vscode-selection-background, var(--l13-selection-background));
+	}
+	
+	&:focus {
+		outline-color: var(--vscode-focusBorder, transparent);
+	}
+	
+	&.-error{
+		outline-color: var(--vscode-inputValidation-errorBorder);
+	}
+}
+
+input[type=checkbox] {
+	-webkit-appearance: none;
+	appearance: none;
+	box-sizing: border-box;
+	display: inline-block;
+	height: 20px;
+	margin: 0 0 0 0;
+	outline: solid 1px transparent;
+	outline-offset: -1px;
+	padding: 0 0 0 0;
+	position: absolute;
+	top: 3px;
+	width: 20px;
+	
+	&:focus {
+		outline-color: var(--vscode-focusBorder, transparent);
+	}
+		
+	&::after {
+		background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+		content: '';
+		height: 100%;
+		left: 0;
+		-webkit-mask-position: 50% 50%;
+		mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		opacity: 0.7;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+	
+	&#l13_case_sensitive {
+		right: 27px;
+		
+		&::after {
+			-webkit-mask-image: url('case-sensitive.svg');
+			mask-image: url('case-sensitive.svg');
+		}
+	}
+	
+	&#l13_use_regexp {
+		right: 5px;
+		
+		&::after {
+			-webkit-mask-image: url('regexp.svg');
+			mask-image: url('regexp.svg');
+		}
+	}
+	
+	&:checked {
+		outline-color: var(--vscode-inputOption-activeBorder);
+		
+		&::after {
+			opacity: 1;
+		}
+	}
+}
+
+button {
+	background: transparent;
+	border: 0;
+	height: 20px;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	position: absolute;
+	right: 4px;
+	top: 7px;
+	width: 20px;
+		
+	&::before {
+		background: var(--vscode-foreground);
+		content: '';
+		height: 100%;
+		left: 0;
+		-webkit-mask-position: 50% 50%;
+		mask-position: 50% 50%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	&:focus {
+		outline: solid 1px var(--vscode-focusBorder, transparent);
+	}
+	
+	&:hover {
+		background: var(--l13-searchButton-backgroundColor-hover);
+		cursor: pointer;
+	}
+	
+	&[disabled] {
+		opacity: 0.3;
+		cursor: default;
+		
+		&:hover {
+			
+			&::before {
+				background: var(--vscode-foreground) !important;
+			}
+		}
+	}
+	
+	&#l13_close {
+		
+		&::before {
+			-webkit-mask-image: url('close.svg');
+			mask-image: url('close.svg');
+		}
+	}
+}

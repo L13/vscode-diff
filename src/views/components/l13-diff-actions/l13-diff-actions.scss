@@ -14,10 +14,10 @@
 		width: 21px;
 			
 		&::before {
+			background: var(--vscode-foreground);
 			content: '';
 			height: 100%;
 			left: 0;
-			background: var(--vscode-foreground);
 			-webkit-mask-position: 50% 50%;
 			mask-position: 50% 50%;
 			-webkit-mask-repeat: no-repeat;
@@ -26,7 +26,7 @@
 			top: 0;
 			width: 100%;
 		}
-
+		
 		&:focus {
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
@@ -40,8 +40,8 @@
 		}
 		
 		&[disabled] {
-			opacity: 0.3;
 			cursor: default;
+			opacity: 0.3;
 			
 			&:hover {
 				
@@ -101,6 +101,21 @@
 				
 				&::before {
 					background: var(--vscode-gitDecoration-untrackedResourceForeground);
+				}
+			}
+		}
+		
+		&#l13_select_all {
+			
+			&::before {
+				-webkit-mask-image: url('select-all.svg');
+				mask-image: url('select-all.svg');
+			}
+			
+			&:hover {
+				
+				&::before {
+					background: var(--vscode-button-hoverBackground);
 				}
 			}
 		}

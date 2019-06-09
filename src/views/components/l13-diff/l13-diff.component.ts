@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
@@ -8,26 +8,33 @@ import { L13DiffViewModel } from './l13-diff.viewmodel';
 import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
 import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffListViewModelService } from '../l13-diff-list/l13-diff-list.service';
+import { L13DiffSearchViewModelService } from '../l13-diff-search/l13-diff-search.service';
 import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
 
-import { vscode } from '../common';
+import { isMetaKey, vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
-const listService = new L13DiffListViewModelService();
-const viewsService = new L13DiffViewsViewModelService();
+const listVM = new L13DiffListViewModelService().model('list');
+const viewsVM = new L13DiffViewsViewModelService().model('views');
+const searchVM = new L13DiffSearchViewModelService().model('search');
 
 //	Initialize _________________________________________________________________
 
-listService.model('list').addFilter(viewsService.model('views'));
-viewsService.model('views').on('update', () => listService.model('list').filter());
+listVM.addFilter(viewsVM);
+listVM.addFilter(searchVM);
+
+viewsVM.on('update', () => listVM.filter());
+searchVM.on('update', () => listVM.filter());
 
 //	Exports ____________________________________________________________________
 
@@ -57,12 +64,21 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
 	
+	@L13Query('l13-diff-intro')
+	private intro:L13DiffIntroComponent;
+	
+	@L13Query('l13-diff-widgets')
+	private widgets:HTMLElement;
+	
 	public constructor () {
 		
 		super();
 		
 		const menu = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
 		menu.vmId = 'menu';
+		
+		const search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
+		search.vmId = 'search';
 		
 		this.left.menu = menu;
 		this.left.list = this.list;
@@ -86,6 +102,33 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
 				}
 			}
+			
+		});
+		
+		search.addEventListener('animationend', () => {
+			
+			if (search.classList.contains('-moveout')) {
+				search.classList.remove('-moveout');
+				search.remove();
+			} else search.classList.remove('-movein');
+			
+		});
+		
+		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
+			
+			if (!search.parentNode) {
+				this.widgets.appendChild(search);
+				this.list.classList.add('-widgets');
+				search.classList.add('-movein');
+			}
+			search.focus();
+			
+		});
+		
+		search.addEventListener('close', () => {
+			
+			this.list.classList.remove('-widgets');
+			search.classList.add('-moveout');
 			
 		});
 		
@@ -115,8 +158,10 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			command: 'init:paths',
 		});
 		
-		listService.model('list').on('compared', () => this.list.focus());
-		listService.model('list').on('copied', () => this.list.focus());
+		listVM.on('compared', () => this.list.focus());
+		listVM.on('copied', () => this.list.focus());
+		listVM.on('filtered', () => this.intro.style.display = listVM.filteredItems.length ? 'none' : 'block');
+		
 		
 	}
 	
