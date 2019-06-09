@@ -1,7 +1,7 @@
 :host {
 	display: block;
-	overflow: auto;
 	margin: 0 0 0 0;
+	overflow: auto;
 	user-select: none;
 	
 	// "list.activeSelectionBackground": "#313233",
@@ -73,6 +73,14 @@ l13-diff-list-row {
 	
 	// &.-unchanged {
 		
+	// }
+	
+	// &.-ignored {
+		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
+	// }
+	
+	// &.-conflicting {
+		// color: var(--vscode-gitDecoration-conflictingResourceForeground);
 	// }
 	
 	&.-untracked {

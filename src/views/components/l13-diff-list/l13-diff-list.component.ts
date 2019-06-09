@@ -1,14 +1,14 @@
 //	Imports ____________________________________________________________________
 
 import { Diff, File } from '../../../types';
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 
-import { changePlatform, isMacOs, isMetaKey, isOtherPlatform, isWindows, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
+import { isMetaKey, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -56,25 +56,20 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.addEventListener('focus', () => {
-			
-			this.list.classList.add('-focus');
-			
-		});
+		this.addEventListener('focus', () => this.list.classList.add('-focus'));
+		this.addEventListener('blur', () => this.list.classList.remove('-focus'));
 		
-		this.addEventListener('blur', () => {
-			
-			this.list.classList.remove('-focus');
-			
-		});
+		addKeyListener(this, { key: 'Ctrl+A', mac: 'Cmd+A' }, () => this.selectAll());
 		
 		this.addEventListener('keydown', (event) => {
 			
 			if (this.disabled) return;
 			
-			switch (event.key) {
+			const { key, metaKey, ctrlKey, altKey, shiftKey } = event;
+			
+			switch (key) {
 				case 'F12': // Debug Mode
-					if (event.metaKey && event.ctrlKey && event.altKey && event.shiftKey) changePlatform();
+					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
 				case 'Escape':
 					this.unselect();
@@ -83,7 +78,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.getIdsBySelection().forEach((id) => {
 						
 						vscode.postMessage({
-							command: event.ctrlKey ? 'open:diffToSide' : 'open:diff',
+							command: ctrlKey ? 'open:diffToSide' : 'open:diff',
 							diff: this.viewmodel.getDiffById(id),
 						});
 						
@@ -153,14 +148,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.list.addEventListener('dblclick', ({ target }) => {
+		this.list.addEventListener('dblclick', ({ target, altKey }) => {
 			
 			if (this.disabled) return;
 			
 			const id = (<HTMLElement>(<HTMLElement>target).parentNode).getAttribute('data-id');
 			
 			vscode.postMessage({
-				command: 'open:diff',
+				command: altKey ? 'open:diffToSide' : 'open:diff',
 				diff: this.viewmodel.getDiffById(id),
 			});
 			
@@ -401,7 +396,23 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const elements = this.list.querySelectorAll(`l13-diff-list-row.-${type}`);
 		
-		if (elements) elements.forEach((element) => element.classList.add('-selected'));
+		if (elements.length) {
+			elements.forEach((element) => element.classList.add('-selected'));
+			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+		}
+		
+		this.detectCopy();
+		
+	}
+	
+	public selectAll () {
+		
+		const elements = this.list.querySelectorAll(`l13-diff-list-row`);
+		
+		if (elements.length) {
+			elements.forEach((element) => element.classList.add('-selected'));
+			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+		}
 		
 		this.detectCopy();
 		

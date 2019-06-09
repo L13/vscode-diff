@@ -1,6 +1,9 @@
 //	Imports ____________________________________________________________________
 
+import { ViewModelConstructor } from '../../@l13/component/types';
+import { ViewModelService } from '../../@l13/component/view-model-service.abstract';
 
+import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -12,16 +15,11 @@
 
 //	Exports ____________________________________________________________________
 
-export * from './component/component.abstract';
-export * from './component/view-model-service.abstract';
-export * from './component/view-model.abstract';
-
-export * from './events/event-dispatcher.class';
-export * from './events/event.class';
-
-export * from './keybindings/keybindings';
-
-export * from './os/platforms';
+export class L13DiffIntroViewModelService extends ViewModelService<L13DiffIntroViewModel> {
+	
+	public vmc:ViewModelConstructor<L13DiffIntroViewModel> = L13DiffIntroViewModel;
+	
+}
 
 //	Functions __________________________________________________________________
 

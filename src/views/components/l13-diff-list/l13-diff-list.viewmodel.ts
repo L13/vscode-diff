@@ -140,6 +140,8 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		this.requestUpdate();
 		
+		this.dispatchEvent('filtered');
+		
 	}
 	
 	public compare () :void {

@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffViewsViewModelService } from './l13-diff-views.service';
 import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
-import { parseIcons, setLabelText } from '../common';
+import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -43,10 +43,10 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 		
 		super();
 		
-		setLabelText(this.unchanged, 'Show all unchanged files');
-		setLabelText(this.deleted, 'Show all deleted files');
-		setLabelText(this.modified, 'Show all modfied files');
-		setLabelText(this.untracked, 'Show all untracked files');
+		setLabel(this.unchanged, 'Show all unchanged files');
+		setLabel(this.deleted, 'Show all deleted files');
+		setLabel(this.modified, 'Show all modfied files');
+		setLabel(this.untracked, 'Show all untracked files');
 		
 	}
 	

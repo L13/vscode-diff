@@ -1,6 +1,9 @@
 //	Imports ____________________________________________________________________
 
+import { ViewModelConstructor } from '../../@l13/component/types';
+import { ViewModelService } from '../../@l13/component/view-model-service.abstract';
 
+import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -12,16 +15,11 @@
 
 //	Exports ____________________________________________________________________
 
-export * from './component/component.abstract';
-export * from './component/view-model-service.abstract';
-export * from './component/view-model.abstract';
-
-export * from './events/event-dispatcher.class';
-export * from './events/event.class';
-
-export * from './keybindings/keybindings';
-
-export * from './os/platforms';
+export class L13DiffSearchViewModelService extends ViewModelService<L13DiffSearchViewModel> {
+	
+	public vmc:ViewModelConstructor<L13DiffSearchViewModel> = L13DiffSearchViewModel;
+	
+}
 
 //	Functions __________________________________________________________________
 

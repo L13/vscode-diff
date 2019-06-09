@@ -11,13 +11,36 @@ body {
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	
+	&.-unselectable * {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	
 	&.vscode-dark {
 		// Fixes the missing selection color if default dark theme is selected
 		--l13-selection-background: #6689af;
+		--l13-searchWidget-borderColor: #454545;
+		--l13-searchButton-backgroundColor-hover: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-intro-backgroundUrl: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzMCAxMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxLjQxNDIxOyI+CiAgICA8ZyBpZD0iTDEzIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjI0MDc0MSwwLDAsMC4yNDA3NDEsLTcuNzAzNyw3LjI1OTI3KSI+CiAgICAgICAgPGcgb3BhY2l0eT0iMC4zMDAwMDgiPgogICAgICAgICAgICA8cGF0aCBpZD0iXzMiIHNlcmlmOmlkPSIzIiBkPSJNMzYyLDQ0OEwzNjIsMzg4TDQ1MiwzODhMNDU1LjA5LDM4Ny45MTlDNDg2LjgyMywzODYuMjgxIDUxMiwzNjAuMDggNTEyLDMyOEM1MTIsMjk0Ljg4MyA0ODUuMTY5LDI2OC4wMzIgNDUyLDI2OEw0NTIsMjY4TDM5MiwyNjhMMzkyLDIwOEw0NTIsMjA4TDQ1NS4wOSwyMDcuOTE5QzQ4Ni44MjMsMjA2LjI4MSA1MTIsMTgwLjA4IDUxMiwxNDhDNTEyLDExNC44ODMgNDg1LjE2OSw4OC4wMzIgNDUyLDg4TDM2Miw4OEwzNjIsMjhMNDUyLDI4TDQ1OC4xNzUsMjguMTU2QzUyMS41ODYsMzEuMzc3IDU3Miw4My44MDEgNTcyLDE0OEM1NzIsMTgzLjg1MSA1NTYuMjc4LDIxNi4wMzEgNTMxLjMzLDIzOEM1NTYuMjc4LDI1OS45NjkgNTcyLDI5Mi4xNDkgNTcyLDMyOEM1NzIsMzk0LjI3NCA1MTguMjc0LDQ0OCA0NTIsNDQ4TDM2Miw0NDhaIi8+CiAgICAgICAgICAgIDxyZWN0IGlkPSJfMSIgc2VyaWY6aWQ9IjEiIHg9IjI3MiIgeT0iMjgiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MjAiLz4KICAgICAgICAgICAgPHBhdGggaWQ9IkwiIGQ9Ik0zMiwyOEw5MiwyOEw5MiwzODhMMjQyLDM4OEwyNDIsNDQ4TDkyLDQ0OEM1OC44NjMsNDQ4IDMyLDQyMS4xMzcgMzIsMzg4TDMyLDI4WiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
+		--l13-intro-color: hsla(0,0%,100%,.6);
+		--l13-intro-keyBackgroundColor: hsla(0, 0%, 50%, .17);
+		--l13-intro-keyBorderColor: rgba(51, 51, 51, .6);
+		--l13-intro-shadow:rgba(68, 68, 68, .6);
 	}
 	
 	&.vscode-light {
 		// Fixes the missing selection color if default light theme is selected
 		--l13-selection-background: #b4d7fd;
+		--l13-searchWidget-borderColor: #c8c8c8;
+		--l13-searchButton-backgroundColor-hover: rgba(0, 0 ,0 , 0.1);
+		
+		--l13-intro-backgroundUrl: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzMCAxMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxLjQxNDIxOyI+CiAgICA8ZyBpZD0iTDEzIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjI0MDc0MSwwLDAsMC4yNDA3NDEsLTcuNzAzNyw3LjI1OTI3KSI+CiAgICAgICAgPGcgb3BhY2l0eT0iMC4wNSI+CiAgICAgICAgICAgIDxwYXRoIGlkPSJfMyIgc2VyaWY6aWQ9IjMiIGQ9Ik0zNjIsNDQ4TDM2MiwzODhMNDUyLDM4OEw0NTUuMDksMzg3LjkxOUM0ODYuODIzLDM4Ni4yODEgNTEyLDM2MC4wOCA1MTIsMzI4QzUxMiwyOTQuODgzIDQ4NS4xNjksMjY4LjAzMiA0NTIsMjY4TDQ1MiwyNjhMMzkyLDI2OEwzOTIsMjA4TDQ1MiwyMDhMNDU1LjA5LDIwNy45MTlDNDg2LjgyMywyMDYuMjgxIDUxMiwxODAuMDggNTEyLDE0OEM1MTIsMTE0Ljg4MyA0ODUuMTY5LDg4LjAzMiA0NTIsODhMMzYyLDg4TDM2MiwyOEw0NTIsMjhMNDU4LjE3NSwyOC4xNTZDNTIxLjU4NiwzMS4zNzcgNTcyLDgzLjgwMSA1NzIsMTQ4QzU3MiwxODMuODUxIDU1Ni4yNzgsMjE2LjAzMSA1MzEuMzMsMjM4QzU1Ni4yNzgsMjU5Ljk2OSA1NzIsMjkyLjE0OSA1NzIsMzI4QzU3MiwzOTQuMjc0IDUxOC4yNzQsNDQ4IDQ1Miw0NDhMMzYyLDQ0OFoiLz4KICAgICAgICAgICAgPHJlY3QgaWQ9Il8xIiBzZXJpZjppZD0iMSIgeD0iMjcyIiB5PSIyOCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQyMCIvPgogICAgICAgICAgICA8cGF0aCBpZD0iTCIgZD0iTTMyLDI4TDkyLDI4TDkyLDM4OEwyNDIsMzg4TDI0Miw0NDhMOTIsNDQ4QzU4Ljg2Myw0NDggMzIsNDIxLjEzNyAzMiwzODhMMzIsMjhaIi8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=");
+		--l13-intro-color: rgba(0,0,0,.68);
+		--l13-intro-keyBackgroundColor: hsla(0, 0%, 87%, .4);
+		--l13-intro-keyBorderColor: hsla(0, 0%, 80%, .4);
+		--l13-intro-shadow:hsla(0, 0%, 73%, .4);
 	}
 }

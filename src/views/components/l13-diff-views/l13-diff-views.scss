@@ -54,7 +54,7 @@
 		}
 		
 		&:checked::after {
-			background: 50% 50% no-repeat var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+			background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
 			content: '';
 			height: 10px;
 			-webkit-mask-image: url('checked.svg');

@@ -1,12 +1,12 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
 import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 
-import { parseIcons, setLabelText } from '../common';
+import { isMetaKey, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -40,6 +40,9 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 	@L13Query('#l13_select_untracked')
 	public selectUntracked:HTMLElement;
 	
+	@L13Query('#l13_select_all')
+	public selectAll:HTMLElement;
+	
 	@L13Query('#l13_copy_left')
 	public copyLeft:HTMLElement;
 	
@@ -49,15 +52,17 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		
 		super();
 		
-		setLabelText(this.copyRight, 'Copy selection to the left folder');
-		setLabelText(this.selectDeleted, 'Select all deleted files');
-		setLabelText(this.selectModified, 'Select all modfied files');
-		setLabelText(this.selectUntracked, 'Select all untracked files');
-		setLabelText(this.copyLeft, 'Copy selection to the right folder');
+		setLabel(this.copyRight, 'Copy selection to the left folder');
+		setLabel(this.selectDeleted, 'Select all deleted files');
+		setLabel(this.selectModified, 'Select all modfied files');
+		setLabel(this.selectUntracked, 'Select all untracked files');
+		setLabel(this.selectAll, 'Select all files', { key: 'Ctrl+A', mac: 'Cmd+A' });
+		setLabel(this.copyLeft, 'Copy selection to the right folder');
 		
-		this.selectDeleted.addEventListener('click', () => this.list.selectByStatus('deleted'));
-		this.selectModified.addEventListener('click', () => this.list.selectByStatus('modified'));
-		this.selectUntracked.addEventListener('click', () => this.list.selectByStatus('untracked'));
+		this.selectDeleted.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('deleted', isMetaKey(ctrlKey, metaKey)));
+		this.selectModified.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('modified', isMetaKey(ctrlKey, metaKey)));
+		this.selectUntracked.addEventListener('click', ({ metaKey, ctrlKey }) => this.list.selectByStatus('untracked', isMetaKey(ctrlKey, metaKey)));
+		this.selectAll.addEventListener('click', () => this.list.selectAll());
 		
 		this.copyLeft.addEventListener('click', () => this.list.copy('left'));
 		this.copyRight.addEventListener('click', () => this.list.copy('right'));
