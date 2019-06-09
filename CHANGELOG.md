@@ -7,7 +7,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added search widget (`Ctrl/Cmd + F`) to filter diff result.
 - Added select all in list view with keyboard shortcut `Ctrl/Cmd + A` or button.
 - Added `Alt + Double Click` to open diff or file to side.
-- Added welcome screen for keyboard shortcuts.
+- Added start screen for keyboard shortcuts.
 
 ### Fixed
 - Fixed menu visiblity if path was selected and input was clicked again, but menu did not appear.

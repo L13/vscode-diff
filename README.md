@@ -9,7 +9,7 @@ Compare two folders in Visual Studio Code.
 - Added search widget (`Ctrl/Cmd + F`) to filter diff result.
 - Added select all in list view with keyboard shortcut `Ctrl/Cmd + A` or button.
 - Added `Alt + Double Click` to open diff or file to side.
-- Added welcome screen for keyboard shortcuts.
+- Added start screen for keyboard shortcuts.
 
 ## Features
 
