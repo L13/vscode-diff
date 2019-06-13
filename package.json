@@ -36,6 +36,8 @@
 		"onCommand:l13Diff.show",
 		"onCommand:l13Diff.open",
 		"onCommand:l13Diff.clearHistory",
+		"onCommand:l13Diff.openFavorite",
+		"onView:diffExplorerFavorites",
 		"onWebviewPanel:l13Diff"
 	],
 	"main": "./out/extension.js",
@@ -69,6 +71,10 @@
 			{
 				"command": "l13Diff.clearHistory",
 				"title": "L13 Diff: Clear History"
+			},
+			{
+				"command": "l13Diff.openFavorite",
+				"title": "L13 Diff: Open Favorite"
 			}
 		],
 		"keybindings": [
@@ -83,6 +89,12 @@
 				{
 					"command": "l13Diff.open",
 					"group": "3_compare@1"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "l13Diff.openFavorite",
+					"when": "view == diffExplorerFavorites && viewItem == favorite"
 				}
 			]
 		},

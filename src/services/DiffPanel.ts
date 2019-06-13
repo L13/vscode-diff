@@ -43,7 +43,7 @@ export class DiffPanel {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public static createOrShow (context:vscode.ExtensionContext, uris:null|vscode.Uri[] = null) {
+	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null) {
 		
 		const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
 		
@@ -83,7 +83,7 @@ export class DiffPanel {
 		
 	}
 	
-	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|vscode.Uri[] = null) {
+	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null) {
 		
 		this.panel = panel;
 		this.context = context;
@@ -178,7 +178,7 @@ function nonce () {
 	
 }
 
-function mapUris (uris:null|vscode.Uri[]) :Uri[] {
+function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
 	

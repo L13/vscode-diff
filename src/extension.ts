@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import { DiffFavoritesProvider, Favorite } from './services/DiffFavorites';
 import { DiffMenu } from './services/DiffMenu';
 import { DiffPanel } from './services/DiffPanel';
 
@@ -16,6 +17,16 @@ import { DiffPanel } from './services/DiffPanel';
 //	Exports ____________________________________________________________________
 
 export function activate (context:vscode.ExtensionContext) {
+	
+	const diffFavoritesProvider = new DiffFavoritesProvider(context);
+	
+	vscode.window.registerTreeDataProvider('diffExplorerFavorites', diffFavoritesProvider);
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavorite', (favorite:Favorite) => {
+		
+		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }]);
+		
+	}));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => {
 		
