@@ -54,13 +54,25 @@ export class DiffFavoritesProvider implements vscode.TreeDataProvider<FavoriteTr
 
 	}
 	
+	public static removeFavorite (node:Favorite) {
+		
+		//
+		
+	}
+	
+	public static clearFavorites () {
+		
+		//
+		
+	}
+	
 }
 
 // tslint:disable-next-line: max-classes-per-file
 export class FavoriteTreeItem extends vscode.TreeItem {
 	
 	public command = {
-		arguments: [this.favorite],
+		arguments: [this],
 		command: 'l13Diff.openFavorite',
 		title: 'Open Favorite',
 	};

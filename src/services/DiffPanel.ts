@@ -107,6 +107,12 @@ export class DiffPanel {
 		
 		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 		
+		this.panel.onDidChangeViewState(({ webviewPanel }) => {
+		
+			this.setContextForFocus(webviewPanel.active);
+			
+		});
+		
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
 			if (message.command === 'init:paths') {
@@ -118,6 +124,8 @@ export class DiffPanel {
 			}
 			
 		}, null, this.disposables);
+		
+		this.setContextForFocus(true);
 		
 	}
 	
@@ -131,6 +139,14 @@ export class DiffPanel {
 			const disposable = this.disposables.pop();
 			if (disposable) disposable.dispose();
 		}
+		
+		this.setContextForFocus(false);
+		
+	}
+	
+	private setContextForFocus (value:boolean) {
+		
+		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
 	}
 	

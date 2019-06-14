@@ -36,7 +36,6 @@
 		"onCommand:l13Diff.show",
 		"onCommand:l13Diff.open",
 		"onCommand:l13Diff.clearHistory",
-		"onCommand:l13Diff.openFavorite",
 		"onView:diffExplorerFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -74,7 +73,23 @@
 			},
 			{
 				"command": "l13Diff.openFavorite",
-				"title": "L13 Diff: Open Favorite"
+				"title": "Open"
+			},
+			{
+				"command": "l13Diff.addToFavorites",
+				"title": "Add to favorites",
+				"icon": {
+					"light": "images/favorite-light.svg",
+					"dark": "images/favorite-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.removeFavorite",
+				"title": "Remove"
+			},
+			{
+				"command": "l13Diff.clearFavorites",
+				"title": "Remove all favorites"
 			}
 		],
 		"keybindings": [
@@ -95,6 +110,17 @@
 				{
 					"command": "l13Diff.openFavorite",
 					"when": "view == diffExplorerFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.removeFavorite",
+					"when": "view == diffExplorerFavorites && viewItem == favorite"
+				}
+			],
+			"editor/title": [
+				{
+					"when": "l13DiffFocus",
+					"command": "l13Diff.addToFavorites",
+					"group": "navigation"
 				}
 			]
 		},

@@ -22,23 +22,25 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	vscode.window.registerTreeDataProvider('diffExplorerFavorites', diffFavoritesProvider);
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavorite', (favorite:Favorite) => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavorite', ({ favorite }) => {
 		
 		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }]);
 		
 	}));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => {
-		
-		DiffPanel.createOrShow(context);
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.addToFavorites', () => {
+	
+		// if (DiffPanel.currentPanel) DiffFavoritesProvider.addToFavorites();
 		
 	}));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', () => {
-		
-		DiffMenu.clearHistory(context);
-		
-	}));
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeFavorite', (node?) => DiffFavoritesProvider.removeFavorite(node)));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearFavorites', () => DiffFavoritesProvider.clearFavorites()));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', () => DiffMenu.clearHistory(context)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', (...uris:any[]) => {
 		
