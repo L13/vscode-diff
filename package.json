@@ -77,6 +77,14 @@
 				"title": "Open"
 			},
 			{
+				"command": "l13Diff.openFavoriteOnly",
+				"title": "Open"
+			},
+			{
+				"command": "l13Diff.openFavoriteAndCompare",
+				"title": "Open & Compare"
+			},
+			{
 				"command": "l13Diff.addToFavorites",
 				"title": "Add to favorites",
 				"icon": {
@@ -109,7 +117,11 @@
 			],
 			"view/item/context": [
 				{
-					"command": "l13Diff.openFavorite",
+					"command": "l13Diff.openFavoriteOnly",
+					"when": "view == diffExplorerFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.openFavoriteAndCompare",
 					"when": "view == diffExplorerFavorites && viewItem == favorite"
 				},
 				{
@@ -149,6 +161,11 @@
 						"node_modules"
 					],
 					"description": "Indicates folders or files to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
+				},
+				"l13Diff.openFavoriteAndCompare": {
+					"type": "boolean",
+					"default": false,
+					"description": "Should click on favorite start a compare?"
 				}
 			}
 		}

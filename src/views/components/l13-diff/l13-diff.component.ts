@@ -100,6 +100,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				if (message.uris.length) {
 					this.left.viewmodel.value = (message.uris[0] || 0).fsPath || '';
 					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
+					if (message.compare) this.list.viewmodel.compare();
 				}
 			}
 			
@@ -162,6 +163,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				
 				window.removeEventListener('message', init);
 				init = null;
+				
+				if (message.compare) this.list.viewmodel.compare();
 			}
 			
 		};

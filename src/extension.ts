@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { DiffFavorites, Favorite } from './services/DiffFavorites';
+import { DiffFavorites } from './services/DiffFavorites';
 import { DiffMenu } from './services/DiffMenu';
 import { DiffPanel } from './services/DiffPanel';
 
@@ -24,7 +24,21 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavorite', ({ favorite }) => {
 		
-		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }]);
+		const compare = vscode.workspace.getConfiguration('l13Diff').get('openFavoriteAndCompare', false);
+		
+		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+		
+	}));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavoriteOnly', ({ favorite }) => {
+		
+		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], false);
+		
+	}));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavoriteAndCompare', ({ favorite }) => {
+		
+		DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
 		
 	}));
 	

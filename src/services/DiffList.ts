@@ -35,7 +35,7 @@ export class DiffList {
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
 			if (message.command === 'create:diffs') {
-					this.createDiffs(message);
+				this.createDiffs(message);
 			}
 			
 		}, null, this.disposables);
@@ -96,7 +96,7 @@ export class DiffList {
 			this.saveHistory(pathA, pathB);
 			const left = vscode.Uri.file(pathA);
 			const right = vscode.Uri.file(pathB);
-			const openToSide = !!vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
+			const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 			vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
 				// preserveFocus: false,
 				preview: false,

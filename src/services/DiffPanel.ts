@@ -44,7 +44,7 @@ export class DiffPanel {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null) {
+	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
 		
@@ -54,6 +54,7 @@ export class DiffPanel {
 				DiffPanel.currentPanel.panel.webview.postMessage({
 					command: 'update:paths',
 					uris: mapUris(uris),
+					compare,
 				});
 			}
 			return;
@@ -74,7 +75,7 @@ export class DiffPanel {
 			light: vscode.Uri.file(path.join(context.extensionPath, 'media', 'icons', 'icon-light.svg')),
 		};
 		
-		DiffPanel.currentPanel = new DiffPanel(panel, context, uris);
+		DiffPanel.currentPanel = new DiffPanel(panel, context, uris, compare);
 		
 	}
 	
@@ -92,7 +93,7 @@ export class DiffPanel {
 		
 	}
 	
-	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null) {
+	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		this.panel = panel;
 		this.context = context;
@@ -129,6 +130,7 @@ export class DiffPanel {
 					command: message.command,
 					uris: mapUris(uris),
 					workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+					compare,
 				});
 			} else if (message.command === 'save:favorite') {
 				vscode.window.showInputBox({ value: `${message.pathA} ↔ ${message.pathB}` }).then((value) => {
