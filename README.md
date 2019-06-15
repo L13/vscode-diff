@@ -130,4 +130,5 @@ Context menu
 
 * `Open` - Open a favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open a favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Remove` - Remove diff from favorites.
+* `Rename` - Change the name of a favorite.
+* `Remove` - Remove a diff from favorites.

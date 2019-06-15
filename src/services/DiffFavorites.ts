@@ -58,6 +58,37 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 
 	}
 	
+	public static renameFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
+		
+		vscode.window.showInputBox({ value: favorite.label }).then((value) => {
+					
+			if (favorite.label === value || value === undefined) return;
+			
+			if (!value) {
+				vscode.window.showErrorMessage(`L13 Diff - Favorite with no name is not valid!`);
+				return;
+			}
+			
+			const favorites:Favorite[] = context.globalState.get('favorites') || [];
+			
+			// tslint:disable-next-line: prefer-for-of
+			for (let i = 0; i < favorites.length; i++) {
+				if (favorites[i].label === favorite.label) {
+					if (!favorites.some(({ label }) => label === value)) {
+						favorites[i].label = value;
+						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+						context.globalState.update('favorites', favorites);
+						DiffFavorites.createProvider(context).refresh();
+						vscode.window.showInformationMessage(`L13 Diff - Favorite '${value}' saved!`);
+					} else vscode.window.showErrorMessage(`L13 Diff - Favorite '${value}' exists!`);
+					break;
+				}
+			}
+			
+		});
+		
+	}
+	
 	public static removeFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
 		const favorites:Favorite[] = context.globalState.get('favorites') || [];

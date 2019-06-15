@@ -73,6 +73,14 @@
 				"title": "L13 Diff: Clear History"
 			},
 			{
+				"command": "l13Diff.addToFavorites",
+				"title": "Add to favorites",
+				"icon": {
+					"light": "images/favorite-light.svg",
+					"dark": "images/favorite-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.openFavorite",
 				"title": "Open"
 			},
@@ -85,12 +93,8 @@
 				"title": "Open & Compare"
 			},
 			{
-				"command": "l13Diff.addToFavorites",
-				"title": "Add to favorites",
-				"icon": {
-					"light": "images/favorite-light.svg",
-					"dark": "images/favorite-dark.svg"
-				}
+				"command": "l13Diff.renameFavorite",
+				"title": "Rename"
 			},
 			{
 				"command": "l13Diff.removeFavorite",
@@ -118,14 +122,22 @@
 			"view/item/context": [
 				{
 					"command": "l13Diff.openFavoriteOnly",
+					"group": "navigation",
 					"when": "view == diffExplorerFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
+					"group": "navigation",
+					"when": "view == diffExplorerFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.renameFavorite",
+					"group": "7_modification@1",
 					"when": "view == diffExplorerFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.removeFavorite",
+					"group": "7_modification@2",
 					"when": "view == diffExplorerFavorites && viewItem == favorite"
 				}
 			],

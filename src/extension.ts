@@ -48,6 +48,8 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.renameFavorite', ({ favorite }) => DiffFavorites.renameFavorite(context, favorite)));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeFavorite', ({ favorite }) => DiffFavorites.removeFavorite(context, favorite)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearFavorites', () => DiffFavorites.clearFavorites(context)));
