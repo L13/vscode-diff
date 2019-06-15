@@ -7,6 +7,7 @@ import { Uri } from '../types';
 import { workspacePaths } from './common';
 import { DiffCopy } from './DiffCopy';
 import { DiffDialog } from './DiffDialog';
+import { DiffFavorites, Favorite } from './DiffFavorites';
 import { DiffList } from './DiffList';
 import { DiffMenu } from './DiffMenu';
 import { DiffOpen } from './DiffOpen';
@@ -50,7 +51,7 @@ export class DiffPanel {
 		if (DiffPanel.currentPanel) {
 			DiffPanel.currentPanel.panel.reveal(column);
 			if (uris) {
-					DiffPanel.currentPanel.panel.webview.postMessage({
+				DiffPanel.currentPanel.panel.webview.postMessage({
 					command: 'update:paths',
 					uris: mapUris(uris),
 				});
@@ -80,6 +81,14 @@ export class DiffPanel {
 	public static revive (panel:vscode.WebviewPanel, context:vscode.ExtensionContext) {
 		
 		DiffPanel.currentPanel = new DiffPanel(panel, context);
+		
+	}
+	
+	public static addToFavorites () {
+		
+		DiffPanel.currentPanel.panel.webview.postMessage({
+			command: 'save:favorite',
+		});
 		
 	}
 	
@@ -120,6 +129,22 @@ export class DiffPanel {
 					command: message.command,
 					uris: mapUris(uris),
 					workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+				});
+			} else if (message.command === 'save:favorite') {
+				vscode.window.showInputBox({ value: `${message.pathA} ↔ ${message.pathB}` }).then((value) => {
+					
+					if (!value) return;
+					
+					const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
+					
+					if (!favorites.some(({ label }) => label === value)) {
+						favorites.push({ label: value, fileA: message.pathA, fileB: message.pathB });
+						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+						this.context.globalState.update('favorites', favorites);
+						DiffFavorites.currentProvider.refresh();
+						vscode.window.showInformationMessage(`L13 Diff - Favorite '${value}' saved!`);
+					} else vscode.window.showErrorMessage(`L13 Diff - Favorite '${value}' exists!`);
+					
 				});
 			}
 			

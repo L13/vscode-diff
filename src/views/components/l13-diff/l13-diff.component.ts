@@ -132,6 +132,20 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		window.addEventListener('message', (event:MessageEvent) => {
+			
+			const message = event.data;
+			
+			if (message.command ===  'save:favorite') {
+				vscode.postMessage({
+					command: message.command,
+					pathA: this.left.viewmodel.value,
+					pathB: this.right.viewmodel.value,
+				});
+			}
+			
+		});
+		
 		let init = (event:MessageEvent) => {
 				
 			const message = event.data;

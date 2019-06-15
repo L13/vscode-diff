@@ -36,6 +36,7 @@
 		"onCommand:l13Diff.show",
 		"onCommand:l13Diff.open",
 		"onCommand:l13Diff.clearHistory",
+		"onCommand:l13Diff.clearFavorites",
 		"onView:diffExplorerFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -89,7 +90,7 @@
 			},
 			{
 				"command": "l13Diff.clearFavorites",
-				"title": "Remove all favorites"
+				"title": "L13 Diff: Remove all favorites"
 			}
 		],
 		"keybindings": [

@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { DiffFavoritesProvider, Favorite } from './services/DiffFavorites';
+import { DiffFavorites, Favorite } from './services/DiffFavorites';
 import { DiffMenu } from './services/DiffMenu';
 import { DiffPanel } from './services/DiffPanel';
 
@@ -18,7 +18,7 @@ import { DiffPanel } from './services/DiffPanel';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	const diffFavoritesProvider = new DiffFavoritesProvider(context);
+	const diffFavoritesProvider = DiffFavorites.createProvider(context);
 	
 	vscode.window.registerTreeDataProvider('diffExplorerFavorites', diffFavoritesProvider);
 	
@@ -30,13 +30,13 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.addToFavorites', () => {
 	
-		// if (DiffPanel.currentPanel) DiffFavoritesProvider.addToFavorites();
+		if (DiffPanel.currentPanel) DiffPanel.addToFavorites();
 		
 	}));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeFavorite', (node?) => DiffFavoritesProvider.removeFavorite(node)));
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeFavorite', ({ favorite }) => DiffFavorites.removeFavorite(context, favorite)));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearFavorites', () => DiffFavoritesProvider.clearFavorites()));
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearFavorites', () => DiffFavorites.clearFavorites(context)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
 	
