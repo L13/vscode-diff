@@ -121,3 +121,13 @@ Windows / Linux
 * `Ctrl + F` - Show search widget.
 * `Alt + C` - Toggle match case.
 * `Alt + R` - Toggle use regular expression.
+
+## Favorites Explorer
+
+* `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
+
+Context menu
+
+* `Open` - Open a favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open & Compare` - Open a favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Remove` - Remove diff from favorites.
