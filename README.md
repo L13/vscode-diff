@@ -4,12 +4,13 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.15.0
+## What's new in L13 Diff 0.16.0
 
-- Added search widget (`Ctrl/Cmd + F`) to filter diff result.
-- Added select all in list view with keyboard shortcut `Ctrl/Cmd + A` or button.
-- Added `Alt + Double Click` to open diff or file to side.
-- Added start screen for keyboard shortcuts.
+- Added favorites explorer and activitybar icon.
+- Added an icon (★) in the top right of the diff panel to add a favorite.
+- Added context menu to open or remove favorites in the list.
+- Added setting `l13Diff.openFavoriteAndCompare` for click on a favorite in the list.
+- Added command `L13 Diff: Remove all favorites` to delete all favorites.
 
 ## Features
 
@@ -23,6 +24,7 @@ Compare two folders in Visual Studio Code.
 * Double click an item in the list to open the diff or the file.
 * Mouse and keyboard support for selecting items in list.
 * Search for pathnames to filter diff result.
+* Manage your favorite diffs and start a compare immediately.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -41,12 +43,14 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders by dialog or context menu.
 * `L13 Diff: Clear History` - Clear the history of recently used files and folders.
+* `L13 Diff: Remove all favorites` - Remove all favorites.
 
 ## Available Settings
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
+* `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite entry should start a compare.
 
 ## Global Keyboard Shortcuts
 
