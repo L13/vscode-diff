@@ -175,7 +175,8 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+		"test": "npm run compile && node ./node_modules/vscode/bin/test",
+		"test-diff": "node ./diff/index.js --clean --create-all"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
