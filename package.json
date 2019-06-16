@@ -98,11 +98,11 @@
 			},
 			{
 				"command": "l13Diff.removeFavorite",
-				"title": "Remove"
+				"title": "Delete"
 			},
 			{
 				"command": "l13Diff.clearFavorites",
-				"title": "L13 Diff: Remove all favorites"
+				"title": "L13 Diff: Delete all favorites"
 			}
 		],
 		"keybindings": [
