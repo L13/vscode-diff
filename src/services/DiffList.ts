@@ -99,7 +99,7 @@ export class DiffList {
 		const statB = fs.lstatSync(pathB);
 		
 		if (statA.isFile() && statB.isFile()) {
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(message.pathA, message.pathB);
 			const left = vscode.Uri.file(pathA);
 			const right = vscode.Uri.file(pathB);
 			const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
@@ -110,7 +110,7 @@ export class DiffList {
 			});
 			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
 		} else if (statA.isDirectory() && statB.isDirectory()) {
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(message.pathA, message.pathB);
 			this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
 				
 				if (error) vscode.window.showErrorMessage(error.message);
