@@ -76,8 +76,8 @@
 				"command": "l13Diff.addToFavorites",
 				"title": "Add to favorites",
 				"icon": {
-					"light": "images/favorite-light.svg",
-					"dark": "images/favorite-dark.svg"
+					"light": "images/favorite-add-light.svg",
+					"dark": "images/favorite-add-dark.svg"
 				}
 			},
 			{

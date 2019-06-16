@@ -10,7 +10,8 @@ import { DiffStatus } from './DiffStatus';
 
 //	Variables __________________________________________________________________
 
-
+const findPlaceholder = /\$\{([a-zA-Z]+)\}/;
+const findPlaceholders = /\$\{([a-zA-Z]+)\}/g;
 
 //	Initialize _________________________________________________________________
 
@@ -66,10 +67,15 @@ export class DiffList {
 	
 	private createDiffs (message:any) :void {
 		
-		const pathA = message.pathA;
-		const pathB = message.pathB;
+		const pathA = parsePredefinedVariables(message.pathA);
+		const pathB = parsePredefinedVariables(message.pathB);
 		
 		this.status.update();
+		
+		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
+			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			return;
+		}
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
@@ -243,6 +249,28 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				fileB: file,
 			};
 		}
+		
+	});
+	
+}
+
+function parsePredefinedVariables (pathname:string) {
+	
+	// tslint:disable-next-line: only-arrow-functions
+	return pathname.replace(findPlaceholders, function (match, name) {
+		
+		switch (name) {
+			case 'workspaceFolder':
+				const folder = vscode.workspace.workspaceFolders[0];
+				if (!folder) {
+					vscode.window.showErrorMessage('L13 Diff - No Workspace folder available!');
+					return match;
+				}
+				return folder.uri.fsPath;
+		}
+		
+		vscode.window.showErrorMessage(`L13 Diff - Placeholder '${match}' not valid!`);
+		return match;
 		
 	});
 	

@@ -128,10 +128,10 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 		title: 'Open Favorite',
 	};
 	
-	// public iconPath = {
-	// 	light: path.join(__filename, '..', 'images', 'favorite-light.svg'),
-	// 	dark: path.join(__filename, '..', 'images', 'favorite-dark.svg'),
-	// };
+	public iconPath = {
+		light: path.join(__filename, '..', '..', 'images', 'favorite-item-light.svg'),
+		dark: path.join(__filename, '..', '..', 'images', 'favorite-item-dark.svg'),
+	};
 	
 	public contextValue = 'favorite';
 	
