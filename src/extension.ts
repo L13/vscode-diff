@@ -20,7 +20,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	const diffFavoritesProvider = DiffFavorites.createProvider(context);
 	
-	vscode.window.registerTreeDataProvider('diffExplorerFavorites', diffFavoritesProvider);
+	vscode.window.registerTreeDataProvider('l13DiffFavorites', diffFavoritesProvider);
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavorite', ({ favorite }) => {
 		

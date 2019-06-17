@@ -144,8 +144,8 @@ export class DiffPanel {
 						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
 						this.context.globalState.update('favorites', favorites);
 						DiffFavorites.currentProvider.refresh();
-						vscode.window.showInformationMessage(`L13 Diff - Favorite '${value}' saved!`);
-					} else vscode.window.showErrorMessage(`L13 Diff - Favorite '${value}' exists!`);
+						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
 					
 				});
 			}

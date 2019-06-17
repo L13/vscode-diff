@@ -10,8 +10,8 @@ import { DiffStatus } from './DiffStatus';
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /\$\{([a-zA-Z]+)\}/;
-const findPlaceholders = /\$\{([a-zA-Z]+)\}/g;
+const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:([^\}]*(?:\\\})*)+)?\}/;
+const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:([^\}]*(?:\\\})*)+)?\}/g;
 
 //	Initialize _________________________________________________________________
 
@@ -257,19 +257,37 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 function parsePredefinedVariables (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholders, function (match, name) {
+	return pathname.replace(findPlaceholders, function (match, placeholder, value) {
 		
-		switch (name) {
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		
+		switch (placeholder) {
 			case 'workspaceFolder':
-				const folder = vscode.workspace.workspaceFolders[0];
+				if (!workspaceFolders) {
+					vscode.window.showErrorMessage('No workspace available!');
+					return match;
+				}
+				value = parseInt(value, 10);
+				if (value && !(value < workspaceFolders.length)) {
+					vscode.window.showErrorMessage(`No workspace with index ${value} available!`);
+					return match;
+				}
+				value = value || 0;
+				return workspaceFolders.filter(({ index }) => index === value)[0].uri.fsPath;
+			case 'workspaceFolderBasename':
+				if (!workspaceFolders) {
+					vscode.window.showErrorMessage('No workspace available!');
+					return match;
+				}
+				const folder = workspaceFolders.filter(({ name }) => name === value)[0];
 				if (!folder) {
-					vscode.window.showErrorMessage('L13 Diff - No Workspace folder available!');
+					vscode.window.showErrorMessage(`No workspace with name '${value}' available!`);
 					return match;
 				}
 				return folder.uri.fsPath;
 		}
 		
-		vscode.window.showErrorMessage(`L13 Diff - Placeholder '${match}' not valid!`);
+		vscode.window.showErrorMessage(`Variable '${match}' not valid!`);
 		return match;
 		
 	});

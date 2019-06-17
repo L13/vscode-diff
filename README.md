@@ -7,11 +7,12 @@ Compare two folders in Visual Studio Code.
 ## What's new in L13 Diff 0.16.0
 
 - Added favorites explorer and activitybar icon.
-- Added an icon (★) in the top right of the diff panel to add a favorite diff.
+- Added an icon (★) in the top right of the diff panel to save a favorite diff.
 - Added context menu to open, rename or remove a favorite diff from the list.
 - Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
 - Added command `L13 Diff: Remove all favorites` to delete all favorite diffs.
-- Added predefined variable `${workspaceFolder}` for paths. 
+- Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
+- Added keyboard shortcut `Cmd/Ctrl + D` to save current paths in favorites.
 
 ## Features
 
@@ -56,16 +57,20 @@ Toggle the view, select files by status or copy files from left to right or vice
 ## Predefined Variables
 
 * `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
+* `${workspaceFolder:INDEX}` - Use a specific workspace folder by index for the diff e.g. '${workspaceFolder:1}/path/to/folder'
+* `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name{1,2\}}'.
 
 ## Global Keyboard Shortcuts
 
 macOS
 
 * `Cmd + L Cmd + L` - Open the diff panel.
+* `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
 
 Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
+* `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 

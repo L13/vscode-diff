@@ -37,7 +37,7 @@
 		"onCommand:l13Diff.open",
 		"onCommand:l13Diff.clearHistory",
 		"onCommand:l13Diff.clearFavorites",
-		"onView:diffExplorerFavorites",
+		"onView:l13DiffFavorites",
 		"onWebviewPanel:l13Diff"
 	],
 	"main": "./out/extension.js",
@@ -54,7 +54,7 @@
 		"views": {
 			"l13-diff": [
 				{
-					"id": "diffExplorerFavorites",
+					"id": "l13DiffFavorites",
 					"name": "Favorites"
 				}
 			]
@@ -74,7 +74,7 @@
 			},
 			{
 				"command": "l13Diff.addToFavorites",
-				"title": "Add to favorites",
+				"title": "Add to Favorites",
 				"icon": {
 					"light": "images/favorite-add-light.svg",
 					"dark": "images/favorite-add-dark.svg"
@@ -102,7 +102,7 @@
 			},
 			{
 				"command": "l13Diff.clearFavorites",
-				"title": "L13 Diff: Delete all favorites"
+				"title": "L13 Diff: Delete All Favorites"
 			}
 		],
 		"keybindings": [
@@ -110,9 +110,21 @@
 				"mac": "meta+l meta+l",
 				"key": "ctrl+l ctrl+l",
 				"command": "l13Diff.show"
+			},
+			{
+				"mac": "meta+d",
+				"key": "ctrl+d",
+				"command": "l13Diff.addToFavorites",
+				"when": "l13DiffFocus"
 			}
 		],
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "l13Diff.addToFavorites",
+					"when": "l13DiffFocus"
+				}
+			],
 			"explorer/context": [
 				{
 					"command": "l13Diff.open",
@@ -123,22 +135,22 @@
 				{
 					"command": "l13Diff.openFavoriteOnly",
 					"group": "navigation",
-					"when": "view == diffExplorerFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
 					"group": "navigation",
-					"when": "view == diffExplorerFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@1",
-					"when": "view == diffExplorerFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.removeFavorite",
 					"group": "7_modification@2",
-					"when": "view == diffExplorerFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == favorite"
 				}
 			],
 			"editor/title": [

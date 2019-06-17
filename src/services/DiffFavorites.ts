@@ -65,7 +65,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 			if (favorite.label === value || value === undefined) return;
 			
 			if (!value) {
-				vscode.window.showErrorMessage(`L13 Diff - Favorite with no name is not valid!`);
+				vscode.window.showErrorMessage(`Favorite with no name is not valid!`);
 				return;
 			}
 			
@@ -79,8 +79,8 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`L13 Diff - Favorite '${value}' saved!`);
-					} else vscode.window.showErrorMessage(`L13 Diff - Favorite '${value}' exists!`);
+						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
 					break;
 				}
 			}
@@ -98,12 +98,12 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 				favorites.splice(i, 1);
 				context.globalState.update('favorites', favorites);
 				DiffFavorites.createProvider(context).refresh();
-				vscode.window.showInformationMessage(`L13 Diff - Removed favorite`);
+				vscode.window.showInformationMessage(`Deleted favorite`);
 				return;
 			}
 		}
 		
-		vscode.window.showErrorMessage(`L13 Diff - Favorite does not exist`);
+		vscode.window.showErrorMessage(`Favorite does not exist`);
 		
 	}
 	
@@ -113,7 +113,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 		
 		DiffFavorites.createProvider(context).refresh();
 		
-		vscode.window.showInformationMessage(`L13 Diff - Cleared favorites`);
+		vscode.window.showInformationMessage(`Deleted all favorites`);
 		
 	}
 	
