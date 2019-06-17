@@ -95,6 +95,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					break;
 				case 'PageDown':
 					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
+					break;
 				case 'Home':
 					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
