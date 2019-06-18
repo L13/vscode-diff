@@ -10,8 +10,9 @@ import { DiffStatus } from './DiffStatus';
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:([^\}]*(?:\\\})*)+)?\}/;
-const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:([^\}]*(?:\\\})*)+)?\}/g;
+const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
+const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
+const findEscapedEndingBrace = /\\\}/g;
 
 //	Initialize _________________________________________________________________
 
@@ -264,24 +265,25 @@ function parsePredefinedVariables (pathname:string) {
 		switch (placeholder) {
 			case 'workspaceFolder':
 				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace available!');
+					vscode.window.showErrorMessage('No workspace folder available!');
 					return match;
 				}
 				value = parseInt(value, 10);
 				if (value && !(value < workspaceFolders.length)) {
-					vscode.window.showErrorMessage(`No workspace with index ${value} available!`);
+					vscode.window.showErrorMessage(`No workspace folder with index ${value} available!`);
 					return match;
 				}
 				value = value || 0;
 				return workspaceFolders.filter(({ index }) => index === value)[0].uri.fsPath;
 			case 'workspaceFolderBasename':
 				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace available!');
+					vscode.window.showErrorMessage('No workspace folder available!');
 					return match;
 				}
+				value = value.replace(findEscapedEndingBrace, '}');
 				const folder = workspaceFolders.filter(({ name }) => name === value)[0];
 				if (!folder) {
-					vscode.window.showErrorMessage(`No workspace with name '${value}' available!`);
+					vscode.window.showErrorMessage(`No workspace folder with name '${value}' available!`);
 					return match;
 				}
 				return folder.uri.fsPath;

@@ -8,25 +8,26 @@ Compare two folders in Visual Studio Code.
 
 - Added favorites explorer and activitybar icon.
 - Added an icon (★) in the top right of the diff panel to save a favorite diff.
-- Added context menu to open, rename or remove a favorite diff from the list.
+- Added context menu to open, rename or delete a favorite diff from the list.
 - Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
-- Added command `L13 Diff: Remove all favorites` to delete all favorite diffs.
+- Added command `L13 Diff: Delete all favorites` to delete all favorite diffs.
 - Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
 - Added keyboard shortcut `Cmd/Ctrl + D` to save current paths in favorites.
 
 ## Features
 
-* Supports a history for recently used folders.
+* Supports a history for recently used files and folders.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
-* Drag'n Drop folders from the VS Code Explorer or from the Finder/Explorer into the input fields.
-* Copy files from left to right or vi­ce ver­sa.
+* Drag'n Drop files and folders from the VS Code Explorer or from the Finder/Explorer into the input fields.
+* Copy files and folders from left to right or vi­ce ver­sa.
 * Select all files and folders by status.
-* Toggle the view by status.
-* Double click an item in the list to open the diff or the file.
-* Mouse and keyboard support for selecting items in list.
+* Toggle the visiblity of list items by status.
+* Double click an file item in the list to open the diff or the file.
+* Mouse and keyboard support for selecting items in the list.
 * Search for pathnames to filter diff result.
 * Manage your favorite diffs and start a compare immediately.
+* Supports predefined variables for dynamic pathnames.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -45,14 +46,14 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders by dialog or context menu.
 * `L13 Diff: Clear History` - Clear the history of recently used files and folders.
-* `L13 Diff: Remove all favorites` - Remove all favorites.
+* `L13 Diff: Delete all favorites` - Delete all favorites.
 
 ## Available Settings
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
-* `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite entry should start a compare.
+* `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 
 ## Predefined Variables
 
@@ -138,7 +139,7 @@ Windows / Linux
 
 Context menu
 
-* `Open` - Open a favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Open & Compare` - Open a favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Rename` - Change the name of a favorite.
-* `Remove` - Remove a diff from favorites.
+* `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Rename` - Change the name of the favorite.
+* `Delete` - Delete the favorite diff.
