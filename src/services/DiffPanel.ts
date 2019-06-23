@@ -7,6 +7,7 @@ import { Uri } from '../types';
 import { workspacePaths } from './common';
 import { DiffCopy } from './DiffCopy';
 import { DiffDialog } from './DiffDialog';
+import { DiffFavorites, Favorite } from './DiffFavorites';
 import { DiffList } from './DiffList';
 import { DiffMenu } from './DiffMenu';
 import { DiffOpen } from './DiffOpen';
@@ -43,16 +44,17 @@ export class DiffPanel {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public static createOrShow (context:vscode.ExtensionContext, uris:null|vscode.Uri[] = null) {
+	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
 		
 		if (DiffPanel.currentPanel) {
 			DiffPanel.currentPanel.panel.reveal(column);
 			if (uris) {
-					DiffPanel.currentPanel.panel.webview.postMessage({
+				DiffPanel.currentPanel.panel.webview.postMessage({
 					command: 'update:paths',
 					uris: mapUris(uris),
+					compare,
 				});
 			}
 			return;
@@ -73,7 +75,7 @@ export class DiffPanel {
 			light: vscode.Uri.file(path.join(context.extensionPath, 'media', 'icons', 'icon-light.svg')),
 		};
 		
-		DiffPanel.currentPanel = new DiffPanel(panel, context, uris);
+		DiffPanel.currentPanel = new DiffPanel(panel, context, uris, compare);
 		
 	}
 	
@@ -83,7 +85,15 @@ export class DiffPanel {
 		
 	}
 	
-	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|vscode.Uri[] = null) {
+	public static addToFavorites () {
+		
+		DiffPanel.currentPanel.panel.webview.postMessage({
+			command: 'save:favorite',
+		});
+		
+	}
+	
+	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		this.panel = panel;
 		this.context = context;
@@ -107,6 +117,12 @@ export class DiffPanel {
 		
 		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 		
+		this.panel.onDidChangeViewState(({ webviewPanel }) => {
+		
+			this.setContextForFocus(webviewPanel.active);
+			
+		});
+		
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
 			if (message.command === 'init:paths') {
@@ -114,10 +130,29 @@ export class DiffPanel {
 					command: message.command,
 					uris: mapUris(uris),
 					workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+					compare,
+				});
+			} else if (message.command === 'save:favorite') {
+				vscode.window.showInputBox({ value: `${message.pathA} ↔ ${message.pathB}` }).then((value) => {
+					
+					if (!value) return;
+					
+					const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
+					
+					if (!favorites.some(({ label }) => label === value)) {
+						favorites.push({ label: value, fileA: message.pathA, fileB: message.pathB });
+						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+						this.context.globalState.update('favorites', favorites);
+						DiffFavorites.currentProvider.refresh();
+						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
+					
 				});
 			}
 			
 		}, null, this.disposables);
+		
+		this.setContextForFocus(true);
 		
 	}
 	
@@ -131,6 +166,14 @@ export class DiffPanel {
 			const disposable = this.disposables.pop();
 			if (disposable) disposable.dispose();
 		}
+		
+		this.setContextForFocus(false);
+		
+	}
+	
+	private setContextForFocus (value:boolean) {
+		
+		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
 	}
 	
@@ -178,7 +221,7 @@ function nonce () {
 	
 }
 
-function mapUris (uris:null|vscode.Uri[]) :Uri[] {
+function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
 	
