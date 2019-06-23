@@ -8,7 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added favorites explorer and activitybar icon.
 - Added an icon (★) in the top right of the diff panel to save a favorite diff.
-- Added context menu to open, rename or delete a favorite diff from the list.
+- Added context menu for favorites to open, rename or delete a favorite diff from the list.
 - Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
 - Added command `L13 Diff: Delete all favorites` to delete all favorite diffs.
 - Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
@@ -26,7 +26,7 @@ Compare two folders in Visual Studio Code.
 * Double click an file item in the list to open the diff or the file.
 * Mouse and keyboard support for selecting items in the list.
 * Search for pathnames to filter diff result.
-* Manage your favorite diffs and start a compare immediately.
+* Save your favorite diffs and start a compare immediately.
 * Supports predefined variables for dynamic pathnames.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
@@ -59,7 +59,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 
 * `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
 * `${workspaceFolder:INDEX}` - Use a specific workspace folder by index for the diff e.g. '${workspaceFolder:1}/path/to/folder'
-* `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name{1,2\}}'.
+* `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name-{1\\}}'.
 
 ## Global Keyboard Shortcuts
 
