@@ -100,9 +100,19 @@ l13-diff-list-row {
 l13-diff-list-file {
 	box-sizing: border-box;
 	overflow: hidden;
-	padding: 2px 10px 3px 38px;
+	padding: 2px 0 3px 42px;
 	position: relative;
 	width: 50%;
+	
+	&:first-child {
+		padding-right: 15px;
+		padding-left: 31px;
+		
+		&.-file::before,
+		&.-folder::before {
+			left: 10px;
+		}
+	}
 	
 	&.-file::before,
 	&.-folder::before {
@@ -110,7 +120,7 @@ l13-diff-list-file {
 		content: '';
 		display: block;
 		height: 16px;
-		left: 17px;
+		left: 21px;
 		-webkit-mask-position: 50% 50%;
 		mask-position: 50% 50%;
 		-webkit-mask-repeat: no-repeat;

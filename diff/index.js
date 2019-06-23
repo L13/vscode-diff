@@ -14,13 +14,15 @@ let action = '';
 let values = [];
 
 const manual = `
-USAGE: node files.js [OPTIONS]
+USAGE: node ${path.basename(__filename)} [OPTIONS]
 
 OPTIONS
 
-    --clean, -c       Remove all files and folders from the root folder.
+    --clean           Remove all files and folders from the root folder.
 
     --create          Create a set of files and folders for testing.
+
+    --create-all      Create all sets of files and folders for testing.
 
 `;
 
@@ -48,15 +50,27 @@ params: while (args.length) {
 		case '--': args.shift(); break params;
 		case '--clean': removeFilesAndFolders(path.join(__dirname, 'test')); args.shift(); break;
 		case '--create': [action, values] = parseOptions(args); break;
+		case '--create-all': action = 'all'; args.shift(); break;
 		default: console.error(`Option '${args[0]}' does not exist\n${manual}`); process.exit(); break params;
 	}
 }
 
 switch (action) {
 	case 'create':
-		while (values.length) {
-			createFilesAndFolders(path.join(__dirname, 'test'), require(path.join(__dirname, 'patterns', values.shift())));
+		let value;
+		while ((value = values.shift())) {
+			createFilesAndFolders(path.join(__dirname, 'test', value), require(path.join(__dirname, 'patterns', value)));
 		}
+		break;
+	case 'all':
+		const files = fs.readdirSync(path.join(__dirname, 'patterns'));
+		files.forEach((value) => {
+			
+			value = path.basename(value, '.json');
+			
+			createFilesAndFolders(path.join(__dirname, 'test', value), require(path.join(__dirname, 'patterns', value)));
+			
+		});
 		break;
 }
 
@@ -72,11 +86,13 @@ function createFilesAndFolders (cwd, structure) {
 	if (!structure) return;
 	
 	for (const name in structure) {
-		const content = structure[name];
+		let content = structure[name];
 		const pathname = path.join(cwd, name);
 		if (typeof content === 'string') fs.symlink(pathname, content);
-		else if (Array.isArray(content)) fs.writeFileSync(pathname, content.join('\n'));
-		else createFilesAndFolders(pathname, content);
+		else if (Array.isArray(content)) {
+			content = typeof content[0] === 'number' ? Buffer.from(content) : content.join('\n');
+			fs.writeFileSync(pathname, content);
+		}else createFilesAndFolders(pathname, content);
 	}
 	
 }

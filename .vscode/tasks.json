@@ -55,6 +55,11 @@
 			"type": "gulp",
 			"task": "templates",
 			"problemMatcher": []
+		},
+		{
+			"type": "npm",
+			"script": "test-diff",
+			"problemMatcher": []
 		}
 	]
 }

@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.16.0] - 2019-06-23
+
+### Added
+- Added favorites explorer and activitybar icon.
+- Added an icon (★) in the top right of the diff panel to save a favorite diff.
+- Added context menu for favorites to open, rename or delete a favorite diff from the list.
+- Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
+- Added command `L13 Diff: Delete all favorites` to delete all favorite diffs.
+- Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
+- Added keyboard shortcut `Cmd/Ctrl + D` to save current paths in favorites.
+
 ## [0.15.0] - 2019-06-09
 
 ### Added

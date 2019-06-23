@@ -10,7 +10,9 @@ import { DiffStatus } from './DiffStatus';
 
 //	Variables __________________________________________________________________
 
-
+const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
+const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
+const findEscapedEndingBrace = /\\\}/g;
 
 //	Initialize _________________________________________________________________
 
@@ -35,7 +37,7 @@ export class DiffList {
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
 			if (message.command === 'create:diffs') {
-					this.createDiffs(message);
+				this.createDiffs(message);
 			}
 			
 		}, null, this.disposables);
@@ -66,10 +68,15 @@ export class DiffList {
 	
 	private createDiffs (message:any) :void {
 		
-		const pathA = message.pathA;
-		const pathB = message.pathB;
+		const pathA = parsePredefinedVariables(message.pathA);
+		const pathB = parsePredefinedVariables(message.pathB);
 		
 		this.status.update();
+		
+		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
+			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			return;
+		}
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
@@ -93,10 +100,10 @@ export class DiffList {
 		const statB = fs.lstatSync(pathB);
 		
 		if (statA.isFile() && statB.isFile()) {
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(message.pathA, message.pathB);
 			const left = vscode.Uri.file(pathA);
 			const right = vscode.Uri.file(pathB);
-			const openToSide = !!vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
+			const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 			vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
 				// preserveFocus: false,
 				preview: false,
@@ -104,7 +111,7 @@ export class DiffList {
 			});
 			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
 		} else if (statA.isDirectory() && statB.isDirectory()) {
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(message.pathA, message.pathB);
 			this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
 				
 				if (error) vscode.window.showErrorMessage(error.message);
@@ -243,6 +250,47 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				fileB: file,
 			};
 		}
+		
+	});
+	
+}
+
+function parsePredefinedVariables (pathname:string) {
+	
+	// tslint:disable-next-line: only-arrow-functions
+	return pathname.replace(findPlaceholders, function (match, placeholder, value) {
+		
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		
+		switch (placeholder) {
+			case 'workspaceFolder':
+				if (!workspaceFolders) {
+					vscode.window.showErrorMessage('No workspace folder available!');
+					return match;
+				}
+				value = parseInt(value, 10);
+				if (value && !(value < workspaceFolders.length)) {
+					vscode.window.showErrorMessage(`No workspace folder with index ${value} available!`);
+					return match;
+				}
+				value = value || 0;
+				return workspaceFolders.filter(({ index }) => index === value)[0].uri.fsPath;
+			case 'workspaceFolderBasename':
+				if (!workspaceFolders) {
+					vscode.window.showErrorMessage('No workspace folder available!');
+					return match;
+				}
+				value = value.replace(findEscapedEndingBrace, '}');
+				const folder = workspaceFolders.filter(({ name }) => name === value)[0];
+				if (!folder) {
+					vscode.window.showErrorMessage(`No workspace folder with name '${value}' available!`);
+					return match;
+				}
+				return folder.uri.fsPath;
+		}
+		
+		vscode.window.showErrorMessage(`Variable '${match}' not valid!`);
+		return match;
 		
 	});
 	
