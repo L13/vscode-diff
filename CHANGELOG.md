@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.17.0] - 2019-07-07
+
+- Added ignore line endings for text files.
+- Added setting `l13Diff.eolFileExtenions` to extend the default whitelist for text files.
+- Added `L13 Diff` as first favorite to open diff panel with mouse.
+- Added dimmed dirnames in list view.
+- Added color for conflicts if file has been changed to folder or vice versa.
+
 ## [0.16.0] - 2019-06-23
 
 ### Added

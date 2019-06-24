@@ -25,8 +25,10 @@ export type DiffResult = {
 
 export type Diff = {
 	id:string,
-	status:'deleted'|'modified'|'unchanged'|'untracked',
+	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
 	type:'file'|'folder'|'link'|'mixed',
+	basename:string,
+	dirname:string,
 	fileA:null|File,
 	fileB:null|File,
 };

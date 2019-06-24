@@ -118,7 +118,7 @@ export class DiffPanel {
 		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 		
 		this.panel.onDidChangeViewState(({ webviewPanel }) => {
-		
+			
 			this.setContextForFocus(webviewPanel.active);
 			
 		});

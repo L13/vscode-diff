@@ -4,15 +4,13 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.16.0
+## What's new in L13 Diff 0.17.0
 
-- Added favorites explorer and activitybar icon.
-- Added an icon (★) in the top right of the diff panel to save a favorite diff.
-- Added context menu for favorites to open, rename or delete a favorite diff from the list.
-- Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
-- Added command `L13 Diff: Delete all favorites` to delete all favorite diffs.
-- Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
-- Added keyboard shortcut `Cmd/Ctrl + D` to save current paths in favorites.
+- Added ignore line endings for text files.
+- Added setting `l13Diff.eolFileExtenions` to extend the default whitelist for text files.
+- Added `L13 Diff` as first favorite to open diff panel with mouse.
+- Added dimmed dirnames in list view.
+- Added color for conflicts if file has been changed to folder or vice versa.
 
 ## Features
 

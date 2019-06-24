@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
+import { basename, dirname, extname, sep } from 'path';
 import * as vscode from 'vscode';
 
 import { walktree } from './@l13/fse';
@@ -201,9 +202,13 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
+		const relative = file.relative;
+		const name = dirname(relative);
 		
 		diffs[file.relative] = {
-			id: file.relative,
+			id: relative,
+			basename: basename(relative),
+			dirname: name !== '.' ? name + sep : '',
 			status: 'deleted',
 			type: file.type,
 			fileA: file,
@@ -219,7 +224,8 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 				
 		const file = result[pathname];
-		const diff = diffs[file.relative];
+		const relative = file.relative;
+		const diff = diffs[relative];
 		
 		if (diff) {
 			diff.status = 'unchanged';
@@ -231,7 +237,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 			const statB = <fs.Stats>fileB.stat;
 			
 			if (fileA.type !== fileB.type) {
-				diff.status = 'modified';
+				diff.status = 'conflicting';
 				diff.type = 'mixed';
 			} else if (fileA.type === 'file' && fileB.type === 'file') {
 				if (statA.size !== statB.size) diff.status = 'modified';
@@ -242,8 +248,12 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				}
 			}
 		} else {
+			const name = dirname(relative);
+			
 			diffs[file.relative] = {
-				id: file.relative,
+				id: relative,
+				basename: basename(relative),
+				dirname: name !== '.' ? name + sep : '',
 				status: 'untracked',
 				type: file.type,
 				fileA: null,

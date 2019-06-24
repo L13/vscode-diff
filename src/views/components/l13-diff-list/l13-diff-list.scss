@@ -79,9 +79,9 @@ l13-diff-list-row {
 		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
 	// }
 	
-	// &.-conflicting {
-		// color: var(--vscode-gitDecoration-conflictingResourceForeground);
-	// }
+	&.-conflicting {
+		color: var(--vscode-gitDecoration-conflictingResourceForeground);
+	}
 	
 	&.-untracked {
 		color: var(--vscode-gitDecoration-untrackedResourceForeground);
@@ -138,5 +138,9 @@ l13-diff-list-file {
 	&.-folder::before {
 		-webkit-mask-image: url('folder.svg');
 		mask-image: url('folder.svg');
+	}
+	
+	span.-dirname {
+		opacity: 0.5;
 	}
 }

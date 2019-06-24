@@ -117,7 +117,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				return;
 			}
 			
-			const parentNode = <HTMLElement>(<HTMLElement>target).parentNode;
+			const listRow = <HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row');
 			
 			if (this.cacheSelectionHistory.length) {
 			//	On macOS metaKey overrides shiftKey if both keys are pressed
@@ -130,22 +130,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 							this.unselect();
 						//	On Windows previous selection will be remembered
 						//	On Linux always last clicked item will be remembered
-							this.cacheSelectionHistory = [isWindows ? lastSelection : parentNode];
+							this.cacheSelectionHistory = [isWindows ? lastSelection : listRow];
 						}
 						if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
-						this.cacheSelectedListItems = this.selectRange(parentNode, lastSelection);
-					} else this.selectListItem(parentNode);
+						this.cacheSelectedListItems = this.selectRange(listRow, lastSelection);
+					} else this.selectListItem(listRow);
 				} else if (isMetaKey(ctrlKey, metaKey)) {
-					parentNode.classList.toggle('-selected');
+					listRow.classList.toggle('-selected');
 					this.cacheSelectedListItems = [];
-					if (parentNode.classList.contains('-selected')) this.cacheSelectionHistory.push(parentNode);
-					else this.cacheSelectionHistory.splice(this.cacheSelectionHistory.indexOf(parentNode), 1);
+					if (listRow.classList.contains('-selected')) this.cacheSelectionHistory.push(listRow);
+					else this.cacheSelectionHistory.splice(this.cacheSelectionHistory.indexOf(listRow), 1);
 					this.detectCopy();
 				} else {
 					this.unselect();
-					this.selectListItem(parentNode);
+					this.selectListItem(listRow);
 				}
-			} else this.selectListItem(parentNode);
+			} else this.selectListItem(listRow);
 			
 		});
 		
@@ -153,7 +153,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			const id = (<HTMLElement>(<HTMLElement>target).parentNode).getAttribute('data-id');
+			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
 			vscode.postMessage({
 				command: altKey ? 'open:diffToSide' : 'open:diff',
@@ -468,8 +468,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			row.classList.add('-' + diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
-			appendColumn(row, <File>diff.fileA);
-			appendColumn(row, <File>diff.fileB);
+			appendColumn(row, diff, <File>diff.fileA);
+			appendColumn(row, diff, <File>diff.fileB);
 			
 			this.cacheListItemViews[diff.id] = row;
 			
@@ -503,13 +503,20 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
-function appendColumn (parent:HTMLElement, file:File) {
+function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
 	
 	const column = document.createElement('l13-diff-list-file');
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
-		column.textContent = file.relative;
+		const dirname = document.createElement('SPAN');
+		const basename = document.createElement('SPAN');
+		dirname.textContent = diff.dirname;
+		dirname.classList.add(`-dirname`);
+		basename.textContent = diff.basename;
+		basename.classList.add(`-basename`);
+		column.appendChild(dirname);
+		column.appendChild(basename);
 	}
 	
 	parent.appendChild(column);
