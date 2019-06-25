@@ -509,13 +509,15 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
-		const dirname = document.createElement('SPAN');
+		if (diff.dirname) {
+			const dirname = document.createElement('SPAN');
+			dirname.textContent = diff.dirname;
+			dirname.classList.add(`-dirname`);
+			column.appendChild(dirname);
+		}
 		const basename = document.createElement('SPAN');
-		dirname.textContent = diff.dirname;
-		dirname.classList.add(`-dirname`);
 		basename.textContent = diff.basename;
 		basename.classList.add(`-basename`);
-		column.appendChild(dirname);
 		column.appendChild(basename);
 	}
 	

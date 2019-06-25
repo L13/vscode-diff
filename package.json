@@ -190,6 +190,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Should click on favorite start a compare?"
+				},
+				"l13Diff.ignoreEndOfLine": {
+					"type": "boolean",
+					"default": true,
+					"description": "Should CR/LF be ignored for text files?"
 				}
 			}
 		}

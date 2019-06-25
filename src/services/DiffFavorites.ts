@@ -81,7 +81,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+						vscode.window.showInformationMessage(`Saved '${value}' in favorites!`);
 					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
 					break;
 				}

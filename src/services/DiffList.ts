@@ -9,15 +9,38 @@ import { walktree } from './@l13/fse';
 import { Dictionary, Diff, DiffResult, File, StatsMap } from '../types';
 import { DiffStatus } from './DiffStatus';
 
+const push = Array.prototype.push;
+
 //	Variables __________________________________________________________________
 
 const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
 const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
 const findEscapedEndingBrace = /\\\}/g;
 
+const extensions:string[] = ['.txt'];
+const config = vscode.workspace.getConfiguration();
+
 //	Initialize _________________________________________________________________
 
+vscode.extensions.all.forEach((extension) => {
+	
+	const packageJSON = extension.packageJSON;
+	
+	if (packageJSON.contributes && packageJSON.contributes.languages) {
+		packageJSON.contributes.languages.forEach((language:any) => {
+			
+			push.apply(extensions, language.extensions);
+			
+		});
+	}
+	
+});
 
+if (config.has('files.associations')) {
+	push.apply(extensions, Object.keys(config.get<object>('files.associations', {})));
+}
+
+extensions.sort();
 
 //	Exports ____________________________________________________________________
 
@@ -209,6 +232,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 			id: relative,
 			basename: basename(relative),
 			dirname: name !== '.' ? name + sep : '',
+			extname: extname(relative),
 			status: 'deleted',
 			type: file.type,
 			fileA: file,
@@ -220,6 +244,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 }
 
 function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
+	
+	const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', true);
 	
 	Object.keys(result).forEach((pathname) => {
 				
@@ -240,11 +266,19 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				diff.status = 'conflicting';
 				diff.type = 'mixed';
 			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if (statA.size !== statB.size) diff.status = 'modified';
-				else {
+				if (ignoreEndOfLine && extensions.includes(diff.extname)) {
 					const bufferA = fs.readFileSync(fileA.path);
 					const bufferB = fs.readFileSync(fileB.path);
-					if (!bufferA.equals(bufferB)) diff.status = 'modified';
+					const maxLength = Math.max(bufferA.length, bufferB.length);
+					if (!normalizedBuffer(bufferA, maxLength).equals(normalizedBuffer(bufferB, maxLength))) diff.status = 'modified';
+				} else {
+					if (statA.size !== statB.size) {
+						diff.status = 'modified';
+					} else {
+						const bufferA = fs.readFileSync(fileA.path);
+						const bufferB = fs.readFileSync(fileB.path);
+						if (!bufferA.equals(bufferB)) diff.status = 'modified';
+					}
 				}
 			}
 		} else {
@@ -254,6 +288,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				id: relative,
 				basename: basename(relative),
 				dirname: name !== '.' ? name + sep : '',
+				extname: extname(relative),
 				status: 'untracked',
 				type: file.type,
 				fileA: null,
@@ -262,6 +297,32 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 		}
 		
 	});
+	
+}
+
+function hasUTF16BOM (buffer:Buffer) {
+	
+	return buffer[0] === 254 && buffer[1] === 255 || buffer[0] === 255 && buffer[1] === 254;
+	
+}
+
+function normalizedBuffer (buffer:Buffer, maxLength:number) {
+	
+	const cache = Buffer.alloc(maxLength);
+	const length = buffer.length;
+	const utf16Fix = hasUTF16BOM(buffer) ? 1 : 0;
+	let index = 0;
+	let i = 0;
+	
+	while (i < length) {
+		const value = buffer[i++];
+		if (value === 13) {
+			if (buffer[i + utf16Fix] !== 10) cache[index++] = 10;
+			i += utf16Fix;
+		} else cache[index++] = value;
+	}
+	
+	return cache;
 	
 }
 

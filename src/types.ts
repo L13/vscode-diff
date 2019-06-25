@@ -29,6 +29,7 @@ export type Diff = {
 	type:'file'|'folder'|'link'|'mixed',
 	basename:string,
 	dirname:string,
+	extname:string,
 	fileA:null|File,
 	fileB:null|File,
 };

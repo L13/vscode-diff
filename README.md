@@ -7,7 +7,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in L13 Diff 0.17.0
 
 - Added ignore line endings for text files.
-- Added setting `l13Diff.eolFileExtenions` to extend the default whitelist for text files.
+- Added setting `l13Diff.ignoreEndOfLine`.
 - Added `L13 Diff` as first favorite to open diff panel with mouse.
 - Added dimmed dirnames in list view.
 - Added color for conflicts if file has been changed to folder or vice versa.
