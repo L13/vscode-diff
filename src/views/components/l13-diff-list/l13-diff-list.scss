@@ -118,8 +118,8 @@ l13-diff-list-file {
 	&.-file {
 		
 		&::before {
-			-webkit-mask-image: url('file.svg');
-			mask-image: url('file.svg');
+			-webkit-mask-image: url('list-file.svg');
+			mask-image: url('list-file.svg');
 		}
 		
 		span.-dirname {
@@ -130,8 +130,8 @@ l13-diff-list-file {
 	&.-folder {
 		
 		&::before {
-			-webkit-mask-image: url('folder.svg');
-			mask-image: url('folder.svg');
+			-webkit-mask-image: url('list-folder.svg');
+			mask-image: url('list-folder.svg');
 		}
 		
 		span.-basename {
