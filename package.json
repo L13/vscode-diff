@@ -193,7 +193,7 @@
 				},
 				"l13Diff.ignoreEndOfLine": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				}
 			}

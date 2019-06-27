@@ -160,15 +160,15 @@ class OpenL13DiffTreeItem extends vscode.TreeItem {
 	};
 	
 	public iconPath = {
-		light: path.join(__filename, '..', '..', 'images', 'open-diff-light.svg'),
-		dark: path.join(__filename, '..', '..', 'images', 'open-diff-dark.svg'),
+		light: path.join(__filename, '..', '..', 'images', 'favorite-l13-light.svg'),
+		dark: path.join(__filename, '..', '..', 'images', 'favorite-l13-dark.svg'),
 	};
 	
 	public contextValue = 'openL13Diff';
 	
 	public constructor () {
 		
-		super('L13 Diff');
+		super('Diff');
 		
 	}
 	
