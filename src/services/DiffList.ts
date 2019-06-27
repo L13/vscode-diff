@@ -18,29 +18,12 @@ const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
 const findEscapedEndingBrace = /\\\}/g;
 
 const extensions:string[] = ['.txt'];
+const filenames:string[] = [];
 const config = vscode.workspace.getConfiguration();
 
 //	Initialize _________________________________________________________________
 
-vscode.extensions.all.forEach((extension) => {
-	
-	const packageJSON = extension.packageJSON;
-	
-	if (packageJSON.contributes && packageJSON.contributes.languages) {
-		packageJSON.contributes.languages.forEach((language:any) => {
-			
-			push.apply(extensions, language.extensions);
-			
-		});
-	}
-	
-});
-
-if (config.has('files.associations')) {
-	push.apply(extensions, Object.keys(config.get<object>('files.associations', {})));
-}
-
-extensions.sort();
+createWhitelistForTextFiles();
 
 //	Exports ____________________________________________________________________
 
@@ -266,11 +249,11 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				diff.status = 'conflicting';
 				diff.type = 'mixed';
 			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if (ignoreEndOfLine && extensions.includes(diff.extname)) {
+				if (ignoreEndOfLine && (extensions.includes(diff.extname) || filenames.includes(diff.basename))) {
 					const bufferA = fs.readFileSync(fileA.path);
 					const bufferB = fs.readFileSync(fileB.path);
 					const maxLength = Math.max(bufferA.length, bufferB.length);
-					if (!normalizedBuffer(bufferA, maxLength).equals(normalizedBuffer(bufferB, maxLength))) diff.status = 'modified';
+					if (!normalizeBuffer(bufferA, maxLength).equals(normalizeBuffer(bufferB, maxLength))) diff.status = 'modified';
 				} else {
 					if (statA.size !== statB.size) {
 						diff.status = 'modified';
@@ -300,13 +283,39 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 }
 
+function createWhitelistForTextFiles () {
+	
+	vscode.extensions.all.forEach((extension) => {
+	
+		const packageJSON = extension.packageJSON;
+		
+		if (packageJSON.contributes && packageJSON.contributes.languages) {
+			packageJSON.contributes.languages.forEach((language:any) => {
+				
+				if (language.extensions) push.apply(extensions, language.extensions);
+				if (language.filenames) push.apply(filenames, language.filenames);
+				
+			});
+		}
+		
+	});
+	
+	if (config.has('files.associations')) {
+		push.apply(extensions, Object.keys(config.get<object>('files.associations', {})));
+	}
+	
+	extensions.sort();
+	filenames.sort();
+	
+}
+
 function hasUTF16BOM (buffer:Buffer) {
 	
 	return buffer[0] === 254 && buffer[1] === 255 || buffer[0] === 255 && buffer[1] === 254;
 	
 }
 
-function normalizedBuffer (buffer:Buffer, maxLength:number) {
+function normalizeBuffer (buffer:Buffer, maxLength:number) {
 	
 	const cache = Buffer.alloc(maxLength);
 	const length = buffer.length;

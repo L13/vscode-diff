@@ -1,11 +1,13 @@
 {
 	"folder-a":{
 		"file.txt":[10],
+		".gitignore":[10],
 		"utf-16be.txt": [254,255,0,10],
 		"utf-16le.txt": [255,254,10,0]
 	},
 	"folder-b":{
 		"file.txt":[13,10],
+		".gitignore":[13,10],
 		"utf-16be.txt": [254,255,0,13,0,10],
 		"utf-16le.txt": [255,254,13,0,10,0]
 	}
