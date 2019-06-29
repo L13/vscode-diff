@@ -38,6 +38,7 @@ export class DiffStatus {
 	public dispose () :void {
 		
 		this.statusBarItem.dispose();
+		DiffStatus.currentStatusBar = undefined;
 		
 	}
 	

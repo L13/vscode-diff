@@ -185,7 +185,7 @@ export class DiffCompare {
 				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
 				
 				diffResult.createStats();
-				diffResult.report();
+				this.output.msg(diffResult.report());
 				
 				callback(null, diffResult);
 				

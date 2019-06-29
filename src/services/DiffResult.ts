@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 
 import { Diff, DiffStats, File } from '../types';
-import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
@@ -66,30 +65,29 @@ export class DiffResult {
 		
 	}
 	
-	public report () :void {
+	public report () :string {
 		
-		const output = DiffOutput.createOutput();
-		
-		output.msg();
-		output.msg(`File Report`);
-		output.msg(`Total: ${this.stats.total}`);
-		output.msg(`Files: ${this.stats.files}`);
-		output.msg(`Folders: ${this.stats.folders}`);
-		// output.msg(`Symlinks: ${this.stats.symlinks}`);
-		
-		output.msg();
-		output.msg(`Status Report`);
-		output.msg(`Diffs: ${this.diffs.length}`);
-		output.msg(`Conflicts: ${this.stats.conflicting}`);
-		output.msg(`Deleted: ${this.stats.deleted}`);
-		output.msg(`Modified: ${this.stats.modified}`);
-		output.msg(`Unchanged: ${this.stats.unchanged}`);
-		output.msg(`Untracked: ${this.stats.untracked}`);
+		let text = `
+File Report
+Total: ${this.stats.total}
+Files: ${this.stats.files}
+Folders: ${this.stats.folders}
+Symlinks: ${this.stats.symlinks}
+
+Status Report
+Diffs: ${this.diffs.length}
+Conflicts: ${this.stats.conflicting}
+Deleted: ${this.stats.deleted}
+Modified: ${this.stats.modified}
+Unchanged: ${this.stats.unchanged}
+Untracked: ${this.stats.untracked}`;
 		
 		if (vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false)) {
-			output.msg();
-			output.msg(`Ignored EOL: ${this.stats.eol}`);
+			text += `
+Ignored EOL: ${this.stats.eol}`;
 		}
+		
+		return text;
 		
 	}
 	

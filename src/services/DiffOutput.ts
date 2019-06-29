@@ -51,6 +51,7 @@ export class DiffOutput {
 	public dispose () :void {
 		
 		this.output.dispose();
+		DiffOutput.currentOutput = undefined;
 		
 	}
 	
