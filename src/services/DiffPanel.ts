@@ -5,12 +5,13 @@ import * as vscode from 'vscode';
 
 import { Uri } from '../types';
 import { workspacePaths } from './common';
+import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDialog } from './DiffDialog';
 import { DiffFavorites, Favorite } from './DiffFavorites';
-import { DiffList } from './DiffList';
 import { DiffMenu } from './DiffMenu';
 import { DiffOpen } from './DiffOpen';
+import { DiffOutput } from './DiffOutput';
 import { DiffStatus } from './DiffStatus';
 
 const floor = Math.floor;
@@ -36,10 +37,12 @@ export class DiffPanel {
 	private readonly context:vscode.ExtensionContext;
 	
 	private readonly status:DiffStatus;
+	private readonly output:DiffOutput;
+	
 	private readonly dialog:DiffDialog;
 	private readonly open:DiffOpen;
 	private readonly menu:DiffMenu;
-	private readonly list:DiffList;
+	private readonly list:DiffCompare;
 	private readonly copy:DiffCopy;
 	
 	private disposables:vscode.Disposable[] = [];
@@ -98,14 +101,16 @@ export class DiffPanel {
 		this.panel = panel;
 		this.context = context;
 		
-		this.status = new DiffStatus(context);
+		this.status = DiffStatus.createStatusBar(context);
+		this.output = DiffOutput.createOutput();
 		this.dialog = new DiffDialog(panel);
 		this.open = new DiffOpen(panel);
 		this.menu = new DiffMenu(panel, context);
 		this.copy = new DiffCopy(panel);
-		this.list = new DiffList(panel, context, this.status);
+		this.list = new DiffCompare(panel, context);
 		
 		this.disposables.push(this.status);
+		this.disposables.push(this.output);
 		this.disposables.push(this.dialog);
 		this.disposables.push(this.open);
 		this.disposables.push(this.menu);

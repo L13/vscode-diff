@@ -37,6 +37,7 @@
 		"onCommand:l13Diff.open",
 		"onCommand:l13Diff.clearHistory",
 		"onCommand:l13Diff.clearFavorites",
+		"onCommand:l13Diff.showOutput",
 		"onView:l13DiffFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -45,14 +46,14 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "l13-diff",
+					"id": "l13Diff",
 					"title": "L13 Diff",
 					"icon": "images/favorites.svg"
 				}
 			]
 		},
 		"views": {
-			"l13-diff": [
+			"l13Diff": [
 				{
 					"id": "l13DiffFavorites",
 					"name": "Favorites"
@@ -103,6 +104,10 @@
 			{
 				"command": "l13Diff.clearFavorites",
 				"title": "L13 Diff: Delete All Favorites"
+			},
+			{
+				"command": "l13Diff.showOutput",
+				"title": "L13 Diff: Show Output Channel"
 			}
 		],
 		"keybindings": [
@@ -116,6 +121,16 @@
 				"key": "ctrl+d",
 				"command": "l13Diff.addToFavorites",
 				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+l meta+f",
+				"key": "ctrl+l ctrl+f",
+				"command": "workbench.view.extension.l13Diff"
+			},
+			{
+				"mac": "meta+l meta+o",
+				"key": "ctrl+l ctrl+o",
+				"command": "l13Diff.showOutput"
 			}
 		],
 		"menus": {

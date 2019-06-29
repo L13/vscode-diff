@@ -6,10 +6,17 @@ import * as vscode from 'vscode';
 
 import { walktree } from './@l13/fse';
 
-import { Dictionary, Diff, DiffResult, File, StatsMap } from '../types';
+import { Dictionary, Diff, File, StatsMap } from '../types';
+import { DiffOutput } from './DiffOutput';
+import { DiffResult } from './DiffResult';
 import { DiffStatus } from './DiffStatus';
 
 const push = Array.prototype.push;
+
+type TextFiles = {
+	extensions:string[],
+	filenames:string[],
+};
 
 //	Variables __________________________________________________________________
 
@@ -17,29 +24,35 @@ const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
 const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
 const findEscapedEndingBrace = /\\\}/g;
 
-const extensions:string[] = ['.txt'];
-const filenames:string[] = [];
-const config = vscode.workspace.getConfiguration();
+const textfiles:TextFiles = {
+	extensions: [],
+	filenames: [],
+};
 
 //	Initialize _________________________________________________________________
 
-createWhitelistForTextFiles();
+buildWhitelistForTextFiles();
+
+vscode.extensions.onDidChange(() => buildWhitelistForTextFiles());
 
 //	Exports ____________________________________________________________________
 
-export class DiffList {
+export class DiffCompare {
 	
 	private readonly panel:vscode.WebviewPanel;
 	private readonly context:vscode.ExtensionContext;
 	
 	private readonly status:DiffStatus;
+	private readonly output:DiffOutput;
+	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, status:DiffStatus) {
+	public constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext) {
 		
 		this.panel = panel;
 		this.context = context;
-		this.status = status;
+		this.status = DiffStatus.createStatusBar(context);
+		this.output = DiffOutput.createOutput();
 		
 		this.panel.webview.onDidReceiveMessage((message) => {
 			
@@ -75,31 +88,32 @@ export class DiffList {
 	
 	private createDiffs (message:any) :void {
 		
+		this.status.update();
+		this.output.clear();
+		
 		const pathA = parsePredefinedVariables(message.pathA);
 		const pathB = parsePredefinedVariables(message.pathB);
 		
-		this.status.update();
-		
 		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 			return;
 		}
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 			return;
 		}
 		
 		if (!fs.existsSync(pathA)) {
 			vscode.window.showErrorMessage(`The left path '${pathA}' does not exist.`);
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 			return;
 		}
 		
 		if (!fs.existsSync(pathB)) {
 			vscode.window.showErrorMessage(`The right path '${pathB}' does not exist.`);
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 			return;
 		}
 		
@@ -116,7 +130,7 @@ export class DiffList {
 				preview: false,
 				viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 			});
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 		} else if (statA.isDirectory() && statB.isDirectory()) {
 			this.saveHistory(message.pathA, message.pathB);
 			this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
@@ -124,7 +138,7 @@ export class DiffList {
 				if (error) vscode.window.showErrorMessage(error.message);
 				
 				if (diffResult) {
-					const total = diffResult.total;
+					const total = diffResult.stats.total;
 					this.status.update(`Compared ${total} file${total > 2 ? 's' : ''}`);
 				} else this.status.update();
 				
@@ -133,7 +147,7 @@ export class DiffList {
 			});
 		} else {
 			vscode.window.showErrorMessage(`The left and right path is not of the same type.`);
-			this.panel.webview.postMessage({ command: message.command, diffResult: { pathA, pathB, diffs: [] } });
+			this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
 		}
 		
 	}
@@ -144,36 +158,36 @@ export class DiffList {
 		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a directory!`));
 		
 		const ignore = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore');
-		const diffResult:DiffResult = { pathA: dirnameA, pathB: dirnameB, total: 0, diffs: [] };
+		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.status.update('Scanning left directory');
+		this.output.log(`Comparing '${dirnameA}' ↔ '${dirnameB}'`);
+		this.output.log('Scanning left directory');
 		
 		walktree(dirnameA, { ignore }, (errorA, resultA) => {
 			
 			if (errorA) return callback(errorA);
 			
-			diffResult.total += Object.keys(<StatsMap>resultA).length;
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.status.update('Scanning right directory');
+			this.output.log('Scanning right directory');
 			
 			walktree(dirnameB, { ignore }, (errorB, resultB) => {
 			
 				if (errorB) return callback(errorB);
 				
-				this.status.update('Comparing files');
+				this.output.log('Comparing files');
+					
+				createListB(diffs, <StatsMap>resultB);
 				
-				setTimeout(() => { // Weird fix to let appear previous status message
-					
-					diffResult.total += Object.keys(<StatsMap>resultB).length;
-					createListB(diffs, <StatsMap>resultB);
-					
-					diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
-					
-					callback(null, diffResult);
-					
-				}, 0);
+				this.output.log('Compared files');
+				
+				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
+				
+				diffResult.createStats();
+				diffResult.report();
+				
+				callback(null, diffResult);
 				
 			});
 			
@@ -218,6 +232,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 			extname: extname(relative),
 			status: 'deleted',
 			type: file.type,
+			eol: false,
 			fileA: file,
 			fileB: null,
 		};
@@ -228,7 +243,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
-	const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', true);
+	const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
 	
 	Object.keys(result).forEach((pathname) => {
 				
@@ -249,10 +264,11 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				diff.status = 'conflicting';
 				diff.type = 'mixed';
 			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if (ignoreEndOfLine && (extensions.includes(diff.extname) || filenames.includes(diff.basename))) {
+				if (ignoreEndOfLine && (textfiles.extensions.includes(diff.extname) || textfiles.filenames.includes(diff.basename))) {
 					const bufferA = fs.readFileSync(fileA.path);
 					const bufferB = fs.readFileSync(fileB.path);
 					const maxLength = Math.max(bufferA.length, bufferB.length);
+					diff.eol = true;
 					if (!normalizeBuffer(bufferA, maxLength).equals(normalizeBuffer(bufferB, maxLength))) diff.status = 'modified';
 				} else {
 					if (statA.size !== statB.size) {
@@ -274,6 +290,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				extname: extname(relative),
 				status: 'untracked',
 				type: file.type,
+				eol: false,
 				fileA: null,
 				fileB: file,
 			};
@@ -283,7 +300,12 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 }
 
-function createWhitelistForTextFiles () {
+function buildWhitelistForTextFiles () {
+	
+	const config = vscode.workspace.getConfiguration();
+	
+	textfiles.extensions = ['.txt'];
+	textfiles.filenames = [];
 	
 	vscode.extensions.all.forEach((extension) => {
 	
@@ -292,8 +314,8 @@ function createWhitelistForTextFiles () {
 		if (packageJSON.contributes && packageJSON.contributes.languages) {
 			packageJSON.contributes.languages.forEach((language:any) => {
 				
-				if (language.extensions) push.apply(extensions, language.extensions);
-				if (language.filenames) push.apply(filenames, language.filenames);
+				if (language.extensions) push.apply(textfiles.extensions, language.extensions);
+				if (language.filenames) push.apply(textfiles.filenames, language.filenames);
 				
 			});
 		}
@@ -301,11 +323,11 @@ function createWhitelistForTextFiles () {
 	});
 	
 	if (config.has('files.associations')) {
-		push.apply(extensions, Object.keys(config.get<object>('files.associations', {})));
+		push.apply(textfiles.extensions, Object.keys(config.get<object>('files.associations', {})));
 	}
 	
-	extensions.sort();
-	filenames.sort();
+	textfiles.extensions.sort();
+	textfiles.filenames.sort();
 	
 }
 
