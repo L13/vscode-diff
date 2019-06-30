@@ -149,7 +149,15 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						stat,
 						type: 'file',
 					};
-				}
+				}/* else if (stat.isSymbolicLink()) {
+					job.result[pathname] = {
+						folder: cwd,
+						path: pathname,
+						relative: nextRelative,
+						stat,
+						type: 'symlink',
+					};
+				}*/
 				
 				if (!job.tasks) job.done();
 				

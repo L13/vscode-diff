@@ -9,6 +9,7 @@ import { walktree } from './@l13/fse';
 import { Dictionary, Diff, File, StatsMap } from '../types';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
+import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
 
 const push = Array.prototype.push;
@@ -137,10 +138,7 @@ export class DiffCompare {
 				
 				if (error) vscode.window.showErrorMessage(error.message);
 				
-				if (diffResult) {
-					const total = diffResult.stats.total;
-					this.status.update(`Compared ${total} file${total > 2 ? 's' : ''}`);
-				} else this.status.update();
+				if (!diffResult) this.status.update();
 				
 				this.panel.webview.postMessage({ command: message.command, diffResult });
 				
@@ -161,6 +159,8 @@ export class DiffCompare {
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
+		this.output.msg('LOG');
+		this.output.msg();
 		this.output.log(`Comparing '${dirnameA}' ↔ '${dirnameB}'`);
 		this.output.log('Scanning left directory');
 		
@@ -184,8 +184,13 @@ export class DiffCompare {
 				
 				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
 				
-				diffResult.createStats();
-				this.output.msg(diffResult.report());
+				const diffStats = new DiffStats(diffResult);
+				this.output.msg();
+				this.output.msg();
+				this.output.msg(diffStats.report());
+				
+				const total = diffStats.total;
+				this.status.update(`Compared ${total} file${total > 2 ? 's' : ''}`);
 				
 				callback(null, diffResult);
 				
