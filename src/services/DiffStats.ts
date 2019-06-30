@@ -115,10 +115,10 @@ export class DiffStats {
 
 Diffs:       ${this.result.diffs.length}
 Conflicts:   ${this.conflicting}
+Created:     ${this.untracked}
 Deleted:     ${this.deleted}
 Modified:    ${this.modified}
-Unchanged:   ${this.unchanged}
-Untracked:   ${this.untracked}`;
+Unchanged:   ${this.unchanged}`;
 		
 		if (vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false)) {
 			text += `
