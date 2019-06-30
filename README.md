@@ -9,9 +9,9 @@ Compare two folders in Visual Studio Code.
 - Added setting `l13Diff.ignoreEndOfLine`. If true different line endings (CR/LF) in text files will be ignored. Default value is `false`.
 - Added `L13 Diff` as first favorite to open diff panel with mouse.
 - Added dimmed dirnames in list view.
-- Added color for conflicts if file has been changed to folder or vice versa.
+- Added new color for conflicts if file has been changed to folder or vice versa.
 - Added output channel for logging and stats.
-- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to show output channel.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
 - Added `Click` on statusbar item to show output channel.
 
 ## Features
@@ -55,7 +55,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF).
+* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. If `files.associations` is set in the user config, whose extension names will be used, too.
 
 ## Predefined Variables
 
@@ -69,13 +69,13 @@ macOS
 
 * `Cmd + L Cmd + L` - Open the diff panel.
 * `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
-* `Cmd + O Cmd + O` - Show output channel for diff. Provides logging and stats.
+* `Cmd + O Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
 
 Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
-* `Ctrl + O Ctrl + O` - Open output channel for diff. Provides logging and stats.
+* `Ctrl + O Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
@@ -150,4 +150,4 @@ Context menu
 
 ## Statusbar
 
-* `Click` - Show the output channel for logging and stats.
+* `Click` - Open the output channel for logging and stats.
