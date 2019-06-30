@@ -10,6 +10,9 @@ Compare two folders in Visual Studio Code.
 - Added `L13 Diff` as first favorite to open diff panel with mouse.
 - Added dimmed dirnames in list view.
 - Added color for conflicts if file has been changed to folder or vice versa.
+- Added output channel for logging and stats.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to show output channel.
+- Added `Click` on statusbar item to show output channel.
 
 ## Features
 
