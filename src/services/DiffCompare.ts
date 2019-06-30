@@ -207,12 +207,12 @@ export class DiffCompare {
 				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
 				
 				const diffStats = new DiffStats(diffResult);
+				
+				this.status.update(`Compared ${diffStats.total} file${diffStats.total > 2 ? 's' : ''}`);
+				
 				this.output.msg();
 				this.output.msg();
 				this.output.msg(diffStats.report());
-				
-				const total = diffStats.total;
-				this.status.update(`Compared ${total} file${total > 2 ? 's' : ''}`);
 				
 				callback(null, diffResult);
 				

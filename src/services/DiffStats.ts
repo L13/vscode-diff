@@ -78,8 +78,8 @@ export class DiffStats {
 		
 		result.diffs.forEach((diff:Diff) => {
 			
-			if (diff.fileA) fileStat(diff.fileA, this.pathA);
-			if (diff.fileB) fileStat(diff.fileB, this.pathB);
+			if (diff.fileA) countBasicStats(diff.fileA, this.pathA);
+			if (diff.fileB) countBasicStats(diff.fileB, this.pathB);
 			
 			if (diff.status === 'conflicting') this.conflicting++;
 			if (diff.status === 'deleted') this.deleted++;
@@ -133,7 +133,7 @@ Ignored EOL: ${this.eol}`;
 
 //	Functions __________________________________________________________________
 
-function fileStat (file:File, stats:FolderStats) {
+function countBasicStats (file:File, stats:FolderStats) {
 	
 	stats.total++;
 	stats.size += file.stat.size;
@@ -152,17 +152,15 @@ function formatFileSize (size:number) {
 	if (size > MB) return `${(size / MB).toFixed(2)} MB`;
 	if (size > KB) return `${(size / KB).toFixed(2)} KB`;
 	
-	return `${size} Byte`;
+	return `${size} Byte${size === 1 ? '' : 's'}`;
 	
 }
 
 function formatBasicStats (name:string, stats:DiffStats|FolderStats) {
 	
 	return `${name}
-Total:       ${stats.total}
-Size:        ${formatFileSize(stats.size)} (${stats.size} Byte)
-Files:       ${stats.files}
-Folders:     ${stats.folders}`;
+Total:       ${stats.total} (${stats.files} file${stats.files === 1 ? '' : 's'}, ${stats.folders} folder${stats.folders === 1 ? '' : 's'})
+Size:        ${formatFileSize(stats.size)} (${stats.size} Byte${stats.size === 1 ? '' : 's'})`;
 // Symlinks: ${stats.symlinks}`;
 	
 }

@@ -42,6 +42,12 @@ export class DiffOutput {
 		
 	}
 	
+	public hide () :void {
+		
+		this.output.hide();
+		
+	}
+	
 	public clear () :void {
 		
 		this.output.clear();
