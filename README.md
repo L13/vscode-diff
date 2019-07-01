@@ -75,6 +75,9 @@ Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
+
+Windows
+
 * `Ctrl + O Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.

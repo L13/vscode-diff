@@ -36,7 +36,7 @@ export type Diff = {
 	id:string,
 	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
 	type:'file'|'folder'|'symlink'|'mixed',
-	eol:boolean,
+	ignoredEOL:boolean,
 	basename:string,
 	dirname:string,
 	extname:string,

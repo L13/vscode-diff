@@ -177,14 +177,14 @@ export class DiffCompare {
 	
 	private createDiffList (dirnameA:string, dirnameB:string, callback:(error:null|Error, diff?:DiffResult) => void) :void {
 		
-		if (!isDirectory(dirnameA)) return callback(new Error(`Path '${dirnameA}' is not a directory!`));
-		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a directory!`));
+		if (!isDirectory(dirnameA)) return callback(new Error(`Path '${dirnameA}' is not a folder!`));
+		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a folder!`));
 		
 		const ignore = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore');
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.output.log('Scanning left directory');
+		this.output.log('Scanning left folder');
 		
 		walktree(dirnameA, { ignore }, (errorA, resultA) => {
 			
@@ -192,7 +192,7 @@ export class DiffCompare {
 			
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.output.log('Scanning right directory');
+			this.output.log('Scanning right folder');
 			
 			walktree(dirnameB, { ignore }, (errorB, resultB) => {
 			
@@ -208,7 +208,7 @@ export class DiffCompare {
 				
 				const diffStats = new DiffStats(diffResult);
 				
-				this.status.update(`Compared ${diffStats.total} file${diffStats.total > 2 ? 's' : ''}`);
+				this.status.update(`Compared ${diffStats.all} file${diffStats.all.total > 2 ? 's' : ''}`);
 				
 				this.output.msg();
 				this.output.msg();
@@ -259,7 +259,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 			extname: extname(relative),
 			status: 'deleted',
 			type: file.type,
-			eol: false,
+			ignoredEOL: false,
 			fileA: file,
 			fileB: null,
 		};
@@ -297,8 +297,10 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 					textfiles.glob && textfiles.glob.test(diff.basename))) {
 					const bufferA = fs.readFileSync(fileA.path);
 					const bufferB = fs.readFileSync(fileB.path);
+				//	If files are equal normalizing is not necessary
+					if (statA.size === statB.size && bufferA.equals(bufferB)) return;
 					const maxLength = Math.max(bufferA.length, bufferB.length);
-					diff.eol = true;
+					diff.ignoredEOL = true;
 					if (!normalizeBuffer(bufferA, maxLength).equals(normalizeBuffer(bufferB, maxLength))) diff.status = 'modified';
 				} else {
 					if (statA.size !== statB.size) {
@@ -320,7 +322,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				extname: extname(relative),
 				status: 'untracked',
 				type: file.type,
-				eol: false,
+				ignoredEOL: false,
 				fileA: null,
 				fileB: file,
 			};

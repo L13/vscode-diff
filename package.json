@@ -129,7 +129,7 @@
 			},
 			{
 				"mac": "meta+l meta+o",
-				"key": "ctrl+l ctrl+o",
+				"win": "ctrl+l ctrl+o",
 				"command": "l13Diff.showOutput"
 			}
 		],
