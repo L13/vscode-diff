@@ -40,6 +40,8 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	private map:{ [name:string]:Diff } = {};
 	
+	public message:string = '';
+	
 	public items:Diff[] = [];
 	public filteredItems:Diff[] = [];
 	
@@ -136,6 +138,10 @@ export class L13DiffListViewModel extends ViewModel {
 		this[FILTERS].forEach((viewmodel) => items = viewmodel.filter(items));
 		
 		this.filteredItems = items;
+		
+		if (this.items.length) {
+			this.message = this.filteredItems.length ? '' : 'No items are matching the current filter settings.';
+		} else this.message = '';
 		
 		this.requestUpdate();
 		

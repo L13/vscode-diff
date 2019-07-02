@@ -4,7 +4,7 @@ export default {
 	"l13-diff-compare/l13-diff-compare.html": "<button [disabled]=\"disabled\">Compare</button>",
 	"l13-diff-input/l13-diff-input.html": "<input type=\"text\" [(model)]=\"value\" [disabled]=\"disabled\">\n<button (click)=\"openDialog()\" [disabled]=\"disabled\"></button>\n<slot></slot>",
 	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts></l13-diff-shortcuts>",
-	"l13-diff-list/l13-diff-list.html": "<slot></slot><l13-diff-list-body></l13-diff-list-body>",
+	"l13-diff-list/l13-diff-list.html": "<slot></slot><l13-diff-list-message [if]=\"message\">{{ message }}</l13-diff-list-message><l13-diff-list-body></l13-diff-list-body>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",
 	"l13-diff-search/l13-diff-search.html": "<div id=\"l13_resizer\"></div>\n<div class=\"l13-input\">\n\t<input id=\"l13_searchterm\" type=\"text\" [(model)]=\"searchterm\" [disabled]=\"disabled\">\n\t<input id=\"l13_case_sensitive\" type=\"checkbox\" [(model)]=\"useCaseSensitive\" [disabled]=\"disabled\">\n\t<input id=\"l13_use_regexp\" type=\"checkbox\" [(model)]=\"useRegExp\" [disabled]=\"disabled\">\n\t<div class=\"l13-message\" [if]=\"error\">{{ error }}</div>\n</div>\n<button id=\"l13_close\" [disabled]=\"disabled\"></button>",

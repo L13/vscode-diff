@@ -208,7 +208,7 @@ export class DiffCompare {
 				
 				const diffStats = new DiffStats(diffResult);
 				
-				this.status.update(`Compared ${diffStats.all} file${diffStats.all.total > 2 ? 's' : ''}`);
+				this.status.update(`Compared ${diffStats.all.total} file${diffStats.all.total > 2 ? 's' : ''}`);
 				
 				this.output.msg();
 				this.output.msg();

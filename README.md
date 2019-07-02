@@ -12,6 +12,7 @@ Compare two folders in Visual Studio Code.
 - Added new color for conflicts if file has been changed to folder or vice versa.
 - Added output channel for logging and stats.
 - Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + F` to open favorites.
 - Added `Click` on statusbar item to show output channel.
 
 ## Features
@@ -70,11 +71,13 @@ macOS
 * `Cmd + L Cmd + L` - Open the diff panel.
 * `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
 * `Cmd + O Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
+* `Cmd + O Cmd + F` - Open favorites explorer.
 
 Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
+* `Ctrl + O Ctrl + F` - Open favorites explorer.
 
 Windows
 

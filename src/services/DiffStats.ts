@@ -170,7 +170,7 @@ Conflicts:   ${this.conflicting.total}
 Created:     ${this.untracked.total}
 Deleted:     ${this.deleted.total}
 Modified:    ${this.modified.total}${ignoreEndOfLine ? formatIgnoreEOL(this.modified.ignoredEOL) : ''}
-Unchanged:   ${this.unchanged.total}${ignoreEndOfLine ? formatIgnoreEOL(this.modified.ignoredEOL) : ''}`;
+Unchanged:   ${this.unchanged.total}${ignoreEndOfLine ? formatIgnoreEOL(this.unchanged.ignoredEOL) : ''}`;
 		
 		return text;
 		

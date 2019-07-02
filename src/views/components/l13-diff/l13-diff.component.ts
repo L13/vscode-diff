@@ -177,7 +177,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		listVM.on('compared', () => this.list.focus());
 		listVM.on('copied', () => this.list.focus());
-		listVM.on('filtered', () => this.intro.style.display = listVM.filteredItems.length ? 'none' : 'block');
+		listVM.on('filtered', () => this.intro.style.display = listVM.items.length ? 'none' : 'block');
 		
 		
 	}
