@@ -70,18 +70,18 @@ macOS
 
 * `Cmd + L Cmd + L` - Open the diff panel.
 * `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
-* `Cmd + O Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
-* `Cmd + O Cmd + F` - Open favorites explorer.
+* `Cmd + L Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
+* `Cmd + L Cmd + F` - Open favorites explorer.
 
 Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
-* `Ctrl + O Ctrl + F` - Open favorites explorer.
+* `Ctrl + L Ctrl + F` - Open favorites explorer.
 
 Windows
 
-* `Ctrl + O Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
+* `Ctrl + L Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
