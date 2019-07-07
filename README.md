@@ -13,7 +13,7 @@ Compare two folders in Visual Studio Code.
 - Added output channel for logging and stats.
 - Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
 - Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + F` to open favorites.
-- Added `Click` on statusbar item to show output channel.
+- Added `Click` on statusbar item to open output channel.
 
 ## Features
 
@@ -56,7 +56,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. If `files.associations` is set in the user config, whose extension names will be used, too.
+* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
 ## Predefined Variables
 

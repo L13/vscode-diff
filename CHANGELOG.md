@@ -10,7 +10,8 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added new color for conflicts if file has been changed to folder or vice versa.
 - Added output channel for logging and stats.
 - Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
-- Added `Click` on statusbar item to show output channel.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + F` to open favorites.
+- Added `Click` on statusbar item to open output channel.
 
 ### Changed
 - Changed icons to be sharper on non retina displays.
