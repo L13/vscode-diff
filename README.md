@@ -4,15 +4,16 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.16.0
+## What's new in L13 Diff 0.17.0
 
-- Added favorites explorer and activitybar icon.
-- Added an icon (★) in the top right of the diff panel to save a favorite diff.
-- Added context menu for favorites to open, rename or delete a favorite diff from the list.
-- Added setting `l13Diff.openFavoriteAndCompare` for clicking on a favorite diff in the list.
-- Added command `L13 Diff: Delete all favorites` to delete all favorite diffs.
-- Added predefined variables `${workspaceFolder}`, `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}` for paths. 
-- Added keyboard shortcut `Cmd/Ctrl + D` to save current paths in favorites.
+- Added setting `l13Diff.ignoreEndOfLine`. If true different line endings (CR/LF) in text files will be ignored. Default value is `false`.
+- Added `L13 Diff` as first favorite to open diff panel with mouse.
+- Added dimmed dirnames in list view.
+- Added new color for conflicts if file has been changed to folder or vice versa.
+- Added output channel for logging and stats.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
+- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + F` to open favorites.
+- Added `Click` on statusbar item to open output channel.
 
 ## Features
 
@@ -26,8 +27,9 @@ Compare two folders in Visual Studio Code.
 * Double click an file item in the list to open the diff or the file.
 * Mouse and keyboard support for selecting items in the list.
 * Search for pathnames to filter diff result.
-* Save your favorite diffs and start a compare immediately.
+* Save your favorite diffs and start a comparison immediately.
 * Supports predefined variables for dynamic pathnames.
+* Provides logging and stats for the current diff.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -54,6 +56,7 @@ Toggle the view, select files by status or copy files from left to right or vice
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
+* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
 ## Predefined Variables
 
@@ -67,11 +70,18 @@ macOS
 
 * `Cmd + L Cmd + L` - Open the diff panel.
 * `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
+* `Cmd + L Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
+* `Cmd + L Cmd + F` - Open favorites explorer.
 
 Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
+* `Ctrl + L Ctrl + F` - Open favorites explorer.
+
+Windows
+
+* `Ctrl + L Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
@@ -79,7 +89,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in menu.
-* `Enter` - If the menu is visible, the selected path will be filled in, otherwise a compare starts.
+* `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
 
 ## List Mouse/Keyboard Shortcuts
 
@@ -143,3 +153,7 @@ Context menu
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Rename` - Change the name of the favorite.
 * `Delete` - Delete the favorite diff.
+
+## Statusbar
+
+* `Click` - Open the output channel for logging and stats.

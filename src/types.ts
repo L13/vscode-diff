@@ -16,17 +16,30 @@ export type Callback = (error?:null|Error, result?:StatsMap) => void;
 
 export type Dictionary<T> = { [token:string]:T };
 
-export type DiffResult = {
-	pathA:string,
-	pathB:string,
+export type DiffStats = {
 	total:number,
-	diffs:Diff[],
+	
+	files:number,
+	folders:number,
+	symlinks:number,
+	
+	conflicting:number,
+	deleted:number,
+	modified:number,
+	unchanged:number,
+	untracked:number,
+	
+	eol:number,
 };
 
 export type Diff = {
 	id:string,
-	status:'deleted'|'modified'|'unchanged'|'untracked',
-	type:'file'|'folder'|'link'|'mixed',
+	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
+	type:'file'|'folder'|'symlink'|'mixed',
+	ignoredEOL:boolean,
+	basename:string,
+	dirname:string,
+	extname:string,
 	fileA:null|File,
 	fileB:null|File,
 };
@@ -36,7 +49,7 @@ export type File = {
 	folder:string,
 	relative:string,
 	stat?:fs.Stats,
-	type?:'file'|'folder'|'link',
+	type?:'file'|'folder'|'symlink',
 };
 
 export type WalkTreeJob = {

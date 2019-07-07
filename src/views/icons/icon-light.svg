@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
-    <g id="L13" transform="matrix(1,0,0,1,-0.999999,-582)">
-        <g id="_3" serif:id="3" transform="matrix(1,0,0,1,-2,-6.67572e-06)">
-            <path d="M13,597L13,595L15,595L15.103,594.997C16.16,594.943 17,594.07 17,593C17,591.896 16.105,591 15,591L14,591L14,589L15,589L15.103,588.997C16.16,588.943 17,588.07 17,587C17,585.896 16.105,585 15,585L13,585L13,583L15,583L15.103,583.001C17.265,583.056 19,584.825 19,587C19,588.195 18.476,589.267 17.645,590C18.476,590.733 19,591.805 19,593C19,595.209 17.209,597 15,597L13,597Z"/>
-        </g>
-        <g id="_1" serif:id="1" transform="matrix(1,0,0,1,-1,0)">
-            <rect x="9" y="583" width="2" height="14"/>
-        </g>
-        <path id="L" d="M1,583L3,583L3,595L7,595L7,597L3,597C1.895,597 1,596.105 1,595L1,583Z"/>
-    </g>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path id="_3" serif:id="3" d="M10,13l2.5,0c0.829,-0.002 1.5,-0.673 1.5,-1.5c0,-0.827 -0.671,-1.499 -1.5,-1.5l-1.5,0l0,-2l1.5,0c0.829,-0.002 1.5,-0.673 1.5,-1.5c0,-0.827 -0.671,-1.499 -1.5,-1.5l-2.5,0l0,-2l2.5,0l0.09,0.001c1.89,0.048 3.41,1.597 3.41,3.499c0,0.979 -0.403,1.865 -1.052,2.5c0.649,0.635 1.052,1.521 1.052,2.5c0,1.932 -1.568,3.5 -3.5,3.5l-2.5,0l0,-2Z"/><rect id="_1" serif:id="1" x="7" y="3" width="2" height="12"/><path id="L" d="M6,13l0,2l-4,0l-0.103,-0.003c-1.056,-0.053 -1.897,-0.928 -1.897,-1.997l0,-10l2,0l0,10l4,0Z"/></svg>

@@ -21,7 +21,7 @@ l13-diff-folders {
 	
 l13-diff-input {
 	box-sizing: border-box;
-	margin: 10px 10px 0 16px;
+	margin: 10px 10px 0 15px;
 	position: relative;
 	width: 50%;
 	z-index: 2;
@@ -117,10 +117,22 @@ l13-diff-list {
 }
 
 l13-diff-intro {
+	left: 50%;
 	position: absolute;
 	top: 50%;
+	transform: translate(-50%, calc(-50% + 20px));
+	user-select: none;
+}
+
+l13-diff-no-result {
+	display: block;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	opacity: 0.7;
+	position: absolute;
+	top: 50%;
+	text-align: center;
+	transform: translate(-50%, calc(-50% + 20px));
+	user-select: none;
 }
 
 ::-webkit-scrollbar {

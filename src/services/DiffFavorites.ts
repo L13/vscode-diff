@@ -14,11 +14,11 @@ export type Favorite = { fileA:string, fileB:string, label:string };
 
 //	Exports ____________________________________________________________________
 
-export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem|FavoriteTreeItem> {
+export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeItem|FavoriteTreeItem> {
 
 // tslint:disable-next-line: max-line-length
-	private _onDidChangeTreeData:vscode.EventEmitter<NoFavoriteTreeItem|FavoriteTreeItem|undefined> = new vscode.EventEmitter<NoFavoriteTreeItem|FavoriteTreeItem|undefined>();
-	public readonly onDidChangeTreeData:vscode.Event<NoFavoriteTreeItem|FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData:vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = new vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined>();
+	public readonly onDidChangeTreeData:vscode.Event<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
 	
 	public favorites:Favorite[] = [];
 	
@@ -44,17 +44,19 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 		
 	}
 
-	public getTreeItem (element:NoFavoriteTreeItem|FavoriteTreeItem) :vscode.TreeItem {
+	public getTreeItem (element:OpenL13DiffTreeItem|FavoriteTreeItem) :vscode.TreeItem {
 		
 		return element;
 		
 	}
 
-	public getChildren (element?:NoFavoriteTreeItem|FavoriteTreeItem) :Thenable<NoFavoriteTreeItem[]|FavoriteTreeItem[]> {
+	public getChildren (element?:OpenL13DiffTreeItem|FavoriteTreeItem) :Thenable<OpenL13DiffTreeItem[]|FavoriteTreeItem[]> {
 		
-		if (!this.favorites.length) return Promise.resolve([new NoFavoriteTreeItem()]);
+		const list:Array<OpenL13DiffTreeItem|FavoriteTreeItem> = [new OpenL13DiffTreeItem()];
 		
-		return Promise.resolve(this.favorites.map((favorite) => new FavoriteTreeItem(favorite)));
+		if (!this.favorites.length) return Promise.resolve(list);
+		
+		return Promise.resolve(list.concat(this.favorites.map((favorite) => new FavoriteTreeItem(favorite))));
 
 	}
 	
@@ -79,7 +81,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+						vscode.window.showInformationMessage(`Saved '${value}' in favorites!`);
 					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
 					break;
 				}
@@ -120,7 +122,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<NoFavoriteTreeItem
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class FavoriteTreeItem extends vscode.TreeItem {
+class FavoriteTreeItem extends vscode.TreeItem {
 	
 	public command = {
 		arguments: [this],
@@ -150,13 +152,29 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-class NoFavoriteTreeItem extends vscode.TreeItem {
+class OpenL13DiffTreeItem extends vscode.TreeItem {
 	
-	public contextValue = 'nofavorite';
+	public command = {
+		command: 'l13Diff.show',
+		title: 'Open L13 Diff',
+	};
+	
+	public iconPath = {
+		light: path.join(__filename, '..', '..', 'images', 'favorite-l13-light.svg'),
+		dark: path.join(__filename, '..', '..', 'images', 'favorite-l13-dark.svg'),
+	};
+	
+	public contextValue = 'openL13Diff';
 	
 	public constructor () {
 		
-		super('No favorites are available.');
+		super('Diff');
+		
+	}
+	
+	public get tooltip () :string {
+		
+		return 'Open L13 Diff';
 		
 	}
 	

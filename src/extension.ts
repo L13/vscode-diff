@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 import { DiffFavorites } from './services/DiffFavorites';
 import { DiffMenu } from './services/DiffMenu';
+import { DiffOutput } from './services/DiffOutput';
 import { DiffPanel } from './services/DiffPanel';
 
 //	Variables __________________________________________________________________
@@ -53,6 +54,8 @@ export function activate (context:vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeFavorite', ({ favorite }) => DiffFavorites.removeFavorite(context, favorite)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearFavorites', () => DiffFavorites.clearFavorites(context)));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.showOutput', () => DiffOutput.createOutput().show()));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
 	

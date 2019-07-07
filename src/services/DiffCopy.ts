@@ -6,7 +6,8 @@ import * as vscode from 'vscode';
 
 import { copyFile, mkdirsSync } from './@l13/fse';
 
-import { CopyFilesJob, Diff, DiffResult, File } from '../types';
+import { CopyFilesJob, Diff, File } from '../types';
+import { DiffResult } from './DiffResult';
 
 //	Variables __________________________________________________________________
 

@@ -36,7 +36,7 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	
 	callback = typeof options === 'function' ? options : callback;
 	
-	const findIgnore = Array.isArray((<Options>options).ignore) ? createFindIgnore((<string[]>(<Options>options).ignore)) : null;
+	const findIgnore = Array.isArray((<Options>options).ignore) ? createFindGlob((<string[]>(<Options>options).ignore)) : null;
 	
 	const job:WalkTreeJob = {
 		error: null,
@@ -57,6 +57,12 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	
 }
 
+export function createFindGlob (ignore:string[]) {
+	
+	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
+	
+}
+
 //	Functions __________________________________________________________________
 
 function escapeForRegExp (text:any) :string {
@@ -64,16 +70,11 @@ function escapeForRegExp (text:any) :string {
 	return ('' + text).replace(findRegExpChars, (match) => {
 		
 		if (match === '*') return '.+';
+		if (match === '?') return '?';
 		
 		return '\\' + match;
 		
 	});
-	
-}
-
-function createFindIgnore (ignore:string[]) {
-	
-	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
 	
 }
 
@@ -149,7 +150,15 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						stat,
 						type: 'file',
 					};
-				}
+				}/* else if (stat.isSymbolicLink()) {
+					job.result[pathname] = {
+						folder: cwd,
+						path: pathname,
+						relative: nextRelative,
+						stat,
+						type: 'symlink',
+					};
+				}*/
 				
 				if (!job.tasks) job.done();
 				

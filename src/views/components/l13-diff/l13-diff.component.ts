@@ -67,6 +67,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-intro')
 	private intro:L13DiffIntroComponent;
 	
+	@L13Query('l13-diff-no-result')
+	private result:L13DiffIntroComponent;
+	
 	@L13Query('l13-diff-widgets')
 	private widgets:HTMLElement;
 	
@@ -177,7 +180,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		listVM.on('compared', () => this.list.focus());
 		listVM.on('copied', () => this.list.focus());
-		listVM.on('filtered', () => this.intro.style.display = listVM.filteredItems.length ? 'none' : 'block');
+		listVM.on('filtered', () => {
+			
+			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
+			this.intro.style.display = listVM.items.length ? 'none' : 'block';
+			
+		});
 		
 		
 	}

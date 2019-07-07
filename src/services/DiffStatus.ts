@@ -16,9 +16,12 @@ export class DiffStatus {
 	
 	private readonly statusBarItem:vscode.StatusBarItem;
 	
-	public constructor (context:vscode.ExtensionContext) {
+	public static currentStatusBar:DiffStatus|undefined = undefined;
+	
+	private constructor (context:vscode.ExtensionContext) {
 		
 		this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+		this.statusBarItem.command = 'l13Diff.showOutput';
 		this.update();
 		this.statusBarItem.show();
 		
@@ -35,6 +38,13 @@ export class DiffStatus {
 	public dispose () :void {
 		
 		this.statusBarItem.dispose();
+		DiffStatus.currentStatusBar = undefined;
+		
+	}
+	
+	public static createStatusBar (context:vscode.ExtensionContext) :DiffStatus {
+		
+		return DiffStatus.currentStatusBar || (DiffStatus.currentStatusBar = new DiffStatus(context));
 		
 	}
 	
