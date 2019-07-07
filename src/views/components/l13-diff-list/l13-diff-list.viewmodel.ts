@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffResult, File } from '../../../types';
+import { DiffResult } from '../../../services/DiffResult';
+import { Diff, File } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { ListFilter } from './l13-diff-list.interface';
 
@@ -45,7 +46,6 @@ export class L13DiffListViewModel extends ViewModel {
 	public data:DiffResult = {
 		pathA: '',
 		pathB: '',
-		total: 0,
 		diffs: [],
 	};
 	
@@ -112,7 +112,6 @@ export class L13DiffListViewModel extends ViewModel {
 		return {
 			pathA: this.data.pathA,
 			pathB: this.data.pathB,
-			total: items.length,
 			diffs: items,
 		};
 		
@@ -147,6 +146,9 @@ export class L13DiffListViewModel extends ViewModel {
 	public compare () :void {
 		
 		disable();
+		
+		this.items = [];
+		this.requestUpdate();
 		
 		vscode.postMessage({
 			command: 'create:diffs',

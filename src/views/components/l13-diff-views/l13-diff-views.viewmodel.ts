@@ -77,12 +77,10 @@ export class L13DiffViewsViewModel extends ViewModel implements ListFilter {
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
-			if (this.unchangedChecked && diff.status === 'unchanged') return true;
-			if (this.deletedChecked && diff.status === 'deleted') return true;
-			if (this.modifiedChecked && diff.status === 'modified') return true;
-			if (this.untrackedChecked && diff.status === 'untracked') return true;
-			
-			return false;
+			return this.unchangedChecked && diff.status === 'unchanged'
+				|| this.deletedChecked && diff.status === 'deleted'
+				|| this.modifiedChecked && (diff.status === 'modified' || diff.status === 'conflicting')
+				|| this.untrackedChecked && diff.status === 'untracked';
 			
 		});
 		

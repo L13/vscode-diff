@@ -9,11 +9,11 @@
 		appearance: none;
 		background: transparent;
 		cursor: pointer;
-		height: 21px;
+		height: 20px;
 		margin: 0 10px 0 0;
 		padding: 0 0 0 0;
 		position: relative;
-		width: 21px;
+		width: 20px;
 			
 		&::before {
 			background: var(--vscode-foreground);
@@ -63,9 +63,9 @@
 			mask-position: 50% 50%;
 			-webkit-mask-repeat: no-repeat;
 			mask-repeat: no-repeat;
-			right: -5px;
+			right: -6px;
 			position: absolute;
-			bottom: -5px;
+			bottom: -6px;
 			width: 10px;
 		}
 		

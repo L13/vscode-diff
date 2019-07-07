@@ -3,21 +3,6 @@
 	margin: 0 0 0 0;
 	overflow: auto;
 	user-select: none;
-	
-	// "list.activeSelectionBackground": "#313233",
-	// "list.activeSelectionForeground": "#cbcccd",
-	// "list.dropBackground": "#05507c",
-	// "list.errorForeground": "#f20013",
-	// "list.focusBackground": "#05507c",
-	// "list.focusForeground": "#ffffff",
-	// "list.highlightForeground": "#ffffff",
-	// "list.hoverBackground": "#05507c",
-	// "list.hoverForeground": "#ffffff",
-	// "list.inactiveFocusBackground": "#313233",
-	// "list.inactiveSelectionBackground": "#313233",
-	// "list.inactiveSelectionForeground": "#cbcccd",
-	// "list.invalidItemForeground": "#f20013",
-	// "list.warningForeground": "#e68300",
 }
 
 l13-diff-list-body {
@@ -79,9 +64,9 @@ l13-diff-list-row {
 		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
 	// }
 	
-	// &.-conflicting {
-		// color: var(--vscode-gitDecoration-conflictingResourceForeground);
-	// }
+	&.-conflicting {
+		color: var(--vscode-gitDecoration-conflictingResourceForeground);
+	}
 	
 	&.-untracked {
 		color: var(--vscode-gitDecoration-untrackedResourceForeground);
@@ -130,13 +115,31 @@ l13-diff-list-file {
 		width: 16px;
 	}
 	
-	&.-file::before {
-		-webkit-mask-image: url('file.svg');
-		mask-image: url('file.svg');
+	&.-file {
+		
+		&::before {
+			-webkit-mask-image: url('list-file.svg');
+			mask-image: url('list-file.svg');
+		}
+		
+		span.-dirname {
+			padding-right: 5px;
+		}
 	}
 	
-	&.-folder::before {
-		-webkit-mask-image: url('folder.svg');
-		mask-image: url('folder.svg');
+	&.-folder {
+		
+		&::before {
+			-webkit-mask-image: url('list-folder.svg');
+			mask-image: url('list-folder.svg');
+		}
+		
+		span.-basename {
+			opacity: 0.7;
+		}
+	}
+	
+	span.-dirname {
+		opacity: 0.7;
 	}
 }
