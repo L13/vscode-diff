@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.18.0] - 2019-07-21
+
+### Added
+- Added mini map to list view.
+
+### Fixed
+- Fixed stats for all entries.
+
 ## [0.17.0] - 2019-07-07
 
 ### Added

@@ -4,16 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.17.0
+## What's new in L13 Diff 0.18.0
 
-- Added setting `l13Diff.ignoreEndOfLine`. If true different line endings (CR/LF) in text files will be ignored. Default value is `false`.
-- Added `L13 Diff` as first favorite to open diff panel with mouse.
-- Added dimmed dirnames in list view.
-- Added new color for conflicts if file has been changed to folder or vice versa.
-- Added output channel for logging and stats.
-- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + O` to open the output channel.
-- Added keyboard shortcut `Cmd/Ctrl + L Cmd/Ctrl + F` to open favorites.
-- Added `Click` on statusbar item to open output channel.
+- Added mini map to list view.
 
 ## Features
 
