@@ -10,6 +10,7 @@ import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.co
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
+import { L13DiffMapComponent } from '../l13-diff-map/l13-diff-map.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
@@ -60,6 +61,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	@L13Query('l13-diff-compare')
 	private compare:L13DiffCompareComponent;
+	
+	@L13Query('l13-diff-map')
+	private map:L13DiffMapComponent;
 	
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
@@ -184,6 +188,34 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
 			this.intro.style.display = listVM.items.length ? 'none' : 'block';
+			
+		});
+		
+		this.list.addEventListener('refresh', () => {
+			
+			let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+			const values:any[] = [];
+			
+			while (element) {
+				values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+				element = <HTMLElement>element.nextElementSibling;
+			}
+			
+			this.map.buildMap(values, this.list.offsetHeight);
+			
+		});
+		
+		window.addEventListener('resize', () => {
+			
+			let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+			const values:any[] = [];
+			
+			while (element) {
+				values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+				element = <HTMLElement>element.nextElementSibling;
+			}
+			
+			this.map.buildMap(values, this.list.offsetHeight);
 			
 		});
 		

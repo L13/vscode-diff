@@ -103,6 +103,7 @@ l13-diff-search {
 
 l13-diff-list {
 	position: relative;
+	margin: 0 10px 0 0;
 	transition: margin-top 0.1s linear;
 	z-index: 0;
 	
@@ -114,6 +115,12 @@ l13-diff-list {
 	&.-widgets {
 		margin-top: 34px;
 	}
+}
+
+l13-diff-map {
+	position: absolute;
+	right: 0;
+	top: 75px;
 }
 
 l13-diff-intro {

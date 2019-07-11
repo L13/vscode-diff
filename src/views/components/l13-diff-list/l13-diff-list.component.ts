@@ -34,7 +34,7 @@ const { PREVIOUS, NEXT } = Direction;
 export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	@L13Query('l13-diff-list-body')
-	private list:HTMLElement;
+	public list:HTMLElement;
 	
 	public disabled:boolean = false;
 	
@@ -466,6 +466,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const row = document.createElement('l13-diff-list-row');
 			
 			row.classList.add('-' + diff.status);
+			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
 			appendColumn(row, diff, <File>diff.fileA);
@@ -496,6 +497,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.list.appendChild(fragment);
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
+		
+		this.dispatchEvent(new CustomEvent('refresh'));
 		
 	}
 	
