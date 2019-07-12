@@ -139,7 +139,17 @@ l13-diff-list-file {
 		}
 	}
 	
-	span.-dirname {
-		opacity: 0.7;
+	span {
+		
+		&.-dirname {
+			opacity: 0.7;
+		}
+		
+		&.-ignored-eol {
+			color: var(--vscode-foreground);
+			font-size: 11px;
+			opacity: 0.5;
+			padding: 0 0 0 5px;
+		}
 	}
 }

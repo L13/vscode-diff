@@ -116,9 +116,15 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		search.addEventListener('animationend', () => {
 			
 			if (search.classList.contains('-moveout')) {
+				this.map.classList.remove('-widgets');
 				search.classList.remove('-moveout');
 				search.remove();
-			} else search.classList.remove('-movein');
+			} else {
+				this.map.classList.add('-widgets');
+				search.classList.remove('-movein');
+			}
+			
+			this.updateMap();
 			
 		});
 		
@@ -191,34 +197,22 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		this.list.addEventListener('refresh', () => {
-			
-			let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
-			const values:any[] = [];
-			
-			while (element) {
-				values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
-				element = <HTMLElement>element.nextElementSibling;
-			}
-			
-			this.map.buildMap(values, this.list.offsetHeight);
-			
-		});
+		this.list.addEventListener('refresh', () => this.updateMap());
+		window.addEventListener('resize', () => this.updateMap());
 		
-		window.addEventListener('resize', () => {
+	}
+	
+	private updateMap () :void {
 			
-			let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
-			const values:any[] = [];
-			
-			while (element) {
-				values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
-				element = <HTMLElement>element.nextElementSibling;
-			}
-			
-			this.map.buildMap(values, this.list.offsetHeight);
-			
-		});
+		let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+		const values:any[] = [];
 		
+		while (element) {
+			values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+			element = <HTMLElement>element.nextElementSibling;
+		}
+		
+		this.map.buildMap(values, this.list.offsetHeight);
 		
 	}
 	

@@ -512,16 +512,25 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
+		
 		if (diff.dirname) {
 			const dirname = document.createElement('SPAN');
 			dirname.textContent = diff.dirname;
 			dirname.classList.add(`-dirname`);
 			column.appendChild(dirname);
 		}
+		
 		const basename = document.createElement('SPAN');
 		basename.textContent = diff.basename;
 		basename.classList.add(`-basename`);
 		column.appendChild(basename);
+		
+		if (diff.ignoredEOL) {
+			const ignoredEOL = document.createElement('SPAN');
+			ignoredEOL.textContent = '(ignored EOL)';
+			ignoredEOL.classList.add('-ignored-eol');
+			column.appendChild(ignoredEOL);
+		}
 	}
 	
 	parent.appendChild(column);

@@ -121,6 +121,10 @@ l13-diff-map {
 	position: absolute;
 	right: 0;
 	top: 75px;
+	
+	&.-widgets {
+		margin-top: 34px;
+	}
 }
 
 l13-diff-intro {
@@ -143,8 +147,8 @@ l13-diff-no-result {
 }
 
 ::-webkit-scrollbar {
-	height: 10px;
-	width: 10px;
+	height: 14px;
+	width: 14px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -157,4 +161,8 @@ l13-diff-no-result {
 
 ::-webkit-scrollbar-thumb:active {
 	background-color: var(--vscode-scrollbarSlider-activeBackground);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0);
 }
