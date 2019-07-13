@@ -4,7 +4,7 @@ export default {
 	"l13-diff-compare/l13-diff-compare.html": "<button [disabled]=\"disabled\">Compare</button>",
 	"l13-diff-input/l13-diff-input.html": "<input type=\"text\" [(model)]=\"value\" [disabled]=\"disabled\">\n<button (click)=\"openDialog()\" [disabled]=\"disabled\"></button>\n<slot></slot>",
 	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts></l13-diff-shortcuts>",
-	"l13-diff-list/l13-diff-list.html": "<slot></slot><l13-diff-list-body></l13-diff-list-body>",
+	"l13-diff-list/l13-diff-list.html": "<l13-diff-list-body></l13-diff-list-body>",
 	"l13-diff-map/l13-diff-map.html": "<canvas id=\"map\"></canvas>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",

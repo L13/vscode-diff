@@ -15,27 +15,39 @@ import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component'
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
+import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
+import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
+import { L13DiffInputViewModelService } from '../l13-diff-input/l13-diff-input.service';
 import { L13DiffListViewModelService } from '../l13-diff-list/l13-diff-list.service';
+import { L13DiffPanelViewModelService } from '../l13-diff-panel/l13-diff-panel.service';
 import { L13DiffSearchViewModelService } from '../l13-diff-search/l13-diff-search.service';
+import { L13DiffSwapViewModelService } from '../l13-diff-swap/l13-diff-swap.service';
 import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
 
-import { isMetaKey, vscode } from '../common';
+import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
+import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
+
+import { vscode } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
+const actionsVM = new L13DiffActionsViewModelService().model('actions');
+const compareVM = new L13DiffCompareViewModelService().model('compare');
+const leftVM = new L13DiffInputViewModelService().model('left');
 const listVM = new L13DiffListViewModelService().model('list');
-const viewsVM = new L13DiffViewsViewModelService().model('views');
+const panelVM = new L13DiffPanelViewModelService().model('panel');
+const rightVM = new L13DiffInputViewModelService().model('right');
 const searchVM = new L13DiffSearchViewModelService().model('search');
+const swapVM = new L13DiffSwapViewModelService().model('swap');
+const viewsVM = new L13DiffViewsViewModelService().model('views');
+
 
 //	Initialize _________________________________________________________________
 
-listVM.addFilter(viewsVM);
-listVM.addFilter(searchVM);
-
-viewsVM.on('update', () => listVM.filter());
-searchVM.on('update', () => listVM.filter());
+listVM.pipe(new L13DiffViewsPipe(viewsVM))
+	.pipe(new L13DiffSearchPipe(searchVM));
 
 //	Exports ____________________________________________________________________
 
@@ -184,21 +196,42 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		window.addEventListener('message', init);
 		
-		vscode.postMessage({
-			command: 'init:paths',
+		listVM.on('compared', () => {
+			
+			enable();
+			this.list.focus();
+			
 		});
-		
-		listVM.on('compared', () => this.list.focus());
-		listVM.on('copied', () => this.list.focus());
+		listVM.on('copied', () => {
+			
+			enable();
+			this.list.focus();
+			
+		});
 		listVM.on('filtered', () => {
 			
 			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
 			this.intro.style.display = listVM.items.length ? 'none' : 'block';
 			
 		});
+		listVM.on('compare', () => {
+			
+			disable();
+			
+			vscode.postMessage({
+				command: 'create:diffs',
+				pathA: leftVM.value,
+				pathB: rightVM.value,
+			});
+			
+		});
 		
 		this.list.addEventListener('refresh', () => this.updateMap());
 		window.addEventListener('resize', () => this.updateMap());
+		
+		vscode.postMessage({
+			command: 'init:paths',
+		});
 		
 	}
 	
@@ -220,3 +253,29 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
+function enable () {
+	
+	panelVM.loading = false;
+	
+	actionsVM.enable();
+	actionsVM.disableCopy();
+	compareVM.enable();
+	leftVM.enable();
+	rightVM.enable();
+	swapVM.enable();
+	viewsVM.enable();
+	
+}
+
+function disable () {
+	
+	panelVM.loading = true;
+		
+	actionsVM.disable();
+	compareVM.disable();
+	leftVM.disable();
+	rightVM.disable();
+	swapVM.disable();
+	viewsVM.disable();
+	
+}

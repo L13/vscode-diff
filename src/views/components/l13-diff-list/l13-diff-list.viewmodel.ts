@@ -3,14 +3,7 @@
 import { DiffResult } from '../../../services/DiffResult';
 import { Diff, File } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
-import { ListFilter } from './l13-diff-list.interface';
-
-import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
-import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
-import { L13DiffInputViewModelService } from '../l13-diff-input/l13-diff-input.service';
-import { L13DiffPanelViewModelService } from '../l13-diff-panel/l13-diff-panel.service';
-import { L13DiffSwapViewModelService } from '../l13-diff-swap/l13-diff-swap.service';
-import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
+import { L13DiffListPipe } from './l13-diff-list.interface';
 
 import { vscode } from '../common';
 
@@ -21,13 +14,6 @@ const stringify = JSON.stringify;
 
 const FILTERS = Symbol.for('filters');
 
-const actionsService = new L13DiffActionsViewModelService();
-const compareService = new L13DiffCompareViewModelService();
-const folderService = new L13DiffInputViewModelService();
-const panelService = new L13DiffPanelViewModelService();
-const swapService = new L13DiffSwapViewModelService();
-const viewsService = new L13DiffViewsViewModelService();
-
 //	Initialize _________________________________________________________________
 
 
@@ -36,7 +22,7 @@ const viewsService = new L13DiffViewsViewModelService();
 
 export class L13DiffListViewModel extends ViewModel {
 	
-	private [FILTERS]:ListFilter[] = [];
+	private [FILTERS]:Array<L13DiffListPipe<Diff>> = [];
 	
 	private map:{ [name:string]:Diff } = {};
 	
@@ -75,29 +61,11 @@ export class L13DiffListViewModel extends ViewModel {
 			
 			switch (message.command) {
 				case 'create:diffs':
-					enable();
-					this.data = message.diffResult;
-					this.map = {};
-					this.data.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
-					this.items = this.data.diffs;
-					this.filter();
-					this.dispatchEvent('compared');
+					this.createList(message.diffResult);
 					break;
 				case 'copy:left':
 				case 'copy:right':
-					enable();
-					const diffs = message.diffResult.diffs;
-					diffs.forEach((diff:Diff) => { // Update original diff with new diff
-						
-						const originalDiff = this.map[diff.id];
-						
-						this.items.splice(this.items.indexOf(originalDiff), 1, diff);
-						this.map[diff.id] = diff;
-						
-					});
-					updateCopiedParentFolders(this.items, diffs);
-					this.items = this.items.slice(); // Refreshs the view
-					this.dispatchEvent('copied');
+					this.updateList(message.diffResult);
 					break;
 			}
 			
@@ -123,9 +91,52 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public addFilter (viewmodel:ListFilter) {
+	public pipe (pipe:L13DiffListPipe<Diff>) {
 		
-		this[FILTERS].push(viewmodel);
+		this[FILTERS].push(pipe);
+		
+		pipe.vm.on('update', () => this.filter());
+		
+		return this;
+		
+	}
+	
+	public createList (diffResult:DiffResult) {
+		
+		this.enable();
+		
+		this.data = diffResult;
+		this.map = {};
+		
+		this.data.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
+		this.items = this.data.diffs;
+		
+		this.filter();
+		
+		this.dispatchEvent('compared');
+		
+	}
+	
+	public updateList (diffResult:DiffResult) {
+		
+		this.enable();
+		
+		const diffs = diffResult.diffs;
+		
+		diffs.forEach((diff:Diff) => { // Update original diff with new diff
+			
+			const originalDiff = this.map[diff.id];
+			
+			this.items.splice(this.items.indexOf(originalDiff), 1, diff);
+			this.map[diff.id] = diff;
+			
+		});
+		
+		updateCopiedParentFolders(this.items, diffs);
+		
+		this.items = this.items.slice(); // Refreshs the view
+		
+		this.dispatchEvent('copied');
 		
 	}
 	
@@ -133,7 +144,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		let items = this.items;
 		
-		this[FILTERS].forEach((viewmodel) => items = viewmodel.filter(items));
+		this[FILTERS].forEach((pipe) => items = pipe.transform(items));
 		
 		this.filteredItems = items;
 		
@@ -145,16 +156,14 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	public compare () :void {
 		
-		disable();
+		if (this.disabled) return;
+		
+		this.disable();
 		
 		this.items = [];
 		this.requestUpdate();
 		
-		vscode.postMessage({
-			command: 'create:diffs',
-			pathA: folderService.model('left').value,
-			pathB: folderService.model('right').value,
-		});
+		this.dispatchEvent('compare');
 		
 	}
 	
@@ -170,33 +179,6 @@ export class L13DiffListViewModel extends ViewModel {
 }
 
 //	Functions __________________________________________________________________
-
-function enable () {
-	
-	panelService.model('panel').loading = false;
-	
-	actionsService.model('actions').enable();
-	actionsService.model('actions').disableCopy();
-	compareService.model('compare').enable();
-	folderService.model('left').enable();
-	folderService.model('right').enable();
-	swapService.model('swap').enable();
-	viewsService.model('views').enable();
-	
-}
-
-function disable () {
-	
-	panelService.model('panel').loading = true;
-		
-	actionsService.model('actions').disable();
-	compareService.model('compare').disable();
-	folderService.model('left').disable();
-	folderService.model('right').disable();
-	swapService.model('swap').disable();
-	viewsService.model('views').disable();
-	
-}
 
 function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :boolean {
 	

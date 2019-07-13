@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 
@@ -12,13 +12,13 @@
 
 //	Exports ____________________________________________________________________
 
-interface ListFilter {
-	filter:(values:any[]) => any[];
+export interface L13DiffListPipe<T> {
+	
+	vm:ViewModel;
+	
+	transform:(items:T[]) => T[];
+	
 }
-
-export {
-	ListFilter,
-};
 
 //	Functions __________________________________________________________________
 
