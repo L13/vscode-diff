@@ -156,16 +156,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		document.addEventListener('mouseup', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			if (target !== document.documentElement && target !== document.body) return;
-			
-			this.unselect();
-			
-		});
-		
 	}
 	
 	private selectListItem (element:HTMLElement) {

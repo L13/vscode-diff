@@ -224,6 +224,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.left.addEventListener('compare', () => this.initCompare());
 		this.right.addEventListener('compare', () => this.initCompare());
 		
+		document.addEventListener('mouseup', ({ target }) => {
+			
+			if (this.list.disabled) return;
+			
+			if (target === document.body || target === document.documentElement) this.list.unselect();
+			
+		});
+		
 		msg.send('init:paths');
 		
 	}
