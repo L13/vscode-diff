@@ -202,7 +202,7 @@ export class DiffCompare {
 				const diffStats = new DiffStats(diffResult);
 				const total = diffStats.all.total;
 				
-				this.status.update(`Compared ${total} entries${total > 2 ? 's' : ''}`);
+				this.status.update(`Compared ${total} entr${total > 2 ? 'ies' : 'y'}`);
 				
 				this.output.msg();
 				this.output.msg();

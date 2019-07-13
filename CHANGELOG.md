@@ -4,10 +4,16 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.18.0] - 2019-07-21
 
 ### Added
-- Added mini map to list view.
+- Added mini map for the list view.
+- Added more details to the stats.
+
+### Changed
+- Switched from element links to event communication for all components.
+- Refactored messaging for service/view communication.
 
 ### Fixed
-- Fixed stats for all entries.
+- Fixed stats for total entries.
+- Fixed `Cmd/Ctrl + Click` in list view. Unselect didn't work correct.
 
 ## [0.17.0] - 2019-07-07
 

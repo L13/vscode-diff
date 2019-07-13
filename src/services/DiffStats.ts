@@ -97,26 +97,25 @@ export class DiffStats {
 	public report () :string {
 		
 		const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
-		let text = 'INFO';
 		
-		text += '\n\n';
-		text += 'Compared:    ' + formatBasicStats(`${this.pathA.pathname} ↔ ${this.pathB.pathname}`, this.all);
-		text += '\n\n';
-		text += 'Left Path:   ' + formatBasicStats(this.pathA.pathname, this.pathA);
-		text += '\n\n';
-		text += 'Right Path:  ' + formatBasicStats(this.pathB.pathname, this.pathB);
-		text += '\n\n\n';
-		text += `RESULT
+		return `INFO
+
+Compared:    ${formatBasicStats(`${this.pathA.pathname} ↔ ${this.pathB.pathname}`, this.all)}
+
+Left Path:   ${formatBasicStats(this.pathA.pathname, this.pathA)}
+
+Right Path:  ${formatBasicStats(this.pathB.pathname, this.pathB)}
+
+
+RESULT
 
 Comparisons: ${this.result.diffs.length}
 Diffs:       ${this.result.diffs.length - this.unchanged.total}
 Conflicts:   ${this.conflicting.total}
-Created:     ${this.untracked.total}
-Deleted:     ${this.deleted.total}
-Modified:    ${this.modified.total}${ignoreEndOfLine ? formatIgnoreEOL(this.modified.ignoredEOL) : ''}
-Unchanged:   ${this.unchanged.total}${ignoreEndOfLine ? formatIgnoreEOL(this.unchanged.ignoredEOL) : ''}`;
-		
-		return text;
+Created:     ${formatDetail(this.untracked)}
+Deleted:     ${formatDetail(this.deleted)}
+Modified:    ${formatDetail(this.modified, ignoreEndOfLine)}
+Unchanged:   ${formatDetail(this.unchanged, ignoreEndOfLine)}`;
 		
 	}
 	
@@ -162,21 +161,23 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 
 function formatFileSize (size:number) {
 	
-	if (size > PB) return `${(size / PB).toFixed(2)} PB`;
-	if (size > TB) return `${(size / TB).toFixed(2)} TB`;
-	if (size > GB) return `${(size / GB).toFixed(2)} GB`;
-	if (size > MB) return `${(size / MB).toFixed(2)} MB`;
-	if (size > KB) return `${(size / KB).toFixed(2)} KB`;
+	const bytes = formatAmount(size, pluralBytes);
 	
-	return `${formatAmount(size, pluralBytes)}`;
+	if (size > PB) return `${(size / PB).toFixed(2)} PB (${bytes})`;
+	if (size > TB) return `${(size / TB).toFixed(2)} TB (${bytes})`;
+	if (size > GB) return `${(size / GB).toFixed(2)} GB (${bytes})`;
+	if (size > MB) return `${(size / MB).toFixed(2)} MB (${bytes})`;
+	if (size > KB) return `${(size / KB).toFixed(2)} KB (${bytes})`;
+	
+	return bytes;
 	
 }
 
 function formatBasicStats (name:string, stats:DetailStats|FolderStats) {
 	
 	return `${name}
-Entries:     ${stats.total}${formatDetail(stats.files, stats.folders)}
-Size:        ${formatFileSize(stats.size)}${formatBytes(stats.size)}`;
+Entries:     ${formatDetail(stats)}
+Size:        ${formatFileSize(stats.size)}`;
 // Symlinks: ${stats.symlinks}`;
 	
 }
@@ -187,20 +188,17 @@ function formatAmount (value:number, measure:Plural) {
 	
 }
 
-function formatDetail (files:number, folders:number) {
+function formatDetail (stats:DetailStats|FolderStats, ignoreEndOfLine:boolean = false) {
 	
-	return ` (${formatAmount(files, pluralFiles)}, ${formatAmount(folders, pluralFolders)})`;
+	const eol = ignoreEndOfLine ? `Ignored EOL in ${formatAmount(stats.files, pluralFiles)}` : '';
 	
-}
-
-function formatBytes (size:number) {
+	if (stats.files && stats.folders) {
+		return `${stats.total} (${formatAmount(stats.files, pluralFiles)}, ${formatAmount(stats.folders, pluralFolders)}${eol ? `, ${eol}` : ''})`;
+	}
 	
-	return size > KB ? ` (${formatAmount(size, pluralBytes)})` : '';
+	if (stats.files) return `${formatAmount(stats.files, pluralFiles)}${eol ? ` (${eol})` : ''}`;
+	if (stats.folders) return `${formatAmount(stats.folders, pluralFolders)})`;
 	
-}
-
-function formatIgnoreEOL (files:number) {
-	
-	return ` (Ignored EOL in ${formatAmount(files, pluralFiles)})`;
+	return '0';
 	
 }

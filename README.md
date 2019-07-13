@@ -6,7 +6,8 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in L13 Diff 0.18.0
 
-- Added mini map to list view.
+- Added mini map for the list view.
+- Added more details to the stats.
 
 ## Features
 
