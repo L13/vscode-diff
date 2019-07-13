@@ -27,7 +27,7 @@ import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.s
 import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
 import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 
-import { vscode } from '../common';
+import { msg } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -42,7 +42,6 @@ const rightVM = new L13DiffInputViewModelService().model('right');
 const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
-
 
 //	Initialize _________________________________________________________________
 
@@ -111,16 +110,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.actions.list = this.list;
 		this.compare.list = this.list;
 		
-		window.addEventListener('message', (event) => {
-				
-			const message = event.data;
+		msg.on('update:paths', (data) => {
 			
-			if (message.command === 'update:paths') {
-				if (message.uris.length) {
-					this.left.viewmodel.value = (message.uris[0] || 0).fsPath || '';
-					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
-					if (message.compare) this.list.viewmodel.compare();
-				}
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+				if (data.compare) this.list.viewmodel.compare();
 			}
 			
 		});
@@ -158,43 +153,33 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		window.addEventListener('message', (event:MessageEvent) => {
+		msg.on('save:favorite', () => {
 			
-			const message = event.data;
-			
-			if (message.command ===  'save:favorite') {
-				vscode.postMessage({
-					command: message.command,
-					pathA: this.left.viewmodel.value,
-					pathB: this.right.viewmodel.value,
-				});
-			}
+			msg.send('save:favorite', {
+				pathA: this.left.viewmodel.value,
+				pathB: this.right.viewmodel.value,
+			});
 			
 		});
 		
-		let init = (event:MessageEvent) => {
+		let init = (data:any) => {
 				
-			const message = event.data;
-			
-			if (message.command === 'init:paths') {
-				
-				if (message.uris.length) {
-					this.left.viewmodel.value = (message.uris[0] || 0).fsPath || '';
-					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
-				} else {
-					this.left.viewmodel.value = message.workspaces[0] || '';
-					this.right.viewmodel.value = message.workspaces[1] || '';
-				}
-				
-				window.removeEventListener('message', init);
-				init = null;
-				
-				if (message.compare) this.list.viewmodel.compare();
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+			} else {
+				this.left.viewmodel.value = data.workspaces[0] || '';
+				this.right.viewmodel.value = data.workspaces[1] || '';
 			}
+			
+			msg.removeMessageListener('message', init);
+			init = null;
+			
+			if (data.compare) this.list.viewmodel.compare();
 			
 		};
 		
-		window.addEventListener('message', init);
+		msg.on('init:paths', init);
 		
 		listVM.on('compared', () => {
 			
@@ -202,24 +187,26 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			this.list.focus();
 			
 		});
+		
 		listVM.on('copied', () => {
 			
 			enable();
 			this.list.focus();
 			
 		});
+		
 		listVM.on('filtered', () => {
 			
 			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
 			this.intro.style.display = listVM.items.length ? 'none' : 'block';
 			
 		});
+		
 		listVM.on('compare', () => {
 			
 			disable();
 			
-			vscode.postMessage({
-				command: 'create:diffs',
+			msg.send('create:diffs', {
 				pathA: leftVM.value,
 				pathB: rightVM.value,
 			});
@@ -229,9 +216,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.list.addEventListener('refresh', () => this.updateMap());
 		window.addEventListener('resize', () => this.updateMap());
 		
-		vscode.postMessage({
-			command: 'init:paths',
-		});
+		msg.send('init:paths');
 		
 	}
 	

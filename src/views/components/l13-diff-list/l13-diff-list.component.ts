@@ -8,7 +8,7 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 
-import { isMetaKey, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
+import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -77,10 +77,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
 						
-						vscode.postMessage({
-							command: ctrlKey ? 'open:diffToSide' : 'open:diff',
-							diff: this.viewmodel.getDiffById(id),
-						});
+						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
 						
 					});
 					break;
@@ -155,10 +152,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			vscode.postMessage({
-				command: altKey ? 'open:diffToSide' : 'open:diff',
-				diff: this.viewmodel.getDiffById(id),
-			});
+			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
 			
 		});
 		

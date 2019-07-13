@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import { DiffMessage } from './DiffMessage';
+
 import * as vscode from 'vscode';
 
 //	Variables __________________________________________________________________
@@ -14,23 +16,11 @@ import * as vscode from 'vscode';
 
 export class DiffDialog {
 	
-	private readonly panel:vscode.WebviewPanel;
-	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (panel:vscode.WebviewPanel) {
+	public constructor (private msg:DiffMessage) {
 		
-		this.panel = panel;
-		
-		this.panel.webview.onDidReceiveMessage((message) => {
-			
-			switch (message.command) {
-				case 'open:dialog':
-					this.open(message);
-					break;
-			}
-			
-		}, null, this.disposables);
+		msg.on('open:dialog', () => this.open());
 		
 	}
 	
@@ -43,7 +33,7 @@ export class DiffDialog {
 		
 	}
 	
-	private open (message:any) :void {
+	private open () :void {
 		
 		vscode.window.showOpenDialog({
 			canSelectFiles: true,
@@ -51,7 +41,7 @@ export class DiffDialog {
 			canSelectMany: false,
 		}).then((uris) => {
 			
-			if (uris) this.panel.webview.postMessage({ command: message.command, folder: uris[0].fsPath });
+			if (uris) this.msg.send('open:dialog', { folder: uris[0].fsPath });
 			
 		});
 		

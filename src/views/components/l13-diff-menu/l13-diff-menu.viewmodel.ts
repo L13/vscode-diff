@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
-import { vscode } from '../common';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -25,22 +25,16 @@ export class L13DiffMenuViewModel extends ViewModel {
 			
 		return new Promise((resolve, reject) => {
 			
-			window.addEventListener('message', function update (event) {
+			msg.on('update:menu', (data) => {
 				
-				const message = event.data;
-				
-				if (message.command === 'update:menu') {
-					self.updateHistory(message.history);
-					self.updateWorkspaces(message.workspaces);
-					window.removeEventListener('message', update);
-					resolve();
-				}
+				self.updateHistory(data.history);
+				self.updateWorkspaces(data.workspaces);
+				msg.removeMessageListener('update:menu', this.update);
+				resolve();
 				
 			});
 			
-			vscode.postMessage({
-				command: 'update:menu',
-			});
+			msg.send('update:menu');
 			
 		});
 		

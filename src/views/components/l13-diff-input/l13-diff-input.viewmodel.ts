@@ -2,7 +2,7 @@
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
-import { vscode } from '../common';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -47,23 +47,18 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	private openListener = (event:MessageEvent) => {
+	private openListener = (data:any) => {
 			
-		const message = event.data;
-		if (message.command === 'open:dialog') {
-			this.value = message.folder;
-			window.removeEventListener('message', this.openListener);
-		}
+		this.value = data.folder;
+		msg.removeMessageListener('open:dialog', this.openListener);
 		
 	}
 		
 	public openDialog () {
 		
-		window.addEventListener('message', this.openListener);
+		msg.on('open:dialog', this.openListener);
 		
-		vscode.postMessage({
-			command: 'open:dialog',
-		});
+		msg.send('open:dialog');
 		
 	}
 	

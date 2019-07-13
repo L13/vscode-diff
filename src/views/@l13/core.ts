@@ -21,6 +21,8 @@ export * from './events/event.class';
 
 export * from './keybindings/keybindings';
 
+export * from './messages/message.class';
+
 export * from './os/platforms';
 
 //	Functions __________________________________________________________________

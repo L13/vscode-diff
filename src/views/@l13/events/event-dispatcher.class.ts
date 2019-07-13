@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { Event } from './event.class';
-import { Listener } from './types';
+import { EventListener } from './types';
 
 //	Variables __________________________________________________________________
 
@@ -17,11 +17,11 @@ const LISTENERS = Symbol.for('listeners');
 
 export class EventDispatcher {
 	
-	private [LISTENERS]:{ [eventName:string]: Listener[] } = Object.create(null);
+	private [LISTENERS]:{ [eventName:string]: EventListener[] } = Object.create(null);
 	
-	public on (name:string, listener:Listener) :void {
+	public on (name:string, listener:EventListener) :void {
 		
-		const listeners:Listener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
+		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
 		listeners[listeners.length] = listener;
 		
@@ -33,9 +33,9 @@ export class EventDispatcher {
 		
 	}
 	
-	public hasEventListener (name:string, listener:Listener) :boolean {
+	public hasEventListener (name:string, listener:EventListener) :boolean {
 		
-		const listeners:null|Listener[] = this[LISTENERS][name] || null;
+		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (!listeners) return false;
 		
@@ -47,7 +47,7 @@ export class EventDispatcher {
 		
 		let event:null|Event = nameOrEvent instanceof Event ? nameOrEvent : null;
 		const name:string = '' + (event ? event.type : nameOrEvent);
-		let listeners:null|Listener[] = this[LISTENERS][name] || null;
+		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 		//	Copy listeners to prevent stuttering if a listener will be deleted
@@ -71,9 +71,9 @@ export class EventDispatcher {
 		
 	}
 	
-	public removeEventListener (name:string, listener:Listener) :void {
+	public removeEventListener (name:string, listener:EventListener) :void {
 		
-		const listeners:null|Listener[] = this[LISTENERS][name] || null;
+		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 			const index = listeners.indexOf(listener);

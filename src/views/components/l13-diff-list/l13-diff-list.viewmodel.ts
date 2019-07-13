@@ -5,7 +5,7 @@ import { Diff, File } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { L13DiffListPipe } from './l13-diff-list.interface';
 
-import { vscode } from '../common';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -55,21 +55,9 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		super();
 		
-		window.addEventListener('message', (event) => {
-			
-			const message = event.data;
-			
-			switch (message.command) {
-				case 'create:diffs':
-					this.createList(message.diffResult);
-					break;
-				case 'copy:left':
-				case 'copy:right':
-					this.updateList(message.diffResult);
-					break;
-			}
-			
-		});
+		msg.on('create:diffs', (data) => this.createList(data.diffResult));
+		msg.on('copy:left', (data) => this.updateList(data.diffResult));
+		msg.on('copy:right', (data) => this.updateList(data.diffResult));
 		
 	}
 	
@@ -169,10 +157,7 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	public copy (from:'left'|'right', ids:string[]) :void {
 		
-		vscode.postMessage({
-			command: `copy:${from}`,
-			diffResult: this.getCopyListByIds(ids),
-		});
+		msg.send(`copy:${from}`, { diffResult: this.getCopyListByIds(ids) });
 		
 	}
 	
