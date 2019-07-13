@@ -45,7 +45,9 @@ export class Message {
 		
 	}
 	
-	public removeMessageListener (name:string, listener:MessageListener) :void {
+	public removeMessageListener (name:string, listener?:MessageListener) :boolean {
+		
+		if (!listener) return delete this[LISTENERS][name];
 		
 		const listeners:null|MessageListener[] = this[LISTENERS][name] || null;
 		
@@ -53,7 +55,10 @@ export class Message {
 			const index = listeners.indexOf(listener);
 			if (index !== -1) listeners.splice(index, 1);
 			if (!listeners.length) delete this[LISTENERS][name];
+			return index !== -1;
 		}
+		
+		return false;
 		
 	}
 	

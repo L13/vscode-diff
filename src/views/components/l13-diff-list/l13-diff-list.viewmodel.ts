@@ -99,15 +99,11 @@ export class L13DiffListViewModel extends ViewModel {
 		this.data.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
 		this.items = this.data.diffs;
 		
-		this.filter();
-		
 		this.dispatchEvent('compared');
 		
 	}
 	
 	public updateList (diffResult:DiffResult) {
-		
-		this.enable();
 		
 		const diffs = diffResult.diffs;
 		
@@ -139,19 +135,6 @@ export class L13DiffListViewModel extends ViewModel {
 		this.requestUpdate();
 		
 		this.dispatchEvent('filtered');
-		
-	}
-	
-	public compare () :void {
-		
-		if (this.disabled) return;
-		
-		this.disable();
-		
-		this.items = [];
-		this.requestUpdate();
-		
-		this.dispatchEvent('compare');
 		
 	}
 	

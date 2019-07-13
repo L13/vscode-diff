@@ -2,7 +2,6 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffCompareViewModelService } from './l13-diff-compare.service';
 import { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
 
@@ -30,13 +29,11 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 	@L13Query('button')
 	private button:HTMLButtonElement;
 	
-	public list:L13DiffListComponent;
-	
 	public constructor () {
 		
 		super();
 		
-		this.button.addEventListener('click', () => this.list.viewmodel.compare());
+		this.button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('compare')));
 		
 	}
 	

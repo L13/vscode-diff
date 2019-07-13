@@ -27,7 +27,7 @@ import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.s
 import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
 import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 
-import { msg } from '../common';
+import { isMetaKey, msg } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -99,24 +99,82 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		search.vmId = 'search';
 		
 		this.left.menu = menu;
-		this.left.list = this.list;
-		
 		this.right.menu = menu;
-		this.right.list = this.list;
 			
-		this.swap.left = this.left;
-		this.swap.right = this.right;
+		this.swap.addEventListener('swap', () => {
+			
+			const value = leftVM.value;
+			
+			leftVM.value = rightVM.value;
+			rightVM.value = value;
+			
+		});
 		
-		this.actions.list = this.list;
-		this.compare.list = this.list;
+		this.actions.addEventListener('select', (event) => {
+			
+			const { metaKey, ctrlKey, status } = (<any>event).detail;
+			
+			if (status) this.list.selectByStatus(status, isMetaKey(ctrlKey, metaKey));
+			else this.list.selectAll();
+			
+		});
+		
+		this.actions.addEventListener('copy', (event) => {
+			
+			this.list.copy((<any>event).detail.from);
+			
+		});
+		
+		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
+			
+			if (!search.parentNode) {
+				this.widgets.appendChild(search);
+				this.list.classList.add('-widgets');
+				search.classList.add('-movein');
+			}
+			search.focus();
+			
+		});
 		
 		msg.on('update:paths', (data) => {
 			
 			if (data.uris.length) {
 				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
 				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-				if (data.compare) this.list.viewmodel.compare();
+				if (data.compare) this.initCompare();
 			}
+			
+		});
+		
+		msg.on('save:favorite', () => {
+			
+			msg.send('save:favorite', {
+				pathA: this.left.viewmodel.value,
+				pathB: this.right.viewmodel.value,
+			});
+			
+		});
+		
+		msg.on('init:paths', (data) => {
+			
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+			} else {
+				this.left.viewmodel.value = data.workspaces[0] || '';
+				this.right.viewmodel.value = data.workspaces[1] || '';
+			}
+			
+			msg.removeMessageListener('init:paths');
+			
+			if (data.compare) this.initCompare();
+			
+		});
+		
+		search.addEventListener('close', () => {
+			
+			this.list.classList.remove('-widgets');
+			search.classList.add('-moveout');
 			
 		});
 		
@@ -134,52 +192,6 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			this.updateMap();
 			
 		});
-		
-		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
-			
-			if (!search.parentNode) {
-				this.widgets.appendChild(search);
-				this.list.classList.add('-widgets');
-				search.classList.add('-movein');
-			}
-			search.focus();
-			
-		});
-		
-		search.addEventListener('close', () => {
-			
-			this.list.classList.remove('-widgets');
-			search.classList.add('-moveout');
-			
-		});
-		
-		msg.on('save:favorite', () => {
-			
-			msg.send('save:favorite', {
-				pathA: this.left.viewmodel.value,
-				pathB: this.right.viewmodel.value,
-			});
-			
-		});
-		
-		let init = (data:any) => {
-				
-			if (data.uris.length) {
-				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
-				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-			} else {
-				this.left.viewmodel.value = data.workspaces[0] || '';
-				this.right.viewmodel.value = data.workspaces[1] || '';
-			}
-			
-			msg.removeMessageListener('message', init);
-			init = null;
-			
-			if (data.compare) this.list.viewmodel.compare();
-			
-		};
-		
-		msg.on('init:paths', init);
 		
 		listVM.on('compared', () => {
 			
@@ -202,21 +214,31 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		listVM.on('compare', () => {
-			
-			disable();
-			
-			msg.send('create:diffs', {
-				pathA: leftVM.value,
-				pathB: rightVM.value,
-			});
-			
-		});
+		this.list.addEventListener('selected', () => actionsVM.enableCopy());
+		this.list.addEventListener('unselected', () => actionsVM.disableCopy());
 		
 		this.list.addEventListener('refresh', () => this.updateMap());
 		window.addEventListener('resize', () => this.updateMap());
 		
+		this.compare.addEventListener('compare', () => this.initCompare());
+		this.left.addEventListener('compare', () => this.initCompare());
+		this.right.addEventListener('compare', () => this.initCompare());
+		
 		msg.send('init:paths');
+		
+	}
+	
+	private initCompare () :void {
+		
+		disable();
+		
+		listVM.items = [];
+		listVM.requestUpdate();
+		
+		msg.send('create:diffs', {
+			pathA: leftVM.value,
+			pathB: rightVM.value,
+		});
 		
 	}
 	
@@ -246,6 +268,7 @@ function enable () {
 	actionsVM.disableCopy();
 	compareVM.enable();
 	leftVM.enable();
+	listVM.enable();
 	rightVM.enable();
 	swapVM.enable();
 	viewsVM.enable();
@@ -259,6 +282,7 @@ function disable () {
 	actionsVM.disable();
 	compareVM.disable();
 	leftVM.disable();
+	listVM.disable();
 	rightVM.disable();
 	swapVM.disable();
 	viewsVM.disable();

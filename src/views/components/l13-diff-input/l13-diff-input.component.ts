@@ -2,7 +2,6 @@
 
 import { changePlatform, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
-import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
@@ -37,8 +36,6 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 	private button:HTMLInputElement;
 	
 	public menu:L13DiffMenuComponent;
-	
-	public list:L13DiffListComponent;
 	
 	public constructor () {
 		
@@ -94,7 +91,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 							const value = menu.getSelection();
 							if (value) this.viewmodel.value = value;
 							menu.remove();
-						} else this.list.viewmodel.compare();
+						} else this.dispatchEvent(new CustomEvent('compare'));
 					}
 					break;
 				case 'Tab':

@@ -6,15 +6,11 @@ import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L1
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
-import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
-
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
-
-const actionsService = new L13DiffActionsViewModelService();
 
 enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
@@ -116,6 +112,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const listRow = <HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row');
 			
+			
 			if (this.cacheSelectionHistory.length) {
 			//	On macOS metaKey overrides shiftKey if both keys are pressed
 				if (isMacOs && shiftKey && !metaKey || !isMacOs && shiftKey) {
@@ -135,9 +132,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				} else if (isMetaKey(ctrlKey, metaKey)) {
 					listRow.classList.toggle('-selected');
 					this.cacheSelectedListItems = [];
-					if (listRow.classList.contains('-selected')) this.cacheSelectionHistory.push(listRow);
-					else this.cacheSelectionHistory.splice(this.cacheSelectionHistory.indexOf(listRow), 1);
-					this.detectCopy();
+					if (!listRow.classList.contains('-selected')) {
+						const index = this.cacheSelectionHistory.indexOf(listRow);
+						if (index !== -1) this.cacheSelectionHistory.splice(index, 1);
+					} else this.cacheSelectionHistory.push(listRow);
+					if (this.list.querySelector('.-selected')) this.dispatchEvent(new CustomEvent('selected'));
+					else this.dispatchEvent(new CustomEvent('unselected'));
 				} else {
 					this.unselect();
 					this.selectListItem(listRow);
@@ -168,13 +168,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private detectCopy () :void {
-		
-		if (this.cacheSelectionHistory.length) actionsService.model('actions').enableCopy();
-		else actionsService.model('actions').disableCopy();
-		
-	}
-	
 	private selectListItem (element:HTMLElement) {
 	
 		element.classList.add('-selected');
@@ -182,7 +175,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
 		
-		actionsService.model('actions').enableCopy();
+		this.dispatchEvent(new CustomEvent('selected'));
 		
 	}
 	
@@ -219,7 +212,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			this.unselect();
 			element.classList.add('-selected');
 			this.cacheSelectionHistory.push(element);
-			actionsService.model('actions').enableCopy();
+			this.dispatchEvent(new CustomEvent('selected'));
 		}
 		
 		scrollElementIntoView(this, element);
@@ -277,7 +270,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		element.classList.add('-selected');
 		scrollElementIntoView(this, element);
-		actionsService.model('actions').enableCopy();
+		this.dispatchEvent(new CustomEvent('selected'));
 		
 	}
 	
@@ -286,7 +279,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			to.classList.add('-selected');
-			actionsService.model('actions').enableCopy();
+			this.dispatchEvent(new CustomEvent('selected'));
 		} else {
 			if (isWindows) {
 				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
@@ -308,7 +301,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			currentElement.classList.add('-selected');
-			actionsService.model('actions').enableCopy();
+			this.dispatchEvent(new CustomEvent('selected'));
 		} else {
 			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
 		}
@@ -322,7 +315,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.firstChild) return;
 		
-		actionsService.model('actions').enableCopy();
+		this.dispatchEvent(new CustomEvent('selected'));
 		event.preventDefault();
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -394,9 +387,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+			this.dispatchEvent(new CustomEvent('selected'));
 		}
-		
-		this.detectCopy();
 		
 	}
 	
@@ -407,9 +399,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+			this.dispatchEvent(new CustomEvent('selected'));
 		}
-		
-		this.detectCopy();
 		
 	}
 	
@@ -421,7 +412,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
 		
-		actionsService.model('actions').disableCopy();
+		this.dispatchEvent(new CustomEvent('unselected'));
 		
 	}
 	
