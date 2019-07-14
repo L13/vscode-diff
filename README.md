@@ -7,6 +7,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in L13 Diff 0.18.0
 
 - Added mini map for the list view.
+- Added scrollbar to the mini map.
 - Added more details to the stats.
 
 ## Features
@@ -24,6 +25,7 @@ Compare two folders in Visual Studio Code.
 * Save your favorite diffs and start a comparison immediately.
 * Supports predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
+* See the diffs on a mini map.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 

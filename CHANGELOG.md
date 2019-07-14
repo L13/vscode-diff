@@ -5,6 +5,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 
 ### Added
 - Added mini map for the list view.
+- Added scrollbar to the mini map.
 - Added more details to the stats.
 
 ### Changed

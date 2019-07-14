@@ -32,7 +32,9 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 	@L13Query('div')
 	public scrollbar:HTMLDivElement;
 	
-	// private scrollbarOffsetY:number = 0;
+	private scrollbarOffsetY:number = 0;
+	
+	private scrollbarMaxY:number = 0;
 	
 	private context:CanvasRenderingContext2D = null;
 	
@@ -43,39 +45,46 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		this.context = this.canvas.getContext('2d');
 		this.canvas.width = 10;
 		
-		// this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
+		this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
 		
 	}
 	
-	// private scrollbarDown = (event:MouseEvent) => {
+	private scrollbarDown = (event:MouseEvent) => {
 		
-	// 	document.body.classList.add('-unselectable');
+		document.body.classList.add('-unselectable');
 		
-	// 	this.scrollbarOffsetY = event.offsetY;
+		this.scrollbarOffsetY = event.offsetY;
 		
-	// 	event.preventDefault();
+		event.preventDefault();
 		
-	// 	document.addEventListener('mousemove', this.scrollbarMove);
-	// 	document.addEventListener('mouseup', this.scrollbarUp);
+		document.addEventListener('mousemove', this.scrollbarMove);
+		document.addEventListener('mouseup', this.scrollbarUp);
 		
-	// }
+	}
 		
-	// private scrollbarMove = (event:MouseEvent) => {
+	private scrollbarMove = (event:MouseEvent) => {
 		
-	// 	if (!event.which) return this.scrollbarUp();
+		if (!event.which) return this.scrollbarUp();
 		
-		// this.scrollbar.style.top = `${this.scrollbarOffsetY - event.clientY}px`;
+		let y = event.clientY - this.scrollbarOffsetY - this.offsetTop;
 		
-	// }
+		if (y < 0) y = 0;
+		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
 		
-	// private scrollbarUp = () => {
+		this.scrollbar.style.top = y + 'px';
 		
-	// 	document.removeEventListener('mousemove', this.scrollbarMove);
-	// 	document.removeEventListener('mouseup', this.scrollbarUp);
+		this.dispatchEvent(new CustomEvent('scroll'));
 		
-	// 	document.body.classList.remove('-unselectable');
+	}
 		
-	// }
+	private scrollbarUp = () => {
+		
+		document.removeEventListener('mousemove', this.scrollbarMove);
+		document.removeEventListener('mouseup', this.scrollbarUp);
+		
+		document.body.classList.remove('-unselectable');
+		
+	}
 	
 	public buildMap (items:any[], listHeight:number) {
 		
@@ -97,6 +106,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		if (total !== listHeight) {
 			this.scrollbar.style.display = 'block';
 			this.scrollbar.style.height = `${ round(listHeight / total * canvas.height) }px`;
+			this.scrollbarMaxY = this.offsetHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		
 		items.reduce((y, { status, offsetHeight }) => {

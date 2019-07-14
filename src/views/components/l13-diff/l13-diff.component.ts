@@ -43,6 +43,8 @@ const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
 
+const round = Math.round;
+
 //	Initialize _________________________________________________________________
 
 listVM.pipe(new L13DiffViewsPipe(viewsVM))
@@ -232,9 +234,17 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		msg.send('init:paths');
-		
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		this.map.addEventListener('scroll', () => {
+			
+			const list = this.list;
+			const map = this.map;
+			
+			list.scrollTop = round(map.scrollbar.offsetTop / map.offsetHeight * list.scrollHeight);
+			
+		});
+		
+		msg.send('init:paths');
 		
 	}
 	
@@ -243,7 +253,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		const list = this.list;
 		const map = this.map;
 		
-		map.scrollbar.style.top = `${Math.round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
+		map.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
 		
 	}
 	
