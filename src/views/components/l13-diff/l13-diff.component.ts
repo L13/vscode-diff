@@ -12,6 +12,7 @@ import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.componen
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
 import { L13DiffMapComponent } from '../l13-diff-map/l13-diff-map.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
@@ -59,6 +60,9 @@ listVM.pipe(new L13DiffViewsPipe(viewsVM))
 	template: templates['l13-diff/l13-diff.html'],
 })
 export class L13DiffComponent extends L13Element<L13DiffViewModel> {
+	
+	@L13Query('l13-diff-panel')
+	private panel:L13DiffPanelComponent;
 	
 	@L13Query('#left')
 	private left:L13DiffInputComponent;
@@ -282,6 +286,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		}
 		
 		this.map.buildMap(values, this.list.offsetHeight);
+		this.map.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
 		
 	}
