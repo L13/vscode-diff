@@ -234,6 +234,17 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		msg.send('init:paths');
 		
+		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		
+	}
+	
+	private setScrollbarPosition () {
+		
+		const list = this.list;
+		const map = this.map;
+		
+		map.scrollbar.style.top = `${Math.round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
+		
 	}
 	
 	private initCompare () :void {
@@ -261,6 +272,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		}
 		
 		this.map.buildMap(values, this.list.offsetHeight);
+		this.setScrollbarPosition();
 		
 	}
 	

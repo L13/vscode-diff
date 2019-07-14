@@ -29,6 +29,11 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 	@L13Query('#map')
 	public canvas:HTMLCanvasElement;
 	
+	@L13Query('div')
+	public scrollbar:HTMLDivElement;
+	
+	// private scrollbarOffsetY:number = 0;
+	
 	private context:CanvasRenderingContext2D = null;
 	
 	public constructor () {
@@ -38,7 +43,39 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		this.context = this.canvas.getContext('2d');
 		this.canvas.width = 10;
 		
+		// this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
+		
 	}
+	
+	// private scrollbarDown = (event:MouseEvent) => {
+		
+	// 	document.body.classList.add('-unselectable');
+		
+	// 	this.scrollbarOffsetY = event.offsetY;
+		
+	// 	event.preventDefault();
+		
+	// 	document.addEventListener('mousemove', this.scrollbarMove);
+	// 	document.addEventListener('mouseup', this.scrollbarUp);
+		
+	// }
+		
+	// private scrollbarMove = (event:MouseEvent) => {
+		
+	// 	if (!event.which) return this.scrollbarUp();
+		
+		// this.scrollbar.style.top = `${this.scrollbarOffsetY - event.clientY}px`;
+		
+	// }
+		
+	// private scrollbarUp = () => {
+		
+	// 	document.removeEventListener('mousemove', this.scrollbarMove);
+	// 	document.removeEventListener('mouseup', this.scrollbarUp);
+		
+	// 	document.body.classList.remove('-unselectable');
+		
+	// }
 	
 	public buildMap (items:any[], listHeight:number) {
 		
@@ -56,6 +93,11 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		canvas.height = listHeight;
+		
+		if (total !== listHeight) {
+			this.scrollbar.style.display = 'block';
+			this.scrollbar.style.height = `${ round(listHeight / total * canvas.height) }px`;
+		} else this.scrollbar.style.display = 'none';
 		
 		items.reduce((y, { status, offsetHeight }) => {
 			

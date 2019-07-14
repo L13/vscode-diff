@@ -96,7 +96,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.addEventListener('mouseup', this.resizeUp);
 		
 	}
-		
+	
 	private resizeMove = (event:MouseEvent) => {
 		
 		if (!event.which) return this.resizeUp();
