@@ -110,7 +110,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 			else if (status === 'untracked') x = width /= 2;
 			
 			context.fillStyle = (<any>colors)[status];
-			context.fillRect(x, roundY, width, round(y + h) - roundY);
+			context.fillRect(x, roundY, width, round(y + h) - roundY || 1);
 			
 			return y += h;
 			
