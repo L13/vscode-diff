@@ -9,6 +9,7 @@ Compare two folders in Visual Studio Code.
 - Added mini map for the list view.
 - Added scrollbar to the mini map.
 - Added more details to the stats.
+- Added description `Ignored EOL` in list view if file was compared with ignoring end of line.
 
 ## Features
 
