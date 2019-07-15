@@ -58,37 +58,37 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		
 		this.copyRight.addEventListener('click', () => {
 			
-			this.dispatchEvent(new CustomEvent('copy', { detail: { from: 'right' } }));
+			this.dispatchCustomEvent('copy', { from: 'right' });
 			
 		});
 		
 		this.selectDeleted.addEventListener('click', ({ metaKey, ctrlKey }) => {
 			
-			this.dispatchEvent(new CustomEvent('select', { detail: { status: 'deleted', metaKey, ctrlKey } }));
+			this.dispatchCustomEvent('select', { status: 'deleted', metaKey, ctrlKey });
 			
 		});
 		
 		this.selectModified.addEventListener('click', ({ metaKey, ctrlKey }) => {
 			
-			this.dispatchEvent(new CustomEvent('select', { detail: { status: 'modified', metaKey, ctrlKey } }));
+			this.dispatchCustomEvent('select', { status: 'modified', metaKey, ctrlKey });
 			
 		});
 		
 		this.selectUntracked.addEventListener('click', ({ metaKey, ctrlKey }) => {
 			
-			this.dispatchEvent(new CustomEvent('select', { detail: { status: 'untracked', metaKey, ctrlKey } }));
+			this.dispatchCustomEvent('select', { status: 'untracked', metaKey, ctrlKey });
 			
 		});
 		
 		this.selectAll.addEventListener('click', ({ metaKey, ctrlKey }) => {
 			
-			this.dispatchEvent(new CustomEvent('select', { detail: { metaKey, ctrlKey } }));
+			this.dispatchCustomEvent('select', { metaKey, ctrlKey });
 			
 		});
 		
 		this.copyLeft.addEventListener('click', () => {
 			
-			this.dispatchEvent(new CustomEvent('copy', { detail: { from: 'left' } }));
+			this.dispatchCustomEvent('copy', { from: 'left' });
 			
 		});
 		

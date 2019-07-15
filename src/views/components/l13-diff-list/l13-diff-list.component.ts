@@ -136,8 +136,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						const index = this.cacheSelectionHistory.indexOf(listRow);
 						if (index !== -1) this.cacheSelectionHistory.splice(index, 1);
 					} else this.cacheSelectionHistory.push(listRow);
-					if (this.list.querySelector('.-selected')) this.dispatchEvent(new CustomEvent('selected'));
-					else this.dispatchEvent(new CustomEvent('unselected'));
+					if (this.list.querySelector('.-selected')) this.dispatchCustomEvent('selected');
+					else this.dispatchCustomEvent('unselected');
 				} else {
 					this.unselect();
 					this.selectListItem(listRow);
@@ -165,7 +165,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
 		
-		this.dispatchEvent(new CustomEvent('selected'));
+		this.dispatchCustomEvent('selected');
 		
 	}
 	
@@ -202,7 +202,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			this.unselect();
 			element.classList.add('-selected');
 			this.cacheSelectionHistory.push(element);
-			this.dispatchEvent(new CustomEvent('selected'));
+			this.dispatchCustomEvent('selected');
 		}
 		
 		scrollElementIntoView(this, element);
@@ -260,7 +260,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		element.classList.add('-selected');
 		scrollElementIntoView(this, element);
-		this.dispatchEvent(new CustomEvent('selected'));
+		this.dispatchCustomEvent('selected');
 		
 	}
 	
@@ -269,7 +269,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			to.classList.add('-selected');
-			this.dispatchEvent(new CustomEvent('selected'));
+			this.dispatchCustomEvent('selected');
 		} else {
 			if (isWindows) {
 				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
@@ -291,7 +291,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			currentElement.classList.add('-selected');
-			this.dispatchEvent(new CustomEvent('selected'));
+			this.dispatchCustomEvent('selected');
 		} else {
 			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
 		}
@@ -305,7 +305,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.firstChild) return;
 		
-		this.dispatchEvent(new CustomEvent('selected'));
+		this.dispatchCustomEvent('selected');
 		event.preventDefault();
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -377,7 +377,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
-			this.dispatchEvent(new CustomEvent('selected'));
+			this.dispatchCustomEvent('selected');
 		}
 		
 	}
@@ -389,7 +389,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
-			this.dispatchEvent(new CustomEvent('selected'));
+			this.dispatchCustomEvent('selected');
 		}
 		
 	}
@@ -402,7 +402,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
 		
-		this.dispatchEvent(new CustomEvent('unselected'));
+		this.dispatchCustomEvent('unselected');
 		
 	}
 	
@@ -473,7 +473,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
 		
-		this.dispatchEvent(new CustomEvent('refresh'));
+		this.dispatchCustomEvent('refresh');
 		
 	}
 	

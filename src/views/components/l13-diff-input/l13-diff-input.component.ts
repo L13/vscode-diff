@@ -91,7 +91,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 							const value = menu.getSelection();
 							if (value) this.viewmodel.value = value;
 							menu.remove();
-						} else this.dispatchEvent(new CustomEvent('compare'));
+						} else this.dispatchCustomEvent('compare');
 					}
 					break;
 				case 'Tab':

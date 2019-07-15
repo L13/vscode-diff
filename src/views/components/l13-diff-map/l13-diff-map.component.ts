@@ -73,7 +73,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		
 		this.scrollbar.style.top = y + 'px';
 		
-		this.dispatchEvent(new CustomEvent('scroll'));
+		this.dispatchCustomEvent('scroll');
 		
 	}
 		

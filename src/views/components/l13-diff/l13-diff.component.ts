@@ -239,6 +239,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		});
 		
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		
 		this.map.addEventListener('scroll', () => {
 			
 			const list = this.list;

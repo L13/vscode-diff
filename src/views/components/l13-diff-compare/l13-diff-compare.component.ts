@@ -33,7 +33,7 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 		
 		super();
 		
-		this.button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('compare')));
+		this.button.addEventListener('click', () => this.dispatchCustomEvent('compare'));
 		
 	}
 	
