@@ -50,11 +50,20 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		
 	}
 	
-	private scrollbarDown = (event:MouseEvent) => {
+	private moveScrollbar = (event:MouseEvent) => {
+		
+		const offsetY = round(this.scrollbar.offsetHeight / 2);
+		
+		this.setScrollbarY(event.offsetY - offsetY);
+		this.scrollbarDown(event, offsetY);
+		
+	}
+	
+	private scrollbarDown = (event:MouseEvent, offsetY?:number) => {
 		
 		document.body.classList.add('-unselectable');
 		
-		this.scrollbarOffsetY = event.offsetY;
+		this.scrollbarOffsetY = offsetY || event.offsetY;
 		
 		event.preventDefault();
 		event.stopPropagation();
@@ -78,12 +87,6 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		document.removeEventListener('mouseup', this.scrollbarUp);
 		
 		document.body.classList.remove('-unselectable');
-		
-	}
-	
-	private moveScrollbar = (event:MouseEvent) => {
-		
-		this.setScrollbarY(event.offsetY - round(this.scrollbar.offsetHeight / 2));
 		
 	}
 	
