@@ -43,7 +43,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		super();
 		
 		this.context = this.canvas.getContext('2d');
-		this.canvas.width = 10;
+		this.canvas.width = this.offsetWidth;
 		
 		this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
 		
@@ -92,11 +92,10 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		const canvas = this.canvas;
 		const context = this.context;
 		const computedStyle = getComputedStyle(document.documentElement);
-		const colors = {
+		const colors:any = {
 			conflicting: computedStyle.getPropertyValue('--vscode-gitDecoration-conflictingResourceForeground'),
 			deleted: computedStyle.getPropertyValue('--vscode-gitDecoration-deletedResourceForeground'),
 			modified: computedStyle.getPropertyValue('--vscode-gitDecoration-modifiedResourceForeground'),
-			unchanged: computedStyle.getPropertyValue('--vscode-foreground'),
 			untracked: computedStyle.getPropertyValue('--vscode-gitDecoration-untrackedResourceForeground'),
 		};
 		
@@ -110,20 +109,24 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		} else this.scrollbar.style.display = 'none';
 		
 		items.reduce((y, { status, offsetHeight }) => {
-			
+
 			const h = offsetHeight / total * canvas.height;
+			const color = colors[status];
+		
+			if (!color) return y += h;
+		
 			const roundY = round(y);
 			let x = 0;
 			let width = canvas.width;
-			
+		
 			if (status === 'deleted') width /= 2;
 			else if (status === 'untracked') x = width /= 2;
-			
-			context.fillStyle = (<any>colors)[status];
+		
+			context.fillStyle = color;
 			context.fillRect(x, roundY, width, round(y + h) - roundY || 1);
-			
+		
 			return y += h;
-			
+		
 		}, 0);
 		
 	}
