@@ -46,6 +46,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		this.canvas.width = this.offsetWidth;
 		
 		this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
+		this.canvas.addEventListener('mousedown', this.moveScrollbar);
 		
 	}
 	
@@ -56,6 +57,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		this.scrollbarOffsetY = event.offsetY;
 		
 		event.preventDefault();
+		event.stopPropagation();
 		
 		document.addEventListener('mousemove', this.scrollbarMove);
 		document.addEventListener('mouseup', this.scrollbarUp);
@@ -66,14 +68,7 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		
 		if (!event.which) return this.scrollbarUp();
 		
-		let y = event.clientY - this.scrollbarOffsetY - this.offsetTop;
-		
-		if (y < 0) y = 0;
-		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
-		
-		this.scrollbar.style.top = y + 'px';
-		
-		this.dispatchCustomEvent('scroll');
+		this.setScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
 		
 	}
 		
@@ -83,6 +78,23 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		document.removeEventListener('mouseup', this.scrollbarUp);
 		
 		document.body.classList.remove('-unselectable');
+		
+	}
+	
+	private moveScrollbar = (event:MouseEvent) => {
+		
+		this.setScrollbarY(event.offsetY - round(this.scrollbar.offsetHeight / 2));
+		
+	}
+	
+	private setScrollbarY (y:number) {
+		
+		if (y < 0) y = 0;
+		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
+		
+		this.scrollbar.style.top = y + 'px';
+		
+		this.dispatchCustomEvent('scroll');
 		
 	}
 	
