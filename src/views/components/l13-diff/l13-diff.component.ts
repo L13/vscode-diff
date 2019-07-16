@@ -249,6 +249,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
+		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
+		
 		msg.send('init:paths');
 		
 	}

@@ -114,6 +114,10 @@ l13-diff-list {
 	&.-widgets {
 		margin-top: 34px;
 	}
+	
+	&.-active::-webkit-scrollbar-thumb {
+		background-color: var(--vscode-scrollbarSlider-activeBackground);
+	}
 }
 
 l13-diff-map {

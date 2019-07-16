@@ -71,6 +71,8 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		document.addEventListener('mousemove', this.scrollbarMove);
 		document.addEventListener('mouseup', this.scrollbarUp);
 		
+		this.dispatchCustomEvent('mousedownscroll');
+		
 	}
 		
 	private scrollbarMove = (event:MouseEvent) => {
@@ -87,6 +89,8 @@ export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
 		document.removeEventListener('mouseup', this.scrollbarUp);
 		
 		document.body.classList.remove('-unselectable');
+		
+		this.dispatchCustomEvent('mouseupscroll');
 		
 	}
 	
