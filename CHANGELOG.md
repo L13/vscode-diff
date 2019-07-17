@@ -4,10 +4,9 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.18.0] - 2019-07-21
 
 ### Added
-- Added mini map for the list view.
-- Added scrollbar to the mini map.
+- Added navigator for the list view.
 - Added more details to the stats.
-- Added description `Ignored EOL` in list view if file was compared with ignoring end of line.
+- Added description `Ignored EOL` in list view if file was compared and line endings were ignored.
 
 ### Changed
 - Switched from element links to event communication for all components.

@@ -6,10 +6,9 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in L13 Diff 0.18.0
 
-- Added mini map for the list view.
-- Added scrollbar to the mini map.
+- Added navigator for the list view.
 - Added more details to the stats.
-- Added description `Ignored EOL` in list view if file was compared with ignoring end of line.
+- Added description `Ignored EOL` in list view if file was compared and line endings were ignored.
 
 ## Features
 
