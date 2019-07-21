@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 import { workspacePaths } from './common';
+import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -16,7 +17,6 @@ import { workspacePaths } from './common';
 
 export class DiffMenu {
 	
-	private readonly panel:vscode.WebviewPanel;
 	private readonly context:vscode.ExtensionContext;
 	
 	private disposables:vscode.Disposable[] = [];
@@ -28,22 +28,18 @@ export class DiffMenu {
 		
 	}
 	
-	public constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext) {
+	public constructor (private msg:DiffMessage, context:vscode.ExtensionContext) {
 		
-		this.panel = panel;
 		this.context = context;
 		
-		this.panel.webview.onDidReceiveMessage((message) => {
+		this.msg.on('update:menu', () => {
 			
-			if (message.command === 'update:menu') {
-				this.panel.webview.postMessage({
-					command: message.command,
-					history: this.context.globalState.get('history') || [],
-					workspaces: workspacePaths(vscode.workspace.workspaceFolders),
-				});
-			}
+			this.msg.send('update:menu', {
+				history: this.context.globalState.get('history') || [],
+				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+			});
 			
-		}, null, this.disposables);
+		});
 		
 	}
 	

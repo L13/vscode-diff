@@ -6,15 +6,11 @@ import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L1
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
-import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
-
-import { isMetaKey, parseIcons, removeChildren, scrollElementIntoView, vscode } from '../common';
+import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
-
-const actionsService = new L13DiffActionsViewModelService();
 
 enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
@@ -34,7 +30,7 @@ const { PREVIOUS, NEXT } = Direction;
 export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	@L13Query('l13-diff-list-body')
-	private list:HTMLElement;
+	public list:HTMLElement;
 	
 	public disabled:boolean = false;
 	
@@ -77,10 +73,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
 						
-						vscode.postMessage({
-							command: ctrlKey ? 'open:diffToSide' : 'open:diff',
-							diff: this.viewmodel.getDiffById(id),
-						});
+						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
 						
 					});
 					break;
@@ -119,6 +112,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const listRow = <HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row');
 			
+			
 			if (this.cacheSelectionHistory.length) {
 			//	On macOS metaKey overrides shiftKey if both keys are pressed
 				if (isMacOs && shiftKey && !metaKey || !isMacOs && shiftKey) {
@@ -138,9 +132,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				} else if (isMetaKey(ctrlKey, metaKey)) {
 					listRow.classList.toggle('-selected');
 					this.cacheSelectedListItems = [];
-					if (listRow.classList.contains('-selected')) this.cacheSelectionHistory.push(listRow);
-					else this.cacheSelectionHistory.splice(this.cacheSelectionHistory.indexOf(listRow), 1);
-					this.detectCopy();
+					if (!listRow.classList.contains('-selected')) {
+						const index = this.cacheSelectionHistory.indexOf(listRow);
+						if (index !== -1) this.cacheSelectionHistory.splice(index, 1);
+					} else this.cacheSelectionHistory.push(listRow);
+					if (this.list.querySelector('.-selected')) this.dispatchCustomEvent('selected');
+					else this.dispatchCustomEvent('unselected');
 				} else {
 					this.unselect();
 					this.selectListItem(listRow);
@@ -155,29 +152,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			vscode.postMessage({
-				command: altKey ? 'open:diffToSide' : 'open:diff',
-				diff: this.viewmodel.getDiffById(id),
-			});
+			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
 			
 		});
-		
-		document.addEventListener('mouseup', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			if (target !== document.documentElement && target !== document.body) return;
-			
-			this.unselect();
-			
-		});
-		
-	}
-	
-	private detectCopy () :void {
-		
-		if (this.cacheSelectionHistory.length) actionsService.model('actions').enableCopy();
-		else actionsService.model('actions').disableCopy();
 		
 	}
 	
@@ -188,7 +165,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
 		
-		actionsService.model('actions').enableCopy();
+		this.dispatchCustomEvent('selected');
 		
 	}
 	
@@ -225,7 +202,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			this.unselect();
 			element.classList.add('-selected');
 			this.cacheSelectionHistory.push(element);
-			actionsService.model('actions').enableCopy();
+			this.dispatchCustomEvent('selected');
 		}
 		
 		scrollElementIntoView(this, element);
@@ -283,7 +260,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.cacheSelectionHistory.push(element);
 		element.classList.add('-selected');
 		scrollElementIntoView(this, element);
-		actionsService.model('actions').enableCopy();
+		this.dispatchCustomEvent('selected');
 		
 	}
 	
@@ -292,7 +269,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			to.classList.add('-selected');
-			actionsService.model('actions').enableCopy();
+			this.dispatchCustomEvent('selected');
 		} else {
 			if (isWindows) {
 				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
@@ -314,7 +291,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) {
 			this.unselect();
 			currentElement.classList.add('-selected');
-			actionsService.model('actions').enableCopy();
+			this.dispatchCustomEvent('selected');
 		} else {
 			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
 		}
@@ -328,7 +305,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.list.firstChild) return;
 		
-		actionsService.model('actions').enableCopy();
+		this.dispatchCustomEvent('selected');
 		event.preventDefault();
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -400,9 +377,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+			this.dispatchCustomEvent('selected');
 		}
-		
-		this.detectCopy();
 		
 	}
 	
@@ -413,9 +389,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (elements.length) {
 			elements.forEach((element) => element.classList.add('-selected'));
 			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+			this.dispatchCustomEvent('selected');
 		}
-		
-		this.detectCopy();
 		
 	}
 	
@@ -427,7 +402,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
 		
-		actionsService.model('actions').disableCopy();
+		this.dispatchCustomEvent('unselected');
 		
 	}
 	
@@ -466,6 +441,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const row = document.createElement('l13-diff-list-row');
 			
 			row.classList.add('-' + diff.status);
+			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
 			appendColumn(row, diff, <File>diff.fileA);
@@ -497,6 +473,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
 		
+		this.dispatchCustomEvent('refresh');
+		
 	}
 	
 }
@@ -509,16 +487,25 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
+		
 		if (diff.dirname) {
 			const dirname = document.createElement('SPAN');
 			dirname.textContent = diff.dirname;
 			dirname.classList.add(`-dirname`);
 			column.appendChild(dirname);
 		}
+		
 		const basename = document.createElement('SPAN');
 		basename.textContent = diff.basename;
 		basename.classList.add(`-basename`);
 		column.appendChild(basename);
+		
+		if (diff.ignoredEOL) {
+			const ignoredEOL = document.createElement('SPAN');
+			ignoredEOL.textContent = '(ignored EOL)';
+			ignoredEOL.classList.add('-ignored-eol');
+			column.appendChild(ignoredEOL);
+		}
 	}
 	
 	parent.appendChild(column);

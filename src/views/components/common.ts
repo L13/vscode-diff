@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { detectPlatform, isMacOs } from '../@l13/core';
+import { detectPlatform, isMacOs, Message } from '../@l13/core';
 
 import icons from './icons';
 
@@ -22,6 +22,8 @@ window.addEventListener('load', () => {
 //	Exports ____________________________________________________________________
 
 export const vscode = acquireVsCodeApi();
+
+export const msg = new Message(vscode);
 
 export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
 	

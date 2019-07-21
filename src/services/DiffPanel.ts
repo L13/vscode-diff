@@ -10,6 +10,7 @@ import { DiffCopy } from './DiffCopy';
 import { DiffDialog } from './DiffDialog';
 import { DiffFavorites, Favorite } from './DiffFavorites';
 import { DiffMenu } from './DiffMenu';
+import { DiffMessage } from './DiffMessage';
 import { DiffOpen } from './DiffOpen';
 import { DiffOutput } from './DiffOutput';
 import { DiffStatus } from './DiffStatus';
@@ -40,6 +41,7 @@ export class DiffPanel {
 	private readonly output:DiffOutput;
 	
 	private readonly dialog:DiffDialog;
+	private readonly msg:DiffMessage;
 	private readonly open:DiffOpen;
 	private readonly menu:DiffMenu;
 	private readonly list:DiffCompare;
@@ -54,8 +56,7 @@ export class DiffPanel {
 		if (DiffPanel.currentPanel) {
 			DiffPanel.currentPanel.panel.reveal(column);
 			if (uris) {
-				DiffPanel.currentPanel.panel.webview.postMessage({
-					command: 'update:paths',
+				DiffPanel.currentPanel.msg.send('update:paths', {
 					uris: mapUris(uris),
 					compare,
 				});
@@ -90,9 +91,7 @@ export class DiffPanel {
 	
 	public static addToFavorites () {
 		
-		DiffPanel.currentPanel.panel.webview.postMessage({
-			command: 'save:favorite',
-		});
+		DiffPanel.currentPanel.msg.send('save:favorite');
 		
 	}
 	
@@ -103,14 +102,16 @@ export class DiffPanel {
 		
 		this.status = DiffStatus.createStatusBar(context);
 		this.output = DiffOutput.createOutput();
-		this.dialog = new DiffDialog(panel);
-		this.open = new DiffOpen(panel);
-		this.menu = new DiffMenu(panel, context);
-		this.copy = new DiffCopy(panel);
-		this.list = new DiffCompare(panel, context);
+		this.msg = new DiffMessage(panel, this.disposables);
+		this.dialog = new DiffDialog(this.msg);
+		this.open = new DiffOpen(this.msg);
+		this.menu = new DiffMenu(this.msg, context);
+		this.copy = new DiffCopy(this.msg);
+		this.list = new DiffCompare(this.msg, context);
 		
 		this.disposables.push(this.status);
 		this.disposables.push(this.output);
+		this.disposables.push(this.msg);
 		this.disposables.push(this.dialog);
 		this.disposables.push(this.open);
 		this.disposables.push(this.menu);
@@ -128,34 +129,35 @@ export class DiffPanel {
 			
 		});
 		
-		this.panel.webview.onDidReceiveMessage((message) => {
+		this.msg.on('init:paths', () => {
 			
-			if (message.command === 'init:paths') {
-				this.panel.webview.postMessage({
-					command: message.command,
-					uris: mapUris(uris),
-					workspaces: workspacePaths(vscode.workspace.workspaceFolders),
-					compare,
-				});
-			} else if (message.command === 'save:favorite') {
-				vscode.window.showInputBox({ value: `${message.pathA} ↔ ${message.pathB}` }).then((value) => {
-					
-					if (!value) return;
-					
-					const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
-					
-					if (!favorites.some(({ label }) => label === value)) {
-						favorites.push({ label: value, fileA: message.pathA, fileB: message.pathB });
-						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
-						this.context.globalState.update('favorites', favorites);
-						DiffFavorites.currentProvider.refresh();
-						vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
-					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
-					
-				});
-			}
+			this.msg.send('init:paths', {
+				uris: mapUris(uris),
+				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+				compare,
+			});
 			
-		}, null, this.disposables);
+		});
+		
+		this.msg.on('save:favorite', (data) => {
+			
+			vscode.window.showInputBox({ value: `${data.pathA} ↔ ${data.pathB}` }).then((value) => {
+					
+				if (!value) return;
+				
+				const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
+				
+				if (!favorites.some(({ label }) => label === value)) {
+					favorites.push({ label: value, fileA: data.pathA, fileB: data.pathB });
+					favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+					this.context.globalState.update('favorites', favorites);
+					DiffFavorites.currentProvider.refresh();
+					vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
+				} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
+				
+			});
+			
+		});
 		
 		this.setContextForFocus(true);
 		

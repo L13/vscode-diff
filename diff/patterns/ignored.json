@@ -1,0 +1,15 @@
+{
+	"folder-a": {
+		".git": null,
+		".svn": null,
+		"node_modules": {
+			"test": {
+				"index.js": ["console.log('Hello world!');"]
+			}
+		},
+		"CVS": null,
+		".DS_Store": [""],
+		"file-a": ["a"]
+	},
+	"folder-b": null
+}

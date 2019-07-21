@@ -1,0 +1,26 @@
+{
+	"folder-a": {
+		"file-i.txt": ["i"],
+		"subfolder-i": null,
+		"subfolder-j": {
+			"file-j.txt": ["j"]
+		},
+		"subfolder-k": {
+			"subfolder-l": {
+				"file-l.txt": ["l"]
+			}
+		}
+	},
+	"folder-b": {
+		"file-i.txt": ["m"],
+		"subfolder-i": null,
+		"subfolder-j": {
+			"file-j.txt": ["n"]
+		},
+		"subfolder-k": {
+			"subfolder-l": {
+				"file-l.txt": ["o"]
+			}
+		}
+	}
+}

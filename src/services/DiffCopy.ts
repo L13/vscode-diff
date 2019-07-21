@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { copyFile, mkdirsSync } from './@l13/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
-import { DiffResult } from './DiffResult';
+import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -21,26 +21,12 @@ import { DiffResult } from './DiffResult';
 
 export class DiffCopy {
 	
-	private readonly panel:vscode.WebviewPanel;
-	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (panel:vscode.WebviewPanel) {
+	public constructor (private msg:DiffMessage) {
 		
-		this.panel = panel;
-		
-		this.panel.webview.onDidReceiveMessage((message:{ command:string, diffResult:DiffResult }) => {
-			
-			switch (message.command) {
-				case 'copy:left':
-					this.copyFromTo(message, 'A', 'B');
-					break;
-				case 'copy:right':
-					this.copyFromTo(message, 'B', 'A');
-					break;
-			}
-			
-		}, null, this.disposables);
+		this.msg.on('copy:left', (data) => this.copyFromTo(data, 'A', 'B'));
+		this.msg.on('copy:right', (data) => this.copyFromTo(data, 'B', 'A'));
 		
 	}
 	
@@ -82,10 +68,10 @@ export class DiffCopy {
 		
 	}
 	
-	private copyFromTo (message:any, from:'A'|'B', to:'A'|'B') :void {
+	private copyFromTo (data:any, from:'A'|'B', to:'A'|'B') :void {
 		
-		const folderTo = message.diffResult['path' + to];
-		const diffs:Diff[] = message.diffResult.diffs;
+		const folderTo = data.diffResult['path' + to];
+		const diffs:Diff[] = data.diffResult.diffs;
 		let length:number = diffs.length;
 		const job:CopyFilesJob = {
 			error: null,
@@ -94,7 +80,7 @@ export class DiffCopy {
 				
 				if (!job.error) vscode.window.showInformationMessage(`Copied ${length} file${length === 1 ? '' : 's'} to '${folderTo}'`);
 				
-				if (!job.tasks) this.panel.webview.postMessage(message);
+				if (!job.tasks) this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
 				
 			},
 		};

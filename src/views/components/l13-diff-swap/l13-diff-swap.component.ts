@@ -32,24 +32,13 @@ export class L13DiffSwapComponent extends L13Element<L13DiffSwapViewModel> {
 	@L13Query('button')
 	public button:HTMLButtonElement;
 	
-	public left:L13DiffInputComponent;
-	
-	public right:L13DiffInputComponent;
-	
 	public constructor () {
 		
 		super();
 		
 		setLabel(this.button, 'Swap left and right input fields');
 		
-		this.button.addEventListener('click', () => {
-			
-			const value = this.left.viewmodel.value;
-			
-			this.left.viewmodel.value = this.right.viewmodel.value;
-			this.right.viewmodel.value = value;
-			
-		});
+		this.button.addEventListener('click', () => this.dispatchCustomEvent('swap'));
 		
 	}
 	

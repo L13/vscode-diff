@@ -191,6 +191,12 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 	}
 	
+	public dispatchCustomEvent (type:string, detail?:any) {
+	
+		this.dispatchEvent(new CustomEvent(type, { detail, bubbles: false }));
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________
