@@ -23,9 +23,9 @@ Compare two folders in Visual Studio Code.
 * Mouse and keyboard support for selecting items in the list.
 * Search for pathnames to filter diff result.
 * Save your favorite diffs and start a comparison immediately.
-* Supports predefined variables for dynamic pathnames.
+* Use predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
-* See the diffs on a mini map.
+* Get a quick overview with the navigator of the current diff.
 
 Select a folder with the dialog, swap the paths and compare two files or folders.
 
@@ -153,3 +153,7 @@ Context menu
 ## Statusbar
 
 * `Click` - Open the output channel for logging and stats.
+
+## Navigator
+
+* `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
