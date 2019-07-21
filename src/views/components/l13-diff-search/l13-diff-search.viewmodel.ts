@@ -1,24 +1,13 @@
 //	Imports ____________________________________________________________________
 
-import { Diff } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
-import { ListFilter } from '../l13-diff-list/l13-diff-list.interface';
 
 //	Variables __________________________________________________________________
-
-const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 const SEARCHTERM = Symbol.for('searchterm');
 const ERROR = Symbol.for('error');
 
-type Cache = {
-	searchterm:string,
-	useRegExp:boolean,
-	useCaseSensitive:boolean,
-	regexp:RegExp,
-	items:Diff[],
-	filteredItems:Diff[],
-};
+
 
 //	Initialize _________________________________________________________________
 
@@ -26,16 +15,7 @@ type Cache = {
 
 //	Exports ____________________________________________________________________
 
-export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
-	
-	private cache:Cache = {
-		searchterm: '',
-		useRegExp: false,
-		useCaseSensitive: false,
-		regexp: null,
-		items: [],
-		filteredItems: [],
-	};
+export class L13DiffSearchViewModel extends ViewModel {
 	
 	public disabled:boolean = false;
 	
@@ -54,10 +34,7 @@ export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
 	public set searchterm (value) {
 		
 		this[SEARCHTERM] = value;
-		if (!value) {
-			this.error = null;
-			this.cache.searchterm = '';
-		}
+		if (!value) this.error = null;
 		this.requestUpdate();
 		
 	}
@@ -97,47 +74,7 @@ export class L13DiffSearchViewModel extends ViewModel implements ListFilter {
 		
 	}
 	
-	public filter (items:Diff[]) :Diff[] {
-		
-		if (!this.searchterm) return items;
-		
-		const cache = this.cache;
-		const searchterm = this.searchterm;
-		const useRegExp = this.useRegExp;
-		const useCaseSensitive = this.useCaseSensitive;
-		
-		if (items === cache.items
-			&& cache.searchterm === searchterm
-			&& cache.useRegExp === useRegExp
-			&& cache.useCaseSensitive === useCaseSensitive
-			) {
-			return cache.filteredItems;
-		}
-		
-		let regexp = cache.regexp;
-		
-		try {
-			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
-			this.error = null;
-		} catch (error) {
-			this.error = error.message;
-		}
-		
-		cache.items = items;
-		cache.searchterm = searchterm;
-		cache.useRegExp = useRegExp;
-		cache.useCaseSensitive = useCaseSensitive;
-		
-		return cache.filteredItems = items.filter((diff:Diff) => regexp.test(diff.id));
-		
-	}
-	
 }
 
 //	Functions __________________________________________________________________
 
-function escapeForRegExp (text:any) :string {
-	
-	return ('' + text).replace(findRegExpChars, '\\$1');
-	
-}

@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 
 import { Diff, File } from '../types';
+import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -17,26 +18,12 @@ import { Diff, File } from '../types';
 
 export class DiffOpen {
 	
-	private readonly panel:vscode.WebviewPanel;
-	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (panel:vscode.WebviewPanel) {
+	public constructor (private msg:DiffMessage) {
 		
-		this.panel = panel;
-		
-		this.panel.webview.onDidReceiveMessage((message) => {
-			
-			switch (message.command) {
-				case 'open:diffToSide':
-					this.open(message, true);
-					break;
-				case 'open:diff':
-					this.open(message, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false));
-					break;
-			}
-			
-		}, null, this.disposables);
+		msg.on('open:diffToSide', (data) => this.open(data, true));
+		msg.on('open:diff', (data) => this.open(data, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false)));
 		
 	}
 	
@@ -99,9 +86,9 @@ export class DiffOpen {
 		
 	}
 	
-	private open (message:any, openToSide:boolean) :void {
+	private open (data:any, openToSide:boolean) :void {
 		
-		const diff:Diff = message.diff;
+		const diff:Diff = data.diff;
 		
 		switch (diff.status) {
 			case 'deleted':

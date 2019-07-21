@@ -1,6 +1,5 @@
 //	Imports ____________________________________________________________________
 
-import { Event } from './event.class';
 
 //	Variables __________________________________________________________________
 
@@ -12,7 +11,7 @@ import { Event } from './event.class';
 
 //	Exports ____________________________________________________________________
 
-export type EventListener = (event?:Event, ...args:any[]) => void;
+export type MessageListener = (...args:any[]) => void;
 
 //	Functions __________________________________________________________________
 

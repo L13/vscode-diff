@@ -10,31 +10,46 @@ import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.co
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
+import { L13DiffMapComponent } from '../l13-diff-map/l13-diff-map.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
+import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
+import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
+import { L13DiffInputViewModelService } from '../l13-diff-input/l13-diff-input.service';
 import { L13DiffListViewModelService } from '../l13-diff-list/l13-diff-list.service';
+import { L13DiffPanelViewModelService } from '../l13-diff-panel/l13-diff-panel.service';
 import { L13DiffSearchViewModelService } from '../l13-diff-search/l13-diff-search.service';
+import { L13DiffSwapViewModelService } from '../l13-diff-swap/l13-diff-swap.service';
 import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.service';
 
-import { isMetaKey, vscode } from '../common';
+import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
+import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
+
+import { isMetaKey, msg } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
+const actionsVM = new L13DiffActionsViewModelService().model('actions');
+const compareVM = new L13DiffCompareViewModelService().model('compare');
+const leftVM = new L13DiffInputViewModelService().model('left');
 const listVM = new L13DiffListViewModelService().model('list');
-const viewsVM = new L13DiffViewsViewModelService().model('views');
+const panelVM = new L13DiffPanelViewModelService().model('panel');
+const rightVM = new L13DiffInputViewModelService().model('right');
 const searchVM = new L13DiffSearchViewModelService().model('search');
+const swapVM = new L13DiffSwapViewModelService().model('swap');
+const viewsVM = new L13DiffViewsViewModelService().model('views');
+
+const round = Math.round;
 
 //	Initialize _________________________________________________________________
 
-listVM.addFilter(viewsVM);
-listVM.addFilter(searchVM);
-
-viewsVM.on('update', () => listVM.filter());
-searchVM.on('update', () => listVM.filter());
+listVM.pipe(new L13DiffViewsPipe(viewsVM))
+	.pipe(new L13DiffSearchPipe(searchVM));
 
 //	Exports ____________________________________________________________________
 
@@ -45,6 +60,9 @@ searchVM.on('update', () => listVM.filter());
 	template: templates['l13-diff/l13-diff.html'],
 })
 export class L13DiffComponent extends L13Element<L13DiffViewModel> {
+	
+	@L13Query('l13-diff-panel')
+	private panel:L13DiffPanelComponent;
 	
 	@L13Query('#left')
 	private left:L13DiffInputComponent;
@@ -60,6 +78,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	@L13Query('l13-diff-compare')
 	private compare:L13DiffCompareComponent;
+	
+	@L13Query('l13-diff-map')
+	private map:L13DiffMapComponent;
 	
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
@@ -84,37 +105,29 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		search.vmId = 'search';
 		
 		this.left.menu = menu;
-		this.left.list = this.list;
-		
 		this.right.menu = menu;
-		this.right.list = this.list;
 			
-		this.swap.left = this.left;
-		this.swap.right = this.right;
-		
-		this.actions.list = this.list;
-		this.compare.list = this.list;
-		
-		window.addEventListener('message', (event) => {
-				
-			const message = event.data;
+		this.swap.addEventListener('swap', () => {
 			
-			if (message.command === 'update:paths') {
-				if (message.uris.length) {
-					this.left.viewmodel.value = (message.uris[0] || 0).fsPath || '';
-					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
-					if (message.compare) this.list.viewmodel.compare();
-				}
-			}
+			const value = leftVM.value;
+			
+			leftVM.value = rightVM.value;
+			rightVM.value = value;
 			
 		});
 		
-		search.addEventListener('animationend', () => {
+		this.actions.addEventListener('select', (event) => {
 			
-			if (search.classList.contains('-moveout')) {
-				search.classList.remove('-moveout');
-				search.remove();
-			} else search.classList.remove('-movein');
+			const { metaKey, ctrlKey, status } = (<any>event).detail;
+			
+			if (status) this.list.selectByStatus(status, isMetaKey(ctrlKey, metaKey));
+			else this.list.selectAll();
+			
+		});
+		
+		this.actions.addEventListener('copy', (event) => {
+			
+			this.list.copy((<any>event).detail.from);
 			
 		});
 		
@@ -129,6 +142,41 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		msg.on('update:paths', (data) => {
+			
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+				if (data.compare) this.initCompare();
+			}
+			
+		});
+		
+		msg.on('save:favorite', () => {
+			
+			msg.send('save:favorite', {
+				pathA: this.left.viewmodel.value,
+				pathB: this.right.viewmodel.value,
+			});
+			
+		});
+		
+		msg.on('init:paths', (data) => {
+			
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+			} else {
+				this.left.viewmodel.value = data.workspaces[0] || '';
+				this.right.viewmodel.value = data.workspaces[1] || '';
+			}
+			
+			msg.removeMessageListener('init:paths');
+			
+			if (data.compare) this.initCompare();
+			
+		});
+		
 		search.addEventListener('close', () => {
 			
 			this.list.classList.remove('-widgets');
@@ -136,50 +184,35 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		window.addEventListener('message', (event:MessageEvent) => {
+		search.addEventListener('animationend', () => {
 			
-			const message = event.data;
-			
-			if (message.command ===  'save:favorite') {
-				vscode.postMessage({
-					command: message.command,
-					pathA: this.left.viewmodel.value,
-					pathB: this.right.viewmodel.value,
-				});
+			if (search.classList.contains('-moveout')) {
+				this.map.classList.remove('-widgets');
+				search.classList.remove('-moveout');
+				search.remove();
+			} else {
+				this.map.classList.add('-widgets');
+				search.classList.remove('-movein');
 			}
+			
+			this.updateMap();
 			
 		});
 		
-		let init = (event:MessageEvent) => {
-				
-			const message = event.data;
+		listVM.on('compared', () => {
 			
-			if (message.command === 'init:paths') {
-				
-				if (message.uris.length) {
-					this.left.viewmodel.value = (message.uris[0] || 0).fsPath || '';
-					this.right.viewmodel.value = (message.uris[1] || 0).fsPath || '';
-				} else {
-					this.left.viewmodel.value = message.workspaces[0] || '';
-					this.right.viewmodel.value = message.workspaces[1] || '';
-				}
-				
-				window.removeEventListener('message', init);
-				init = null;
-				
-				if (message.compare) this.list.viewmodel.compare();
-			}
+			enable();
+			this.list.focus();
 			
-		};
-		
-		window.addEventListener('message', init);
-		
-		vscode.postMessage({
-			command: 'init:paths',
 		});
 		
-		listVM.on('compared', () => this.list.focus());
-		listVM.on('copied', () => this.list.focus());
+		listVM.on('copied', () => {
+			
+			enable();
+			this.list.focus();
+			
+		});
+		
 		listVM.on('filtered', () => {
 			
 			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
@@ -187,6 +220,78 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		this.list.addEventListener('selected', () => actionsVM.enableCopy());
+		this.list.addEventListener('unselected', () => actionsVM.disableCopy());
+		
+		this.list.addEventListener('refresh', () => this.updateMap());
+		window.addEventListener('resize', () => this.updateMap());
+		
+		this.compare.addEventListener('compare', () => this.initCompare());
+		this.left.addEventListener('compare', () => this.initCompare());
+		this.right.addEventListener('compare', () => this.initCompare());
+		
+		document.addEventListener('mouseup', ({ target }) => {
+			
+			if (this.list.disabled) return;
+			
+			if (target === document.body || target === document.documentElement) this.list.unselect();
+			
+		});
+		
+		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		
+		this.map.addEventListener('scroll', () => {
+			
+			const list = this.list;
+			const map = this.map;
+			
+			list.scrollTop = round(map.scrollbar.offsetTop / map.offsetHeight * list.scrollHeight);
+			
+		});
+		
+		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
+		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
+		
+		msg.send('init:paths');
+		
+	}
+	
+	private setScrollbarPosition () {
+		
+		const list = this.list;
+		const map = this.map;
+		
+		map.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
+		
+	}
+	
+	private initCompare () :void {
+		
+		disable();
+		
+		listVM.items = [];
+		listVM.requestUpdate();
+		
+		msg.send('create:diffs', {
+			pathA: leftVM.value,
+			pathB: rightVM.value,
+		});
+		
+	}
+	
+	private updateMap () :void {
+			
+		let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+		const values:any[] = [];
+		
+		while (element) {
+			values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+			element = <HTMLElement>element.nextElementSibling;
+		}
+		
+		this.map.buildMap(values, this.list.offsetHeight);
+		this.map.style.top = this.panel.offsetHeight + 'px';
+		this.setScrollbarPosition();
 		
 	}
 	
@@ -194,3 +299,31 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
+function enable () {
+	
+	panelVM.loading = false;
+	
+	actionsVM.enable();
+	actionsVM.disableCopy();
+	compareVM.enable();
+	leftVM.enable();
+	listVM.enable();
+	rightVM.enable();
+	swapVM.enable();
+	viewsVM.enable();
+	
+}
+
+function disable () {
+	
+	panelVM.loading = true;
+		
+	actionsVM.disable();
+	compareVM.disable();
+	leftVM.disable();
+	listVM.disable();
+	rightVM.disable();
+	swapVM.disable();
+	viewsVM.disable();
+	
+}

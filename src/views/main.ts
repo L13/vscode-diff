@@ -26,6 +26,10 @@ import './components/l13-diff-list/l13-diff-list.component';
 import './components/l13-diff-list/l13-diff-list.service';
 import './components/l13-diff-list/l13-diff-list.viewmodel';
 
+import './components/l13-diff-map/l13-diff-map.component';
+import './components/l13-diff-map/l13-diff-map.service';
+import './components/l13-diff-map/l13-diff-map.viewmodel';
+
 import './components/l13-diff-search/l13-diff-search.component';
 import './components/l13-diff-search/l13-diff-search.service';
 import './components/l13-diff-search/l13-diff-search.viewmodel';

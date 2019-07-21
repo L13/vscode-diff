@@ -17,108 +17,52 @@ const pluralFiles:Plural = { size: 'files', 1: 'file' };
 const pluralFolders:Plural = { size: 'folders', 1: 'folder' };
 const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
 
-type FolderStats = {
-	pathname:string,
-	total:number,
-	files:number,
-	folders:number,
-	symlinks:number,
-	size:number,
-};
-
 type Plural = {
 	size:string,
 	[index:number]:string,
 };
 
-type DetailStats = {
-	total:number,
-	size:number,
-	files:number,
-	folders:number,
-	symlinks:number,
-	ignoredEOL:number,
-};
-
 //	Initialize _________________________________________________________________
 
+class FolderStats {
+	public pathname:string = '';
+	public total:number = 0;
+	public files:number = 0;
+	public folders:number = 0;
+	public symlinks:number = 0;
+	public size:number = 0;
+}
 
+// tslint:disable-next-line: max-classes-per-file
+class DetailStats {
+	public total:number = 0;
+	public files:number = 0;
+	public folders:number = 0;
+	public symlinks:number = 0;
+	public size:number = 0;
+	public ignoredEOL:number = 0;
+}
 
 //	Exports ____________________________________________________________________
 
+// tslint:disable-next-line: max-classes-per-file
 export class DiffStats {
 	
-	public pathA:FolderStats = {
-		pathname: '',
-		total: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		size: 0,
-	};
+	public pathA:FolderStats = new FolderStats();
 	
-	public pathB:FolderStats = {
-		pathname: '',
-		total: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		size: 0,
-	};
+	public pathB:FolderStats = new FolderStats();
 	
-	public all:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public all:DetailStats = new DetailStats();
 	
-	public conflicting:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public conflicting:DetailStats = new DetailStats();
 	
-	public deleted:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public deleted:DetailStats = new DetailStats();
 	
-	public modified:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public modified:DetailStats = new DetailStats();
 	
-	public unchanged:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public unchanged:DetailStats = new DetailStats();
 	
-	public untracked:DetailStats = {
-		total: 0,
-		size: 0,
-		files: 0,
-		folders: 0,
-		symlinks: 0,
-		ignoredEOL: 0,
-	};
+	public untracked:DetailStats = new DetailStats();
 	
 	public constructor (private result:DiffResult) {
 		
@@ -135,16 +79,16 @@ export class DiffStats {
 		
 		result.diffs.forEach((diff:Diff) => {
 			
-			if (diff.fileA) countBasicStats(diff.fileA, this.pathA);
-			if (diff.fileB) countBasicStats(diff.fileB, this.pathB);
+			if (diff.fileA) countBasicStats(this.pathA, diff.fileA);
+			if (diff.fileB) countBasicStats(this.pathB, diff.fileB);
 			
-			countDetailStats(diff, this.all);
+			countAllStats(this.all, this.pathA, this.pathB);
 			
-			if (diff.status === 'conflicting') countDetailStats(diff, this.conflicting);
-			else if (diff.status === 'deleted') countDetailStats(diff, this.deleted);
-			else if (diff.status === 'modified') countDetailStats(diff, this.modified);
-			else if (diff.status === 'unchanged') countDetailStats(diff, this.unchanged);
-			else if (diff.status === 'untracked') countDetailStats(diff, this.untracked);
+			if (diff.status === 'conflicting') countDetailStats(this.conflicting, diff);
+			else if (diff.status === 'deleted') countDetailStats(this.deleted, diff);
+			else if (diff.status === 'modified') countDetailStats(this.modified, diff);
+			else if (diff.status === 'unchanged') countDetailStats(this.unchanged, diff);
+			else if (diff.status === 'untracked') countDetailStats(this.untracked, diff);
 			
 		});
 		
@@ -153,26 +97,25 @@ export class DiffStats {
 	public report () :string {
 		
 		const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
-		let text = 'INFO';
 		
-		text += '\n\n';
-		text += 'Compared:    ' + formatBasicStats(`${this.pathA.pathname} ↔ ${this.pathB.pathname}`, this.all);
-		text += '\n\n';
-		text += 'Left Path:   ' + formatBasicStats(this.pathA.pathname, this.pathA);
-		text += '\n\n';
-		text += 'Right Path:  ' + formatBasicStats(this.pathB.pathname, this.pathB);
-		text += '\n\n\n';
-		text += `RESULT
+		return `INFO
+
+Compared:    ${formatBasicStats(`${this.pathA.pathname} ↔ ${this.pathB.pathname}`, this.all)}
+
+Left Path:   ${formatBasicStats(this.pathA.pathname, this.pathA)}
+
+Right Path:  ${formatBasicStats(this.pathB.pathname, this.pathB)}
+
+
+RESULT
 
 Comparisons: ${this.result.diffs.length}
 Diffs:       ${this.result.diffs.length - this.unchanged.total}
 Conflicts:   ${this.conflicting.total}
-Created:     ${this.untracked.total}
-Deleted:     ${this.deleted.total}
-Modified:    ${this.modified.total}${ignoreEndOfLine ? formatIgnoreEOL(this.modified.ignoredEOL) : ''}
-Unchanged:   ${this.unchanged.total}${ignoreEndOfLine ? formatIgnoreEOL(this.unchanged.ignoredEOL) : ''}`;
-		
-		return text;
+Created:     ${formatDetail(this.untracked)}
+Deleted:     ${formatDetail(this.deleted)}
+Modified:    ${formatDetail(this.modified, ignoreEndOfLine)}
+Unchanged:   ${formatDetail(this.unchanged, ignoreEndOfLine)}`;
 		
 	}
 	
@@ -180,49 +123,61 @@ Unchanged:   ${this.unchanged.total}${ignoreEndOfLine ? formatIgnoreEOL(this.unc
 
 //	Functions __________________________________________________________________
 
-function countBasicStats (file:File, stats:FolderStats) {
+function countBasicStats (stats:FolderStats, file:File) {
 	
 	stats.total++;
 	stats.size += file.stat.size;
 	
 	if (file.type === 'file') stats.files++;
-	if (file.type === 'folder') stats.folders++;
-	if (file.type === 'symlink') stats.symlinks++;
+	else if (file.type === 'folder') stats.folders++;
+	else if (file.type === 'symlink') stats.symlinks++;
 	
 }
 
-function countDetailStats (diff:Diff, stats:DetailStats) {
+function countAllStats (stats:DetailStats, pathA:FolderStats, pathB:FolderStats) {
+	
+	stats.total = pathA.total + pathB.total;
+	stats.size = pathA.size + pathB.size;
+	stats.files = pathA.files + pathB.files;
+	stats.folders = pathA.folders + pathB.folders;
+	stats.symlinks = pathA.symlinks + pathB.symlinks;
+	
+}
+
+function countDetailStats (stats:DetailStats, diff:Diff) {
 	
 	stats.total++;
 	
 	if (diff.fileA) stats.size += diff.fileA.stat.size;
 	if (diff.fileB) stats.size += diff.fileB.stat.size;
 	
-	if (diff.type === 'file') stats.files++;
-	if (diff.type === 'folder') stats.folders++;
-	if (diff.type === 'symlink') stats.symlinks++;
-	
-	if (diff.ignoredEOL) stats.ignoredEOL++;
+	if (diff.type === 'file') {
+		stats.files++;
+		if (diff.ignoredEOL) stats.ignoredEOL++;
+	} else if (diff.type === 'folder') stats.folders++;
+	else if (diff.type === 'symlink') stats.symlinks++;
 	
 }
 
 function formatFileSize (size:number) {
 	
-	if (size > PB) return `${(size / PB).toFixed(2)} PB`;
-	if (size > TB) return `${(size / TB).toFixed(2)} TB`;
-	if (size > GB) return `${(size / GB).toFixed(2)} GB`;
-	if (size > MB) return `${(size / MB).toFixed(2)} MB`;
-	if (size > KB) return `${(size / KB).toFixed(2)} KB`;
+	const bytes = formatAmount(size, pluralBytes);
 	
-	return `${formatAmount(size, pluralBytes)}`;
+	if (size > PB) return `${(size / PB).toFixed(2)} PB (${bytes})`;
+	if (size > TB) return `${(size / TB).toFixed(2)} TB (${bytes})`;
+	if (size > GB) return `${(size / GB).toFixed(2)} GB (${bytes})`;
+	if (size > MB) return `${(size / MB).toFixed(2)} MB (${bytes})`;
+	if (size > KB) return `${(size / KB).toFixed(2)} KB (${bytes})`;
+	
+	return bytes;
 	
 }
 
 function formatBasicStats (name:string, stats:DetailStats|FolderStats) {
 	
 	return `${name}
-Items:       ${stats.total}${formatDetail(stats.files, stats.folders)}
-Size:        ${formatFileSize(stats.size)}${formatBytes(stats.size)}`;
+Entries:     ${formatDetail(stats)}
+Size:        ${formatFileSize(stats.size)}`;
 // Symlinks: ${stats.symlinks}`;
 	
 }
@@ -233,26 +188,17 @@ function formatAmount (value:number, measure:Plural) {
 	
 }
 
-function formatDetail (files:number, folders:number) {
+function formatDetail (stats:DetailStats|FolderStats, ignoreEndOfLine:boolean = false) {
 	
-	return ` (${formatAmount(files, pluralFiles)}, ${formatAmount(folders, pluralFolders)})`;
+	const eol = ignoreEndOfLine ? `Ignored EOL in ${formatAmount(stats.files, pluralFiles)}` : '';
 	
-}
-
-function formatBytes (size:number) {
+	if (stats.files && stats.folders) {
+		return `${stats.total} (${formatAmount(stats.files, pluralFiles)}, ${formatAmount(stats.folders, pluralFolders)}${eol ? `, ${eol}` : ''})`;
+	}
 	
-	return size > KB ? ` (${formatAmount(size, pluralBytes)})` : '';
+	if (stats.files) return `${formatAmount(stats.files, pluralFiles)}${eol ? ` (${eol})` : ''}`;
+	if (stats.folders) return `${formatAmount(stats.folders, pluralFolders)})`;
 	
-}
-
-function formatIgnoreEOL (files:number) {
-	
-	return ` (Ignored EOL in ${formatAmount(files, pluralFiles)})`;
-	
-}
-
-function formatDetailStats () {
-	
-	
+	return '0';
 	
 }

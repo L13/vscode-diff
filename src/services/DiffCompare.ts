@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { createFindGlob, walktree } from './@l13/fse';
 
 import { Dictionary, Diff, File, StatsMap } from '../types';
+import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
 import { DiffStats } from './DiffStats';
@@ -42,7 +43,6 @@ vscode.extensions.onDidChange(() => buildWhitelistForTextFiles());
 
 export class DiffCompare {
 	
-	private readonly panel:vscode.WebviewPanel;
 	private readonly context:vscode.ExtensionContext;
 	
 	private readonly status:DiffStatus;
@@ -50,20 +50,13 @@ export class DiffCompare {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext) {
+	public constructor (private msg:DiffMessage, context:vscode.ExtensionContext) {
 		
-		this.panel = panel;
 		this.context = context;
 		this.status = DiffStatus.createStatusBar(context);
 		this.output = DiffOutput.createOutput();
 		
-		this.panel.webview.onDidReceiveMessage((message) => {
-			
-			if (message.command === 'create:diffs') {
-				this.createDiffs(message);
-			}
-			
-		}, null, this.disposables);
+		msg.on('create:diffs', (data) => this.createDiffs(data));
 		
 	}
 	
@@ -89,49 +82,49 @@ export class DiffCompare {
 		
 	}
 	
-	private createDiffs (message:any) :void {
+	private createDiffs (data:any) :void {
 		
 		this.status.update();
 		this.output.clear();
 		this.output.msg('LOG');
 		this.output.msg();
 		
-		const pathA = parsePredefinedVariables(message.pathA);
-		const pathB = parsePredefinedVariables(message.pathB);
+		const pathA = parsePredefinedVariables(data.pathA);
+		const pathB = parsePredefinedVariables(data.pathB);
 		
 		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
-			return this.postEmptyResult(message, pathA, pathB);
+			return this.postEmptyResult(pathA, pathB);
 		}
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
-			return this.postEmptyResult(message, pathA, pathB);
+			return this.postEmptyResult(pathA, pathB);
 		}
 		
 		if (!fs.existsSync(pathA)) {
-			return this.postError(`The left path '${pathA}' does not exist.`, message, pathA, pathB);
+			return this.postError(`The left path '${pathA}' does not exist.`, pathA, pathB);
 		}
 		
 		if (!fs.existsSync(pathB)) {
-			return this.postError(`The right path '${pathB}' does not exist.`, message, pathA, pathB);
+			return this.postError(`The right path '${pathB}' does not exist.`, pathA, pathB);
 		}
 		
 		const statA = fs.lstatSync(pathA);
 		const statB = fs.lstatSync(pathB);
 		
-		if (statA.isFile() && statB.isFile()) this.compareFiles(message, pathA, pathB);
-		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(message, pathA, pathB);
-		else this.postError(`The left and right path is not of the same type.`, message, pathA, pathB);
+		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
+		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
+		else this.postError(`The left and right path is not of the same type.`, pathA, pathB);
 		
 	}
 	
-	private compareFiles (message:any, pathA:string, pathB:string) {
+	private compareFiles (data:any, pathA:string, pathB:string) {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
 		const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 		
-		this.saveHistory(message.pathA, message.pathB);
+		this.saveHistory(data.pathA, data.pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
@@ -139,13 +132,13 @@ export class DiffCompare {
 			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 		});
 		
-		this.postEmptyResult(message, pathA, pathB);
+		this.postEmptyResult(pathA, pathB);
 		
 	}
 	
-	private compareFolders (message:any, pathA:string, pathB:string) {
+	private compareFolders (data:any, pathA:string, pathB:string) {
 		
-		this.saveHistory(message.pathA, message.pathB);
+		this.saveHistory(data.pathA, data.pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
@@ -154,24 +147,24 @@ export class DiffCompare {
 			
 			if (!diffResult) this.status.update();
 			
-			this.panel.webview.postMessage({ command: message.command, diffResult });
+			this.msg.send('create:diffs', { diffResult });
 			
 		});
 		
 	}
 	
-	private postError (text:string, message:any, pathA:string, pathB:string) {
+	private postError (text:string, pathA:string, pathB:string) {
 		
 		this.output.log(text);
 		vscode.window.showErrorMessage(text);
 		
-		this.postEmptyResult(message, pathA, pathB);
+		this.postEmptyResult(pathA, pathB);
 		
 	}
 	
-	private postEmptyResult (message:any, pathA:string, pathB:string) {
+	private postEmptyResult (pathA:string, pathB:string) {
 		
-		this.panel.webview.postMessage({ command: message.command, diffResult: new DiffResult(pathA, pathB) });
+		this.msg.send('create:diffs', { diffResult: new DiffResult(pathA, pathB) });
 		
 	}
 	
@@ -207,8 +200,9 @@ export class DiffCompare {
 				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
 				
 				const diffStats = new DiffStats(diffResult);
+				const total = diffStats.all.total;
 				
-				this.status.update(`Compared ${diffStats.all.total} file${diffStats.all.total > 2 ? 's' : ''}`);
+				this.status.update(`Compared ${total} entr${total > 2 ? 'ies' : 'y'}`);
 				
 				this.output.msg();
 				this.output.msg();

@@ -2,7 +2,6 @@
 	display: flex;
 	font-size: 0.8125rem;
 	flex-direction: column;
-	height: 100%;
 	max-height: 100%;
 }
 
@@ -103,6 +102,7 @@ l13-diff-search {
 
 l13-diff-list {
 	position: relative;
+	margin: 0 30px 0 0;
 	transition: margin-top 0.1s linear;
 	z-index: 0;
 	
@@ -110,6 +110,21 @@ l13-diff-list {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
 		outline-offset: -1px;
 	}
+	
+	&.-widgets {
+		margin-top: 34px;
+	}
+	
+	&.-active::-webkit-scrollbar-thumb {
+		background-color: var(--vscode-scrollbarSlider-activeBackground);
+	}
+}
+
+l13-diff-map {
+	position: absolute;
+	right: 0;
+	top: 75px;
+	width: 30px;
 	
 	&.-widgets {
 		margin-top: 34px;
@@ -136,8 +151,8 @@ l13-diff-no-result {
 }
 
 ::-webkit-scrollbar {
-	height: 10px;
-	width: 10px;
+	height: 14px;
+	width: 14px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -150,4 +165,8 @@ l13-diff-no-result {
 
 ::-webkit-scrollbar-thumb:active {
 	background-color: var(--vscode-scrollbarSlider-activeBackground);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0);
 }

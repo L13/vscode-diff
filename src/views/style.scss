@@ -29,6 +29,8 @@ body {
 		--l13-intro-keyBackgroundColor: hsla(0, 0%, 50%, .17);
 		--l13-intro-keyBorderColor: rgba(51, 51, 51, .6);
 		--l13-intro-shadow:rgba(68, 68, 68, .6);
+		
+		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
 	}
 	
 	&.vscode-light {
@@ -42,5 +44,7 @@ body {
 		--l13-intro-keyBackgroundColor: hsla(0, 0%, 87%, .4);
 		--l13-intro-keyBorderColor: hsla(0, 0%, 80%, .4);
 		--l13-intro-shadow:hsla(0, 0%, 73%, .4);
+		
+		--l13-scrollbar-background: rgba(0, 0, 0, 0.1);
 	}
 }
