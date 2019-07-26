@@ -60,6 +60,11 @@
 			"type": "npm",
 			"script": "test-diff",
 			"problemMatcher": []
+		},
+		{
+			"type": "gulp",
+			"task": "icons:fix",
+			"problemMatcher": []
 		}
 	]
 }

@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.19.0] - 2019-08-05
+
+### Changed
+- New icons because Visual Studio Code has new icons.
+
 ## [0.18.0] - 2019-07-21
 
 ### Added
