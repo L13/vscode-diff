@@ -31,6 +31,8 @@ body {
 		--l13-intro-shadow:rgba(68, 68, 68, .6);
 		
 		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-icon-background: #c5c5c5;
 	}
 	
 	&.vscode-light {
@@ -46,5 +48,7 @@ body {
 		--l13-intro-shadow:hsla(0, 0%, 73%, .4);
 		
 		--l13-scrollbar-background: rgba(0, 0, 0, 0.1);
+		
+		--l13-icon-background: #414141;
 	}
 }
