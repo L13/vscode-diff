@@ -4,11 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.18.0
+## What's new in L13 Diff 0.19.0
 
-- Added navigator for the list view.
-- Added more details to the stats.
-- Added description `Ignored EOL` in list view if file was compared and line endings were ignored.
+- New icons because Visual Studio Code has new icons.
 
 ## Features
 
