@@ -199,7 +199,7 @@
 						"CVS",
 						"node_modules"
 					],
-					"description": "Indicates folders or files to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
+					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},
 				"l13Diff.openFavoriteAndCompare": {
 					"type": "boolean",
