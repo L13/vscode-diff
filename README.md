@@ -25,17 +25,29 @@ Compare two folders in Visual Studio Code.
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
 
-Select a folder with the dialog, swap the paths and compare two files or folders.
+### Basics
 
 ![L13 Diff Basics](images/preview-start.png)
 
-Select from recently used, current workspaces or drag'n drop folders into the input fields.
+### Menu
 
 ![L13 Diff Menu](images/preview-menu.png)
 
-Toggle the view, select files by status or copy files from left to right or vice versa.
+### Favorites
 
-![L13 Diff List](images/preview-diff.png)
+![L13 Diff Favorites](images/preview-favorites.png)
+
+### Search, filter or select
+
+![L13 Diff Search](images/preview-search.png)
+
+### List and navigator
+
+![L13 Diff Selection](images/preview-select.png)
+
+### Stats
+
+![L13 Diff Stats](images/preview-stats.png)
 
 ## Available Commands
 
