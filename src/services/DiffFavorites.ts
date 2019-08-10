@@ -1,8 +1,9 @@
 //	Imports ____________________________________________________________________
 
-import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+
+import { sortCaseInsensitive } from './common';
 
 //	Variables __________________________________________________________________
 
@@ -78,7 +79,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 				if (favorites[i].label === favorite.label) {
 					if (!favorites.some(({ label }) => label === value)) {
 						favorites[i].label = value;
-						favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+						favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
 						vscode.window.showInformationMessage(`Saved '${value}' in favorites!`);

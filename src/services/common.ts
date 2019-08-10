@@ -18,5 +18,14 @@ export function workspacePaths (workspaceFolders:vscode.WorkspaceFolder[]|undefi
 	
 }
 
+export function sortCaseInsensitive (a:string, b:string) {
+					
+	a = a.toLowerCase();
+	b = b.toLowerCase();
+	
+	return a < b ? -1 : a > b ? 1 : 0;
+	
+}
+
 //	Functions __________________________________________________________________
 

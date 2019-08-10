@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Uri } from '../types';
-import { workspacePaths } from './common';
+import { sortCaseInsensitive, workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDialog } from './DiffDialog';
@@ -149,7 +149,7 @@ export class DiffPanel {
 				
 				if (!favorites.some(({ label }) => label === value)) {
 					favorites.push({ label: value, fileA: data.pathA, fileB: data.pathB });
-					favorites.sort(({ label:a }, { label:b }) => a > b ? 1 : a < b ? -1 : 0);
+					favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
 					this.context.globalState.update('favorites', favorites);
 					DiffFavorites.currentProvider.refresh();
 					vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
