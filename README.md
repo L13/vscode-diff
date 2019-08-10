@@ -18,7 +18,7 @@ Compare two folders in Visual Studio Code.
 * Select all files and folders by status.
 * Toggle the visiblity of list items by status.
 * Double click an file item in the list to open the diff or the file.
-* Mouse and keyboard support for selecting items in the list.
+* Mouse and keyboard support for selecting items in the list view.
 * Search for pathnames to filter diff result.
 * Save your favorite diffs and start a comparison immediately.
 * Use predefined variables for dynamic pathnames.
