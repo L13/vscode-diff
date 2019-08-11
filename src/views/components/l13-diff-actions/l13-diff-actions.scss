@@ -14,7 +14,7 @@
 		width: 20px;
 			
 		&::before {
-			background: var(--vscode-foreground);
+			background: var(--l13-icon-background);
 			content: '';
 			height: 100%;
 			left: 0;
@@ -46,7 +46,7 @@
 			&:hover {
 				
 				&::before {
-					background: var(--vscode-foreground) !important;
+					background: var(--l13-icon-background) !important;
 				}
 			}
 		}

@@ -4,11 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.18.0
+## What's new in L13 Diff 0.19.0
 
-- Added navigator for the list view.
-- Added more details to the stats.
-- Added description `Ignored EOL` in list view if file was compared and line endings were ignored.
+- New icons because Visual Studio Code has new icons.
 
 ## Features
 
@@ -20,24 +18,36 @@ Compare two folders in Visual Studio Code.
 * Select all files and folders by status.
 * Toggle the visiblity of list items by status.
 * Double click an file item in the list to open the diff or the file.
-* Mouse and keyboard support for selecting items in the list.
+* Mouse and keyboard support for selecting items in the list view.
 * Search for pathnames to filter diff result.
 * Save your favorite diffs and start a comparison immediately.
 * Use predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
 
-Select a folder with the dialog, swap the paths and compare two files or folders.
+### Basics
 
 ![L13 Diff Basics](images/preview-start.png)
 
-Select from recently used, current workspaces or drag'n drop folders into the input fields.
+### Menu
 
 ![L13 Diff Menu](images/preview-menu.png)
 
-Toggle the view, select files by status or copy files from left to right or vice versa.
+### Favorites
 
-![L13 Diff List](images/preview-diff.png)
+![L13 Diff Favorites](images/preview-favorites.png)
+
+### Search, filter or select
+
+![L13 Diff Search](images/preview-search.png)
+
+### List and navigator
+
+![L13 Diff Selection](images/preview-select.png)
+
+### Stats
+
+![L13 Diff Stats](images/preview-stats.png)
 
 ## Available Commands
 

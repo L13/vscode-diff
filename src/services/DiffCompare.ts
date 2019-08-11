@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { createFindGlob, walktree } from './@l13/fse';
 
 import { Dictionary, Diff, File, StatsMap } from '../types';
+import { sortCaseInsensitive } from './common';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
@@ -197,7 +198,7 @@ export class DiffCompare {
 				
 				this.output.log('Compared files');
 				
-				diffResult.diffs = Object.keys(diffs).sort().map((relative) => diffs[relative]);
+				diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
 				
 				const diffStats = new DiffStats(diffResult);
 				const total = diffStats.all.total;

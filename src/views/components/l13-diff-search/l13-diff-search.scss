@@ -95,7 +95,7 @@ input[type=checkbox] {
 	}
 		
 	&::after {
-		background: var(--vscode-settings-checkboxForeground, var(--vscode-foreground));
+		background: var(--vscode-settings-checkboxForeground, var(--l13-icon-background));
 		content: '';
 		height: 100%;
 		left: 0;
@@ -148,7 +148,7 @@ button {
 	width: 20px;
 		
 	&::before {
-		background: var(--vscode-foreground);
+		background: var(--l13-icon-background);
 		content: '';
 		height: 100%;
 		left: 0;
@@ -177,7 +177,7 @@ button {
 		&:hover {
 			
 			&::before {
-				background: var(--vscode-foreground) !important;
+				background: var(--l13-icon-background) !important;
 			}
 		}
 	}
