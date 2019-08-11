@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.19.0] - 2019-08-11
+
+### Changed
+- New icons because Visual Studio Code has new icons.
+- Updated screenshots for README.
+
+### Fixed
+- Fixed sorting in list view and favorites. [Issue #14](https://github.com/L13/vscode-diff/issues/14)
+
 ## [0.18.0] - 2019-07-21
 
 ### Added

@@ -39,7 +39,7 @@ l13-diff-list-row {
 			
 		l13-diff-list-file::before {
 			// Fixes icon which disappears if list loses focus ?!?
-			background: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
+			background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
 		}
 		
 		// &:hover {
@@ -101,7 +101,7 @@ l13-diff-list-file {
 	
 	&.-file::before,
 	&.-folder::before {
-		background: var(--vscode-foreground);
+		background: var(--l13-icon-background);
 		content: '';
 		display: block;
 		height: 16px;
