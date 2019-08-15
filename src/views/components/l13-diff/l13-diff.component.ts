@@ -134,12 +134,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
 			
 			if (!search.parentNode) {
-				search.viewmodel.enable();
+				search.viewmodel.enable().then(() => search.focus());
 				this.widgets.appendChild(search);
 				this.list.classList.add('-widgets');
 				search.classList.add('-movein');
 			}
-			search.focus();
 			
 		});
 		

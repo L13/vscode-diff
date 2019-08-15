@@ -72,13 +72,14 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			return cache.filteredItems;
 		}
 		
-		let regexp = cache.regexp;
+		let regexp:RegExp = null;
 		
 		try {
-			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
+			regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
 			vm.error = null;
 		} catch (error) {
 			vm.error = error.message;
+			return items;
 		}
 		
 		cache.items = items;
@@ -90,7 +91,9 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
-			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder') return regexp.test(diff.id);
+			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder') {
+				return searchterm ? regexp.test(diff.id) : true;
+			}
 			
 			return false;
 			

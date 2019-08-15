@@ -53,19 +53,28 @@ export abstract class ViewModel extends EventDispatcher {
 	
 	public requestUpdate () {
 		
-		const frameId = refreshComponents.get(this);
+		let promise = refreshComponents.get(this);
 		
-		if (!frameId) {
-			refreshComponents.set(this, requestAnimationFrame(() => {
+		if (!promise) {
+			promise = new Promise((resolve, reject) => {
 				
-				this[COMPONENTS].forEach((component) => component.update());
+				requestAnimationFrame(() => {
+					
+					this[COMPONENTS].forEach((component) => component.update());
+					
+					refreshComponents.delete(this);
+					
+					this.dispatchEvent('update');
+					
+					resolve();
+					
+				});
 				
-				refreshComponents.delete(this);
-				
-				this.dispatchEvent('update');
-				
-			}));
+			});
+			refreshComponents.set(this, promise);
 		}
+		
+		return promise;
 		
 	}
 	
