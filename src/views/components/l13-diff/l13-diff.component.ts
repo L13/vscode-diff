@@ -134,6 +134,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
 			
 			if (!search.parentNode) {
+				search.viewmodel.enable();
 				this.widgets.appendChild(search);
 				this.list.classList.add('-widgets');
 				search.classList.add('-movein');
@@ -189,6 +190,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			if (search.classList.contains('-moveout')) {
 				this.map.classList.remove('-widgets');
 				search.classList.remove('-moveout');
+				search.viewmodel.disable();
 				search.remove();
 			} else {
 				this.map.classList.add('-widgets');

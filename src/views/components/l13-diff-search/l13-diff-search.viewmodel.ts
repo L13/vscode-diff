@@ -23,6 +23,10 @@ export class L13DiffSearchViewModel extends ViewModel {
 	
 	public useCaseSensitive:boolean = false;
 	
+	public useFiles:boolean = true;
+	
+	public useFolders:boolean = true;
+	
 	private [SEARCHTERM]:string = '';
 	
 	public get searchterm () {

@@ -9,7 +9,7 @@
 	padding: 4px 4px 5px 8px;
 	position: relative;
 	user-select: none;
-	width: 232px;
+	width: 284px;
 }
 
 #l13_resizer {
@@ -24,7 +24,7 @@
 }
 
 div.l13-input {
-	margin: 0 22px 0 0;
+	margin: 0 74px 0 0;
 	position: relative;
 }
 
@@ -124,6 +124,26 @@ input[type=checkbox] {
 		&::after {
 			-webkit-mask-image: url('regexp.svg');
 			mask-image: url('regexp.svg');
+		}
+	}
+	
+	&#l13_use_files {
+		right: 52px;
+		top: 7px;
+		
+		&::after {
+			-webkit-mask-image: url('list-file.svg');
+			mask-image: url('list-file.svg');
+		}
+	}
+	
+	&#l13_use_folders {
+		right: 28px;
+		top: 7px;
+		
+		&::after {
+			-webkit-mask-image: url('list-folder.svg');
+			mask-image: url('list-folder.svg');
 		}
 	}
 	
