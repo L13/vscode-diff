@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.20.0] - 2019-08-25
+
+### Added
+- Added options to search widget to filter files and/or folders.
+
+### Changed
+- Closing search widget doesn't clear the input field anymore.
+
 ## [0.19.0] - 2019-08-11
 
 ### Changed
