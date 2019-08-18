@@ -67,4 +67,12 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 	
 }
 
+export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputElement) {
+	
+	element.addEventListener('mousedown', () => element.classList.add('-active'));
+	element.addEventListener('mouseup', () => element.classList.remove('-active'));
+	element.addEventListener('mouseleave', () => element.classList.remove('-active'));
+	
+}
+
 //	Functions __________________________________________________________________

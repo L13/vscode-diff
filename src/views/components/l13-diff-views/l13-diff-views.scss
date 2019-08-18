@@ -41,6 +41,10 @@
 			// }
 		}
 		
+		&:not([disabled]).-active {
+			transform: scale(1.272019649, 1.272019649);
+		}
+		
 		&[disabled] {
 			opacity: 0.3;
 			cursor: default;

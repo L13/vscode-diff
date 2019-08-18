@@ -5,7 +5,7 @@ import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 import { L13DiffViewsViewModelService } from './l13-diff-views.service';
 import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
-import { parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -28,16 +28,16 @@ import templates from '../templates';
 export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 	
 	@L13Query('#l13_show_unchanged')
-	public unchanged:HTMLElement;
+	public unchanged:HTMLInputElement;
 	
 	@L13Query('#l13_show_deleted')
-	public deleted:HTMLElement;
+	public deleted:HTMLInputElement;
 	
 	@L13Query('#l13_show_modified')
-	public modified:HTMLElement;
+	public modified:HTMLInputElement;
 	
 	@L13Query('#l13_show_untracked')
-	public untracked:HTMLElement;
+	public untracked:HTMLInputElement;
 	
 	public constructor () {
 		
@@ -47,6 +47,11 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 		setLabel(this.deleted, 'Show all deleted files');
 		setLabel(this.modified, 'Show all modfied files');
 		setLabel(this.untracked, 'Show all created files');
+		
+		addButtonActiveStyleEvents(this.unchanged);
+		addButtonActiveStyleEvents(this.deleted);
+		addButtonActiveStyleEvents(this.modified);
+		addButtonActiveStyleEvents(this.untracked);
 		
 	}
 	

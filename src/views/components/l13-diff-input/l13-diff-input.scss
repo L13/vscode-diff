@@ -37,6 +37,7 @@
 		position: absolute;
 		right: 7px;
 		top: 2px;
+		transition: transform 0.1s;
 		width: 21px;
 			
 		&::before {
@@ -65,6 +66,10 @@
 			// 	background: var(--vscode-button-hoverBackground);
 			// }
 		// }
+		
+		&:not([disabled]).-active {
+			transform: scale(1.272019649, 1.272019649);
+		}
 		
 		&[disabled] {
 			cursor: default;
