@@ -46,7 +46,7 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff Selection](images/preview-select.png)
 
-### Stats
+### Logging and stats
 
 ![L13 Diff Stats](images/preview-stats.png)
 
