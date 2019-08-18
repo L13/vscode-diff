@@ -5,11 +5,11 @@
 	display: block;
 	height: 34px;
 	max-width: calc(100% - 38px);
-	min-width: 232px;
+	min-width: 286px;
 	padding: 4px 4px 5px 8px;
 	position: relative;
 	user-select: none;
-	width: 284px;
+	width: 286px;
 }
 
 #l13_resizer {
@@ -24,7 +24,7 @@
 }
 
 div.l13-input {
-	margin: 0 74px 0 0;
+	margin: 0 76px 0 0;
 	position: relative;
 }
 
@@ -127,19 +127,24 @@ input[type=checkbox] {
 		}
 	}
 	
+	&.-option {
+		height: 22px;
+		top: 6px;
+		width: 22px;
+	}
+	
 	&#l13_use_files {
-		right: 52px;
-		top: 7px;
+		right: 54px;
 		
 		&::after {
 			-webkit-mask-image: url('list-file.svg');
 			mask-image: url('list-file.svg');
+			left: 1px;
 		}
 	}
 	
 	&#l13_use_folders {
 		right: 28px;
-		top: 7px;
 		
 		&::after {
 			-webkit-mask-image: url('list-folder.svg');
@@ -148,6 +153,7 @@ input[type=checkbox] {
 	}
 	
 	&:checked {
+		background: var(--vscode-inputOption-activeBackground, transparent);
 		outline-color: var(--vscode-inputOption-activeBorder);
 		
 		&::after {
