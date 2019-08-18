@@ -138,7 +138,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				this.widgets.appendChild(search);
 				this.list.classList.add('-widgets');
 				search.classList.add('-movein');
-			}
+			} else search.focus();
 			
 		});
 		

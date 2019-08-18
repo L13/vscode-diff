@@ -1,3 +1,5 @@
+$host-width: 286px;
+
 :host {
 	background: var(--vscode-editorWidget-background);
 	box-shadow: 0 2px 8px var(--vscode-widget-shadow);
@@ -5,11 +7,11 @@
 	display: block;
 	height: 34px;
 	max-width: calc(100% - 38px);
-	min-width: 286px;
+	min-width: $host-width;
 	padding: 4px 4px 5px 8px;
 	position: relative;
 	user-select: none;
-	width: 286px;
+	width: $host-width;
 }
 
 #l13_resizer {
