@@ -25,8 +25,8 @@ export class DiffCopy {
 	
 	public constructor (private msg:DiffMessage) {
 		
-		this.msg.on('copy:left', (data) => this.copyFromTo(data, 'A', 'B'));
-		this.msg.on('copy:right', (data) => this.copyFromTo(data, 'B', 'A'));
+		this.msg.on('copy:left', (data) => this.showCopyFromToDialog(data, 'A', 'B'));
+		this.msg.on('copy:right', (data) => this.showCopyFromToDialog(data, 'B', 'A'));
 		
 	}
 	
@@ -65,6 +65,22 @@ export class DiffCopy {
 				});
 			} else callback(new Error(`'${dest}' exists, but is not a file!`));
 		}
+		
+	}
+	
+	private showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') :void {
+		
+		const length = data.diffResult.diffs.length;
+		
+		if (!length) return;
+		
+		const text = `Copy ${length} file${length === 1 ? '' : 's'} to "${data.diffResult['path' + to]}"?`;
+		
+		vscode.window.showInformationMessage(text, { modal: true }, 'Copy').then((value) => {
+			
+			if (value) this.copyFromTo(data, from, to);
+			
+		});
 		
 	}
 	
