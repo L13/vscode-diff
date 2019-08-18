@@ -32,12 +32,12 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		&:hover {
+		// &:hover {
 			
-			&::before {
-				background: var(--vscode-button-hoverBackground);
-			}
-		}
+		// 	&::before {
+		// 		background: var(--vscode-button-hoverBackground);
+		// 	}
+		// }
 		
 		&[disabled] {
 			cursor: default;

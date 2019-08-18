@@ -36,21 +36,21 @@
 		&:hover {
 			cursor: pointer;
 			
-			&::before {
-				background: var(--vscode-button-hoverBackground);
-			}
+			// &::before {
+			// 	background: var(--vscode-button-hoverBackground);
+			// }
 		}
 		
 		&[disabled] {
 			opacity: 0.3;
 			cursor: default;
 			
-			&:hover {
+			// &:hover {
 				
-				&::before {
-					background: var(--l13-icon-background) !important;
-				}
-			}
+			// 	&::before {
+			// 		background: var(--l13-icon-background) !important;
+			// 	}
+			// }
 		}
 		
 		&:checked::after {
@@ -76,12 +76,12 @@
 				mask-image: url('show-unchanged.svg');
 			}
 			
-			&:hover {
+			// &:hover {
 				
-				&::before {
-					background: var(--vscode-button-hoverBackground);
-				}
-			}
+			// 	&::before {
+			// 		background: var(--vscode-button-hoverBackground);
+			// 	}
+			// }
 		}
 		
 		&#l13_show_deleted {
@@ -91,12 +91,12 @@
 				mask-image: url('show-deleted.svg');
 			}
 			
-			&:hover {
+			// &:hover {
 				
-				&::before {
-					background: var(--vscode-gitDecoration-deletedResourceForeground);
-				}
-			}
+			// 	&::before {
+			// 		background: var(--vscode-gitDecoration-deletedResourceForeground);
+			// 	}
+			// }
 		}
 		
 		&#l13_show_modified {
@@ -106,12 +106,12 @@
 				mask-image: url('show-modified.svg');
 			}
 			
-			&:hover {
+			// &:hover {
 				
-				&::before {
-					background: var(--vscode-gitDecoration-modifiedResourceForeground);
-				}
-			}
+			// 	&::before {
+			// 		background: var(--vscode-gitDecoration-modifiedResourceForeground);
+			// 	}
+			// }
 		}
 		
 		&#l13_show_untracked {
@@ -121,12 +121,12 @@
 				mask-image: url('show-untracked.svg');
 			}
 			
-			&:hover {
+			// &:hover {
 				
-				&::before {
-					background: var(--vscode-gitDecoration-untrackedResourceForeground);
-				}
-			}
+			// 	&::before {
+			// 		background: var(--vscode-gitDecoration-untrackedResourceForeground);
+			// 	}
+			// }
 		}
 	}
 }
