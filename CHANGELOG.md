@@ -5,9 +5,15 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 
 ### Added
 - Added options to search widget to filter files and/or folders.
+- Added confirm dialog for coping files.
+- Added confirm dialog for deleting favorites.
+- Added scaling for icons on mouse down like Visual Studio Code.
 
 ### Changed
 - Closing search widget doesn't clear the input field anymore.
+
+### Removed
+- Removed hover color for icons.
 
 ## [0.19.0] - 2019-08-11
 
