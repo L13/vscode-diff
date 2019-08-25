@@ -23,6 +23,10 @@ export class L13DiffSearchViewModel extends ViewModel {
 	
 	public useCaseSensitive:boolean = false;
 	
+	public useFiles:boolean = true;
+	
+	public useFolders:boolean = true;
+	
 	private [SEARCHTERM]:string = '';
 	
 	public get searchterm () {
@@ -60,17 +64,19 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public disable () :void {
+	public disable () :Promise<any> {
 		
 		this.disabled = true;
-		this.requestUpdate();
+		
+		return this.requestUpdate();
 		
 	}
 	
-	public enable () :void {
+	public enable () :Promise<any> {
 		
 		this.disabled = false;
-		this.requestUpdate();
+		
+		return this.requestUpdate();
 		
 	}
 	

@@ -1,3 +1,5 @@
+$host-width: 286px;
+
 :host {
 	background: var(--vscode-editorWidget-background);
 	box-shadow: 0 2px 8px var(--vscode-widget-shadow);
@@ -5,11 +7,11 @@
 	display: block;
 	height: 34px;
 	max-width: calc(100% - 38px);
-	min-width: 232px;
+	min-width: $host-width;
 	padding: 4px 4px 5px 8px;
 	position: relative;
 	user-select: none;
-	width: 232px;
+	width: $host-width;
 }
 
 #l13_resizer {
@@ -24,7 +26,7 @@
 }
 
 div.l13-input {
-	margin: 0 22px 0 0;
+	margin: 0 76px 0 0;
 	position: relative;
 }
 
@@ -127,7 +129,33 @@ input[type=checkbox] {
 		}
 	}
 	
+	&.-option {
+		height: 22px;
+		top: 6px;
+		width: 22px;
+	}
+	
+	&#l13_use_files {
+		right: 54px;
+		
+		&::after {
+			-webkit-mask-image: url('list-file.svg');
+			mask-image: url('list-file.svg');
+			left: 1px;
+		}
+	}
+	
+	&#l13_use_folders {
+		right: 28px;
+		
+		&::after {
+			-webkit-mask-image: url('list-folder.svg');
+			mask-image: url('list-folder.svg');
+		}
+	}
+	
 	&:checked {
+		background: var(--vscode-inputOption-activeBackground, transparent);
 		outline-color: var(--vscode-inputOption-activeBorder);
 		
 		&::after {

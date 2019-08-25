@@ -13,6 +13,8 @@ type Cache = {
 	searchterm:string,
 	useRegExp:boolean,
 	useCaseSensitive:boolean,
+	useFiles:boolean,
+	useFolders:boolean,
 	regexp:RegExp,
 	items:Diff[],
 	filteredItems:Diff[],
@@ -34,6 +36,8 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		searchterm: '',
 		useRegExp: false,
 		useCaseSensitive: false,
+		useFiles: true,
+		useFolders: true,
 		regexp: null,
 		items: [],
 		filteredItems: [],
@@ -49,36 +53,51 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		
 		const vm = this.vm;
 		
-		if (!vm.searchterm) return items;
+		if (vm.disabled) return items;
 		
 		const cache = this.cache;
 		const searchterm = vm.searchterm;
 		const useRegExp = vm.useRegExp;
 		const useCaseSensitive = vm.useCaseSensitive;
+		const useFiles = vm.useFiles;
+		const useFolders = vm.useFolders;
 		
 		if (items === cache.items
 			&& cache.searchterm === searchterm
 			&& cache.useRegExp === useRegExp
 			&& cache.useCaseSensitive === useCaseSensitive
+			&& cache.useFiles === useFiles
+			&& cache.useFolders === useFolders
 			) {
 			return cache.filteredItems;
 		}
 		
-		let regexp = cache.regexp;
+		let regexp:RegExp = null;
 		
 		try {
-			cache.regexp = regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
+			regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
 			vm.error = null;
 		} catch (error) {
 			vm.error = error.message;
+			return items;
 		}
 		
 		cache.items = items;
 		cache.searchterm = searchterm;
 		cache.useRegExp = useRegExp;
 		cache.useCaseSensitive = useCaseSensitive;
+		cache.useFiles = useFiles;
+		cache.useFolders = useFolders;
 		
-		return cache.filteredItems = items.filter((diff:Diff) => regexp.test(diff.id));
+		return cache.filteredItems = items.filter((diff:Diff) => {
+			
+			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder') {
+				return searchterm ? regexp.test(diff.id) : true;
+			}
+			
+			return false;
+			
+		});
 		
 	}
 	

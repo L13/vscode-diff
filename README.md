@@ -4,9 +4,13 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.19.0
+## What's new in L13 Diff 0.20.0
 
-- New icons because Visual Studio Code has new icons.
+- Added options to search widget to filter files and/or folders.
+- Added confirm dialog for coping files.
+- Added confirm dialog for deleting favorites.
+- Added scaling for icons on mouse down like Visual Studio Code.
+- Closing search widget doesn't clear the input field anymore.
 
 ## Features
 
@@ -45,7 +49,7 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff Selection](images/preview-select.png)
 
-### Stats
+### Logging and stats
 
 ![L13 Diff Stats](images/preview-stats.png)
 

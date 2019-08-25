@@ -5,4 +5,6 @@
 	<input id="l13_use_regexp" type="checkbox" [(model)]="useRegExp" [disabled]="disabled">
 	<div class="l13-message" [if]="error">{{ error }}</div>
 </div>
+<input id="l13_use_files" class="-option" type="checkbox" [(model)]="useFiles" [disabled]="disabled">
+<input id="l13_use_folders" class="-option" type="checkbox" [(model)]="useFolders" [disabled]="disabled">
 <button id="l13_close" [disabled]="disabled"></button>
