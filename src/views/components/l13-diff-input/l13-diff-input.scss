@@ -33,11 +33,11 @@
 		border: 0;
 		cursor: pointer;
 		height: 21px;
-		margin-top: -11px;
 		padding: 0 0 0 0;
 		position: absolute;
 		right: 7px;
-		top: 50%;
+		top: 2px;
+		transition: transform 0.1s;
 		width: 21px;
 			
 		&::before {
@@ -60,11 +60,15 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		&:hover {
+		// &:hover {
 			
-			&::before {
-				background: var(--vscode-button-hoverBackground);
-			}
+			// &::before {
+			// 	background: var(--vscode-button-hoverBackground);
+			// }
+		// }
+		
+		&:not([disabled]).-active {
+			transform: scale(1.2, 1.2);
 		}
 		
 		&[disabled] {

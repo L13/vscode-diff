@@ -61,18 +61,6 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public getCopyListByIds (ids:string[]) :DiffResult {
-		
-		const items = ids.map((id) => this.map[id]);
-		
-		return {
-			pathA: this.data.pathA,
-			pathB: this.data.pathB,
-			diffs: items,
-		};
-		
-	}
-	
 	public getDiffById (id:string) :null|Diff {
 		
 		return this.map[id] || null;
@@ -138,9 +126,23 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
+	public getCopyListByIds (ids:string[], from:'left'|'right') :DiffResult {
+		
+		const items = ids.map((id) => this.map[id]).filter((diff:Diff) => from === 'left' && diff.fileA || from === 'right' && diff.fileB);
+		
+		return {
+			pathA: this.data.pathA,
+			pathB: this.data.pathB,
+			diffs: items,
+		};
+		
+	}
+	
 	public copy (from:'left'|'right', ids:string[]) :void {
 		
-		msg.send(`copy:${from}`, { diffResult: this.getCopyListByIds(ids) });
+		const diffResult = this.getCopyListByIds(ids, from);
+		
+		if (diffResult.diffs.length) msg.send(`copy:${from}`, { diffResult });
 		
 	}
 	

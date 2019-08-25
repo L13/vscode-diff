@@ -60,16 +60,16 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		this.inputSearchterm.placeholder = 'Find';
 		
-		addKeyListener(this.inputSearchterm, { key: 'Escape' }, () => this.close());
+		addKeyListener(this, { key: 'Escape' }, () => this.close());
 		
-		addKeyListener(this.inputSearchterm, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, () => {
+		addKeyListener(this, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, () => {
 			
 			this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
 			this.viewmodel.requestUpdate();
 			
 		});
 		
-		addKeyListener(this.inputSearchterm, { key: 'Alt+R', mac: 'Cmd+Alt+R' }, () => {
+		addKeyListener(this, { key: 'Alt+R', mac: 'Cmd+Alt+R' }, () => {
 			
 			this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
 			this.viewmodel.requestUpdate();
@@ -125,7 +125,6 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	public close () {
 		
-		this.viewmodel.clearSearchterm();
 		this.dispatchCustomEvent('close');
 		
 	}

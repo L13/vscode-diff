@@ -82,8 +82,8 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 						favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`Saved '${value}' in favorites!`);
-					} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
+						vscode.window.showInformationMessage(`Saved "${value}" in favorites!`);
+					} else vscode.window.showErrorMessage(`Favorite "${value}" exists!`);
 					break;
 				}
 			}
@@ -94,29 +94,38 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 	
 	public static removeFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
-		const favorites:Favorite[] = context.globalState.get('favorites') || [];
-		
-		for (let i = 0; i < favorites.length; i++) {
-			if (favorites[i].label === favorite.label) {
-				favorites.splice(i, 1);
-				context.globalState.update('favorites', favorites);
-				DiffFavorites.createProvider(context).refresh();
-				vscode.window.showInformationMessage(`Deleted favorite`);
-				return;
+		vscode.window.showInformationMessage(`Delete favorite "${favorite.label}"?`, { modal: true }, 'Delete').then((value) => {
+			
+			if (value) {
+				
+				const favorites:Favorite[] = context.globalState.get('favorites') || [];
+				
+				for (let i = 0; i < favorites.length; i++) {
+					if (favorites[i].label === favorite.label) {
+						favorites.splice(i, 1);
+						context.globalState.update('favorites', favorites);
+						DiffFavorites.createProvider(context).refresh();
+						return;
+					}
+				}
+				
+				vscode.window.showErrorMessage(`Favorite does not exist`);
 			}
-		}
-		
-		vscode.window.showErrorMessage(`Favorite does not exist`);
+			
+		});
 		
 	}
 	
 	public static clearFavorites (context:vscode.ExtensionContext) {
 		
-		context.globalState.update('favorites', []);
-		
-		DiffFavorites.createProvider(context).refresh();
-		
-		vscode.window.showInformationMessage(`Deleted all favorites`);
+		vscode.window.showInformationMessage(`Delete all favorites?'`, { modal: true }, 'Delete').then((value) => {
+			
+			if (value) {
+				context.globalState.update('favorites', []);
+				DiffFavorites.createProvider(context).refresh();
+			}
+			
+		});
 		
 	}
 	

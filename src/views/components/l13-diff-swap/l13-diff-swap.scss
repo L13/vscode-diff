@@ -10,6 +10,7 @@
 		margin: 2px 0 0 0;
 		padding: 0 0 0 0;
 		position: relative;
+		transition: transform 0.1s;
 		width: 20px;
 			
 		&::before {
@@ -32,11 +33,15 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		&:hover {
+		// &:hover {
 			
-			&::before {
-				background: var(--vscode-button-hoverBackground);
-			}
+		// 	&::before {
+		// 		background: var(--vscode-button-hoverBackground);
+		// 	}
+		// }
+		
+		&:not([disabled]).-active {
+			transform: scale(1.26, 1.26);
 		}
 		
 		&[disabled] {

@@ -7,7 +7,7 @@ import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
-import { parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -133,6 +133,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			}
 			
 		});
+		
+		addButtonActiveStyleEvents(this.button);
 		
 	}
 	

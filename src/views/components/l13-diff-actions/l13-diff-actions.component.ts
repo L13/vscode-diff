@@ -5,7 +5,7 @@ import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
 import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 
-import { parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -28,22 +28,22 @@ import templates from '../templates';
 export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel> {
 	
 	@L13Query('#l13_copy_right')
-	public copyRight:HTMLElement;
+	public copyRight:HTMLButtonElement;
 	
 	@L13Query('#l13_select_deleted')
-	public selectDeleted:HTMLElement;
+	public selectDeleted:HTMLButtonElement;
 	
 	@L13Query('#l13_select_modified')
-	public selectModified:HTMLElement;
+	public selectModified:HTMLButtonElement;
 	
 	@L13Query('#l13_select_untracked')
-	public selectUntracked:HTMLElement;
+	public selectUntracked:HTMLButtonElement;
 	
 	@L13Query('#l13_select_all')
-	public selectAll:HTMLElement;
+	public selectAll:HTMLButtonElement;
 	
 	@L13Query('#l13_copy_left')
-	public copyLeft:HTMLElement;
+	public copyLeft:HTMLButtonElement;
 	
 	public constructor () {
 		
@@ -55,6 +55,13 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		setLabel(this.selectUntracked, 'Select all created files');
 		setLabel(this.selectAll, 'Select all files', { key: 'Ctrl+A', mac: 'Cmd+A' });
 		setLabel(this.copyLeft, 'Copy selection to the right folder');
+		
+		addButtonActiveStyleEvents(this.copyRight);
+		addButtonActiveStyleEvents(this.selectDeleted);
+		addButtonActiveStyleEvents(this.selectModified);
+		addButtonActiveStyleEvents(this.selectUntracked);
+		addButtonActiveStyleEvents(this.selectAll);
+		addButtonActiveStyleEvents(this.copyLeft);
 		
 		this.copyRight.addEventListener('click', () => {
 			
