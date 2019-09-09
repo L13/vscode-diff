@@ -96,7 +96,7 @@
 			},
 			{
 				"command": "l13Diff.compareProjectWithWorkspace",
-				"title": "Compare project with workspace"
+				"title": "Compare with workspace"
 			},
 			{
 				"command": "l13Diff.renameFavorite",
