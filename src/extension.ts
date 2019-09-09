@@ -43,6 +43,14 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareProjectWithWorkspace', ({ project }) => {
+		
+		const compare = vscode.workspace.getConfiguration('l13Diff').get('openFavoriteAndCompare', false);
+		
+		DiffPanel.createOrShow(context, [{ fsPath: '${workspaceFolder}' }, { fsPath: project.path }], compare);
+		
+	}));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.addToFavorites', () => {
 	
 		if (DiffPanel.currentPanel) DiffPanel.addToFavorites();

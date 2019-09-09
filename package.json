@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.20.0",
+	"version": "0.21.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"preview": true,
@@ -38,6 +38,7 @@
 		"onCommand:l13Diff.clearHistory",
 		"onCommand:l13Diff.clearFavorites",
 		"onCommand:l13Diff.showOutput",
+		"onCommand:l13Diff.compareProjectWithWorkspace",
 		"onView:l13DiffFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -92,6 +93,10 @@
 			{
 				"command": "l13Diff.openFavoriteAndCompare",
 				"title": "Open & Compare"
+			},
+			{
+				"command": "l13Diff.compareProjectWithWorkspace",
+				"title": "Compare project with workspace"
 			},
 			{
 				"command": "l13Diff.renameFavorite",
@@ -156,6 +161,11 @@
 					"command": "l13Diff.openFavoriteAndCompare",
 					"group": "navigation",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"group": "3_compare@1",
+					"when": "view == l13ProjectsWorkspaces && viewItem =~ /project-(favorite|git|vscode)/"
 				},
 				{
 					"command": "l13Diff.renameFavorite",
