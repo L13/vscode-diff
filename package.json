@@ -39,6 +39,7 @@
 		"onCommand:l13Diff.clearFavorites",
 		"onCommand:l13Diff.showOutput",
 		"onCommand:l13Diff.compareProjectWithWorkspace",
+		"onCommand:l13Diff.openProject",
 		"onView:l13DiffFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -95,10 +96,6 @@
 				"title": "Open & Compare"
 			},
 			{
-				"command": "l13Diff.compareProjectWithWorkspace",
-				"title": "Compare with workspace"
-			},
-			{
 				"command": "l13Diff.renameFavorite",
 				"title": "Rename"
 			},
@@ -113,6 +110,14 @@
 			{
 				"command": "l13Diff.showOutput",
 				"title": "L13 Diff: Show Output Channel"
+			},
+			{
+				"command": "l13Diff.compareProjectWithWorkspace",
+				"title": "Compare with workspace"
+			},
+			{
+				"command": "l13Diff.openProject",
+				"title": "Open in L13 Diff"
 			}
 		],
 		"keybindings": [
@@ -163,11 +168,6 @@
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
-					"command": "l13Diff.compareProjectWithWorkspace",
-					"group": "3_compare@1",
-					"when": "view == l13ProjectsWorkspaces && viewItem =~ /project-(favorite|git|vscode)/"
-				},
-				{
 					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
@@ -176,6 +176,16 @@
 					"command": "l13Diff.removeFavorite",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"group": "3_compare@1",
+					"when": "view == l13ProjectsWorkspaces && viewItem =~ /project-(folder|git|vscode)/"
+				},
+				{
+					"command": "l13Diff.openProject",
+					"group": "3_compare@1",
+					"when": "view == l13ProjectsWorkspaces && viewItem =~ /project-(folder|git|vscode)/"
 				}
 			],
 			"editor/title": [
