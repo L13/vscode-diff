@@ -180,12 +180,12 @@
 				{
 					"command": "l13Diff.compareProjectWithWorkspace",
 					"group": "3_compare@1",
-					"when": "view == l13ProjectsWorkspaces && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.openProject",
 					"group": "3_compare@1",
-					"when": "view == l13ProjectsWorkspaces && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				}
 			],
 			"editor/title": [
