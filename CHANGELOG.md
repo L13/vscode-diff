@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.21.0] - 2019-09-22
+
+### Added
+- Added support for new extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Click on swap button also chnages the list view if paths are equal.
+
 ## [0.20.0] - 2019-08-25
 
 ### Added

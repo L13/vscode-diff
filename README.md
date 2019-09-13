@@ -4,13 +4,10 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.20.0
+## What's new in L13 Diff 0.21.0
 
-- Added options to search widget to filter files and/or folders.
-- Added confirm dialog for coping files.
-- Added confirm dialog for deleting favorites.
-- Added scaling for icons on mouse down like Visual Studio Code.
-- Closing search widget doesn't clear the input field anymore.
+- Added support for new extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Click on swap button also changes the list view if paths are equal.
 
 ## Features
 
@@ -28,6 +25,7 @@ Compare two folders in Visual Studio Code.
 * Use predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
+* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ### Basics
 
@@ -157,7 +155,7 @@ Windows / Linux
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-Context menu
+### Context menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
