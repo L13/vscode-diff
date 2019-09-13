@@ -114,6 +114,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			leftVM.value = rightVM.value;
 			rightVM.value = value;
 			
+			this.list.viewmodel.swapList(rightVM.value, leftVM.value);
+			
 		});
 		
 		this.actions.addEventListener('select', (event) => {
