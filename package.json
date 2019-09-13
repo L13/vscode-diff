@@ -148,6 +148,34 @@
 				{
 					"command": "l13Diff.addToFavorites",
 					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.openFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteOnly",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.renameFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openProject",
+					"when": "false"
 				}
 			],
 			"explorer/context": [
