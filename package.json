@@ -113,7 +113,7 @@
 			},
 			{
 				"command": "l13Diff.compareProjectWithWorkspace",
-				"title": "Compare with workspace"
+				"title": "Compare with Workspace"
 			},
 			{
 				"command": "l13Diff.openProject",
