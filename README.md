@@ -51,6 +51,10 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff Stats](images/preview-stats.png)
 
+### Supports [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+![L13 Projects](images/preview-l13-projects.png)
+
 ## Available Commands
 
 * `L13 Diff` - Open the diff panel.
