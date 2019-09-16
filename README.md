@@ -11,6 +11,7 @@ Compare two folders in Visual Studio Code.
 
 ## Features
 
+* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 * Supports a history for recently used files and folders.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
@@ -25,7 +26,6 @@ Compare two folders in Visual Studio Code.
 * Use predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
-* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ### Basics
 
