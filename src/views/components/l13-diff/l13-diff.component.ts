@@ -107,14 +107,21 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.left.menu = menu;
 		this.right.menu = menu;
 			
-		this.swap.addEventListener('swap', () => {
+		this.swap.addEventListener('swap', ({ detail }:any) => {
 			
-			const value = leftVM.value;
-			
-			leftVM.value = rightVM.value;
-			rightVM.value = value;
-			
-			this.list.viewmodel.swapList(rightVM.value, leftVM.value);
+			if (detail.altKey) {
+				const viewmodel = this.list.viewmodel;
+				
+				viewmodel.swapList();
+				
+				leftVM.value = viewmodel.diffResult.pathA;
+				rightVM.value = viewmodel.diffResult.pathB;
+			} else {
+				const value = leftVM.value;
+				
+				leftVM.value = rightVM.value;
+				rightVM.value = value;
+			}
 			
 		});
 		

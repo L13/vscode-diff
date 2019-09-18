@@ -112,14 +112,13 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public swapList (currentPathA:string, currentPathB:string) {
+	public swapList () {
 		
 		const diffResult = this.diffResult;
+		const pathA = diffResult.pathA;
 		
-		if (diffResult.pathA !== currentPathA || diffResult.pathB !== currentPathB) return;
-		
-		diffResult.pathA = currentPathB;
-		diffResult.pathB = currentPathA;
+		diffResult.pathA = diffResult.pathB;
+		diffResult.pathB = pathA;
 		
 		this.items.forEach((diff:Diff) => {
 			

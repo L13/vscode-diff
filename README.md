@@ -4,10 +4,12 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
+This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
+
 ## What's new in L13 Diff 0.21.0
 
 - Added support for new extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- Click on swap button also changes the list view if paths are equal.
+- Alt + Click on swap button changes the list view, too.
 
 ## Features
 
@@ -102,6 +104,11 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
+
+## Swap Button
+
+* `Click` - Swaps just the values of the input fields.
+* `Alt + Click` - Swaps the values of the input fields and the diff result.
 
 ## List Mouse/Keyboard Shortcuts
 
