@@ -187,12 +187,12 @@
 			"view/item/context": [
 				{
 					"command": "l13Diff.openFavoriteOnly",
-					"group": "navigation",
+					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
-					"group": "navigation",
+					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
