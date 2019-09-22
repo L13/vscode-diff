@@ -4,16 +4,16 @@ Compare two folders in Visual Studio Code.
 
 ![L13 Diff](images/preview.png)
 
-## What's new in L13 Diff 0.20.0
+This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-- Added options to search widget to filter files and/or folders.
-- Added confirm dialog for coping files.
-- Added confirm dialog for deleting favorites.
-- Added scaling for icons on mouse down like Visual Studio Code.
-- Closing search widget doesn't clear the input field anymore.
+## What's new in L13 Diff 0.21.0
+
+- Added support for new extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Alt + Click on swap button changes the list view, too.
 
 ## Features
 
+* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 * Supports a history for recently used files and folders.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
@@ -52,6 +52,10 @@ Compare two folders in Visual Studio Code.
 ### Logging and stats
 
 ![L13 Diff Stats](images/preview-stats.png)
+
+### Supports [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+![L13 Projects](images/preview-l13-projects.png)
 
 ## Available Commands
 
@@ -100,6 +104,11 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
+
+## Swap Button
+
+* `Click` - Swaps just the values of the input fields.
+* `Alt + Click` - Swaps the values of the input fields and the diff result.
 
 ## List Mouse/Keyboard Shortcuts
 
@@ -157,7 +166,7 @@ Windows / Linux
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-Context menu
+### Context menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.

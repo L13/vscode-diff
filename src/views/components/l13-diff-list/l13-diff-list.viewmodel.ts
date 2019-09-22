@@ -29,7 +29,7 @@ export class L13DiffListViewModel extends ViewModel {
 	public items:Diff[] = [];
 	public filteredItems:Diff[] = [];
 	
-	public data:DiffResult = {
+	public diffResult:DiffResult = {
 		pathA: '',
 		pathB: '',
 		diffs: [],
@@ -81,11 +81,11 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		this.enable();
 		
-		this.data = diffResult;
+		this.diffResult = diffResult;
 		this.map = {};
 		
-		this.data.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
-		this.items = this.data.diffs;
+		this.diffResult.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
+		this.items = this.diffResult.diffs;
 		
 		this.dispatchEvent('compared');
 		
@@ -112,6 +112,32 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
+	public swapList () {
+		
+		const diffResult = this.diffResult;
+		const pathA = diffResult.pathA;
+		
+		diffResult.pathA = diffResult.pathB;
+		diffResult.pathB = pathA;
+		
+		this.items.forEach((diff:Diff) => {
+			
+			const fileA = diff.fileA;
+			
+			diff.fileA = diff.fileB;
+			diff.fileB = fileA;
+			
+			if (diff.status === 'deleted') diff.status = 'untracked';
+			else if (diff.status === 'untracked') diff.status = 'deleted';
+			
+		});
+		
+		this.items = this.items.slice(); // Refreshs the view
+		
+		this.filter();
+		
+	}
+	
 	public filter () :void {
 		
 		let items = this.items;
@@ -131,8 +157,8 @@ export class L13DiffListViewModel extends ViewModel {
 		const items = ids.map((id) => this.map[id]).filter((diff:Diff) => from === 'left' && diff.fileA || from === 'right' && diff.fileB);
 		
 		return {
-			pathA: this.data.pathA,
-			pathB: this.data.pathB,
+			pathA: this.diffResult.pathA,
+			pathB: this.diffResult.pathB,
 			diffs: items,
 		};
 		

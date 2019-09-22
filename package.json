@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.20.0",
+	"version": "0.21.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"preview": true,
@@ -38,6 +38,8 @@
 		"onCommand:l13Diff.clearHistory",
 		"onCommand:l13Diff.clearFavorites",
 		"onCommand:l13Diff.showOutput",
+		"onCommand:l13Diff.compareProjectWithWorkspace",
+		"onCommand:l13Diff.openProject",
 		"onView:l13DiffFavorites",
 		"onWebviewPanel:l13Diff"
 	],
@@ -108,6 +110,14 @@
 			{
 				"command": "l13Diff.showOutput",
 				"title": "L13 Diff: Show Output Channel"
+			},
+			{
+				"command": "l13Diff.compareProjectWithWorkspace",
+				"title": "Compare with Workspace"
+			},
+			{
+				"command": "l13Diff.openProject",
+				"title": "Open in L13 Diff"
 			}
 		],
 		"keybindings": [
@@ -138,6 +148,34 @@
 				{
 					"command": "l13Diff.addToFavorites",
 					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.openFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteOnly",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.renameFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFavorite",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openProject",
+					"when": "false"
 				}
 			],
 			"explorer/context": [
@@ -149,12 +187,12 @@
 			"view/item/context": [
 				{
 					"command": "l13Diff.openFavoriteOnly",
-					"group": "navigation",
+					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
-					"group": "navigation",
+					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
@@ -166,6 +204,16 @@
 					"command": "l13Diff.removeFavorite",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"group": "3_compare@1",
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+				},
+				{
+					"command": "l13Diff.openProject",
+					"group": "3_compare@1",
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				}
 			],
 			"editor/title": [

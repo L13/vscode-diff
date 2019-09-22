@@ -79,7 +79,7 @@ gulp.task('icons', gulp.series('icons:common', 'icons:json'));
 gulp.task('style:common', () => {
 	
 	return gulp.src('src/views/style.scss')
-		.pipe(sass.sync({}).on('error', sass.logError))
+		.pipe(sass.sync({ outputStyle: 'compressed' }).on('error', sass.logError))
 		.pipe(gulp.dest('media'));
 	
 });
