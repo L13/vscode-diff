@@ -7,6 +7,7 @@ import { Uri } from '../types';
 import { sortCaseInsensitive, workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
+import { DiffDelete } from './DiffDelete';
 import { DiffDialog } from './DiffDialog';
 import { DiffFavorites, Favorite } from './DiffFavorites';
 import { DiffMenu } from './DiffMenu';
@@ -46,6 +47,7 @@ export class DiffPanel {
 	private readonly menu:DiffMenu;
 	private readonly list:DiffCompare;
 	private readonly copy:DiffCopy;
+	private readonly delete:DiffDelete;
 	
 	private disposables:vscode.Disposable[] = [];
 	
@@ -107,6 +109,7 @@ export class DiffPanel {
 		this.open = new DiffOpen(this.msg);
 		this.menu = new DiffMenu(this.msg, context);
 		this.copy = new DiffCopy(this.msg);
+		this.delete = new DiffDelete(this.msg);
 		this.list = new DiffCompare(this.msg, context);
 		
 		this.disposables.push(this.status);
@@ -116,6 +119,7 @@ export class DiffPanel {
 		this.disposables.push(this.open);
 		this.disposables.push(this.menu);
 		this.disposables.push(this.copy);
+		this.disposables.push(this.delete);
 		this.disposables.push(this.list);
 		
 		this.panel.title = 'Diff';

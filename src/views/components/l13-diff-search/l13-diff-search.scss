@@ -1,4 +1,4 @@
-$host-width: 286px;
+$host-width: 338px;
 
 :host {
 	background: var(--vscode-editorWidget-background);
@@ -26,7 +26,7 @@ $host-width: 286px;
 }
 
 div.l13-input {
-	margin: 0 76px 0 0;
+	margin: 0 128px 0 0;
 	position: relative;
 }
 
@@ -136,7 +136,7 @@ input[type=checkbox] {
 	}
 	
 	&#l13_use_files {
-		right: 54px;
+		right: 106px;
 		
 		&::after {
 			-webkit-mask-image: url('list-file.svg');
@@ -146,11 +146,29 @@ input[type=checkbox] {
 	}
 	
 	&#l13_use_folders {
-		right: 28px;
+		right: 80px;
 		
 		&::after {
 			-webkit-mask-image: url('list-folder.svg');
 			mask-image: url('list-folder.svg');
+		}
+	}
+	
+	&#l13_use_symlinks {
+		right: 54px;
+		
+		&::after {
+			-webkit-mask-image: url('list-symlink.svg');
+			mask-image: url('list-symlink.svg');
+		}
+	}
+	
+	&#l13_use_conflicts {
+		right: 28px;
+		
+		&::after {
+			-webkit-mask-image: url('list-mixed.svg');
+			mask-image: url('list-mixed.svg');
 		}
 	}
 	

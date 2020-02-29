@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.21.0",
+	"version": "0.22.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"preview": true,

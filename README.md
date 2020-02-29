@@ -6,10 +6,9 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.21.0
+## What's new in L13 Diff 0.22.0
 
-- Added support for new extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- Alt + Click on swap button changes the list view, too.
+- Delete files and folders with keyboard shortcuts.
 
 ## Features
 
@@ -132,6 +131,8 @@ macOS
 * `Shift + Alt + ArrowUp/ArrowDown` - Add all list items until start/end of the list view to the selection.
 * `Home/End` - Scroll to the start/end of the list view.
 * `PageUp/PageDown` - Scroll to the previous/next page of the list view.
+* `Cmd + Backspace` - Delete all selected files and folders.
+* `Cmd + Alt + Backspace` - Delete only left or right selected files and folders.
 
 Windows / Linux
 
@@ -143,6 +144,8 @@ Windows / Linux
 * `Shift + Home/End` - Add all list items until start/end of the list view to the selection.
 * `PageUp/PageDown` - Move the cursor to the start/end of the previous/next page of the list view.
 * `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
+* `Delete` - Delete all selected files and folders.
+* `Alt + Delete` - Delete only left or right selected files and folders.
 
 ## Search Widget Keyboard Shortcuts
 

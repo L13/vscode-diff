@@ -223,6 +223,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			this.list.focus();
 			
 		});
+		listVM.on('deleted', () => {
+			
+			enable();
+			this.list.focus();
+			
+		});
 		
 		listVM.on('filtered', () => {
 			

@@ -15,6 +15,8 @@ type Cache = {
 	useCaseSensitive:boolean,
 	useFiles:boolean,
 	useFolders:boolean,
+	useSymlinks:boolean,
+	useConflicts:boolean,
 	regexp:RegExp,
 	items:Diff[],
 	filteredItems:Diff[],
@@ -38,6 +40,8 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		useCaseSensitive: false,
 		useFiles: true,
 		useFolders: true,
+		useSymlinks: true,
+		useConflicts: true,
 		regexp: null,
 		items: [],
 		filteredItems: [],
@@ -61,6 +65,8 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		const useCaseSensitive = vm.useCaseSensitive;
 		const useFiles = vm.useFiles;
 		const useFolders = vm.useFolders;
+		const useSymlinks = vm.useSymlinks;
+		const useConflicts = vm.useConflicts;
 		
 		if (items === cache.items
 			&& cache.searchterm === searchterm
@@ -68,6 +74,8 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			&& cache.useCaseSensitive === useCaseSensitive
 			&& cache.useFiles === useFiles
 			&& cache.useFolders === useFolders
+			&& cache.useSymlinks === useSymlinks
+			&& cache.useConflicts === useConflicts
 			) {
 			return cache.filteredItems;
 		}
@@ -88,10 +96,12 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		cache.useCaseSensitive = useCaseSensitive;
 		cache.useFiles = useFiles;
 		cache.useFolders = useFolders;
+		cache.useSymlinks = useSymlinks;
+		cache.useConflicts = useConflicts;
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
-			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder') {
+			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder' || useConflicts && diff.type === 'mixed') {
 				return searchterm ? regexp.test(diff.id) : true;
 			}
 			

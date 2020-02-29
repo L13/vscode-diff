@@ -27,6 +27,10 @@ export class L13DiffSearchViewModel extends ViewModel {
 	
 	public useFolders:boolean = true;
 	
+	public useSymlinks:boolean = true;
+	
+	public useConflicts:boolean = true;
+	
 	private [SEARCHTERM]:string = '';
 	
 	public get searchterm () {

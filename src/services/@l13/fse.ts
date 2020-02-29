@@ -57,6 +57,18 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	
 }
 
+export function unlinkSync (pathname:string, callback?:() => {}) {
+	
+	if (fs.existsSync(pathname)) {
+		if (fs.lstatSync(pathname).isDirectory()) {
+			fs.readdirSync(pathname).forEach((name) => unlinkSync(path.join(pathname, name), callback));
+			fs.rmdirSync(pathname);
+		} else fs.unlinkSync(pathname);
+		if (callback) callback();
+	}
+	
+}
+
 export function createFindGlob (ignore:string[]) {
 	
 	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);

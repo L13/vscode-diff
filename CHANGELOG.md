@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.22.0] - 2020-03-08
+
+### Added
+- Delete files and folders with keyboard shortcuts.
+
+### Fixed
+- Fixed search widget for conflicting files.
+- Fixed wrong path in list view for parent copied folders.
+
 ## [0.21.0] - 2019-09-22
 
 ### Added
