@@ -121,35 +121,40 @@ export class DiffCopy {
 			if (diff.status === 'unchanged') return --job.tasks;
 			
 			const fileFrom:File = (<any>diff)['file' + from];
+			let stat = null;
 			
-			if (fileFrom && fs.existsSync(fileFrom.path)) {
-				const dest = path.join(folderTo, fileFrom.relative);
-				this.copy(fileFrom, dest, (error:null|Error) => {
-					
-					--job.tasks;
-					
-					if (error) {
-						job.error = error;
-						vscode.window.showErrorMessage(error.message);
-					} else {
-						diff.status = 'unchanged';
-						if (!(<any>diff)['file' + to]) {
-							(<any>diff)['file' + to] = {
-								folder: folderTo,
-								path: dest,
-								relative: fileFrom.relative,
-								type: fileFrom.type,
-							};
+			try {
+				stat = fs.lstatSync(fileFrom.path);
+			} finally {
+				if (stat) {
+					const dest = path.join(folderTo, fileFrom.relative);
+					this.copy(fileFrom, dest, (error:null|Error) => {
+						
+						--job.tasks;
+						
+						if (error) {
+							job.error = error;
+							vscode.window.showErrorMessage(error.message);
+						} else {
+							diff.status = 'unchanged';
+							if (!(<any>diff)['file' + to]) {
+								(<any>diff)['file' + to] = {
+									folder: folderTo,
+									path: dest,
+									relative: fileFrom.relative,
+									type: fileFrom.type,
+								};
+							}
 						}
-					}
-					
+						
+						if (!job.tasks) job.done();
+						
+					});
+				} else {
+					--job.tasks;
+					--length;
 					if (!job.tasks) job.done();
-					
-				});
-			} else {
-				--job.tasks;
-				--length;
-				if (!job.tasks) job.done();
+				}
 			}
 			
 		});

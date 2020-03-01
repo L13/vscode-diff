@@ -213,11 +213,11 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (onlyOneSide:boolean = false, ids:string[]) :void {
+	public delete (ids:string[]) :void {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
-		if (diffResult.diffs.length) msg.send(`delete:${onlyOneSide ? 'only' : 'all'}`, { diffResult });
+		if (diffResult.diffs.length) msg.send('delete:files', { diffResult });
 		
 	}
 	

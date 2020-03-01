@@ -57,7 +57,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		addKeyListener(this, { key: 'Ctrl+A', mac: 'Cmd+A' }, () => this.selectAll());
 		addKeyListener(this, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.delete());
-		addKeyListener(this, { key: 'Alt+Delete', mac: 'Cmd+Alt+Backspace' }, () => this.delete(true));
 		
 		this.addEventListener('keydown', (event) => {
 			
@@ -425,9 +424,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public delete (onlyOneSide:boolean = false) :void {
+	public delete () :void {
 		
-		this.viewmodel.delete(onlyOneSide, this.getIdsBySelection());
+		this.viewmodel.delete(this.getIdsBySelection());
 		
 	}
 	

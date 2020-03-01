@@ -23,8 +23,7 @@ export class DiffDelete {
 	
 	public constructor (private msg:DiffMessage) {
 		
-		this.msg.on('delete:all', (data) => this.showDeleteAllFilesDialog(data));
-		this.msg.on('delete:only', (data) => this.showDeleteOnlyFilesDialog(data));
+		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
 		
 	}
 	
@@ -37,38 +36,15 @@ export class DiffDelete {
 		
 	}
 	
-	private showDeleteAllFilesDialog (data:any) :void {
-		
-		const length = data.diffResult.diffs.reduce((total:number, diff:Diff) => {
-			
-			if (diff.fileA) total++;
-			if (diff.fileB) total++;
-			
-			return total;
-			
-		}, 0);
-		
-		if (!length) return;
-		
-		const text = `Delete ${length} file${length === 1 ? '' : 's'}?`;
-		
-		vscode.window.showInformationMessage(text, { modal: true }, 'Delete').then((value) => {
-			
-			if (value) this.deleteFiles(data, 'All');
-			
-		});
-		
-	}
-	
-	private showDeleteOnlyFilesDialog (data:any) :void {
+	private showDeleteFilesDialog (data:any) :void {
 		
 		if (!data.diffResult.diffs.length) return;
 		
-		const text = 'Delete left or right selected files?';
+		const text = `Which files do you want to delete?`;
 		
-		vscode.window.showInformationMessage(text, { modal: true }, 'Right', 'Left').then((value:undefined|string) => {
+		vscode.window.showInformationMessage(text, { modal: true }, 'Delete All', 'Delete Right', 'Delete Left').then((value) => {
 			
-			if (value) this.deleteFiles(data, <'Left'|'Right'>value);
+			if (value) this.deleteFiles(data, <'All'|'Left'|'Right'>(<string>value).replace('Delete ', ''));
 			
 		});
 		

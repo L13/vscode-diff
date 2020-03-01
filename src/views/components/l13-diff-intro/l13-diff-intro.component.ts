@@ -29,11 +29,6 @@ const keyboardShortcuts:Shortcut[] = [
 		key: 'Delete',
 		mac: 'Cmd+Backspace',
 	},
-	{
-		description: 'Delete Left Or Right Files',
-		key: 'Alt+Delete',
-		mac: 'Cmd+Alt+Backspace',
-	},
 ];
 
 //	Initialize _________________________________________________________________
