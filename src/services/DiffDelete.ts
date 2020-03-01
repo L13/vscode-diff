@@ -80,11 +80,14 @@ export class DiffDelete {
 		let total = 0;
 		
 		files:for (const diff of diffs) {
-			console.log(diff);
+			
 			if (diff.fileA && (side === 'All' || side === 'Left')) {
 				try {
-					unlinkSync(diff.fileA.path, () => total++);
-					diff.fileA = null;
+					const result = unlinkSync(diff.fileA.path);
+					if (result) {
+						diff.fileA = null;
+						total += result;
+					}
 				} catch (error) {
 					vscode.window.showErrorMessage(error.message);
 					break files;
@@ -93,8 +96,11 @@ export class DiffDelete {
 			
 			if (diff.fileB && (side === 'All' || side === 'Right')) {
 				try {
-					unlinkSync(diff.fileB.path, () => total++);
-					diff.fileB = null;
+					const result = unlinkSync(diff.fileB.path);
+					if (result) {
+						diff.fileB = null;
+						total += result;
+					}
 				} catch (error) {
 					vscode.window.showErrorMessage(error.message);
 					break files;

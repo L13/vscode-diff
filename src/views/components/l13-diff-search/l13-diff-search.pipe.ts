@@ -101,7 +101,10 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
-			if (useFiles && diff.type === 'file' || useFolders && diff.type === 'folder' || useConflicts && diff.type === 'mixed') {
+			if (useFiles && diff.type === 'file'
+				|| useFolders && diff.type === 'folder'
+				|| useSymlinks && diff.type === 'symlink'
+				|| useConflicts && diff.type === 'mixed') {
 				return searchterm ? regexp.test(diff.id) : true;
 			}
 			

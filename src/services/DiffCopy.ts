@@ -42,28 +42,43 @@ export class DiffCopy {
 	private copy (file:File, dest:string, callback:any) :void {
 		
 		const stat = fs.lstatSync(file.path);
+		let statDest = null;
 		
-		if (stat.isDirectory()) {
-			if (!fs.existsSync(dest)) {
-				try {
-					mkdirsSync(dest);
-					callback();
-				} catch (error) {
-					callback(error);
+		try {
+			statDest = fs.lstatSync(dest);
+		} finally {
+			if (stat.isDirectory()) {
+				if (!statDest) {
+					try {
+						mkdirsSync(dest);
+						callback();
+					} catch (error) {
+						callback(error);
+					}
+				} else {
+					if (statDest.isDirectory()) callback();
+					else callback(new Error(`'${dest}' exists, but is not a folder!`));
 				}
-			} else {
-				if (fs.statSync(dest).isDirectory()) callback();
-				else callback(new Error(`'${dest}' exists, but is not a folder!`));
+			} else if (stat.isFile()) {
+				if (!statDest || statDest.isFile()) {
+					copyFile(file.path, dest, (error:Error) => {
+						
+						if (error) callback(error);
+						else callback();
+						
+					});
+				} else callback(new Error(`'${dest}' exists, but is not a file!`));
+			} else if (stat.isSymbolicLink()) {
+				if (!statDest || statDest.isSymbolicLink()) {
+					if (statDest) fs.unlinkSync(dest);
+					fs.symlink(fs.readlinkSync(file.path), dest, (error:Error) => {
+						
+						if (error) callback(error);
+						else callback();
+						
+					});
+				} else callback(new Error(`'${dest}' exists, but is not a symbolic link!`));
 			}
-		} else if (stat.isFile()) {
-			if (!fs.existsSync(dest) || fs.statSync(dest).isFile()) {
-				copyFile(file.path, dest, (error:Error) => {
-					
-					if (error) callback(error);
-					else callback();
-					
-				});
-			} else callback(new Error(`'${dest}' exists, but is not a file!`));
 		}
 		
 	}

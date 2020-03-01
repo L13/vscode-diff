@@ -306,6 +306,10 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 						if (!bufferA.equals(bufferB)) diff.status = 'modified';
 					}
 				}
+			} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
+				const linkA = fs.readlinkSync(fileA.path);
+				const linkB = fs.readlinkSync(fileB.path);
+				if (linkA !== linkB) diff.status = 'modified';
 			}
 		} else {
 			const name = dirname(relative);

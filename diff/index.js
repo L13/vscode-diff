@@ -20,8 +20,6 @@ USAGE: node ${path.basename(__filename)} [OPTIONS]
 
 OPTIONS
 
-    --clean           Remove all files and folders from the root folder.
-
     --random          Create a random test file and folder structure.
 
     --shared          Changed cwd to /Users/Shared folder.
@@ -54,7 +52,6 @@ params: while (args.length) {
 	switch (args[0]) {
 		case '--help': console.log(manual); process.exit(); break params;
 		case '--': args.shift(); break params;
-		case '--clean': removeFilesAndFolders(path.join(root)); args.shift(); break;
 		case '--create': [action, values] = parseOptions(args); break;
 		case '--random': action = 'random'; args.shift(); break;
 		case '--shared': root = '/Users/Shared/L13 Diff'; args.shift(); break;
@@ -67,6 +64,7 @@ switch (action) {
 	case 'create':
 		let value;
 		while ((value = values.shift())) {
+			removeFilesAndFolders(path.join(root, value));
 			createFilesAndFolders(path.join(root, value), require(path.join(__dirname, 'patterns', value)));
 		}
 		break;
@@ -76,6 +74,7 @@ switch (action) {
 		break;
 	case 'all':
 		const files = fs.readdirSync(path.join(__dirname, 'patterns'));
+		removeFilesAndFolders(path.join(root));
 		files.forEach((value) => {
 			
 			value = path.basename(value, '.json');
@@ -100,8 +99,9 @@ function createFilesAndFolders (cwd, structure) {
 	for (const name in structure) {
 		let content = structure[name];
 		const pathname = path.join(cwd, name);
-		if (typeof content === 'string') fs.symlink(pathname, content);
-		else if (Array.isArray(content)) {
+		if (typeof content === 'string') {
+			fs.symlinkSync(content, pathname);
+		} else if (Array.isArray(content)) {
 			content = typeof content[0] === 'number' ? Buffer.from(content) : content.join('\n');
 			fs.writeFileSync(pathname, content);
 		}else createFilesAndFolders(pathname, content);
@@ -109,19 +109,15 @@ function createFilesAndFolders (cwd, structure) {
 	
 }
 
-function removeFilesAndFolders (cwd) {
+function removeFilesAndFolders (pathname) {
+
+	const stat = fs.lstatSync(pathname);
 	
-	if (fs.existsSync(cwd)) {
-		fs.readdirSync(cwd).forEach((name) => {
-			
-			const pathname = path.join(cwd, name);
-			
-			if (fs.lstatSync(pathname).isDirectory()) removeFilesAndFolders(pathname);
-			else fs.unlinkSync(pathname);
-			
-		});
-		fs.rmdirSync(cwd);
-	}
+	if (stat.isDirectory()) {
+		fs.readdirSync(pathname).forEach((name) => removeFilesAndFolders(path.join(pathname, name)));
+		fs.rmdirSync(pathname);
+	} else fs.unlinkSync(pathname);
+	
 }
 
 function random (min, max) {

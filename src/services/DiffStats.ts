@@ -15,6 +15,7 @@ const PB:number = KB * TB;
 
 const pluralFiles:Plural = { size: 'files', 1: 'file' };
 const pluralFolders:Plural = { size: 'folders', 1: 'folder' };
+const pluralSymlinks:Plural = { size: 'symlinks', 1: 'symlink' };
 const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
 
 type Plural = {
@@ -178,8 +179,7 @@ function formatBasicStats (name:string, stats:DetailStats|FolderStats) {
 	return `${name}
 Entries:     ${formatDetail(stats)}
 Size:        ${formatFileSize(stats.size)}`;
-// Symlinks: ${stats.symlinks}`;
-	
+
 }
 
 function formatAmount (value:number, measure:Plural) {
@@ -191,14 +191,12 @@ function formatAmount (value:number, measure:Plural) {
 function formatDetail (stats:DetailStats|FolderStats, ignoreEndOfLine:boolean = false) {
 	
 	const eol = ignoreEndOfLine ? `Ignored EOL in ${formatAmount(stats.files, pluralFiles)}` : '';
+	const total:string[] = [];
 	
-	if (stats.files && stats.folders) {
-		return `${stats.total} (${formatAmount(stats.files, pluralFiles)}, ${formatAmount(stats.folders, pluralFolders)}${eol ? `, ${eol}` : ''})`;
-	}
+	if (stats.files) total.push(`${formatAmount(stats.files, pluralFiles)}${eol ? ` [${eol}]` : ''}`);
+	if (stats.folders) total.push(`${formatAmount(stats.folders, pluralFolders)}`);
+	if (stats.symlinks) total.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
 	
-	if (stats.files) return `${formatAmount(stats.files, pluralFiles)}${eol ? ` (${eol})` : ''}`;
-	if (stats.folders) return `${formatAmount(stats.folders, pluralFolders)})`;
-	
-	return '0';
+	return total.length > 1 ? `${stats.total} (${total.join(', ')})` : total[0] || '0';
 	
 }

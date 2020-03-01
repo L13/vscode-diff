@@ -16,7 +16,8 @@
 		"file-a.txt": ["a"],
 		"file-c.txt": ["c"],
 		"file-d.txt": ["d"],
-		"file-e.txt": ["e"]
+		"file-e.txt": ["e"],
+		"link-a.txt": "./file-a.txt"
 	},
 	"folder-b": {
 		"subfolder-b": null,
