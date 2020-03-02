@@ -111,12 +111,20 @@ function createFilesAndFolders (cwd, structure) {
 
 function removeFilesAndFolders (pathname) {
 
-	const stat = fs.lstatSync(pathname);
+	let stat = null;
 	
-	if (stat.isDirectory()) {
-		fs.readdirSync(pathname).forEach((name) => removeFilesAndFolders(path.join(pathname, name)));
-		fs.rmdirSync(pathname);
-	} else fs.unlinkSync(pathname);
+	try {
+		stat = fs.lstatSync(pathname);
+	} catch (error) {
+		
+	}
+	
+	if (stat) {
+		if (stat.isDirectory()) {
+			fs.readdirSync(pathname).forEach((name) => removeFilesAndFolders(path.join(pathname, name)));
+			fs.rmdirSync(pathname);
+		} else fs.unlinkSync(pathname);
+	}
 	
 }
 

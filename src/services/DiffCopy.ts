@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, mkdirsSync } from './@l13/fse';
+import { copyFile, lstatSync, mkdirsSync } from './@l13/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
 import { DiffMessage } from './DiffMessage';
@@ -41,12 +41,10 @@ export class DiffCopy {
 	
 	private copy (file:File, dest:string, callback:any) :void {
 		
-		const stat = fs.lstatSync(file.path);
-		let statDest = null;
+		const stat = lstatSync(file.path);
 		
-		try {
-			statDest = fs.lstatSync(dest);
-		} finally {
+		if (stat) {
+			const statDest = lstatSync(dest);
 			if (stat.isDirectory()) {
 				if (!statDest) {
 					try {
@@ -79,7 +77,7 @@ export class DiffCopy {
 					});
 				} else callback(new Error(`'${dest}' exists, but is not a symbolic link!`));
 			}
-		}
+		} else callback(new Error(`'${dest}' doesn't exist!`));
 		
 	}
 	
@@ -121,40 +119,36 @@ export class DiffCopy {
 			if (diff.status === 'unchanged') return --job.tasks;
 			
 			const fileFrom:File = (<any>diff)['file' + from];
-			let stat = null;
+			const stat = lstatSync(fileFrom.path);
 			
-			try {
-				stat = fs.lstatSync(fileFrom.path);
-			} finally {
-				if (stat) {
-					const dest = path.join(folderTo, fileFrom.relative);
-					this.copy(fileFrom, dest, (error:null|Error) => {
-						
-						--job.tasks;
-						
-						if (error) {
-							job.error = error;
-							vscode.window.showErrorMessage(error.message);
-						} else {
-							diff.status = 'unchanged';
-							if (!(<any>diff)['file' + to]) {
-								(<any>diff)['file' + to] = {
-									folder: folderTo,
-									path: dest,
-									relative: fileFrom.relative,
-									type: fileFrom.type,
-								};
-							}
-						}
-						
-						if (!job.tasks) job.done();
-						
-					});
-				} else {
+			if (stat) {
+				const dest = path.join(folderTo, fileFrom.relative);
+				this.copy(fileFrom, dest, (error:null|Error) => {
+					
 					--job.tasks;
-					--length;
+					
+					if (error) {
+						job.error = error;
+						vscode.window.showErrorMessage(error.message);
+					} else {
+						diff.status = 'unchanged';
+						if (!(<any>diff)['file' + to]) {
+							(<any>diff)['file' + to] = {
+								folder: folderTo,
+								path: dest,
+								relative: fileFrom.relative,
+								type: fileFrom.type,
+							};
+						}
+					}
+					
 					if (!job.tasks) job.done();
-				}
+					
+				});
+			} else {
+				--job.tasks;
+				--length;
+				if (!job.tasks) job.done();
 			}
 			
 		});

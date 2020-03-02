@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { basename, dirname, extname, sep } from 'path';
 import * as vscode from 'vscode';
 
-import { createFindGlob, walktree } from './@l13/fse';
+import { createFindGlob, lstatSync, walktree } from './@l13/fse';
 
 import { Dictionary, Diff, File, StatsMap } from '../types';
 import { sortCaseInsensitive } from './common';
@@ -102,20 +102,21 @@ export class DiffCompare {
 			return this.postEmptyResult(pathA, pathB);
 		}
 		
-		if (!fs.existsSync(pathA)) {
+		const statA = lstatSync(pathA);
+		
+		if (!statA) {
 			return this.postError(`The left path '${pathA}' does not exist.`, pathA, pathB);
 		}
 		
-		if (!fs.existsSync(pathB)) {
+		const statB = lstatSync(pathB);
+		
+		if (!statB) {
 			return this.postError(`The right path '${pathB}' does not exist.`, pathA, pathB);
 		}
 		
-		const statA = fs.lstatSync(pathA);
-		const statB = fs.lstatSync(pathB);
-		
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
-		else this.postError(`The left and right path is not of the same type.`, pathA, pathB);
+		else this.postError(`The left and right path can't be compared!`, pathA, pathB);
 		
 	}
 	
@@ -233,7 +234,7 @@ function addToRecentlyUsed (history:string[], path:string) {
 
 function isDirectory (folder:string) :boolean {
 	
-	const stat = fs.existsSync(folder) ? fs.lstatSync(folder) : false;
+	const stat = lstatSync(folder);
 	
 	return !!(stat && stat.isDirectory());
 	
