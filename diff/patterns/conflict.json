@@ -1,10 +1,18 @@
 {
 	"folder-a": {
 		"filefolder-a": null,
-		"filefolder-b": ["a"]
+		"filefolder-b": null,
+		"filefolder-c": ["a"],
+		"filefolder-d": ["a"],
+		"filefolder-e": "./filefolder-c",
+		"filefolder-f": "./filefolder-c"
 	},
 	"folder-b": {
 		"filefolder-a": ["a"],
-		"filefolder-b": null
+		"filefolder-b": "./filefolder-a",
+		"filefolder-c": null,
+		"filefolder-d": "./filefolder-a",
+		"filefolder-e": null,
+		"filefolder-f": ["a"]
 	}
 }
