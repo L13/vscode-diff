@@ -2,9 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { unlinkSync } from './@l13/fse';
-
-import { Diff } from '../types';
+import { Diff, File } from '../types';
 import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
@@ -53,41 +51,33 @@ export class DiffDelete {
 	private deleteFiles (data:any, side:'All'|'Left'|'Right') :void {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
-		let total = 0;
-		
-		files:for (const diff of diffs) {
-			
-			if (diff.fileA && (side === 'All' || side === 'Left')) {
-				try {
-					const result = unlinkSync(diff.fileA.path);
-					if (result) {
-						diff.fileA = null;
-						total += result;
-					}
-				} catch (error) {
-					vscode.window.showErrorMessage(error.message);
-					break files;
-				}
-			}
-			
-			if (diff.fileB && (side === 'All' || side === 'Right')) {
-				try {
-					const result = unlinkSync(diff.fileB.path);
-					if (result) {
-						diff.fileB = null;
-						total += result;
-					}
-				} catch (error) {
-					vscode.window.showErrorMessage(error.message);
-					break files;
-				}
-			}
-			
+		const folders:string[] = [];
+		const files:string[] = [];
+	
+		for (const diff of diffs) {
+			const fileA = diff.fileA;
+			if (fileA && side === 'All' || side === 'Left') separateFilesAndFolders(fileA, folders, files);
+			const fileB = diff.fileB;
+			if (fileB && side === 'All' || side === 'Right') separateFilesAndFolders(fileB, folders, files);
 		}
 		
-		vscode.window.showInformationMessage(`Deleted ${total} file${total === 1 ? '' : 's'}`);
+		removeSubfiles(folders.slice(), folders);
+		removeSubfiles(folders, files);
 		
-		this.msg.send('delete', data);
+		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash');
+		const summary = { total: 0 };
+		const promises = [];
+		
+		for (const file of folders.concat(files)) promises.push(deleteFile(diffs, file, useTrash, summary));
+		
+		Promise.all(promises).then(() => {
+			
+			const total = summary.total;
+			
+			vscode.window.showInformationMessage(`Deleted ${total} file${total === 1 ? '' : 's'}.`);
+			this.msg.send('delete:files', data);
+			
+		});
 		
 	}
 	
@@ -95,3 +85,45 @@ export class DiffDelete {
 
 //	Functions __________________________________________________________________
 
+function separateFilesAndFolders (file:File, folders:string[], files:string[]) {
+	
+	if (file.type === 'folder') folders.push(file.path);
+	else files.push(file.path);
+	
+}
+
+function removeSubfiles (folders:string[], files:string[]) {
+	
+	for (const folder of folders) {
+		let i = 0;
+		let file;
+		while ((file = files[i++])) {
+			if (file !== folder && file.indexOf(folder) === 0) files.splice(--i , 1);
+		}
+	}
+	
+}
+
+function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean, summary:{ total:number }) {
+	
+	return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
+		recursive: true,
+		useTrash,
+	}).then(() => {
+		
+		for (const diff of diffs) {
+			const fileA = diff.fileA;
+			if (fileA && fileA.path.indexOf(pathname) === 0) {
+				diff.fileA = null;
+				summary.total++;
+			}
+			const fileB = diff.fileB;
+			if (fileB && fileB.path.indexOf(pathname) === 0) {
+				diff.fileB = null;
+				summary.total++;
+			}
+		}
+		
+	}, (error) => vscode.window.showErrorMessage(error.message));
+	
+}

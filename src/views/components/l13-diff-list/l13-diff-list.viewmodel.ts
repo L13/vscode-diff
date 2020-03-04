@@ -58,7 +58,7 @@ export class L13DiffListViewModel extends ViewModel {
 		msg.on('create:diffs', (data) => this.createList(data.diffResult));
 		msg.on('copy:left', (data) => this.updateCopiedList(data.diffResult));
 		msg.on('copy:right', (data) => this.updateCopiedList(data.diffResult));
-		msg.on('delete', (data) => this.updateDeletedList(data.diffResult));
+		msg.on('delete:files', (data) => this.updateDeletedList(data.diffResult));
 		
 	}
 	
