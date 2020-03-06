@@ -56,9 +56,9 @@ export class DiffDelete {
 	
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
-			if (fileA && side === 'All' || side === 'Left') separateFilesAndFolders(fileA, folders, files);
+			if (fileA && (side === 'All' || side === 'Left')) separateFilesAndFolders(fileA, folders, files);
 			const fileB = diff.fileB;
-			if (fileB && side === 'All' || side === 'Right') separateFilesAndFolders(fileB, folders, files);
+			if (fileB && (side === 'All' || side === 'Right')) separateFilesAndFolders(fileB, folders, files);
 		}
 		
 		removeSubfiles(folders.slice(), folders);

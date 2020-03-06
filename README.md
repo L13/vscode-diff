@@ -8,7 +8,8 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## What's new in L13 Diff 0.22.0
 
-- Delete files and folders with keyboard shortcuts.
+- Delete selected files and folders by keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
+- Compare now symbolic links, too.
 
 ## Features
 
@@ -16,8 +17,8 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Supports a history for recently used files and folders.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
-* Drag'n Drop files and folders from the VS Code Explorer or from the Finder/Explorer into the input fields.
-* Copy files and folders from left to right or vi­ce ver­sa.
+* Drag'n Drop files and folders from the Finder/Explorer into the input fields.
+* Copy files and folders from left to right or vi­ce ver­sa. Import: Symlinks on Windows can only be copied if Visual Studio Code runs in Administrator Mode otherwise an error occurs.
 * Select all files and folders by status.
 * Toggle the visiblity of list items by status.
 * Double click an file item in the list to open the diff or the file.
@@ -27,6 +28,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Use predefined variables for dynamic pathnames.
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
+* Delete files and folders in the list view.
 
 ### Basics
 
@@ -59,7 +61,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 ## Available Commands
 
 * `L13 Diff` - Open the diff panel.
-* `Open in L13 Diff` - Open the diff panel with selected files or folders by dialog or context menu.
+* `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
 * `L13 Diff: Clear History` - Clear the history of recently used files and folders.
 * `L13 Diff: Delete all favorites` - Delete all favorites.
 
@@ -131,8 +133,7 @@ macOS
 * `Shift + Alt + ArrowUp/ArrowDown` - Add all list items until start/end of the list view to the selection.
 * `Home/End` - Scroll to the start/end of the list view.
 * `PageUp/PageDown` - Scroll to the previous/next page of the list view.
-* `Cmd + Backspace` - Delete all selected files and folders.
-* `Cmd + Alt + Backspace` - Delete only left or right selected files and folders.
+* `Cmd + Backspace` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
 
 Windows / Linux
 
@@ -144,8 +145,7 @@ Windows / Linux
 * `Shift + Home/End` - Add all list items until start/end of the list view to the selection.
 * `PageUp/PageDown` - Move the cursor to the start/end of the previous/next page of the list view.
 * `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
-* `Delete` - Delete all selected files and folders.
-* `Alt + Delete` - Delete only left or right selected files and folders.
+* `Delete` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
 
 ## Search Widget Keyboard Shortcuts
 
