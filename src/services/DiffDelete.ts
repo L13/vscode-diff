@@ -36,19 +36,43 @@ export class DiffDelete {
 	
 	private showDeleteFilesDialog (data:any) :void {
 		
-		if (!data.diffResult.diffs.length) return;
+		const diffs:Diff[] = data.diffResult.diffs;
 		
-		const text = `Which files do you want to delete?`;
+		if (!diffs.length) return;
 		
-		vscode.window.showInformationMessage(text, { modal: true }, 'Delete All', 'Delete Right', 'Delete Left').then((value) => {
-			
-			if (value) this.deleteFiles(data, <'All'|'Left'|'Right'>(<string>value).replace('Delete ', ''));
-			
-		});
+		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
+		let sides:number = 0;
+		
+		for (const diff of diffs) {
+			// tslint:disable-next-line: no-bitwise
+			if (diff.fileA) sides |= 1;
+			// tslint:disable-next-line: no-bitwise
+			if (diff.fileB) sides |= 2;
+			if (sides > 2) break;
+		}
+		
+		if (sides > 2) {
+			const text = `Which files should be ${useTrash ? 'moved to the trash' : 'permanently deleted'}?`;
+			const all = useTrash ? 'Move All to Trash' : 'Delete All';
+			const left = useTrash ? 'Move Left to Trash' : 'Delete Left';
+			const right = useTrash ? 'Move Right to Trash' : 'Delete Right';
+			vscode.window.showInformationMessage(text, { modal: true }, all, right, left).then((value) => {
+				
+				if (value) this.deleteFiles(data, value === left ? 'left' : value === right ? 'right' : 'all', useTrash);
+				
+			});
+		} else {
+			const text = `${useTrash ? 'Move' : 'Delete'} all selected files${useTrash ? ' to the trash' : ''}?`;
+			vscode.window.showInformationMessage(text, { modal: true }, useTrash ? 'Move to Trash' : 'Delete').then((value) => {
+				
+				if (value) this.deleteFiles(data, 'all', useTrash);
+				
+			});
+		}
 		
 	}
 	
-	private deleteFiles (data:any, side:'All'|'Left'|'Right') :void {
+	private deleteFiles (data:any, side:'all'|'left'|'right', useTrash:boolean) :void {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		const folders:string[] = [];
@@ -56,25 +80,20 @@ export class DiffDelete {
 	
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
-			if (fileA && (side === 'All' || side === 'Left')) separateFilesAndFolders(fileA, folders, files);
+			if (fileA && (side === 'all' || side === 'left')) separateFilesAndFolders(fileA, folders, files);
 			const fileB = diff.fileB;
-			if (fileB && (side === 'All' || side === 'Right')) separateFilesAndFolders(fileB, folders, files);
+			if (fileB && (side === 'all' || side === 'right')) separateFilesAndFolders(fileB, folders, files);
 		}
 		
 		removeSubfiles(folders.slice(), folders);
 		removeSubfiles(folders, files);
 		
-		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash');
-		const summary = { total: 0 };
 		const promises = [];
 		
-		for (const file of folders.concat(files)) promises.push(deleteFile(diffs, file, useTrash, summary));
+		for (const file of folders.concat(files)) promises.push(deleteFile(diffs, file, useTrash));
 		
 		Promise.all(promises).then(() => {
 			
-			const total = summary.total;
-			
-			vscode.window.showInformationMessage(`Deleted ${total} file${total === 1 ? '' : 's'}.`);
 			this.msg.send('delete:files', data);
 			
 		});
@@ -104,7 +123,7 @@ function removeSubfiles (folders:string[], files:string[]) {
 	
 }
 
-function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean, summary:{ total:number }) {
+function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
 	
 	return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
 		recursive: true,
@@ -113,15 +132,9 @@ function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean, summary:{ 
 		
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
-			if (fileA && fileA.path.indexOf(pathname) === 0) {
-				diff.fileA = null;
-				summary.total++;
-			}
 			const fileB = diff.fileB;
-			if (fileB && fileB.path.indexOf(pathname) === 0) {
-				diff.fileB = null;
-				summary.total++;
-			}
+			if (fileA && fileA.path.indexOf(pathname) === 0) diff.fileA = null;
+			if (fileB && fileB.path.indexOf(pathname) === 0) diff.fileB = null;
 		}
 		
 	}, (error) => vscode.window.showErrorMessage(error.message));

@@ -67,7 +67,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
 		setLabel(this.inputFiles, 'Show Files');
 		setLabel(this.inputFolders, 'Show Folders');
-		setLabel(this.inputSymlinks, 'Show Symlinks');
+		setLabel(this.inputSymlinks, 'Show Symbolic Links');
 		setLabel(this.inputConflicts, 'Show Conflicts');
 		setLabel(this.button, 'Close', { key: 'Escape' });
 		

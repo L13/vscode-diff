@@ -8,7 +8,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## What's new in L13 Diff 0.22.0
 
-- Delete selected files and folders by keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
+- Delete selected files and folders with a keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
 - Compare now symbolic links, too.
 
 ## Features
@@ -18,10 +18,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
 * Drag'n Drop files and folders from the Finder/Explorer into the input fields.
-* Copy files and folders from left to right or vi­ce ver­sa. Import: Symlinks on Windows can only be copied if Visual Studio Code runs in Administrator Mode otherwise an error occurs.
-* Select all files and folders by status.
+* Copy files and folders from left to right or vi­ce ver­sa. Symlinks on Windows can only be copied if Visual Studio Code runs in Administrator Mode otherwise an error occurs.
+* Select all files, folders and symlinks by status.
 * Toggle the visiblity of list items by status.
-* Double click an file item in the list to open the diff or the file.
+* Double click a file item in the list to open the diff or the file.
 * Mouse and keyboard support for selecting items in the list view.
 * Search for pathnames to filter diff result.
 * Save your favorite diffs and start a comparison immediately.
@@ -103,7 +103,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ## Input/Menu Mouse/Keyboard Shortcuts
 
 * `Click` - Select a path in the menu.
-* `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in menu.
+* `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in the menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
 
 ## Swap Button
@@ -169,7 +169,7 @@ Windows / Linux
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-### Context menu
+### Context Menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.

@@ -4,7 +4,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.22.0] - 2020-03-15
 
 ### Added
-- Delete selected files and folders by keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
+- Delete selected files and folders with a keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
 - Compare now symbolic links, too.
 
 ### Fixed
