@@ -7,7 +7,36 @@ import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
+type Dialog = {
+	text:string,
+	buttonAll:string,
+	buttonLeft?:string,
+	buttonRight?:string,
+};
 
+const selectableTrashDialog:Dialog = {
+	text: 'Which files should be moved to the trash?',
+	buttonAll: 'Move All to Trash',
+	buttonLeft: 'Move Left to Trash',
+	buttonRight: 'Move Right to Trash',
+};
+
+const selectableDeleteDialog:Dialog = {
+	text: 'Which files should be permanently deleted?',
+	buttonAll: 'Delete All',
+	buttonLeft: 'Delete Left',
+	buttonRight: 'Delete Right',
+};
+
+const simpleTrashDialog:Dialog = {
+	text: 'Move all selected files to the trash?',
+	buttonAll: 'Move to Trash',
+};
+
+const simpleDeleteDialog:Dialog = {
+	text: 'Delete all selected files?',
+	buttonAll: 'Delete',
+};
 
 //	Initialize _________________________________________________________________
 
@@ -40,7 +69,6 @@ export class DiffDelete {
 		
 		if (!diffs.length) return;
 		
-		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
 		let sides:number = 0;
 		
 		for (const diff of diffs) {
@@ -51,24 +79,21 @@ export class DiffDelete {
 			if (sides > 2) break;
 		}
 		
+		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
+		let dialog:Dialog = null;
+		const args = [];
+
 		if (sides > 2) {
-			const text = `Which files should be ${useTrash ? 'moved to the trash' : 'permanently deleted'}?`;
-			const all = useTrash ? 'Move All to Trash' : 'Delete All';
-			const left = useTrash ? 'Move Left to Trash' : 'Delete Left';
-			const right = useTrash ? 'Move Right to Trash' : 'Delete Right';
-			vscode.window.showInformationMessage(text, { modal: true }, all, right, left).then((value) => {
+			dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
+			if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
+			else args.push(dialog.buttonRight, dialog.buttonLeft);
+		} else dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+
+		vscode.window.showInformationMessage(dialog.text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
 				
-				if (value) this.deleteFiles(data, value === left ? 'left' : value === right ? 'right' : 'all', useTrash);
+			if (value) this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
 				
-			});
-		} else {
-			const text = `${useTrash ? 'Move' : 'Delete'} all selected files${useTrash ? ' to the trash' : ''}?`;
-			vscode.window.showInformationMessage(text, { modal: true }, useTrash ? 'Move to Trash' : 'Delete').then((value) => {
-				
-				if (value) this.deleteFiles(data, 'all', useTrash);
-				
-			});
-		}
+		});
 		
 	}
 	
