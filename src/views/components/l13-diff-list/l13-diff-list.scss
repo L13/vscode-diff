@@ -94,13 +94,15 @@ l13-diff-list-file {
 		width: calc(50% + 22px);
 		
 		&.-file::before,
-		&.-folder::before {
+		&.-folder::before,
+		&.-symlink::before {
 			left: 10px;
 		}
 	}
 	
 	&.-file::before,
-	&.-folder::before {
+	&.-folder::before,
+	&.-symlink::before {
 		background: var(--l13-icon-background);
 		content: '';
 		display: block;
@@ -137,6 +139,18 @@ l13-diff-list-file {
 		span.-basename {
 			opacity: 0.7;
 		}
+	}
+	
+	&.-symlink {
+		
+		&::before {
+			-webkit-mask-image: url('list-symlink.svg');
+			mask-image: url('list-symlink.svg');
+		}
+		
+		// span.-basename {
+		// 	opacity: 0.7;
+		// }
 	}
 	
 	span {

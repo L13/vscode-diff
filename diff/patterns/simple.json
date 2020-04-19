@@ -11,12 +11,14 @@
 			"file-a.txt": ["a"],
 			"file-c.txt": ["c"],
 			"file-d.txt": ["d"],
-			"file-e.txt": ["e"]
+			"file-e.txt": ["e"],
+			"link-a.txt": "./file-a.txt"
 		},
 		"file-a.txt": ["a"],
 		"file-c.txt": ["c"],
 		"file-d.txt": ["d"],
-		"file-e.txt": ["e"]
+		"file-e.txt": ["e"],
+		"link-a.txt": "./file-a.txt"
 	},
 	"folder-b": {
 		"subfolder-b": null,
@@ -25,7 +27,8 @@
 			"file-b.txt": ["b"],
 			"file-c.txt": ["c"],
 			"file-d.txt": ["dd"],
-			"file-e.txt": ["f"]
+			"file-e.txt": ["f"],
+			"link-e.txt": "./file-e.txt"
 		},
 		"file-b.txt": ["b"],
 		"file-c.txt": ["c"],

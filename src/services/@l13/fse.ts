@@ -57,6 +57,36 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	
 }
 
+export function unlinkSync (pathname:string) :number {
+	
+	const stat = lstatSync(pathname);
+	let total = 0;
+	
+	if (stat) {
+		if (stat.isDirectory()) {
+			fs.readdirSync(pathname).forEach((name) => total += unlinkSync(path.join(pathname, name)));
+			fs.rmdirSync(pathname);
+			total++;
+		} else if (stat.isFile() || stat.isSymbolicLink()) {
+			fs.unlinkSync(pathname);
+			total++;
+		}
+	}
+	
+	return total;
+	
+}
+
+export function lstatSync (pathname:string) {
+	
+	try {
+		return fs.lstatSync(pathname);
+	} catch (error) {
+		return null;
+	}
+	
+}
+
 export function createFindGlob (ignore:string[]) {
 	
 	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
@@ -150,7 +180,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						stat,
 						type: 'file',
 					};
-				}/* else if (stat.isSymbolicLink()) {
+				} else if (stat.isSymbolicLink()) {
 					job.result[pathname] = {
 						folder: cwd,
 						path: pathname,
@@ -158,7 +188,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						stat,
 						type: 'symlink',
 					};
-				}*/
+				}
 				
 				if (!job.tasks) job.done();
 				

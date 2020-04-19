@@ -24,6 +24,11 @@ const keyboardShortcuts:Shortcut[] = [
 		key: 'Ctrl+F',
 		mac: 'Cmd+F',
 	},
+	{
+		description: 'Delete Selected Files',
+		key: 'Delete',
+		mac: 'Cmd+Backspace',
+	},
 ];
 
 //	Initialize _________________________________________________________________
