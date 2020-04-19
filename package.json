@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.21.0",
+	"version": "0.22.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"preview": true,
@@ -20,7 +20,7 @@
 		"theme": "dark"
 	},
 	"engines": {
-		"vscode": "^1.37.0"
+		"vscode": "^1.43.0"
 	},
 	"categories": [
 		"Other"
@@ -266,24 +266,25 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "gulp build",
 		"watch": "gulp watch",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test",
+		"test": "npm run compile",
 		"test-diff": "node ./diff/index.js --clean --create-all"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^10.14.12",
-		"del": "^4.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^12.12.35",
+		"@types/vscode": "^1.43.0",
+		"del": "^5.1.0",
 		"gulp": "^4.0.2",
 		"gulp-concat": "^2.6.1",
 		"gulp-eol": "^0.2.0",
 		"gulp-sass": "^4.0.2",
 		"gulp-typescript": "^5.0.1",
-		"rollup": "^1.16.6",
+		"rollup": "^1.32.1",
 		"rollup-plugin-typescript": "^1.0.1",
-		"tslint": "^5.18.0",
-		"typescript": "^3.4.5",
-		"vscode": "^1.1.35"
+		"mocha": "^7.1.1",
+		"tslint": "^6.1.0",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.0.2"
 	}
 }

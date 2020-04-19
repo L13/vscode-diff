@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, mkdirsSync } from './@l13/fse';
+import { copyFile, lstatSync, mkdirsSync } from './@l13/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
 import { DiffMessage } from './DiffMessage';
@@ -41,30 +41,43 @@ export class DiffCopy {
 	
 	private copy (file:File, dest:string, callback:any) :void {
 		
-		const stat = fs.lstatSync(file.path);
+		const stat = lstatSync(file.path);
 		
-		if (stat.isDirectory()) {
-			if (!fs.existsSync(dest)) {
-				try {
-					mkdirsSync(dest);
-					callback();
-				} catch (error) {
-					callback(error);
+		if (stat) {
+			const statDest = lstatSync(dest);
+			if (stat.isDirectory()) {
+				if (!statDest) {
+					try {
+						mkdirsSync(dest);
+						callback();
+					} catch (error) {
+						callback(error);
+					}
+				} else {
+					if (statDest.isDirectory()) callback();
+					else callback(new Error(`'${dest}' exists, but is not a folder!`));
 				}
-			} else {
-				if (fs.statSync(dest).isDirectory()) callback();
-				else callback(new Error(`'${dest}' exists, but is not a folder!`));
+			} else if (stat.isFile()) {
+				if (!statDest || statDest.isFile()) {
+					copyFile(file.path, dest, (error:Error) => {
+						
+						if (error) callback(error);
+						else callback();
+						
+					});
+				} else callback(new Error(`'${dest}' exists, but is not a file!`));
+			} else if (stat.isSymbolicLink()) {
+				if (!statDest || statDest.isSymbolicLink()) {
+					if (statDest) fs.unlinkSync(dest);
+					fs.symlink(fs.readlinkSync(file.path), dest, (error:Error) => {
+						
+						if (error) callback(error);
+						else callback();
+						
+					});
+				} else callback(new Error(`'${dest}' exists, but is not a symbolic link!`));
 			}
-		} else if (stat.isFile()) {
-			if (!fs.existsSync(dest) || fs.statSync(dest).isFile()) {
-				copyFile(file.path, dest, (error:Error) => {
-					
-					if (error) callback(error);
-					else callback();
-					
-				});
-			} else callback(new Error(`'${dest}' exists, but is not a file!`));
-		}
+		} else callback(new Error(`'${dest}' doesn't exist!`));
 		
 	}
 	
@@ -106,8 +119,9 @@ export class DiffCopy {
 			if (diff.status === 'unchanged') return --job.tasks;
 			
 			const fileFrom:File = (<any>diff)['file' + from];
+			const stat = lstatSync(fileFrom.path);
 			
-			if (fileFrom && fs.existsSync(fileFrom.path)) {
+			if (stat) {
 				const dest = path.join(folderTo, fileFrom.relative);
 				this.copy(fileFrom, dest, (error:null|Error) => {
 					

@@ -40,6 +40,18 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	@L13Query('#l13_use_regexp')
 	private inputRegExp:HTMLInputElement;
 	
+	@L13Query('#l13_use_files')
+	private inputFiles:HTMLInputElement;
+	
+	@L13Query('#l13_use_folders')
+	private inputFolders:HTMLInputElement;
+	
+	@L13Query('#l13_use_symlinks')
+	private inputSymlinks:HTMLInputElement;
+	
+	@L13Query('#l13_use_conflicts')
+	private inputConflicts:HTMLInputElement;
+	
 	@L13Query('button')
 	private button:HTMLButtonElement;
 		
@@ -53,6 +65,10 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		setLabel(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+C' });
 		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
+		setLabel(this.inputFiles, 'Show Files');
+		setLabel(this.inputFolders, 'Show Folders');
+		setLabel(this.inputSymlinks, 'Show Symbolic Links');
+		setLabel(this.inputConflicts, 'Show Conflicts');
 		setLabel(this.button, 'Close', { key: 'Escape' });
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());

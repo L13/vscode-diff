@@ -56,8 +56,9 @@ export class L13DiffListViewModel extends ViewModel {
 		super();
 		
 		msg.on('create:diffs', (data) => this.createList(data.diffResult));
-		msg.on('copy:left', (data) => this.updateList(data.diffResult));
-		msg.on('copy:right', (data) => this.updateList(data.diffResult));
+		msg.on('copy:left', (data) => this.updateCopiedList(data.diffResult));
+		msg.on('copy:right', (data) => this.updateCopiedList(data.diffResult));
+		msg.on('delete:files', (data) => this.updateDeletedList(data.diffResult));
 		
 	}
 	
@@ -91,7 +92,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public updateList (diffResult:DiffResult) {
+	public updateCopiedList (diffResult:DiffResult) {
 		
 		const diffs = diffResult.diffs;
 		
@@ -109,6 +110,34 @@ export class L13DiffListViewModel extends ViewModel {
 		this.items = this.items.slice(); // Refreshs the view
 		
 		this.dispatchEvent('copied');
+		
+	}
+	
+	public updateDeletedList (diffResult:DiffResult) {
+		
+		const diffs = diffResult.diffs;
+		
+		diffs.forEach((diff:Diff) => { // Update original diff with new diff
+			
+			const originalDiff = this.map[diff.id];
+			
+			if (diff.fileA || diff.fileB) {
+				this.items.splice(this.items.indexOf(originalDiff), 1, diff);
+				this.map[diff.id] = diff;
+				if (!diff.fileA) diff.status = 'untracked';
+				if (!diff.fileB) diff.status = 'deleted';
+			} else {
+				this.items.splice(this.items.indexOf(originalDiff), 1);
+				delete this.map[diff.id];
+			}
+			
+		});
+		
+		updateDeletedSubfiles(this.items, diffs);
+		
+		this.items = this.items.slice(); // Refreshs the view
+		
+		this.dispatchEvent('deleted');
 		
 	}
 	
@@ -172,6 +201,26 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
+	private getDiffsByIds (ids:string[]) {
+		
+		const items = ids.map((id) => this.map[id]);
+		
+		return {
+			pathA: this.diffResult.pathA,
+			pathB: this.diffResult.pathB,
+			diffs: items,
+		};
+		
+	}
+	
+	public delete (ids:string[]) :void {
+		
+		const diffResult = this.getDiffsByIds(ids);
+		
+		if (diffResult.diffs.length) msg.send('delete:files', { diffResult });
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________
@@ -185,7 +234,7 @@ function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :bo
 		const clone:File = parse(stringify(file));
 		const fileTo = `file${to}`;
 		clone.folder = (<any>copiedDiff)[fileTo].folder;
-		clone.path = clone.folder + clone.path.slice(0, file.folder.length);
+		clone.path = clone.folder + clone.path.slice(file.folder.length);
 		(<any>diff)[fileTo] = clone;
 		diff.status = 'unchanged';
 		return true;
@@ -211,8 +260,28 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 				return false;
 				
 			});
+			
 		}
 		
 	});
+	
+}
+
+function updateDeletedSubfiles (diffs:Diff[], deletedDiffs:Diff[]) {
+	
+	const deletedFolders = deletedDiffs.filter((diff) => diff.type === 'folder');
+	
+	for (const diff of diffs.slice()) {
+		loop:for (const deletedDiff of deletedFolders) {
+			if (diff.id.indexOf(deletedDiff.id) === 0) {
+				if (!deletedDiff.fileA) diff.fileA = null;
+				if (!deletedDiff.fileB) diff.fileB = null;
+				if (!diff.fileA && !diff.fileB) diffs.splice(diffs.indexOf(diff), 1);
+				else if (!diff.fileA) diff.status = 'untracked';
+				else if (!diff.fileB) diff.status = 'deleted';
+				break loop;
+			}
+		}
+	}
 	
 }

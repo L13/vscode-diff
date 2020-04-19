@@ -1,6 +1,7 @@
 {
 	"folder-a": {
 		"file-i.txt": ["i"],
+		"link-i.txt": "./file-i.txt",
 		"subfolder-i": null,
 		"subfolder-j": {
 			"file-j.txt": ["j"]
@@ -13,6 +14,7 @@
 	},
 	"folder-b": {
 		"file-i.txt": ["m"],
+		"link-i.txt": "./file-j.txt",
 		"subfolder-i": null,
 		"subfolder-j": {
 			"file-j.txt": ["n"]

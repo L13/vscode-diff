@@ -152,6 +152,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+		
 		msg.on('update:paths', (data) => {
 			
 			if (data.uris.length) {
@@ -218,6 +220,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		});
 		
 		listVM.on('copied', () => {
+			
+			enable();
+			this.list.focus();
+			
+		});
+		listVM.on('deleted', () => {
 			
 			enable();
 			this.list.focus();
