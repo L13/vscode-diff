@@ -18,7 +18,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
 * Drag'n Drop files and folders from the Finder/Explorer into the input fields.
-* Copy files and folders from left to right or vi­ce ver­sa. Symlinks on Windows can only be copied if Visual Studio Code runs in Administrator Mode otherwise an error occurs.
+* Copy files and folders from left to right or vi­ce ver­sa. Symbolic links on Windows can only be copied if Visual Studio Code runs in administrator mode otherwise an error occurs.
 * Select all files, folders and symlinks by status.
 * Toggle the visiblity of list items by status.
 * Double click a file item in the list to open the diff or the file.
@@ -63,7 +63,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
 * `L13 Diff: Clear History` - Clear the history of recently used files and folders.
-* `L13 Diff: Delete all favorites` - Delete all favorites.
+* `L13 Diff: Delete All Favorites` - Delete all favorites.
 
 ## Available Settings
 
@@ -79,39 +79,41 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `${workspaceFolder:INDEX}` - Use a specific workspace folder by index for the diff e.g. '${workspaceFolder:1}/path/to/folder'
 * `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name-{1\\}}'.
 
-## Global Keyboard Shortcuts
+## Mouse and Keyboard Shortcuts
 
-macOS
+### Global 
+
+#### macOS
 
 * `Cmd + L Cmd + L` - Open the diff panel.
 * `Cmd + D` - Add the current paths to favorites. Diff panel has to be active editor.
 * `Cmd + L Cmd + O` - Open the output channel. Provides logging and stats for the current diff.
 * `Cmd + L Cmd + F` - Open favorites explorer.
 
-Windows / Linux
+#### Windows / Linux
 
 * `Ctrl + L Ctrl + L` - Open the diff panel.
 * `Ctrl + D` - Add the current paths to favorites. Diff panel has to be active editor.
 * `Ctrl + L Ctrl + F` - Open favorites explorer.
 
-Windows
+#### Windows
 
 * `Ctrl + L Ctrl + O` - Open the output channel. Provides logging and stats for the current diff.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
-## Input/Menu Mouse/Keyboard Shortcuts
+### Input/Menu
 
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in the menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
 
-## Swap Button
+### Swap Button
 
 * `Click` - Swaps just the values of the input fields.
 * `Alt + Click` - Swaps the values of the input fields and the diff result.
 
-## List Mouse/Keyboard Shortcuts
+### List
 
 All platforms
 
@@ -147,39 +149,39 @@ Windows / Linux
 * `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
 * `Delete` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
 
-## Search Widget Keyboard Shortcuts
+### Search Widget
 
-All platforms
+#### All platforms
 
 * `Escape` - Hide search widget.
 
-macOS
+#### macOS
 
 * `Cmd + F` - Show search widget.
 * `Cmd + Alt + C` - Toggle match case.
 * `Cmd + Alt + R` - Toggle use regular expression.
 
-Windows / Linux
+#### Windows / Linux
 
 * `Ctrl + F` - Show search widget.
 * `Alt + C` - Toggle match case.
 * `Alt + R` - Toggle use regular expression.
 
-## Favorites Explorer
+### Favorites Explorer
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-### Context Menu
+#### Context Menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Rename` - Change the name of the favorite.
 * `Delete` - Delete the favorite diff.
 
-## Statusbar
+### Statusbar
 
 * `Click` - Open the output channel for logging and stats.
 
-## Navigator
+### Navigator
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
