@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.22.0",
+	"version": "0.23.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"preview": true,
@@ -59,9 +59,23 @@
 				{
 					"id": "l13DiffFavorites",
 					"name": "Favorites"
+				},
+				{
+					"id": "l13DiffHistory",
+					"name": "History"
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+			"view": "l13DiffFavorites",
+			"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)"
+			},
+			{
+			"view": "l13DiffHistory",
+			"contents": "No previous comparisons found.\n[L13 Diff](command:l13Diff.show)"
+			}
+		],
 		"commands": [
 			{
 				"command": "l13Diff.show",
@@ -73,7 +87,11 @@
 			},
 			{
 				"command": "l13Diff.clearHistory",
-				"title": "L13 Diff: Clear History"
+				"title": "L13 Diff: Clear History",
+				"icon": {
+					"light": "images/history-clear-light.svg",
+					"dark": "images/history-clear-dark.svg"
+				}
 			},
 			{
 				"command": "l13Diff.addToFavorites",
@@ -106,6 +124,22 @@
 			{
 				"command": "l13Diff.clearFavorites",
 				"title": "L13 Diff: Delete All Favorites"
+			},
+			{
+				"command": "l13Diff.openComparison",
+				"title": "Open"
+			},
+			{
+				"command": "l13Diff.openComparisonOnly",
+				"title": "Open"
+			},
+			{
+				"command": "l13Diff.openComparisonAndCompare",
+				"title": "Open & Compare"
+			},
+			{
+				"command": "l13Diff.removeComparison",
+				"title": "Delete"
 			},
 			{
 				"command": "l13Diff.showOutput",
@@ -170,6 +204,22 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.openComparison",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openComparisonOnly",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openComparisonAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeComparison",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.compareProjectWithWorkspace",
 					"when": "false"
 				},
@@ -182,6 +232,13 @@
 				{
 					"command": "l13Diff.open",
 					"group": "3_compare@1"
+				}
+			],
+			"view/title": [
+				{
+					"command": "l13Diff.clearHistory",
+					"when": "view == l13DiffHistory",
+					"group": "navigation@1"
 				}
 			],
 			"view/item/context": [
@@ -204,6 +261,21 @@
 					"command": "l13Diff.removeFavorite",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.openComparisonOnly",
+					"group": "navigation@1",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.openComparisonAndCompare",
+					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.removeComparison",
+					"group": "7_modification@2",
+					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
 					"command": "l13Diff.compareProjectWithWorkspace",
@@ -232,6 +304,11 @@
 					"type": "number",
 					"default": 10,
 					"description": "How many recently used entries should be visible in the menu?"
+				},
+				"l13Diff.maxHistoryEntries": {
+					"type": "number",
+					"default": 10,
+					"description": "How many entries should be visible in the history?"
 				},
 				"l13Diff.openToSide": {
 					"type": "boolean",

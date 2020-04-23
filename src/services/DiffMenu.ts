@@ -24,7 +24,6 @@ export class DiffMenu {
 	public static clearHistory (context:vscode.ExtensionContext) :void {
 		
 		context.globalState.update('history', []);
-		vscode.window.showInformationMessage(`Cleared history`);
 		
 	}
 	

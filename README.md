@@ -6,10 +6,9 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.22.0
+## What's new in L13 Diff 0.23.0
 
-- Delete selected files and folders with a keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
-- Compare now symbolic links, too.
+- Added list for recently compared folders to view.
 
 ## Features
 

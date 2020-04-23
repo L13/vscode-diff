@@ -12,7 +12,7 @@ import * as vscode from 'vscode';
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:vscode.WorkspaceFolder[]|undefined) {
+export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
 	
 	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
 	

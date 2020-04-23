@@ -1,13 +1,14 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, sep } from 'path';
+import { basename, dirname, extname, join, sep } from 'path';
 import * as vscode from 'vscode';
 
 import { createFindGlob, lstatSync, walktree } from './@l13/fse';
 
 import { Dictionary, Diff, File, StatsMap } from '../types';
 import { sortCaseInsensitive } from './common';
+import { DiffHistory } from './DiffHistory';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
@@ -20,6 +21,12 @@ type TextFiles = {
 	extensions:string[],
 	filenames:string[],
 	glob:RegExp,
+};
+
+type History = {
+	fileA:string,
+	fileB:string,
+	label:string,
 };
 
 //	Variables __________________________________________________________________
@@ -48,6 +55,7 @@ export class DiffCompare {
 	
 	private readonly status:DiffStatus;
 	private readonly output:DiffOutput;
+	private readonly history:DiffHistory;
 	
 	private disposables:vscode.Disposable[] = [];
 	
@@ -56,6 +64,7 @@ export class DiffCompare {
 		this.context = context;
 		this.status = DiffStatus.createStatusBar(context);
 		this.output = DiffOutput.createOutput();
+		this.history = DiffHistory.createProvider(context);
 		
 		msg.on('create:diffs', (data) => this.createDiffs(data));
 		
@@ -70,16 +79,55 @@ export class DiffCompare {
 		
 	}
 	
-	private saveHistory (pathA:string, pathB:string) :void {
+	private formatName (pathA:string, pathB:string) :string {
 		
+		const fileA:string[] = pathA.split(sep);
+		const fileB:string[] = pathB.split(sep);
+		
+		while (fileA.length > 1 && fileB.length > 1 && fileA[0] === fileB[0]) {
+			fileA.shift();
+			fileB.shift();
+		}
+		
+		return `${join.apply(null, fileA)} ↔ ${join.apply(null, fileB)}`;
+		
+	}
+	
+	private saveRecentlyUsed (pathA:string, pathB:string) :void {
+		
+		const maxRecentlyUsedLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
 		const history:string[] = this.context.globalState.get('history') || [];
 		
 		addToRecentlyUsed(history, pathB);
 		addToRecentlyUsed(history, pathA);
 		
-		const maxLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
+		this.context.globalState.update('history', history.slice(0, maxRecentlyUsedLength));
 		
-		this.context.globalState.update('history', history.slice(0, maxLength));
+	}
+	
+	private saveHistory (pathA:string, pathB:string) :void {
+		
+		const maxHistoryEntriesLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxHistoryEntries', 10);
+		const comparisons:History[] = this.context.globalState.get('comparisons') || [];
+		let comparison:History = null;
+		let i = 0;
+		
+		while ((comparison = comparisons[i++])) {
+			if (comparison.fileA === pathA && comparison.fileB === pathB) {
+				comparisons.splice(--i, 1);
+				break;
+			}
+		}
+		
+		comparisons.unshift({
+			fileA: pathA,
+			fileB: pathB,
+			label: this.formatName(pathA, pathB),
+		});
+		
+		this.context.globalState.update('comparisons', comparisons.slice(0, maxHistoryEntriesLength));
+		
+		this.history.refresh();
 		
 	}
 	
@@ -126,7 +174,8 @@ export class DiffCompare {
 		const right = vscode.Uri.file(pathB);
 		const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 		
-		this.saveHistory(data.pathA, data.pathB);
+		this.saveRecentlyUsed(data.pathA, data.pathB);
+		this.saveHistory(pathA, pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
@@ -140,7 +189,8 @@ export class DiffCompare {
 	
 	private compareFolders (data:any, pathA:string, pathB:string) {
 		
-		this.saveHistory(data.pathA, data.pathB);
+		this.saveRecentlyUsed(data.pathA, data.pathB);
+		this.saveHistory(pathA, pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {

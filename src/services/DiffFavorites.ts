@@ -15,11 +15,11 @@ export type Favorite = { fileA:string, fileB:string, label:string };
 
 //	Exports ____________________________________________________________________
 
-export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeItem|FavoriteTreeItem> {
+export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> {
 
 // tslint:disable-next-line: max-line-length
-	private _onDidChangeTreeData:vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = new vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined>();
-	public readonly onDidChangeTreeData:vscode.Event<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData:vscode.EventEmitter<FavoriteTreeItem|undefined> = new vscode.EventEmitter<FavoriteTreeItem|undefined>();
+	public readonly onDidChangeTreeData:vscode.Event<FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
 	
 	public favorites:Favorite[] = [];
 	
@@ -45,15 +45,15 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 		
 	}
 
-	public getTreeItem (element:OpenL13DiffTreeItem|FavoriteTreeItem) :vscode.TreeItem {
+	public getTreeItem (element:FavoriteTreeItem) :vscode.TreeItem {
 		
 		return element;
 		
 	}
 
-	public getChildren (element?:OpenL13DiffTreeItem|FavoriteTreeItem) :Thenable<OpenL13DiffTreeItem[]|FavoriteTreeItem[]> {
+	public getChildren (element?:FavoriteTreeItem) :Thenable<FavoriteTreeItem[]> {
 		
-		const list:Array<OpenL13DiffTreeItem|FavoriteTreeItem> = [new OpenL13DiffTreeItem()];
+		const list:FavoriteTreeItem[] = [];
 		
 		if (!this.favorites.length) return Promise.resolve(list);
 		
@@ -156,35 +156,6 @@ class FavoriteTreeItem extends vscode.TreeItem {
 	public get tooltip () :string {
 		
 		return `${this.favorite.fileA} ↔ ${this.favorite.fileB}`;
-		
-	}
-	
-}
-
-// tslint:disable-next-line: max-classes-per-file
-class OpenL13DiffTreeItem extends vscode.TreeItem {
-	
-	public command = {
-		command: 'l13Diff.show',
-		title: 'Open L13 Diff',
-	};
-	
-	public iconPath = {
-		light: path.join(__filename, '..', '..', 'images', 'favorite-l13-light.svg'),
-		dark: path.join(__filename, '..', '..', 'images', 'favorite-l13-dark.svg'),
-	};
-	
-	public contextValue = 'openL13Diff';
-	
-	public constructor () {
-		
-		super('Diff');
-		
-	}
-	
-	public get tooltip () :string {
-		
-		return 'Open L13 Diff';
 		
 	}
 	
