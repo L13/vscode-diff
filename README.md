@@ -114,7 +114,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### List
 
-All platforms
+#### All platforms
 
 * `Click` - Select a file or folder in the list view.
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
@@ -124,7 +124,7 @@ All platforms
 * `Ctrl + Enter` - Open diff or file to side.
 * `Escape` - Unselect all items in the list view.
 
-macOS
+#### macOS
 
 * `Cmd + Click` - Add or remove a file or folder to or from the current selection.
 * `Cmd + A` - Select all items in the list view.
@@ -136,7 +136,7 @@ macOS
 * `PageUp/PageDown` - Scroll to the previous/next page of the list view.
 * `Cmd + Backspace` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
 
-Windows / Linux
+#### Windows / Linux
 
 * `Ctrl + Click` - Add or remove a file or folder to or from the current selection.
 * `Ctrl + A` - Select all items in the list view.

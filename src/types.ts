@@ -14,6 +14,26 @@ import * as fs from 'fs';
 
 export type Callback = (error?:null|Error, result?:StatsMap) => void;
 
+export type Comparison = {
+	fileA:string,
+	fileB:string,
+	label:string,
+	desc:string,
+};
+
+export type CopyFilesJob = {
+	error:null|Error,
+	tasks:number,
+	done:(error?:Error) => void,
+};
+
+export type Dialog = {
+	text:string,
+	buttonAll:string,
+	buttonLeft?:string,
+	buttonRight?:string,
+};
+
 export type Dictionary<T> = { [token:string]:T };
 
 export type DiffStats = {
@@ -44,6 +64,12 @@ export type Diff = {
 	fileB:null|File,
 };
 
+export type Favorite = {
+	fileA:string,
+	fileB:string,
+	label:string
+};
+
 export type File = {
 	path:string,
 	folder:string,
@@ -52,28 +78,37 @@ export type File = {
 	type?:'file'|'folder'|'symlink',
 };
 
+export type MessageListener = (...args:any[]) => void;
+
+export type Options = {
+	ignore?:string[],
+};
+
+export type Plural = {
+	size:string,
+	[index:number]:string,
+};
+
+export type StatsMap = {
+	[pathname:string]:File
+};
+
+export type TextFiles = {
+	extensions:string[],
+	filenames:string[],
+	glob:RegExp,
+};
+
+export type Uri = {
+	fsPath:string,
+};
+
 export type WalkTreeJob = {
 	error:null|Error,
 	ignore:null|RegExp,
 	tasks:number,
 	result:StatsMap,
 	done:(error?:Error) => void,
-};
-
-export type CopyFilesJob = {
-	error:null|Error,
-	tasks:number,
-	done:(error?:Error) => void,
-};
-
-export type Options = {
-	ignore?:string[],
-};
-
-export type StatsMap = { [pathname:string]:File };
-
-export type Uri = {
-	fsPath:string,
 };
 
 //	Functions __________________________________________________________________

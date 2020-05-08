@@ -5,7 +5,6 @@
 	"version": "0.23.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
-	"preview": true,
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
 	"repository": {
 		"type": "git",
@@ -68,12 +67,18 @@
 		},
 		"viewsWelcome": [
 			{
-			"view": "l13DiffFavorites",
-			"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)"
+				"view": "l13DiffFavorites",
+				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
+				"when": "!isMac"
 			},
 			{
-			"view": "l13DiffHistory",
-			"contents": "No previous comparisons found.\n[L13 Diff](command:l13Diff.show)"
+				"view": "l13DiffFavorites",
+				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
+				"when": "isMac"
+			},
+			{
+				"view": "l13DiffHistory",
+				"contents": "No previous comparisons found."
 			}
 		],
 		"commands": [

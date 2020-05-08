@@ -2,17 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import { Diff, File } from '../types';
+import { Dialog, Diff, File } from '../types';
 import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
-
-type Dialog = {
-	text:string,
-	buttonAll:string,
-	buttonLeft?:string,
-	buttonRight?:string,
-};
 
 const selectableTrashDialog:Dialog = {
 	text: 'Which files should be moved to the trash?',
@@ -29,12 +22,12 @@ const selectableDeleteDialog:Dialog = {
 };
 
 const simpleTrashDialog:Dialog = {
-	text: 'Move all selected files to the trash?',
+	text: 'Are you sure to delete all selected files?',
 	buttonAll: 'Move to Trash',
 };
 
 const simpleDeleteDialog:Dialog = {
-	text: 'Delete all selected files?',
+	text: 'Are you sure to delete all selected files?',
 	buttonAll: 'Delete',
 };
 

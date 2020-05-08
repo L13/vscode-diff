@@ -3,13 +3,13 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Uri } from '../types';
+import { Favorite, Uri } from '../types';
 import { sortCaseInsensitive, workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDelete } from './DiffDelete';
 import { DiffDialog } from './DiffDialog';
-import { DiffFavorites, Favorite } from './DiffFavorites';
+import { DiffFavorites } from './DiffFavorites';
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOpen } from './DiffOpen';
@@ -150,14 +150,29 @@ export class DiffPanel {
 				if (!value) return;
 				
 				const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
+				const favorite:Favorite = { label: value, fileA: data.pathA, fileB: data.pathB };
+				let index = -1;
 				
-				if (!favorites.some(({ label }) => label === value)) {
-					favorites.push({ label: value, fileA: data.pathA, fileB: data.pathB });
-					favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-					this.context.globalState.update('favorites', favorites);
-					DiffFavorites.currentProvider.refresh();
-					vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
-				} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
+				for (let i = 0; i < favorites.length; i++) {
+					if (favorites[i].label === value) {
+						index = i;
+						break;
+					}
+				}
+				
+				if (index === -1) {
+					favorites.push(favorite);
+					saveFavorite(this.context, favorites);
+				} else {
+					vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((value) => {
+							
+						if (value) {
+							favorites[index] = favorite;
+							saveFavorite(this.context, favorites);
+						}
+						
+					});
+				}
 				
 			});
 			
@@ -235,5 +250,13 @@ function nonce () {
 function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
+	
+}
+
+function saveFavorite (context:vscode.ExtensionContext, favorites:Favorite[]) {
+	
+	favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
+	context.globalState.update('favorites', favorites);
+	DiffFavorites.currentProvider.refresh();
 	
 }

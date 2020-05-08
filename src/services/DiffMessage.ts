@@ -2,13 +2,15 @@
 
 import * as vscode from 'vscode';
 
+import { MessageListener } from '../types';
+
 //	Variables __________________________________________________________________
 
 const LISTENERS = Symbol.for('listeners');
 
 //	Initialize _________________________________________________________________
 
-type MessageListener = (...args:any[]) => void;
+
 
 //	Exports ____________________________________________________________________
 

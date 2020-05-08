@@ -3,11 +3,12 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+import { Favorite } from '../types';
 import { sortCaseInsensitive } from './common';
 
 //	Variables __________________________________________________________________
 
-export type Favorite = { fileA:string, fileB:string, label:string };
+
 
 //	Initialize _________________________________________________________________
 
@@ -82,7 +83,6 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 						favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
 						context.globalState.update('favorites', favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`Saved "${value}" in favorites!`);
 					} else vscode.window.showErrorMessage(`Favorite "${value}" exists!`);
 					break;
 				}

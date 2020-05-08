@@ -7,7 +7,7 @@ import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
-
+const HISTORY = 'history';
 
 //	Initialize _________________________________________________________________
 
@@ -23,7 +23,7 @@ export class DiffMenu {
 	
 	public static clearHistory (context:vscode.ExtensionContext) :void {
 		
-		context.globalState.update('history', []);
+		context.globalState.update(HISTORY, []);
 		
 	}
 	
@@ -34,7 +34,7 @@ export class DiffMenu {
 		this.msg.on('update:menu', () => {
 			
 			this.msg.send('update:menu', {
-				history: this.context.globalState.get('history') || [],
+				history: this.context.globalState.get(HISTORY) || [],
 				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 			});
 			
@@ -51,7 +51,28 @@ export class DiffMenu {
 		
 	}
 	
+	public static saveRecentlyUsed (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
+		
+		const maxRecentlyUsedLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
+		const history:string[] = context.globalState.get(HISTORY) || [];
+		
+		addToRecentlyUsed(history, pathB);
+		addToRecentlyUsed(history, pathA);
+		
+		context.globalState.update(HISTORY, history.slice(0, maxRecentlyUsedLength));
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________
 
+function addToRecentlyUsed (history:string[], path:string) {
+	
+	const index = history.indexOf(path);
+	
+	if (index !== -1) history.splice(index, 1);
+	
+	history.unshift(path);
+	
+}

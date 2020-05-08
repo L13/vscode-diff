@@ -1,14 +1,15 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, join, sep } from 'path';
+import { basename, dirname, extname, sep } from 'path';
 import * as vscode from 'vscode';
 
 import { createFindGlob, lstatSync, walktree } from './@l13/fse';
 
-import { Dictionary, Diff, File, StatsMap } from '../types';
+import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
 import { sortCaseInsensitive } from './common';
 import { DiffHistory } from './DiffHistory';
+import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
@@ -16,18 +17,6 @@ import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
 
 const push = Array.prototype.push;
-
-type TextFiles = {
-	extensions:string[],
-	filenames:string[],
-	glob:RegExp,
-};
-
-type History = {
-	fileA:string,
-	fileB:string,
-	label:string,
-};
 
 //	Variables __________________________________________________________________
 
@@ -79,58 +68,6 @@ export class DiffCompare {
 		
 	}
 	
-	private formatName (pathA:string, pathB:string) :string {
-		
-		const fileA:string[] = pathA.split(sep);
-		const fileB:string[] = pathB.split(sep);
-		
-		while (fileA.length > 1 && fileB.length > 1 && fileA[0] === fileB[0]) {
-			fileA.shift();
-			fileB.shift();
-		}
-		
-		return `${join.apply(null, fileA)} ↔ ${join.apply(null, fileB)}`;
-		
-	}
-	
-	private saveRecentlyUsed (pathA:string, pathB:string) :void {
-		
-		const maxRecentlyUsedLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
-		const history:string[] = this.context.globalState.get('history') || [];
-		
-		addToRecentlyUsed(history, pathB);
-		addToRecentlyUsed(history, pathA);
-		
-		this.context.globalState.update('history', history.slice(0, maxRecentlyUsedLength));
-		
-	}
-	
-	private saveHistory (pathA:string, pathB:string) :void {
-		
-		const maxHistoryEntriesLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxHistoryEntries', 10);
-		const comparisons:History[] = this.context.globalState.get('comparisons') || [];
-		let comparison:History = null;
-		let i = 0;
-		
-		while ((comparison = comparisons[i++])) {
-			if (comparison.fileA === pathA && comparison.fileB === pathB) {
-				comparisons.splice(--i, 1);
-				break;
-			}
-		}
-		
-		comparisons.unshift({
-			fileA: pathA,
-			fileB: pathB,
-			label: this.formatName(pathA, pathB),
-		});
-		
-		this.context.globalState.update('comparisons', comparisons.slice(0, maxHistoryEntriesLength));
-		
-		this.history.refresh();
-		
-	}
-	
 	private createDiffs (data:any) :void {
 		
 		this.status.update();
@@ -165,6 +102,19 @@ export class DiffCompare {
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
 		else this.postError(`The left and right path can't be compared!`, pathA, pathB);
+		
+	}
+	
+	private saveRecentlyUsed (pathA:string, pathB:string) :void {
+		
+		DiffMenu.saveRecentlyUsed(this.context, pathA, pathB);
+		
+	}
+	
+	private saveHistory (pathA:string, pathB:string) {
+		
+		DiffHistory.saveComparison(this.context, pathA, pathB);
+		this.history.refresh();
 		
 	}
 	
@@ -229,7 +179,7 @@ export class DiffCompare {
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.output.log('Scanning left folder');
+		this.output.log(`Scanning folder '${dirnameA}'`);
 		
 		walktree(dirnameA, { ignore }, (errorA, resultA) => {
 			
@@ -237,7 +187,7 @@ export class DiffCompare {
 			
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.output.log('Scanning right folder');
+			this.output.log(`Scanning folder '${dirnameB}'`);
 			
 			walktree(dirnameB, { ignore }, (errorB, resultB) => {
 			
@@ -271,16 +221,6 @@ export class DiffCompare {
 }
 
 //	Functions __________________________________________________________________
-
-function addToRecentlyUsed (history:string[], path:string) {
-	
-	const index = history.indexOf(path);
-	
-	if (index !== -1) history.splice(index, 1);
-	
-	history.unshift(path);
-	
-}
 
 function isDirectory (folder:string) :boolean {
 	
