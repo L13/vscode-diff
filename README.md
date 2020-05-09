@@ -8,12 +8,13 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## What's new in L13 Diff 0.23.0
 
-- Added list for recently compared folders to view.
+- Added history view for previous comparisons.
+- Added welcome view for favorites.
 
 ## Features
 
 * Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-* Supports a history for recently used files and folders.
+* Supports a history for recently used files, folders and previous comparisons.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
 * Drag'n Drop files and folders from the Finder/Explorer into the input fields.
@@ -29,6 +30,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
 
+### Welcome
+
+![L13 Diff Welcome](images/preview-welcome.png)
+
 ### Basics
 
 ![L13 Diff Basics](images/preview-start.png)
@@ -40,6 +45,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 ### Favorites
 
 ![L13 Diff Favorites](images/preview-favorites.png)
+
+### History
+
+![L13 Diff History](images/preview-history.png)
 
 ### Search, filter or select
 
@@ -61,7 +70,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 * `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
-* `L13 Diff: Clear History` - Clear the history of recently used files and folders.
+* `L13 Diff: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `L13 Diff: Delete All Favorites` - Delete all favorites.
 
 ## Available Settings

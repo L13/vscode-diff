@@ -1,10 +1,11 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
-## [0.23.0] - 2020-05-03
+## [0.23.0] - 2020-05-10
 
 ### Added
-- Added list for recently compared folders to view.
+- Added history view for previous comparisons.
+- Added welcome view for favorites.
 
 ## [0.22.0] - 2020-04-19
 

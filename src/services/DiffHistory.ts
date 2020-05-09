@@ -88,7 +88,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 	public static removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
-		vscode.window.showInformationMessage(`Delete comparison "${comparison.label}"?`, { modal: true }, 'Delete').then((value) => {
+		vscode.window.showInformationMessage(`Delete comparison '${formatDeleteText(comparison)}'?`, { modal: true }, 'Delete').then((value) => {
 			
 			if (value) {
 				
@@ -177,5 +177,11 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 	comparison.desc = join.apply(null, desc);
 	
 	return comparison;
+	
+}
+
+function formatDeleteText (comparison:Comparison) :string {
+	
+	return `${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`;
 	
 }
