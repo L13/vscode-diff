@@ -164,9 +164,9 @@ export class DiffPanel {
 					favorites.push(favorite);
 					saveFavorite(this.context, favorites);
 				} else {
-					vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((value) => {
+					vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((val) => {
 							
-						if (value) {
+						if (val) {
 							favorites[index] = favorite;
 							saveFavorite(this.context, favorites);
 						}

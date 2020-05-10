@@ -42,7 +42,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 		
 	private updateHistory (history:string[]) {
 		
-		if (history && history.length) {
+		if (history) {
 			if (('' + history) !== '' + this.history) {
 				this.history = history;
 				this.requestUpdate();
@@ -53,7 +53,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 	
 	private updateWorkspaces (workspaces:string[]) {
 		
-		if (workspaces && workspaces.length) {
+		if (workspaces) {
 			if (('' + workspaces) !== '' + this.workspaces) {
 				this.workspaces = workspaces;
 				this.requestUpdate();

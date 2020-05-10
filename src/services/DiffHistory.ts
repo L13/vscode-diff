@@ -88,7 +88,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 	public static removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
-		vscode.window.showInformationMessage(`Delete comparison '${formatDeleteText(comparison)}'?`, { modal: true }, 'Delete').then((value) => {
+		vscode.window.showInformationMessage(`Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`, { modal: true }, 'Delete').then((value) => {
 			
 			if (value) {
 				
@@ -171,20 +171,19 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 		fileB.shift();
 	}
 	
-	if (desc.length === 1 && desc[0] === '') {
-		fileA.unshift(desc[0]);
-		fileB.unshift(desc[0]);
+	if (desc.length && desc.join('') === '') { // Fix for absolute and network paths
+		desc.forEach((value, index) => {
+			
+			fileA.splice(index, 0, value);
+			fileB.splice(index, 0, value);
+			
+		});
+		desc.splice(0, desc.length);
 	}
 	
 	comparison.label = `${fileA.join(sep)} ↔ ${fileB.join(sep)}`;
 	comparison.desc = desc.join(sep);
 	
 	return comparison;
-	
-}
-
-function formatDeleteText (comparison:Comparison) :string {
-	
-	return `${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`;
 	
 }
