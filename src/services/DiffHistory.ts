@@ -171,10 +171,13 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 		fileB.shift();
 	}
 	
-	if (desc.length > 1 && !desc[0]) desc[0] = sep;
+	if (desc.length === 1 && desc[0] === '') {
+		fileA.unshift(desc[0]);
+		fileB.unshift(desc[0]);
+	}
 	
-	comparison.label = `${join.apply(null, fileA)} ↔ ${join.apply(null, fileB)}`;
-	comparison.desc = join.apply(null, desc);
+	comparison.label = `${fileA.join(sep)} ↔ ${fileB.join(sep)}`;
+	comparison.desc = desc.join(sep);
 	
 	return comparison;
 	

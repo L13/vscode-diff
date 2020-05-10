@@ -41,7 +41,9 @@ export class DiffDialog {
 			canSelectMany: false,
 		}).then((uris) => {
 			
-			if (uris) this.msg.send('open:dialog', { folder: uris[0].fsPath });
+			const folder = uris ? uris[0].fsPath : null;
+			
+			this.msg.send('open:dialog', { folder });
 			
 		});
 		

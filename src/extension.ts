@@ -109,7 +109,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', () => {
 		
-		vscode.window.showInformationMessage(`Delete the complete history?'`, { modal: true }, 'Delete').then((value) => {
+		vscode.window.showInformationMessage('Delete the complete history?', { modal: true }, 'Delete').then((value) => {
 			
 			if (value) {
 				DiffMenu.clearHistory(context);
