@@ -152,6 +152,11 @@ gulp.task('script:services', () => {
 	
 	return rollup.rollup({
 		input: 'src/extension.ts',
+		external: [
+			'fs',
+			'path',
+			'vscode',
+		],
 		plugins: [
 			typescript({
 				target: 'es6',
@@ -169,6 +174,11 @@ gulp.task('script:services', () => {
 			file: './out/extension.js',
 			format: 'umd',
 			name: 'l13diffservices',
+			globals: {
+				fs: 'fs',
+				path: 'path',
+				vscode: 'vscode',
+			},
 		});
 		
 	});

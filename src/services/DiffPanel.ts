@@ -3,8 +3,8 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Favorite, Uri } from '../types';
-import { sortCaseInsensitive, workspacePaths } from './common';
+import { Uri } from '../types';
+import { workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDelete } from './DiffDelete';
@@ -143,40 +143,7 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('save:favorite', (data) => {
-			
-			vscode.window.showInputBox({ value: `${data.pathA} ↔ ${data.pathB}` }).then((value) => {
-					
-				if (!value) return;
-				
-				const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
-				const favorite:Favorite = { label: value, fileA: data.pathA, fileB: data.pathB };
-				let index = -1;
-				
-				for (let i = 0; i < favorites.length; i++) {
-					if (favorites[i].label === value) {
-						index = i;
-						break;
-					}
-				}
-				
-				if (index === -1) {
-					favorites.push(favorite);
-					saveFavorite(this.context, favorites);
-				} else {
-					vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((val) => {
-							
-						if (val) {
-							favorites[index] = favorite;
-							saveFavorite(this.context, favorites);
-						}
-						
-					});
-				}
-				
-			});
-			
-		});
+		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.fileA, data.fileB));
 		
 		this.setContextForFocus(true);
 		
@@ -250,13 +217,5 @@ function nonce () {
 function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
-	
-}
-
-function saveFavorite (context:vscode.ExtensionContext, favorites:Favorite[]) {
-	
-	favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
-	context.globalState.update('favorites', favorites);
-	DiffFavorites.currentProvider.refresh();
 	
 }

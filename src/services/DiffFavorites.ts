@@ -8,7 +8,7 @@ import { sortCaseInsensitive } from './common';
 
 //	Variables __________________________________________________________________
 
-
+const FAVORITES = 'favorites';
 
 //	Initialize _________________________________________________________________
 
@@ -34,13 +34,13 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 
 	private constructor (private context:vscode.ExtensionContext) {
 		
-		this.favorites = this.context.globalState.get('favorites') || [];
+		this.favorites = this.context.globalState.get(FAVORITES) || [];
 		
 	}
 
 	public refresh () :void {
 		
-		this.favorites = this.context.globalState.get('favorites') || [];
+		this.favorites = this.context.globalState.get(FAVORITES) || [];
 		
 		this._onDidChangeTreeData.fire();
 		
@@ -62,6 +62,41 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 
 	}
 	
+	public static addFavorite (context:vscode.ExtensionContext, fileA:string, fileB:string) {
+		
+		vscode.window.showInputBox({ value: `${fileA} ↔ ${fileB}` }).then((label) => {
+					
+			if (!label) return;
+			
+			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
+			const favorite:Favorite = { label, fileA, fileB };
+			let index = -1;
+			
+			for (let i = 0; i < favorites.length; i++) {
+				if (favorites[i].label === label) {
+					index = i;
+					break;
+				}
+			}
+			
+			if (index === -1) {
+				favorites.push(favorite);
+				saveFavorite(context, favorites);
+			} else {
+				vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((val) => {
+						
+					if (val) {
+						favorites[index] = favorite;
+						saveFavorite(context, favorites);
+					}
+					
+				});
+			}
+			
+		});
+		
+	}
+	
 	public static renameFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
 		vscode.window.showInputBox({ value: favorite.label }).then((value) => {
@@ -73,7 +108,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 				return;
 			}
 			
-			const favorites:Favorite[] = context.globalState.get('favorites') || [];
+			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
 			
 			// tslint:disable-next-line: prefer-for-of
 			for (let i = 0; i < favorites.length; i++) {
@@ -81,7 +116,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 					if (!favorites.some(({ label }) => label === value)) {
 						favorites[i].label = value;
 						favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-						context.globalState.update('favorites', favorites);
+						context.globalState.update(FAVORITES, favorites);
 						DiffFavorites.createProvider(context).refresh();
 					} else vscode.window.showErrorMessage(`Favorite "${value}" exists!`);
 					break;
@@ -98,12 +133,12 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 			
 			if (value) {
 				
-				const favorites:Favorite[] = context.globalState.get('favorites') || [];
+				const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
 				
 				for (let i = 0; i < favorites.length; i++) {
 					if (favorites[i].label === favorite.label) {
 						favorites.splice(i, 1);
-						context.globalState.update('favorites', favorites);
+						context.globalState.update(FAVORITES, favorites);
 						DiffFavorites.createProvider(context).refresh();
 						return;
 					}
@@ -121,7 +156,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 		vscode.window.showInformationMessage(`Delete all favorites?'`, { modal: true }, 'Delete').then((value) => {
 			
 			if (value) {
-				context.globalState.update('favorites', []);
+				context.globalState.update(FAVORITES, []);
 				DiffFavorites.createProvider(context).refresh();
 			}
 			
@@ -163,3 +198,10 @@ class FavoriteTreeItem extends vscode.TreeItem {
 
 //	Functions __________________________________________________________________
 
+function saveFavorite (context:vscode.ExtensionContext, favorites:Favorite[]) {
+	
+	favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
+	context.globalState.update(FAVORITES, favorites);
+	DiffFavorites.currentProvider.refresh();
+	
+}
