@@ -143,7 +143,7 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.fileA, data.fileB));
+		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.pathA, data.pathB));
 		
 		this.setContextForFocus(true);
 		
