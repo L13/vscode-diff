@@ -172,7 +172,7 @@ gulp.task('script:services', () => {
 		
 		return bundle.write({
 			file: './out/extension.js',
-			format: 'umd',
+			format: 'cjs',
 			name: 'l13diffservices',
 			globals: {
 				fs: 'fs',
