@@ -1,0 +1,30 @@
+{
+	"folder-a": {
+		".DS_Store": [""],
+		".hg": null,
+		".git": null,
+		".svn": null,
+		"CVS": null,
+		"node_modules": {
+			"test": {
+				"index.js": ["console.log('Hello world!');"]
+			}
+		},
+		"file-a": ["a"]
+	},
+	"folder-b": null,
+	"ignore.code-workspace": ["{",
+		"\t\"folders\": [",
+		"\t\t{",
+		"\t\t\t\"path\": \"./folder-a\"",
+		"\t\t},",
+		"\t\t{",
+		"\t\t\t\"path\": \"./folder-b\"",
+		"\t\t}",
+		"\t],",
+		"\t\"settings\": {",
+		"\t\t\"l13Diff.ignore\":[",
+		"\t\t]",
+		"\t}",
+		"}"]
+}

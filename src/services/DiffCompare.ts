@@ -1,13 +1,13 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, sep } from 'path';
+import { basename, dirname, extname, join, sep } from 'path';
 import * as vscode from 'vscode';
 
-import { createFindGlob, lstatSync, walktree } from './@l13/fse';
+import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/fse';
 
 import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
-import { sortCaseInsensitive } from './common';
+import { removeCommentsFromJSON, sortCaseInsensitive } from './common';
 import { DiffHistory } from './DiffHistory';
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
@@ -75,12 +75,15 @@ export class DiffCompare {
 		this.output.msg('LOG');
 		this.output.msg();
 		
-		const pathA = parsePredefinedVariables(data.pathA);
-		const pathB = parsePredefinedVariables(data.pathB);
+		let pathA = parsePredefinedVariables(data.pathA);
+		let pathB = parsePredefinedVariables(data.pathB);
 		
 		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
 			return this.postEmptyResult(pathA, pathB);
 		}
+		
+		pathA = vscode.Uri.file(pathA).fsPath;
+		pathB = vscode.Uri.file(pathB).fsPath;
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
@@ -175,13 +178,13 @@ export class DiffCompare {
 		if (!isDirectory(dirnameA)) return callback(new Error(`Path '${dirnameA}' is not a folder!`));
 		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a folder!`));
 		
-		const ignore = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore');
+		const ignore = getSettingsIgnore(dirnameA, dirnameB);
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
 		this.output.log(`Scanning folder '${dirnameA}'`);
 		
-		walktree(dirnameA, { ignore }, (errorA, resultA) => {
+		walkTree(dirnameA, { ignore }, (errorA, resultA) => {
 			
 			if (errorA) return callback(errorA);
 			
@@ -189,7 +192,7 @@ export class DiffCompare {
 			
 			this.output.log(`Scanning folder '${dirnameB}'`);
 			
-			walktree(dirnameB, { ignore }, (errorB, resultB) => {
+			walkTree(dirnameB, { ignore }, (errorB, resultB) => {
 			
 				if (errorB) return callback(errorB);
 				
@@ -417,5 +420,44 @@ function parsePredefinedVariables (pathname:string) {
 		return match;
 		
 	});
+	
+}
+
+function loadSettingsIgnore (pathname:string) :string[] {
+	
+	const codePath = walkUp(pathname, '.vscode');
+	
+	if (!codePath) return null;
+	
+	const codeSettingsPath = join(codePath, 'settings.json');
+	const stat = lstatSync(codeSettingsPath);
+	let json:any = {};
+	
+	if (stat && stat.isFile()) {
+		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
+		try {
+			json = JSON.parse(removeCommentsFromJSON(content));
+		} catch {
+			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
+		}
+	}
+	
+	return json['l13Diff.ignore'] || null;
+	
+}
+
+function useWorkspaceSettings (pathname:string) :boolean {
+	
+	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.indexOf(folder.uri.fsPath) === 0);
+	
+}
+
+function getSettingsIgnore (pathA:string, pathB:string) :string[] {
+	
+	const ignores = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore', []);
+	const ignoresA:string[] = useWorkspaceSettings(pathA) ? ignores : loadSettingsIgnore(pathA) || ignores;
+	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
+	
+	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
 	
 }

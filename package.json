@@ -69,12 +69,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
 				"when": "isMac"
 			},
 			{
@@ -326,6 +326,7 @@
 					"default": [
 						".DS_Store",
 						".git",
+						".hg",
 						".svn",
 						"CVS",
 						"node_modules"

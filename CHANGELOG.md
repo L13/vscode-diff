@@ -6,6 +6,13 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ### Added
 - Added history view for previous comparisons.
 - Added welcome view for favorites.
+- Added support for `l13Diff.ignore` in local `.vscode/settings.json` files.
+
+### Changed
+- Changed status bar text.
+
+### Fixed
+- Fixed unused listener for open dialog.
 
 ## [0.22.0] - 2020-04-19
 

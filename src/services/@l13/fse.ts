@@ -32,7 +32,7 @@ export function copyFile (sourcePath:string, destPath:string, options?:any, call
 	
 }
 
-export function walktree (cwd:string, options:Callback|Options, callback?:Callback) {
+export function walkTree (cwd:string, options:Callback|Options, callback?:Callback) {
 	
 	callback = typeof options === 'function' ? options : callback;
 	
@@ -54,6 +54,19 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	};
 	
 	_walktree(job, cwd);
+	
+}
+
+export function walkUp (dirname:string, filename:string) :string {
+	
+	return dirname.split(path.sep).some(() => {
+		
+		if (fs.existsSync(path.join(dirname, filename))) return true;
+		
+		dirname = path.dirname(dirname);
+		return false;
+		
+	}) ? path.join(dirname, filename) : null;
 	
 }
 

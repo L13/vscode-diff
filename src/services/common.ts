@@ -4,7 +4,7 @@ import { WorkspaceFolder } from 'vscode';
 
 //	Variables __________________________________________________________________
 
-
+const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)/g;
 
 //	Initialize _________________________________________________________________
 
@@ -24,6 +24,16 @@ export function sortCaseInsensitive (a:string, b:string) {
 	b = b.toLowerCase();
 	
 	return a < b ? -1 : a > b ? 1 : 0;
+	
+}
+
+export function removeCommentsFromJSON (text:string) :string {
+	
+	return text.replace(findComments, (match, comment) => {
+		
+		return comment ? '' : match;
+		
+	});
 	
 }
 
