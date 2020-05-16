@@ -85,7 +85,11 @@
 		"commands": [
 			{
 				"command": "l13Diff.show",
-				"title": "L13 Diff"
+				"title": "L13 Diff",
+				"icon": {
+					"light": "images/open-diff-light.svg",
+					"dark": "images/open-diff-dark.svg"
+				}
 			},
 			{
 				"command": "l13Diff.open",
@@ -241,6 +245,11 @@
 				}
 			],
 			"view/title": [
+				{
+					"command": "l13Diff.show",
+					"when": "view == l13DiffFavorites",
+					"group": "navigation@1"
+				},
 				{
 					"command": "l13Diff.clearHistory",
 					"when": "view == l13DiffHistory",
