@@ -7,7 +7,7 @@ import { Comparison } from '../types';
 
 //	Variables __________________________________________________________________
 
-export const COMPARISONS = 'comparisons';
+const COMPARISONS_HISTORY = 'comparisons';
 
 //	Initialize _________________________________________________________________
 
@@ -33,13 +33,13 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 
 	private constructor (private context:vscode.ExtensionContext) {
 		
-		this.comparisons = this.context.globalState.get(COMPARISONS) || [];
+		this.comparisons = this.context.globalState.get(COMPARISONS_HISTORY) || [];
 		
 	}
 
 	public refresh () :void {
 		
-		this.comparisons = this.context.globalState.get(COMPARISONS) || [];
+		this.comparisons = this.context.globalState.get(COMPARISONS_HISTORY) || [];
 		
 		this._onDidChangeTreeData.fire();
 		
@@ -64,7 +64,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	public static saveComparison (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
 		
 		const maxHistoryEntriesLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxHistoryEntries', 10);
-		const comparisons:Comparison[] = context.globalState.get(COMPARISONS) || [];
+		const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 		let comparison:Comparison = null;
 		let i = 0;
 		
@@ -82,7 +82,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 			desc: '',
 		}));
 		
-		context.globalState.update(COMPARISONS, comparisons.slice(0, maxHistoryEntriesLength));
+		context.globalState.update(COMPARISONS_HISTORY, comparisons.slice(0, maxHistoryEntriesLength));
 		
 	}
 	
@@ -92,12 +92,12 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 			
 			if (value) {
 				
-				const comparisons:Comparison[] = context.globalState.get(COMPARISONS) || [];
+				const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 				
 				for (let i = 0; i < comparisons.length; i++) {
 					if (comparisons[i].label === comparison.label) {
 						comparisons.splice(i, 1);
-						context.globalState.update(COMPARISONS, comparisons);
+						context.globalState.update(COMPARISONS_HISTORY, comparisons);
 						DiffHistory.createProvider(context).refresh();
 						return;
 					}
@@ -112,7 +112,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 	public static clearComparisons (context:vscode.ExtensionContext) {
 		
-		context.globalState.update(COMPARISONS, []);
+		context.globalState.update(COMPARISONS_HISTORY, []);
 		DiffHistory.createProvider(context).refresh();
 		
 	}
@@ -163,6 +163,7 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 	const fileB:string[] = normalize(comparison.fileB).split(sep);
 	const desc:string[] = [];
 	
+//	Remove last entry if path has a slash/backslash at the end
 	if (!fileA[fileA.length - 1]) fileA.pop();
 	if (!fileB[fileB.length - 1]) fileB.pop();
 	
@@ -170,8 +171,9 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 		desc.push(fileA.shift());
 		fileB.shift();
 	}
-	
-	if (desc.length && desc.join('') === '') { // Fix for absolute and network paths
+
+//	Fix for absolute and network paths if folders are part of the root
+	if (desc.length && desc.join('') === '') {
 		desc.forEach((value, index) => {
 			
 			fileA.splice(index, 0, value);
