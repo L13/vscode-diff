@@ -1,5 +1,5 @@
 :host {
-	background: var(--vscode-sideBar-background);
+	background: var(--vscode-editorWidget-background);
 	box-shadow: 0px 5px 8px var(--vscode-widget-shadow, transparent);
 	box-sizing: border-box;
 	display: block;
@@ -33,7 +33,11 @@
 				user-select: none;
 				
 				&.-active,
-				&.-selected,
+				&.-selected {
+					background: var(--vscode-list-focusBackground);
+					color: var(--vscode-list-focusForeground);
+				}
+				
 				&:hover {
 					background: var(--vscode-list-hoverBackground);
 					color: var(--vscode-list-hoverForeground);

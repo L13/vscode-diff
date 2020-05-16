@@ -9,6 +9,7 @@
 				"\"/* This is not a multiline comment*/\": false,",
 				"// This is a single line comment",
 				"\"// This is not a single comment\": false,",
+				"\"testQuote\":\"\\\"\",",
 				"\"l13Diff.ignore\": [",
 					"\".vscode\"",
 				"]",
