@@ -1,11 +1,11 @@
 {
 	"folder-a": {
 		".vscode": {
-			"settings.json": ["{",
-				"\"l13Diff.ignore\": [",
-					"\".vscode\"",
-				"]",
-			"}"]
+			"settings.json": [{
+				"l13Diff.ignore": [
+					".vscode"
+				]
+			}]
 		},
 		".DS_Store": [""],
 		".hg": null,
@@ -17,15 +17,15 @@
 				"index.js": ["console.log('Hello world!');"]
 			}
 		},
-		"file-a": ["a"]
+		"file-a.txt": ["a"]
 	},
 	"folder-b": {
 		".vscode": {
-			"settings.json": ["{",
-				"\"l13Diff.ignore\": [",
+			"settings.json": [{
+				"l13Diff.ignore": [
 					
-				"]",
-			"}"]
+				]
+			}]
 		}
 	}
 }

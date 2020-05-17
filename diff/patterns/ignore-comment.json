@@ -25,7 +25,7 @@
 				"index.js": ["console.log('Hello world!');"]
 			}
 		},
-		"file-a": ["a"]
+		"file-a.txt": ["a"]
 	},
 	"folder-b": null
 }

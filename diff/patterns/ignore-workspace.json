@@ -1,5 +1,12 @@
 {
 	"folder-a": {
+		".vscode": {
+			"settings.json": [{
+				"l13Diff.ignore": [
+					"file-a.txt"
+				]
+			}]
+		},
 		".DS_Store": [""],
 		".hg": null,
 		".git": null,
@@ -10,21 +17,22 @@
 				"index.js": ["console.log('Hello world!');"]
 			}
 		},
-		"file-a": ["a"]
+		"file-a.txt": ["a"]
 	},
 	"folder-b": null,
-	"ignore.code-workspace": ["{",
-		"\t\"folders\": [",
-		"\t\t{",
-		"\t\t\t\"path\": \"./folder-a\"",
-		"\t\t},",
-		"\t\t{",
-		"\t\t\t\"path\": \"./folder-b\"",
-		"\t\t}",
-		"\t],",
-		"\t\"settings\": {",
-		"\t\t\"l13Diff.ignore\":[",
-		"\t\t]",
-		"\t}",
-		"}"]
+	"ignore.code-workspace": [{
+		"folders": [
+			{
+				"path": "./folder-a"
+			},
+			{
+				"path": "./folder-b"
+			}
+		],
+		"settings": {
+			"l13Diff.ignore": [
+				
+			]
+		}
+	}]
 }

@@ -1,11 +1,11 @@
 {
 	"folder-a": {
 		".vscode": {
-			"settings.json": ["{",
-				"\"l13Diff.ignore\": [",
-					"\"test\"",
-				"]",
-			"}"]
+			"settings.json": [{
+				"l13Diff.ignore": [
+					"test"
+				]
+			}]
 		},
 		"folder-c": {
 			".DS_Store": [""],
@@ -18,7 +18,7 @@
 					"index.js": ["console.log('Hello world!');"]
 				}
 			},
-			"file-a": ["a"],
+			"file-a.txt": ["a"],
 			"test": {
 				"index.js": ["console.log('Hello universe!');"]
 			}
