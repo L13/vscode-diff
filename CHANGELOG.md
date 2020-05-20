@@ -1,13 +1,14 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
-## [0.23.0] - 2020-05-17
+## [0.23.0] - 2020-05-24
 
 ### Added
 - Added history view for previous comparisons.
 - Added welcome view for favorites.
 - Added support for `l13Diff.ignore` in local `.vscode/settings.json` files.
 - Added auto selection focus for first menu item.
+- Added message if no files or folders are found.
 
 ### Changed
 - Changed status bar text.

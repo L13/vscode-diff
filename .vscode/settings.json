@@ -20,7 +20,6 @@
         "media",
         "node_modules",
         "out",
-        "package-lock.json",
-        "src"
+        "package-lock.json"
     ]
 }

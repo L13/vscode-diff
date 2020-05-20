@@ -151,6 +151,7 @@ export class DiffCompare {
 			if (error) vscode.window.showErrorMessage(error.message);
 			
 			if (!diffResult) this.status.update();
+			else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', { diffResult });
 			
@@ -207,7 +208,7 @@ export class DiffCompare {
 				const diffStats = new DiffStats(diffResult);
 				const total = diffStats.all.total;
 				
-				this.status.update(`Compared ${total} entr${total > 2 ? 'ies' : 'y'}`);
+				this.status.update(`Compared ${total} entr${total === 1 ? 'y' : 'ies'}`);
 				
 				this.output.msg();
 				this.output.msg();

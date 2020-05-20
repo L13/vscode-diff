@@ -198,6 +198,11 @@ gulp.task('watch', () => {
 	gulp.watch('src/views/**/*.html', gulp.parallel('templates'));
 	
 	gulp.watch([
+		'src/**/*.svg',
+		'images/**/*.svg',
+	], gulp.parallel('icons:fix'));
+	
+	gulp.watch([
 		'src/views/**/*.ts',
 		'src/types.ts',
 	], gulp.parallel('script:view'));
