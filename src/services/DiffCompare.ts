@@ -1,13 +1,15 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, sep } from 'path';
+import { basename, dirname, extname, join, sep } from 'path';
 import * as vscode from 'vscode';
 
-import { createFindGlob, lstatSync, walktree } from './@l13/fse';
+import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/fse';
 
-import { Dictionary, Diff, File, StatsMap } from '../types';
-import { sortCaseInsensitive } from './common';
+import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
+import { removeCommentsFromJSON, sortCaseInsensitive } from './common';
+import { DiffHistory } from './DiffHistory';
+import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
@@ -15,12 +17,6 @@ import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
 
 const push = Array.prototype.push;
-
-type TextFiles = {
-	extensions:string[],
-	filenames:string[],
-	glob:RegExp,
-};
 
 //	Variables __________________________________________________________________
 
@@ -48,6 +44,7 @@ export class DiffCompare {
 	
 	private readonly status:DiffStatus;
 	private readonly output:DiffOutput;
+	private readonly history:DiffHistory;
 	
 	private disposables:vscode.Disposable[] = [];
 	
@@ -56,6 +53,7 @@ export class DiffCompare {
 		this.context = context;
 		this.status = DiffStatus.createStatusBar(context);
 		this.output = DiffOutput.createOutput();
+		this.history = DiffHistory.createProvider(context);
 		
 		msg.on('create:diffs', (data) => this.createDiffs(data));
 		
@@ -70,19 +68,6 @@ export class DiffCompare {
 		
 	}
 	
-	private saveHistory (pathA:string, pathB:string) :void {
-		
-		const history:string[] = this.context.globalState.get('history') || [];
-		
-		addToRecentlyUsed(history, pathB);
-		addToRecentlyUsed(history, pathA);
-		
-		const maxLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
-		
-		this.context.globalState.update('history', history.slice(0, maxLength));
-		
-	}
-	
 	private createDiffs (data:any) :void {
 		
 		this.status.update();
@@ -90,12 +75,15 @@ export class DiffCompare {
 		this.output.msg('LOG');
 		this.output.msg();
 		
-		const pathA = parsePredefinedVariables(data.pathA);
-		const pathB = parsePredefinedVariables(data.pathB);
+		let pathA = parsePredefinedVariables(data.pathA);
+		let pathB = parsePredefinedVariables(data.pathB);
 		
 		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
 			return this.postEmptyResult(pathA, pathB);
 		}
+		
+		pathA = vscode.Uri.file(pathA).fsPath;
+		pathB = vscode.Uri.file(pathB).fsPath;
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
@@ -120,13 +108,27 @@ export class DiffCompare {
 		
 	}
 	
+	private saveRecentlyUsed (pathA:string, pathB:string) :void {
+		
+		DiffMenu.saveRecentlyUsed(this.context, pathA, pathB);
+		
+	}
+	
+	private saveHistory (pathA:string, pathB:string) {
+		
+		DiffHistory.saveComparison(this.context, pathA, pathB);
+		this.history.refresh();
+		
+	}
+	
 	private compareFiles (data:any, pathA:string, pathB:string) {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
 		const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
 		
-		this.saveHistory(data.pathA, data.pathB);
+		this.saveRecentlyUsed(data.pathA, data.pathB);
+		this.saveHistory(pathA, pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
@@ -140,7 +142,8 @@ export class DiffCompare {
 	
 	private compareFolders (data:any, pathA:string, pathB:string) {
 		
-		this.saveHistory(data.pathA, data.pathB);
+		this.saveRecentlyUsed(data.pathA, data.pathB);
+		this.saveHistory(pathA, pathB);
 		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
@@ -148,6 +151,7 @@ export class DiffCompare {
 			if (error) vscode.window.showErrorMessage(error.message);
 			
 			if (!diffResult) this.status.update();
+			else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', { diffResult });
 			
@@ -175,21 +179,21 @@ export class DiffCompare {
 		if (!isDirectory(dirnameA)) return callback(new Error(`Path '${dirnameA}' is not a folder!`));
 		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a folder!`));
 		
-		const ignore = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore');
+		const ignore = getSettingsIgnore(dirnameA, dirnameB);
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.output.log('Scanning left folder');
+		this.output.log(`Scanning folder '${dirnameA}'`);
 		
-		walktree(dirnameA, { ignore }, (errorA, resultA) => {
+		walkTree(dirnameA, { ignore }, (errorA, resultA) => {
 			
 			if (errorA) return callback(errorA);
 			
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.output.log('Scanning right folder');
+			this.output.log(`Scanning folder '${dirnameB}'`);
 			
-			walktree(dirnameB, { ignore }, (errorB, resultB) => {
+			walkTree(dirnameB, { ignore }, (errorB, resultB) => {
 			
 				if (errorB) return callback(errorB);
 				
@@ -204,7 +208,7 @@ export class DiffCompare {
 				const diffStats = new DiffStats(diffResult);
 				const total = diffStats.all.total;
 				
-				this.status.update(`Compared ${total} entr${total > 2 ? 'ies' : 'y'}`);
+				this.status.update(`Compared ${total} entr${total === 1 ? 'y' : 'ies'}`);
 				
 				this.output.msg();
 				this.output.msg();
@@ -221,16 +225,6 @@ export class DiffCompare {
 }
 
 //	Functions __________________________________________________________________
-
-function addToRecentlyUsed (history:string[], path:string) {
-	
-	const index = history.indexOf(path);
-	
-	if (index !== -1) history.splice(index, 1);
-	
-	history.unshift(path);
-	
-}
 
 function isDirectory (folder:string) :boolean {
 	
@@ -427,5 +421,44 @@ function parsePredefinedVariables (pathname:string) {
 		return match;
 		
 	});
+	
+}
+
+function loadSettingsIgnore (pathname:string) :string[] {
+	
+	const codePath = walkUp(pathname, '.vscode');
+	
+	if (!codePath) return null;
+	
+	const codeSettingsPath = join(codePath, 'settings.json');
+	const stat = lstatSync(codeSettingsPath);
+	let json:any = {};
+	
+	if (stat && stat.isFile()) {
+		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
+		try {
+			json = JSON.parse(removeCommentsFromJSON(content));
+		} catch {
+			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
+		}
+	}
+	
+	return json['l13Diff.ignore'] || null;
+	
+}
+
+function useWorkspaceSettings (pathname:string) :boolean {
+	
+	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.indexOf(folder.uri.fsPath) === 0);
+	
+}
+
+function getSettingsIgnore (pathA:string, pathB:string) :string[] {
+	
+	const ignores = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore', []);
+	const ignoresA:string[] = useWorkspaceSettings(pathA) ? ignores : loadSettingsIgnore(pathA) || ignores;
+	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
+	
+	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
 	
 }

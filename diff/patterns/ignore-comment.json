@@ -1,0 +1,31 @@
+{
+	"folder-a": {
+		".vscode": {
+			"settings.json": ["{",
+				"/*",
+				"This is a multi line comment",
+				"*/",
+				"/* This is a multi line comment in a single line */",
+				"\"/* This is not a multiline comment*/\": false,",
+				"// This is a single line comment",
+				"\"// This is not a single comment\": false,",
+				"\"testQuote\":\"\\\"\",",
+				"\"l13Diff.ignore\": [",
+					"\".vscode\"",
+				"]",
+			"}"]
+		},
+		".DS_Store": [""],
+		".hg": null,
+		".git": null,
+		".svn": null,
+		"CVS": null,
+		"node_modules": {
+			"test": {
+				"index.js": ["console.log('Hello world!');"]
+			}
+		},
+		"file-a.txt": ["a"]
+	},
+	"folder-b": null
+}

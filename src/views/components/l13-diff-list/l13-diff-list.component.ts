@@ -46,9 +46,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		super();
 		
+		const focusListView = () => this.focus();
+		
 		window.addEventListener('focus', () => {
 			
-			if (this.cacheSelectionHistory.length) this.focus();
+			if (this.cacheSelectionHistory.length) setTimeout(focusListView, 0);
 			
 		});
 		

@@ -102,7 +102,10 @@ function createFilesAndFolders (cwd, structure) {
 		if (typeof content === 'string') {
 			fs.symlinkSync(content, pathname);
 		} else if (Array.isArray(content)) {
-			content = typeof content[0] === 'number' ? Buffer.from(content) : content.join('\n');
+			const item = content[0];
+			if (typeof item === 'number') content = Buffer.from(content);
+			else if (typeof item === 'object') content = JSON.stringify(item, null, '\t');
+			else content = content.join('\n');
 			fs.writeFileSync(pathname, content);
 		}else createFilesAndFolders(pathname, content);
 	}

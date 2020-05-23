@@ -152,6 +152,11 @@ gulp.task('script:services', () => {
 	
 	return rollup.rollup({
 		input: 'src/extension.ts',
+		external: [
+			'fs',
+			'path',
+			'vscode',
+		],
 		plugins: [
 			typescript({
 				target: 'es6',
@@ -167,8 +172,13 @@ gulp.task('script:services', () => {
 		
 		return bundle.write({
 			file: './out/extension.js',
-			format: 'umd',
+			format: 'cjs',
 			name: 'l13diffservices',
+			globals: {
+				fs: 'fs',
+				path: 'path',
+				vscode: 'vscode',
+			},
 		});
 		
 	});
@@ -186,6 +196,11 @@ gulp.task('watch', () => {
 	gulp.watch('src/views/**/*.scss', gulp.parallel('style'));
 	
 	gulp.watch('src/views/**/*.html', gulp.parallel('templates'));
+	
+	gulp.watch([
+		'src/**/*.svg',
+		'images/**/*.svg',
+	], gulp.parallel('icons:fix'));
 	
 	gulp.watch([
 		'src/views/**/*.ts',

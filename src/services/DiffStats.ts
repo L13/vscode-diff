@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Diff, File } from '../types';
+import { Diff, File, Plural } from '../types';
 import { DiffResult } from './DiffResult';
 
 //	Variables __________________________________________________________________
@@ -17,11 +17,6 @@ const pluralFiles:Plural = { size: 'files', 1: 'file' };
 const pluralFolders:Plural = { size: 'folders', 1: 'folder' };
 const pluralSymlinks:Plural = { size: 'symlinks', 1: 'symlink' };
 const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
-
-type Plural = {
-	size:string,
-	[index:number]:string,
-};
 
 //	Initialize _________________________________________________________________
 

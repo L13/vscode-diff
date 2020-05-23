@@ -6,15 +6,16 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.22.0
+## What's new in L13 Diff 0.23.0
 
-- Delete selected files and folders with a keyboard shortcut. Press `Cmd + Backspace` on macOS or `Delete` on Windows/Linux in the list view.
-- Compare now symbolic links, too.
+- Added history view for previous comparisons.
+- Added welcome view for favorites.
+- Added support for `l13Diff.ignore` in local `.vscode/settings.json` files.
 
 ## Features
 
 * Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-* Supports a history for recently used files and folders.
+* Supports a history for recently used files, folders and previous comparisons.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
 * Drag'n Drop files and folders from the Finder/Explorer into the input fields.
@@ -30,6 +31,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
 
+### Welcome
+
+![L13 Diff Welcome](images/preview-welcome.png)
+
 ### Basics
 
 ![L13 Diff Basics](images/preview-start.png)
@@ -41,6 +46,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 ### Favorites
 
 ![L13 Diff Favorites](images/preview-favorites.png)
+
+### History
+
+![L13 Diff History](images/preview-history.png)
 
 ### Search, filter or select
 
@@ -62,14 +71,14 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 * `L13 Diff` - Open the diff panel.
 * `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
-* `L13 Diff: Clear History` - Clear the history of recently used files and folders.
+* `L13 Diff: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `L13 Diff: Delete All Favorites` - Delete all favorites.
 
 ## Available Settings
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
-* `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names.
+* `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
@@ -115,7 +124,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### List
 
-All platforms
+#### All platforms
 
 * `Click` - Select a file or folder in the list view.
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
@@ -125,7 +134,7 @@ All platforms
 * `Ctrl + Enter` - Open diff or file to side.
 * `Escape` - Unselect all items in the list view.
 
-macOS
+#### macOS
 
 * `Cmd + Click` - Add or remove a file or folder to or from the current selection.
 * `Cmd + A` - Select all items in the list view.
@@ -137,7 +146,7 @@ macOS
 * `PageUp/PageDown` - Scroll to the previous/next page of the list view.
 * `Cmd + Backspace` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
 
-Windows / Linux
+#### Windows / Linux
 
 * `Ctrl + Click` - Add or remove a file or folder to or from the current selection.
 * `Ctrl + A` - Select all items in the list view.

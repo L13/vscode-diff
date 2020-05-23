@@ -22,6 +22,7 @@ export class DiffStatus {
 		
 		this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 		this.statusBarItem.command = 'l13Diff.showOutput';
+		this.statusBarItem.tooltip = 'L13 Diff Output';
 		this.update();
 		this.statusBarItem.show();
 		
@@ -31,7 +32,7 @@ export class DiffStatus {
 	
 	public update (text:string = '') :void {
 		
-		this.statusBarItem.text = 'L13 Diff' + (text ? ` - ${text}` : '');
+		this.statusBarItem.text = '$(file-submodule) ' + (text || 'L13 Diff');
 		
 	}
 	
