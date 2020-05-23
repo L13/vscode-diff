@@ -49,7 +49,7 @@ export class L13DiffInputViewModel extends ViewModel {
 	
 	private openListener = (data:any) => {
 			
-		this.value = data.folder;
+		if (data.folder) this.value = data.folder;
 		msg.removeMessageListener('open:dialog', this.openListener);
 		
 	}

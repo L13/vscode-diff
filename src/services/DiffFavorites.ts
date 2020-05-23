@@ -3,11 +3,12 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+import { Favorite } from '../types';
 import { sortCaseInsensitive } from './common';
 
 //	Variables __________________________________________________________________
 
-export type Favorite = { fileA:string, fileB:string, label:string };
+const FAVORITES = 'favorites';
 
 //	Initialize _________________________________________________________________
 
@@ -15,11 +16,11 @@ export type Favorite = { fileA:string, fileB:string, label:string };
 
 //	Exports ____________________________________________________________________
 
-export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeItem|FavoriteTreeItem> {
+export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> {
 
 // tslint:disable-next-line: max-line-length
-	private _onDidChangeTreeData:vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = new vscode.EventEmitter<OpenL13DiffTreeItem|FavoriteTreeItem|undefined>();
-	public readonly onDidChangeTreeData:vscode.Event<OpenL13DiffTreeItem|FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData:vscode.EventEmitter<FavoriteTreeItem|undefined> = new vscode.EventEmitter<FavoriteTreeItem|undefined>();
+	public readonly onDidChangeTreeData:vscode.Event<FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
 	
 	public favorites:Favorite[] = [];
 	
@@ -33,32 +34,67 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 
 	private constructor (private context:vscode.ExtensionContext) {
 		
-		this.favorites = this.context.globalState.get('favorites') || [];
+		this.favorites = this.context.globalState.get(FAVORITES) || [];
 		
 	}
 
 	public refresh () :void {
 		
-		this.favorites = this.context.globalState.get('favorites') || [];
+		this.favorites = this.context.globalState.get(FAVORITES) || [];
 		
 		this._onDidChangeTreeData.fire();
 		
 	}
 
-	public getTreeItem (element:OpenL13DiffTreeItem|FavoriteTreeItem) :vscode.TreeItem {
+	public getTreeItem (element:FavoriteTreeItem) :vscode.TreeItem {
 		
 		return element;
 		
 	}
 
-	public getChildren (element?:OpenL13DiffTreeItem|FavoriteTreeItem) :Thenable<OpenL13DiffTreeItem[]|FavoriteTreeItem[]> {
+	public getChildren (element?:FavoriteTreeItem) :Thenable<FavoriteTreeItem[]> {
 		
-		const list:Array<OpenL13DiffTreeItem|FavoriteTreeItem> = [new OpenL13DiffTreeItem()];
+		const list:FavoriteTreeItem[] = [];
 		
 		if (!this.favorites.length) return Promise.resolve(list);
 		
 		return Promise.resolve(list.concat(this.favorites.map((favorite) => new FavoriteTreeItem(favorite))));
 
+	}
+	
+	public static addFavorite (context:vscode.ExtensionContext, fileA:string, fileB:string) {
+		
+		vscode.window.showInputBox({ value: `${fileA} ↔ ${fileB}` }).then((label) => {
+					
+			if (!label) return;
+			
+			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
+			const favorite:Favorite = { label, fileA, fileB };
+			let index = -1;
+			
+			for (let i = 0; i < favorites.length; i++) {
+				if (favorites[i].label === label) {
+					index = i;
+					break;
+				}
+			}
+			
+			if (index === -1) {
+				favorites.push(favorite);
+				saveFavorite(context, favorites);
+			} else {
+				vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok').then((val) => {
+						
+					if (val) {
+						favorites[index] = favorite;
+						saveFavorite(context, favorites);
+					}
+					
+				});
+			}
+			
+		});
+		
 	}
 	
 	public static renameFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
@@ -72,7 +108,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 				return;
 			}
 			
-			const favorites:Favorite[] = context.globalState.get('favorites') || [];
+			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
 			
 			// tslint:disable-next-line: prefer-for-of
 			for (let i = 0; i < favorites.length; i++) {
@@ -80,9 +116,8 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 					if (!favorites.some(({ label }) => label === value)) {
 						favorites[i].label = value;
 						favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-						context.globalState.update('favorites', favorites);
+						context.globalState.update(FAVORITES, favorites);
 						DiffFavorites.createProvider(context).refresh();
-						vscode.window.showInformationMessage(`Saved "${value}" in favorites!`);
 					} else vscode.window.showErrorMessage(`Favorite "${value}" exists!`);
 					break;
 				}
@@ -98,12 +133,12 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 			
 			if (value) {
 				
-				const favorites:Favorite[] = context.globalState.get('favorites') || [];
+				const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
 				
 				for (let i = 0; i < favorites.length; i++) {
 					if (favorites[i].label === favorite.label) {
 						favorites.splice(i, 1);
-						context.globalState.update('favorites', favorites);
+						context.globalState.update(FAVORITES, favorites);
 						DiffFavorites.createProvider(context).refresh();
 						return;
 					}
@@ -121,7 +156,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<OpenL13DiffTreeIte
 		vscode.window.showInformationMessage(`Delete all favorites?'`, { modal: true }, 'Delete').then((value) => {
 			
 			if (value) {
-				context.globalState.update('favorites', []);
+				context.globalState.update(FAVORITES, []);
 				DiffFavorites.createProvider(context).refresh();
 			}
 			
@@ -161,34 +196,12 @@ class FavoriteTreeItem extends vscode.TreeItem {
 	
 }
 
-// tslint:disable-next-line: max-classes-per-file
-class OpenL13DiffTreeItem extends vscode.TreeItem {
-	
-	public command = {
-		command: 'l13Diff.show',
-		title: 'Open L13 Diff',
-	};
-	
-	public iconPath = {
-		light: path.join(__filename, '..', '..', 'images', 'favorite-l13-light.svg'),
-		dark: path.join(__filename, '..', '..', 'images', 'favorite-l13-dark.svg'),
-	};
-	
-	public contextValue = 'openL13Diff';
-	
-	public constructor () {
-		
-		super('Diff');
-		
-	}
-	
-	public get tooltip () :string {
-		
-		return 'Open L13 Diff';
-		
-	}
-	
-}
-
 //	Functions __________________________________________________________________
 
+function saveFavorite (context:vscode.ExtensionContext, favorites:Favorite[]) {
+	
+	favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
+	context.globalState.update(FAVORITES, favorites);
+	DiffFavorites.currentProvider.refresh();
+	
+}

@@ -32,7 +32,7 @@ export function copyFile (sourcePath:string, destPath:string, options?:any, call
 	
 }
 
-export function walktree (cwd:string, options:Callback|Options, callback?:Callback) {
+export function walkTree (cwd:string, options:Callback|Options, callback?:Callback) {
 	
 	callback = typeof options === 'function' ? options : callback;
 	
@@ -57,25 +57,38 @@ export function walktree (cwd:string, options:Callback|Options, callback?:Callba
 	
 }
 
-export function unlinkSync (pathname:string) :number {
+export function walkUp (dirname:string, filename:string) :string {
 	
-	const stat = lstatSync(pathname);
-	let total = 0;
-	
-	if (stat) {
-		if (stat.isDirectory()) {
-			fs.readdirSync(pathname).forEach((name) => total += unlinkSync(path.join(pathname, name)));
-			fs.rmdirSync(pathname);
-			total++;
-		} else if (stat.isFile() || stat.isSymbolicLink()) {
-			fs.unlinkSync(pathname);
-			total++;
-		}
-	}
-	
-	return total;
+	return dirname.split(path.sep).some(() => {
+		
+		if (fs.existsSync(path.join(dirname, filename))) return true;
+		
+		dirname = path.dirname(dirname);
+		return false;
+		
+	}) ? path.join(dirname, filename) : null;
 	
 }
+
+// export function unlinkSync (pathname:string) :number {
+	
+// 	const stat = lstatSync(pathname);
+// 	let total = 0;
+	
+// 	if (stat) {
+// 		if (stat.isDirectory()) {
+// 			fs.readdirSync(pathname).forEach((name) => total += unlinkSync(path.join(pathname, name)));
+// 			fs.rmdirSync(pathname);
+// 			total++;
+// 		} else if (stat.isFile() || stat.isSymbolicLink()) {
+// 			fs.unlinkSync(pathname);
+// 			total++;
+// 		}
+// 	}
+	
+// 	return total;
+	
+// }
 
 export function lstatSync (pathname:string) {
 	

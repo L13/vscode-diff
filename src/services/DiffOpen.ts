@@ -49,7 +49,7 @@ export class DiffOpen {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
-			}
+			} else vscode.window.showErrorMessage(`File can't be opened! '${file.path}' is not a file!`);
 			
 		});
 		

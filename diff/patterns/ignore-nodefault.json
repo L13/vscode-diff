@@ -1,0 +1,31 @@
+{
+	"folder-a": {
+		".vscode": {
+			"settings.json": [{
+				"l13Diff.ignore": [
+					".vscode"
+				]
+			}]
+		},
+		".DS_Store": [""],
+		".hg": null,
+		".git": null,
+		".svn": null,
+		"CVS": null,
+		"node_modules": {
+			"test": {
+				"index.js": ["console.log('Hello world!');"]
+			}
+		},
+		"file-a.txt": ["a"]
+	},
+	"folder-b": {
+		".vscode": {
+			"settings.json": [{
+				"l13Diff.ignore": [
+					
+				]
+			}]
+		}
+	}
+}

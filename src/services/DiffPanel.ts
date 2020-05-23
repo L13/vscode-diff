@@ -4,12 +4,12 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Uri } from '../types';
-import { sortCaseInsensitive, workspacePaths } from './common';
+import { workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDelete } from './DiffDelete';
 import { DiffDialog } from './DiffDialog';
-import { DiffFavorites, Favorite } from './DiffFavorites';
+import { DiffFavorites } from './DiffFavorites';
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOpen } from './DiffOpen';
@@ -123,7 +123,7 @@ export class DiffPanel {
 		this.disposables.push(this.list);
 		
 		this.panel.title = 'Diff';
-		this.panel.webview.html = this.getHTMLforDiff();
+		this.panel.webview.html = this.getHTMLforDiff(this.panel.webview);
 		
 		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 		
@@ -143,25 +143,7 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('save:favorite', (data) => {
-			
-			vscode.window.showInputBox({ value: `${data.pathA} ↔ ${data.pathB}` }).then((value) => {
-					
-				if (!value) return;
-				
-				const favorites:Favorite[] = this.context.globalState.get('favorites') || [];
-				
-				if (!favorites.some(({ label }) => label === value)) {
-					favorites.push({ label: value, fileA: data.pathA, fileB: data.pathB });
-					favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-					this.context.globalState.update('favorites', favorites);
-					DiffFavorites.currentProvider.refresh();
-					vscode.window.showInformationMessage(`Favorite '${value}' saved!`);
-				} else vscode.window.showErrorMessage(`Favorite '${value}' exists!`);
-				
-			});
-			
-		});
+		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.pathA, data.pathB));
 		
 		this.setContextForFocus(true);
 		
@@ -188,16 +170,13 @@ export class DiffPanel {
 		
 	}
 	
-	private getHTMLforDiff () {
+	private getHTMLforDiff (webview:vscode.Webview) {
 		
-		const scriptPathOnDisk = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'main.js'));
-		const stylePathOnDisk = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'style.css'));
-		
-		const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
-		const styleUri = stylePathOnDisk.with({ scheme: 'vscode-resource' });
+		const scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'main.js'));
+		const styleUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'style.css'));
 		
 		const nonceToken = nonce();
-		const csp = `default-src 'none'; img-src vscode-resource: data:; style-src 'unsafe-inline' vscode-resource:; script-src 'nonce-${nonceToken}';`;
+		const csp = `default-src 'none'; img-src ${webview.cspSource} data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonceToken}';`;
 		
 		return `<!DOCTYPE html>
 		<html lang="en">
@@ -206,8 +185,8 @@ export class DiffPanel {
 				<meta http-equiv="Content-Security-Policy" content="${csp}">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>L13 Diff</title>
-				<link rel="stylesheet" nonce="${nonceToken}" href="${styleUri}">
-				<script nonce="${nonceToken}" src="${scriptUri}"></script>
+				<link rel="stylesheet" nonce="${nonceToken}" href="${webview.asWebviewUri(styleUri)}">
+				<script nonce="${nonceToken}" src="${webview.asWebviewUri(scriptUri)}"></script>
 			</head>
 			<body class="platform-${platform}"></body>
 		</html>`;
