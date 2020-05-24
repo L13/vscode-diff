@@ -41,6 +41,10 @@ l13-diff-list-row {
 			// Fixes icon which disappears if list loses focus ?!?
 			background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
 		}
+					
+		l13-diff-context {
+			background: var(--vscode-list-activeSelectionBackground) !important;
+		}
 		
 		// &:hover {
 			
@@ -166,4 +170,11 @@ l13-diff-list-file {
 			padding: 0 0 0 5px;
 		}
 	}
+}
+
+l13-diff-context {
+	background: var(--vscode-list-hoverBackground);
+	position: absolute;
+	top: 0;
+	right: 0;
 }

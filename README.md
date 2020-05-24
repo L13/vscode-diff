@@ -6,11 +6,10 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.23.0
+## What's new in L13 Diff 0.24.0
 
-- Added history view for previous comparisons.
-- Added welcome view for favorites.
-- Added support for `l13Diff.ignore` in local `.vscode/settings.json` files.
+- Added context menu for copy, delete and reveal file to list items.
+- Added `l13Diff.ignoreTrailingWhitespace` to ignore trailing whitespace in text files.
 
 ## Features
 
@@ -80,7 +79,13 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
+* `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
+* `l13Diff.ignoreTrailingWhitespace` [1] - Ignores trailing whitespace in text files.
+	* `default` (default) uses the value of `diffEditor.ignoreTrimWhitespace`.
+	* `on` always ignores trailing whitespace in text files.
+	* `off` does not ignore trailing whitespace in text files.
+
+[1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
 ## Predefined Variables
 

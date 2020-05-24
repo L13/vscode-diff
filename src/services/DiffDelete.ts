@@ -9,6 +9,7 @@ import { DiffMessage } from './DiffMessage';
 
 const selectableTrashDialog:Dialog = {
 	text: 'Which files should be moved to the trash?',
+	textSingle: 'Which file should be moved to the trash?',
 	buttonAll: 'Move All to Trash',
 	buttonLeft: 'Move Left to Trash',
 	buttonRight: 'Move Right to Trash',
@@ -16,6 +17,7 @@ const selectableTrashDialog:Dialog = {
 
 const selectableDeleteDialog:Dialog = {
 	text: 'Which files should be permanently deleted?',
+	textSingle: 'Which file should be permanently deleted?',
 	buttonAll: 'Delete All',
 	buttonLeft: 'Delete Left',
 	buttonRight: 'Delete Right',
@@ -23,11 +25,13 @@ const selectableDeleteDialog:Dialog = {
 
 const simpleTrashDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
+	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
 };
 
 const simpleDeleteDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
+	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
 };
 
@@ -44,6 +48,8 @@ export class DiffDelete {
 	public constructor (private msg:DiffMessage) {
 		
 		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
+		this.msg.on('delete:left', (data) => this.showDeleteFileDialog(data, 'left'));
+		this.msg.on('delete:right', (data) => this.showDeleteFileDialog(data, 'right'));
 		
 	}
 	
@@ -53,6 +59,25 @@ export class DiffDelete {
 			const disposable = this.disposables.pop();
 			if (disposable) disposable.dispose();
 		}
+		
+	}
+	
+	private showDeleteFileDialog (data:any, side:'left'|'right') :void {
+		
+		const diffs:Diff[] = data.diffResult.diffs;
+		
+		if (!diffs.length) return;
+		
+		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
+		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		
+		const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
+
+		vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll).then((value) => {
+				
+			if (value) this.deleteFiles(data, side, useTrash);
+				
+		});
 		
 	}
 	
@@ -81,8 +106,10 @@ export class DiffDelete {
 			if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
 			else args.push(dialog.buttonRight, dialog.buttonLeft);
 		} else dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		
+		const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
 
-		vscode.window.showInformationMessage(dialog.text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
+		vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
 				
 			if (value) this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
 				

@@ -29,6 +29,7 @@ export type CopyFilesJob = {
 
 export type Dialog = {
 	text:string,
+	textSingle?:string,
 	buttonAll:string,
 	buttonLeft?:string,
 	buttonRight?:string,
@@ -56,6 +57,7 @@ export type Diff = {
 	id:string,
 	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
 	type:'file'|'folder'|'symlink'|'mixed',
+	ignoredWhitespace:boolean,
 	ignoredEOL:boolean,
 	basename:string,
 	dirname:string,

@@ -3,6 +3,7 @@
 import { Diff, File } from '../../../types';
 import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
+import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
@@ -32,6 +33,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	@L13Query('l13-diff-list-body')
 	public list:HTMLElement;
 	
+	public context:L13DiffContextComponent;
+	
 	public disabled:boolean = false;
 	
 	public tabIndex = 0;
@@ -45,6 +48,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public constructor () {
 		
 		super();
+		
+		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		
 		const focusListView = () => this.focus();
 		
@@ -156,6 +161,40 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
 			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
+			
+		});
+		
+		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
+		
+		this.context.addEventListener('copy', ({ target }) => {
+			
+			if (this.disabled) return;
+			
+			const fileNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file'));
+			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
+			
+			this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', [id]);
+			
+		});
+		
+		this.context.addEventListener('delete', ({ target }) => {
+			
+			if (this.disabled) return;
+			
+			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
+			
+			this.viewmodel.delete([id], fileNode.nextElementSibling ? 'left' : 'right');
+			
+		});
+		
+		this.context.addEventListener('reveal', ({ target }) => {
+			
+			if (this.disabled) return;
+			
+			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-file');
+			
+			msg.send('reveal:file', { pathname });
 			
 		});
 		
@@ -441,6 +480,43 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	private appendColumn (parent:HTMLElement, diff:Diff, file:File) :HTMLElement {
+	
+		const column = document.createElement('l13-diff-list-file');
+		
+		if (file) {
+			column.classList.add(`-${file.type}`);
+			column.setAttribute('data-file', file.path);
+			
+			if (diff.dirname) {
+				const dirname = document.createElement('SPAN');
+				dirname.textContent = diff.dirname;
+				dirname.classList.add(`-dirname`);
+				column.appendChild(dirname);
+			}
+			
+			const basename = document.createElement('SPAN');
+			basename.textContent = diff.basename;
+			basename.classList.add(`-basename`);
+			column.appendChild(basename);
+			
+			if (diff.ignoredEOL) {
+				const ignoredEOL = document.createElement('SPAN');
+				ignoredEOL.textContent = '(ignored EOL)';
+				ignoredEOL.classList.add('-ignored-eol');
+				column.appendChild(ignoredEOL);
+			}
+			
+			column.addEventListener('mouseenter', ({ target }) => (<HTMLElement>target).appendChild(this.context));
+			column.addEventListener('mouseleave', () => this.context.remove());
+		}
+		
+		parent.appendChild(column);
+		
+		return column;
+		
+	}
+	
 	private createListItemViews () :void {
 		
 		this.cacheListItemViews = {};
@@ -453,8 +529,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
-			appendColumn(row, diff, <File>diff.fileA);
-			appendColumn(row, diff, <File>diff.fileB);
+			this.appendColumn(row, diff, <File>diff.fileA).classList.add('-left');
+			this.appendColumn(row, diff, <File>diff.fileB).classList.add('-right');
 			
 			this.cacheListItemViews[diff.id] = row;
 			
@@ -490,33 +566,3 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
-function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
-	
-	const column = document.createElement('l13-diff-list-file');
-	
-	if (file) {
-		column.classList.add(`-${file.type}`);
-		
-		if (diff.dirname) {
-			const dirname = document.createElement('SPAN');
-			dirname.textContent = diff.dirname;
-			dirname.classList.add(`-dirname`);
-			column.appendChild(dirname);
-		}
-		
-		const basename = document.createElement('SPAN');
-		basename.textContent = diff.basename;
-		basename.classList.add(`-basename`);
-		column.appendChild(basename);
-		
-		if (diff.ignoredEOL) {
-			const ignoredEOL = document.createElement('SPAN');
-			ignoredEOL.textContent = '(ignored EOL)';
-			ignoredEOL.classList.add('-ignored-eol');
-			column.appendChild(ignoredEOL);
-		}
-	}
-	
-	parent.appendChild(column);
-	
-}

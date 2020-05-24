@@ -14,6 +14,10 @@ import './components/l13-diff-compare/l13-diff-compare.component';
 import './components/l13-diff-compare/l13-diff-compare.service';
 import './components/l13-diff-compare/l13-diff-compare.viewmodel';
 
+import './components/l13-diff-context/l13-diff-context.component';
+import './components/l13-diff-context/l13-diff-context.service';
+import './components/l13-diff-context/l13-diff-context.viewmodel';
+
 import './components/l13-diff-input/l13-diff-input.component';
 import './components/l13-diff-input/l13-diff-input.service';
 import './components/l13-diff-input/l13-diff-input.viewmodel';
@@ -30,10 +34,6 @@ import './components/l13-diff-map/l13-diff-map.component';
 import './components/l13-diff-map/l13-diff-map.service';
 import './components/l13-diff-map/l13-diff-map.viewmodel';
 
-import './components/l13-diff-search/l13-diff-search.component';
-import './components/l13-diff-search/l13-diff-search.service';
-import './components/l13-diff-search/l13-diff-search.viewmodel';
-
 import './components/l13-diff-menu/l13-diff-menu.component';
 import './components/l13-diff-menu/l13-diff-menu.service';
 import './components/l13-diff-menu/l13-diff-menu.viewmodel';
@@ -41,6 +41,10 @@ import './components/l13-diff-menu/l13-diff-menu.viewmodel';
 import './components/l13-diff-panel/l13-diff-panel.component';
 import './components/l13-diff-panel/l13-diff-panel.service';
 import './components/l13-diff-panel/l13-diff-panel.viewmodel';
+
+import './components/l13-diff-search/l13-diff-search.component';
+import './components/l13-diff-search/l13-diff-search.service';
+import './components/l13-diff-search/l13-diff-search.viewmodel';
 
 import './components/l13-diff-swap/l13-diff-swap.component';
 import './components/l13-diff-swap/l13-diff-swap.service';

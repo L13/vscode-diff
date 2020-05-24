@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Uri } from '../types';
-import { workspacePaths } from './common';
+import { isMacOs, isWindows, workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';
 import { DiffDelete } from './DiffDelete';
@@ -25,8 +25,8 @@ let platform = 'other';
 
 //	Initialize _________________________________________________________________
 
-if (process.platform === 'darwin') platform = 'mac';
-if (process.platform === 'win32') platform = 'win';
+if (isMacOs) platform = 'mac';
+else if (isWindows) platform = 'win';
 
 //	Exports ____________________________________________________________________
 

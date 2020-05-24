@@ -153,6 +153,7 @@ gulp.task('script:services', () => {
 	return rollup.rollup({
 		input: 'src/extension.ts',
 		external: [
+			'child_process',
 			'fs',
 			'path',
 			'vscode',
@@ -175,6 +176,7 @@ gulp.task('script:services', () => {
 			format: 'cjs',
 			name: 'l13diffservices',
 			globals: {
+				child_process: 'child_process',
 				fs: 'fs',
 				path: 'path',
 				vscode: 'vscode',

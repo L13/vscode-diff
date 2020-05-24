@@ -249,6 +249,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 			extname: extname(relative),
 			status: 'deleted',
 			type: file.type,
+			ignoredWhitespace: false,
 			ignoredEOL: false,
 			fileA: file,
 			fileB: null,
@@ -261,6 +262,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 	const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
+	const useDefault = vscode.workspace.getConfiguration('l13Diff').get('ignoreTrailingWhitespace', 'default');
+	const ignoreTrailingWhitespace = useDefault === 'default' ? vscode.workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', false) : useDefault === 'on';
 	
 	Object.keys(result).forEach((pathname) => {
 				
@@ -281,17 +284,26 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				diff.status = 'conflicting';
 				diff.type = 'mixed';
 			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if (ignoreEndOfLine &&
+				if ((ignoreEndOfLine || ignoreTrailingWhitespace) &&
 					(textfiles.extensions.includes(diff.extname) ||
 					textfiles.filenames.includes(diff.basename) ||
 					textfiles.glob && textfiles.glob.test(diff.basename))) {
-					const bufferA = fs.readFileSync(fileA.path);
-					const bufferB = fs.readFileSync(fileB.path);
+					let bufferA = fs.readFileSync(fileA.path);
+					let bufferB = fs.readFileSync(fileB.path);
 				//	If files are equal normalizing is not necessary
 					if (statA.size === statB.size && bufferA.equals(bufferB)) return;
-					const maxLength = Math.max(bufferA.length, bufferB.length);
-					diff.ignoredEOL = true;
-					if (!normalizeBuffer(bufferA, maxLength).equals(normalizeBuffer(bufferB, maxLength))) diff.status = 'modified';
+					if (ignoreTrailingWhitespace) {
+						bufferA = trimTrailingWhitespace(bufferA);
+						bufferB = trimTrailingWhitespace(bufferB);
+						diff.ignoredWhitespace = true;
+					}
+					if (ignoreEndOfLine) {
+						const maxLength = Math.max(bufferA.length, bufferB.length);
+						bufferA = normalizeBuffer(bufferA, maxLength);
+						bufferB = normalizeBuffer(bufferB, maxLength);
+						diff.ignoredEOL = true;
+					}
+					if (!bufferA.equals(bufferB)) diff.status = 'modified';
 				} else {
 					if (statA.size !== statB.size) {
 						diff.status = 'modified';
@@ -316,6 +328,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				extname: extname(relative),
 				status: 'untracked',
 				type: file.type,
+				ignoredWhitespace: false,
 				ignoredEOL: false,
 				fileA: null,
 				fileB: file,
@@ -460,5 +473,200 @@ function getSettingsIgnore (pathA:string, pathB:string) :string[] {
 	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
 	
 	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
+	
+}
+
+function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
+	
+	const length = buffer.length;
+	const newBuffer = [];
+	let cache = [];
+	let i = 0;
+	
+	if (buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191) {
+		newBuffer.push(239, 187, 191);
+		i = 3;
+	}
+	
+	stream: while (i < length) {
+		const value = buffer[i++];
+		if (value === 13 || value === 10 || i === length) {
+			if (!cache.length) {
+				newBuffer[newBuffer.length] = value;
+				continue stream;
+			}
+			if (i === length) cache[cache.length] = value;
+			let j = 0;
+			start: while (j < cache.length) {
+				const cacheValue = cache[j];
+				if (cacheValue === 9 || cacheValue === 11 || cacheValue === 12 || cacheValue === 32) {
+					j++;
+					continue start;
+				}
+				break start;
+			}
+			let k = cache.length;
+			end: while (k > j) {
+				const cacheValue = cache[k - 1];
+				if (cacheValue === 9 || cacheValue === 11 || cacheValue === 12 || cacheValue === 32) {
+					k--;
+					continue end;
+				}
+				break end;
+			}
+			if (j !== k) push.apply(newBuffer, cache.slice(j, k));
+			newBuffer[newBuffer.length] = value;
+			cache = [];
+		} else cache[cache.length] = value;
+	}
+	
+	return Buffer.from(newBuffer);
+	
+}
+
+function trimTrailingWhitespaceForUTF16BE (buffer:Buffer) :Buffer {
+	
+	const length = buffer.length;
+	const newBuffer = [buffer[0], buffer[1]];
+	let cache = [];
+	let i = 2;
+	
+	stream: while (i < length) {
+		const valueA = buffer[i++];
+		const valueB = buffer[i++];
+		if (valueA === 0 && (valueB === 13 || valueB === 10)) {
+			if (!cache.length) {
+				newBuffer.push(valueA, valueB);
+				continue stream;
+			}
+			let j = 0;
+			start: while (j < cache.length) {
+				const cacheValueA = cache[j];
+				const cacheValueB = cache[j + 1];
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+					j += 2;
+					continue start;
+				}
+				break start;
+			}
+			let k = cache.length;
+			end: while (k > j) {
+				const cacheValueA = cache[k - 2];
+				const cacheValueB = cache[k - 1];
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+					k -= 2;
+					continue end;
+				}
+				break end;
+			}
+			if (j !== k) push.apply(newBuffer, cache.slice(j, k));
+			newBuffer.push(valueA, valueB);
+			cache = [];
+		} else cache.push(valueA, valueB);
+	}
+	
+	if (cache.length) {
+		let j = 0;
+		start: while (j < cache.length) {
+			const cacheValueA = cache[j];
+			const cacheValueB = cache[j + 1];
+			if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+				j += 2;
+				continue start;
+			}
+			break start;
+		}
+		let k = cache.length;
+		end: while (k > j) {
+			const cacheValueA = cache[k - 2];
+			const cacheValueB = cache[k - 1];
+			if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+				k -= 2;
+				continue end;
+			}
+			break end;
+		}
+		if (j !== k) push.apply(newBuffer, cache.slice(j, k));
+	}
+	
+	return Buffer.from(newBuffer);
+	
+}
+
+function trimTrailingWhitespaceForUTF16LE (buffer:Buffer) :Buffer {
+	
+	const length = buffer.length;
+	const newBuffer = [buffer[0], buffer[1]];
+	let cache = [];
+	let i = 2;
+	
+	stream: while (i < length) {
+		const valueA = buffer[i++];
+		const valueB = buffer[i++];
+		if (valueB === 0 && (valueA === 13 || valueA === 10)) {
+			if (!cache.length) {
+				newBuffer.push(valueA, valueB);
+				continue stream;
+			}
+			let j = 0;
+			start: while (j < cache.length) {
+				const cacheValueA = cache[j];
+				const cacheValueB = cache[j + 1];
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+					j += 2;
+					continue start;
+				}
+				break start;
+			}
+			let k = cache.length - 1;
+			end: while (k > j) {
+				const cacheValueA = cache[k - 1];
+				const cacheValueB = cache[k];
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+					k -= 2;
+					continue end;
+				}
+				break end;
+			}
+			if (j !== k) push.apply(newBuffer, cache.slice(j, k));
+			newBuffer.push(valueA, valueB);
+			cache = [];
+		} else cache.push(valueA, valueB);
+	}
+	
+	if (cache.length) {
+		let j = 0;
+		start: while (j < cache.length) {
+			const cacheValueA = cache[j];
+			const cacheValueB = cache[j + 1];
+			if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				j += 2;
+				continue start;
+			}
+			break start;
+		}
+		let k = cache.length - 1;
+		end: while (k > j) {
+			const cacheValueA = cache[k - 1];
+			const cacheValueB = cache[k];
+			if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				k -= 2;
+				continue end;
+			}
+			break end;
+		}
+		if (j !== k) push.apply(newBuffer, cache.slice(j, k));
+	}
+	
+	return Buffer.from(newBuffer);
+	
+}
+
+function trimTrailingWhitespace (buffer:Buffer) :Buffer {
+	
+	if (buffer[0] === 254 && buffer[1] === 255) return trimTrailingWhitespaceForUTF16BE(buffer);
+	if (buffer[0] === 255 && buffer[1] === 254) return trimTrailingWhitespaceForUTF16LE(buffer);
+	
+	return trimTrailingWhitespaceForAscii(buffer);
 	
 }

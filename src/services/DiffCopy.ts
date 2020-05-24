@@ -87,7 +87,7 @@ export class DiffCopy {
 		
 		if (!length) return;
 		
-		const text = `Copy ${length} file${length === 1 ? '' : 's'} to "${data.diffResult['path' + to]}"?`;
+		const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
 		
 		vscode.window.showInformationMessage(text, { modal: true }, 'Copy').then((value) => {
 			

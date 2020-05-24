@@ -22,7 +22,7 @@ const FILTERS = Symbol.for('filters');
 
 export class L13DiffListViewModel extends ViewModel {
 	
-	private [FILTERS]:Array<L13DiffListPipe<Diff>> = [];
+	private [FILTERS]:L13DiffListPipe<Diff>[] = [];
 	
 	private map:{ [name:string]:Diff } = {};
 	
@@ -213,11 +213,11 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (ids:string[]) :void {
+	public delete (ids:string[], side:'left'|'right'|'files' = 'files') :void {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
-		if (diffResult.diffs.length) msg.send('delete:files', { diffResult });
+		if (diffResult.diffs.length) msg.send(`delete:${side}`, { diffResult });
 		
 	}
 	

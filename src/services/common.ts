@@ -1,20 +1,26 @@
 //	Imports ____________________________________________________________________
 
-import { WorkspaceFolder } from 'vscode';
+import * as vscode from 'vscode';
 
 //	Variables __________________________________________________________________
 
 const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)/g;
 
+export let isMacOs = false;
+export let isWindows = false;
+export let isLinux = false;
+
 //	Initialize _________________________________________________________________
 
-
+if (process.platform === 'darwin') isMacOs = true;
+else if (process.platform === 'win32') isWindows = true;
+else isLinux = true;
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:readonly WorkspaceFolder[]|undefined) {
+export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
 	
-	return (workspaceFolders || []).map((item:WorkspaceFolder) => item.uri.fsPath);
+	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
 	
 }
 

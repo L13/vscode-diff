@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.24.0] - 2020-06-07
+
+### Added
+- Added context menu for copy, delete and reveal file to list items.
+- Added `l13Diff.ignoreTrailingWhitespace` to ignore trailing whitespace in text files.
+
+### Changed
+- Changed icons for copy files.
+
+### Removed
+- Removed auto selection focus for first menu item, because of usability bug `copy & paste -> enter`.
+
 ## [0.23.0] - 2020-05-23
 
 ### Added
