@@ -79,16 +79,6 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 			this.lists.appendChild(this.listWorkspaces);
 		}
 		
-		this.setFirstItemFocus();
-		
-	}
-	
-	public setFirstItemFocus () {
-		
-		const fistListElement = this.lists.querySelector('LI');
-		
-		if (fistListElement) fistListElement.classList.add('-active');
-		
 	}
 	
 	public updateList (list:HTMLElement, entries:string[]) {

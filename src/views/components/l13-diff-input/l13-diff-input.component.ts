@@ -53,8 +53,6 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		//	Update of menu is async and should be done right after. Fixes it.
 			await menu.viewmodel.update();
 			
-			menu.setFirstItemFocus();
-			
 		});
 		
 		this.input.addEventListener('click', async () => {
@@ -68,8 +66,6 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		//	Weird focus blur switch if click is outside of panel view.
 		//	Update of menu is async and should be done right after. Fixes it.
 			await menu.viewmodel.update();
-			
-			menu.setFirstItemFocus();
 			
 		});
 			
