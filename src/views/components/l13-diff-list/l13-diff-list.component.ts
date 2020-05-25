@@ -91,16 +91,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'ArrowDown':
 					this.selectPreviousOrNext(NEXT, event);
 					break;
+				case 'Home':
 				case 'PageUp':
 					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
 					break;
-				case 'PageDown':
-					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
-					break;
-				case 'Home':
-					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
-					break;
 				case 'End':
+				case 'PageDown':
 					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
 					break;
 			}
@@ -163,6 +159,25 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
 			
 		});
+		
+		this.list.addEventListener('mouseover', ({ target }) => {
+			
+			if (<HTMLElement>target === this.context) return;
+			
+			let element:HTMLElement = null;
+			
+			if ((<HTMLElement>target).nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>target);
+			else if ((<HTMLElement>target).parentNode.nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>(<HTMLElement>target).parentNode);
+			
+			if (element) {
+				if (element.childNodes.length) {
+					if (this.context.parentNode !== element) element.appendChild(this.context);
+				}else this.context.remove();
+			}
+			
+		});
+		
+		this.list.addEventListener('mouseleave', () => this.context.remove());
 		
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
@@ -480,43 +495,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private appendColumn (parent:HTMLElement, diff:Diff, file:File) :HTMLElement {
-	
-		const column = document.createElement('l13-diff-list-file');
-		
-		if (file) {
-			column.classList.add(`-${file.type}`);
-			column.setAttribute('data-file', file.path);
-			
-			if (diff.dirname) {
-				const dirname = document.createElement('SPAN');
-				dirname.textContent = diff.dirname;
-				dirname.classList.add(`-dirname`);
-				column.appendChild(dirname);
-			}
-			
-			const basename = document.createElement('SPAN');
-			basename.textContent = diff.basename;
-			basename.classList.add(`-basename`);
-			column.appendChild(basename);
-			
-			if (diff.ignoredEOL) {
-				const ignoredEOL = document.createElement('SPAN');
-				ignoredEOL.textContent = '(ignored EOL)';
-				ignoredEOL.classList.add('-ignored-eol');
-				column.appendChild(ignoredEOL);
-			}
-			
-			column.addEventListener('mouseenter', ({ target }) => (<HTMLElement>target).appendChild(this.context));
-			column.addEventListener('mouseleave', () => this.context.remove());
-		}
-		
-		parent.appendChild(column);
-		
-		return column;
-		
-	}
-	
 	private createListItemViews () :void {
 		
 		this.cacheListItemViews = {};
@@ -529,8 +507,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
-			this.appendColumn(row, diff, <File>diff.fileA).classList.add('-left');
-			this.appendColumn(row, diff, <File>diff.fileB).classList.add('-right');
+			appendColumn(row, diff, <File>diff.fileA);
+			appendColumn(row, diff, <File>diff.fileB);
 			
 			this.cacheListItemViews[diff.id] = row;
 			
@@ -566,3 +544,36 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
+
+	
+function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
+	
+	const column = document.createElement('l13-diff-list-file');
+	
+	if (file) {
+		column.classList.add(`-${file.type}`);
+		column.setAttribute('data-file', file.path);
+		
+		if (diff.dirname) {
+			const dirname = document.createElement('SPAN');
+			dirname.textContent = diff.dirname;
+			dirname.classList.add(`-dirname`);
+			column.appendChild(dirname);
+		}
+		
+		const basename = document.createElement('SPAN');
+		basename.textContent = diff.basename;
+		basename.classList.add(`-basename`);
+		column.appendChild(basename);
+		
+		if (diff.ignoredEOL) {
+			const ignoredEOL = document.createElement('SPAN');
+			ignoredEOL.textContent = '(ignored EOL)';
+			ignoredEOL.classList.add('-ignored-eol');
+			column.appendChild(ignoredEOL);
+		}
+	}
+	
+	parent.appendChild(column);
+	
+}

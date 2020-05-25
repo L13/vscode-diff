@@ -70,10 +70,8 @@ export class DiffDelete {
 		
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
-		
-		const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
 
-		vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll).then((value) => {
+		vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll).then((value) => {
 				
 			if (value) this.deleteFiles(data, side, useTrash);
 				

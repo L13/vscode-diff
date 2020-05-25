@@ -1,7 +1,7 @@
 :host {
 	box-sizing: border-box;
-	height: 100%;
-	padding: 3px 7px 0 2px;
+	height: calc(100% - 2px);
+	padding: 2px 7px 0 2px;
 	
 	button {
 		background: transparent;
@@ -18,8 +18,12 @@
 			transform: scale(1.2, 1.2);
 			
 			&::before {
-				background-color: var(--vscode-list-focusForeground);
+				background-color: var(--l13-icon-activeBackground);
 			}
+		}
+		
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 	
 		&::before {
