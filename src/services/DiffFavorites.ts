@@ -18,7 +18,6 @@ const FAVORITES = 'favorites';
 
 export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> {
 
-// tslint:disable-next-line: max-line-length
 	private _onDidChangeTreeData:vscode.EventEmitter<FavoriteTreeItem|undefined> = new vscode.EventEmitter<FavoriteTreeItem|undefined>();
 	public readonly onDidChangeTreeData:vscode.Event<FavoriteTreeItem|undefined> = this._onDidChangeTreeData.event;
 	

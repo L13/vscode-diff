@@ -8,6 +8,7 @@ import { Callback, Options, WalkTreeJob } from '../../types';
 //	Variables __________________________________________________________________
 
 const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
+const sep = path.sep;
 
 //	Initialize _________________________________________________________________
 
@@ -170,17 +171,23 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				if (job.error) return; // If error no further actions
 				if (statError) return job.done(statError);
 				
-				const nextRelative = path.join(relative, name);
+				const currentRelative = path.join(relative, name);
+				let currentDirname = path.dirname(currentRelative);
+				
+				currentDirname = currentDirname === '.' ? '' : currentDirname + sep;
 				
 				if (stat.isDirectory()) {
 					job.result[pathname] = {
 						folder: cwd,
 						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
+						basename: path.basename(currentRelative) + sep,
+						dirname: currentDirname,
+						extname: '',
 						stat,
 						type: 'folder',
 					};
-					return _walktree(job, cwd, nextRelative);
+					return _walktree(job, cwd, currentRelative);
 				}
 				
 				job.tasks--;
@@ -189,7 +196,10 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 					job.result[pathname] = {
 						folder: cwd,
 						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
+						basename: path.basename(currentRelative),
+						dirname: currentDirname,
+						extname: path.extname(currentRelative),
 						stat,
 						type: 'file',
 					};
@@ -197,7 +207,10 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 					job.result[pathname] = {
 						folder: cwd,
 						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
+						basename: path.basename(currentRelative),
+						dirname: currentDirname,
+						extname: '',
 						stat,
 						type: 'symlink',
 					};
@@ -215,7 +228,6 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 
 export function mkdirsSync (dirname:string) {
 	
-	const sep = path.sep;
 	const dirnames = dirname.split(sep);
 	const base = dirnames.shift() || sep;
 	

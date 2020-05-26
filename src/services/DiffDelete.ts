@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { sep } from 'path';
 import * as vscode from 'vscode';
 
 import { Dialog, Diff, File } from '../types';
@@ -160,7 +161,7 @@ function removeSubfiles (folders:string[], files:string[]) {
 		let i = 0;
 		let file;
 		while ((file = files[i++])) {
-			if (file !== folder && file.indexOf(folder) === 0) files.splice(--i , 1);
+			if (file !== folder && file.startsWith(folder)) files.splice(--i , 1);
 		}
 	}
 	
@@ -176,8 +177,8 @@ function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
 			const fileB = diff.fileB;
-			if (fileA && fileA.path.indexOf(pathname) === 0) diff.fileA = null;
-			if (fileB && fileB.path.indexOf(pathname) === 0) diff.fileB = null;
+			if (fileA?.path.startsWith(pathname)) diff.fileA = null;
+			if (fileB?.path.startsWith(pathname)) diff.fileB = null;
 		}
 		
 	}, (error) => vscode.window.showErrorMessage(error.message));

@@ -59,9 +59,6 @@ export type Diff = {
 	type:'file'|'folder'|'symlink'|'mixed',
 	ignoredWhitespace:boolean,
 	ignoredEOL:boolean,
-	basename:string,
-	dirname:string,
-	extname:string,
 	fileA:null|File,
 	fileB:null|File,
 };
@@ -77,6 +74,9 @@ export type File = {
 	folder:string,
 	relative:string,
 	stat?:fs.Stats,
+	basename:string,
+	dirname:string,
+	extname:string,
 	type?:'file'|'folder'|'symlink',
 };
 

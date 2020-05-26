@@ -273,7 +273,7 @@ function updateDeletedSubfiles (diffs:Diff[], deletedDiffs:Diff[]) {
 	
 	for (const diff of diffs.slice()) {
 		loop:for (const deletedDiff of deletedFolders) {
-			if (diff.id.indexOf(deletedDiff.id) === 0) {
+			if (diff.id.startsWith(deletedDiff.id)) {
 				if (!deletedDiff.fileA) diff.fileA = null;
 				if (!deletedDiff.fileB) diff.fileB = null;
 				if (!diff.fileA && !diff.fileB) diffs.splice(diffs.indexOf(diff), 1);

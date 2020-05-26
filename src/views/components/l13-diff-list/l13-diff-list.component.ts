@@ -497,24 +497,41 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private createListItemViews () :void {
 		
+		const items = this.viewmodel.items;
+		
 		this.cacheListItemViews = {};
 		
-		this.viewmodel.items.forEach((diff) => {
+		const foldersA:string[] = [];
+		const foldersB:string[] = [];
+		
+		items.forEach(({ fileA, fileB }) => {
+			
+			if (fileA?.type === 'folder') foldersA.push(fileA.dirname + fileA.basename);
+			if (fileB?.type === 'folder') foldersB.push(fileB.dirname + fileB.basename);
+			
+		});
+		
+		foldersA.sort().reverse();
+		foldersB.sort().reverse();
+		
+		items.forEach((diff) => {
 		
 			const row = document.createElement('l13-diff-list-row');
+			const fileA = diff.fileA;
+			const fileB = diff.fileB;
 			
 			row.classList.add('-' + diff.status);
 			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', '' + diff.id);
 			
-			appendColumn(row, diff, <File>diff.fileA);
-			appendColumn(row, diff, <File>diff.fileB);
+			appendColumn(row, diff, fileA, detectExistingFolder(fileA, foldersB, foldersA));
+			appendColumn(row, diff, fileB, detectExistingFolder(fileB, foldersA, foldersB));
 			
 			this.cacheListItemViews[diff.id] = row;
 			
 		});
 		
-		this.cacheListItems = this.viewmodel.items;
+		this.cacheListItems = items;
 		
 	}
 	
@@ -546,7 +563,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 
 	
-function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
+function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]) {
 	
 	const column = document.createElement('l13-diff-list-file');
 	
@@ -554,26 +571,59 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File) {
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-file', file.path);
 		
-		if (diff.dirname) {
+		if (file.dirname) {
 			const dirname = document.createElement('SPAN');
-			dirname.textContent = diff.dirname;
 			dirname.classList.add(`-dirname`);
+			
+			if (exists[0]) {
+				const dirnameExists = document.createElement('SPAN');
+				dirnameExists.classList.add(`-exists`);
+				dirnameExists.textContent = exists[0];
+				dirname.appendChild(dirnameExists);
+			}
+			
+			if (exists[1]) {
+				const dirnameMissing = document.createElement('SPAN');
+				dirnameMissing.classList.add(`-missing`);
+				dirnameMissing.textContent = exists[1];
+				dirname.appendChild(dirnameMissing);
+			}
+			
 			column.appendChild(dirname);
 		}
 		
 		const basename = document.createElement('SPAN');
-		basename.textContent = diff.basename;
+		basename.textContent = file.basename;
 		basename.classList.add(`-basename`);
 		column.appendChild(basename);
 		
-		if (diff.ignoredEOL) {
-			const ignoredEOL = document.createElement('SPAN');
-			ignoredEOL.textContent = '(ignored EOL)';
-			ignoredEOL.classList.add('-ignored-eol');
-			column.appendChild(ignoredEOL);
+		if (diff.ignoredEOL || diff.ignoredWhitespace) {
+			const ignored = document.createElement('SPAN');
+			const values = [];
+			if (diff.ignoredEOL) values.push('end of line');
+			if (diff.ignoredWhitespace) values.push('trailing whitespace');
+			ignored.textContent = `(ignored ${values.join(' and ')})`;
+			ignored.classList.add('-ignored');
+			column.appendChild(ignored);
 		}
 	}
 	
 	parent.appendChild(column);
+	
+}
+
+function detectExistingFolder (file:File, otherFolders:string[], sameFolders:string[]) {
+	
+	if (!file) return null;
+	
+	const dirname = file.dirname;
+	
+	for (const folder of otherFolders) {
+		if (dirname.startsWith(folder) && sameFolders.indexOf(folder) !== 1) {
+			return [folder, dirname.replace(folder, '')];
+		}
+	}
+	
+	return [null, file.dirname];
 	
 }

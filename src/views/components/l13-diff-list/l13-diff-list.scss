@@ -172,6 +172,10 @@ l13-diff-list-file {
 			-webkit-mask-image: url('list-symlink.svg');
 			mask-image: url('list-symlink.svg');
 		}
+		
+		span.-dirname {
+			padding-right: 5px;
+		}
 	}
 	
 	span {
@@ -180,7 +184,15 @@ l13-diff-list-file {
 			opacity: 0.7;
 		}
 		
-		&.-ignored-eol {
+		&.-exists {
+			color: var(--vscode-foreground);
+		}
+		
+		// &.-missing {
+			
+		// }
+		
+		&.-ignored {
 			color: var(--vscode-foreground);
 			font-size: 11px;
 			opacity: 0.5;

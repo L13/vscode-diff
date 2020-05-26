@@ -23,7 +23,7 @@ export class DiffOpen {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (private msg:DiffMessage) {
+	public constructor (msg:DiffMessage) {
 		
 		msg.on('open:diffToSide', (data) => this.open(data, true));
 		msg.on('open:diff', (data) => this.open(data, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false)));
@@ -115,7 +115,7 @@ export class DiffOpen {
 		const pathname:string = data.pathname;
 		
 		if (isMacOs) showFileInFinder(pathname);
-		else if (isMacOs) showFileInFinder(pathname);
+		else if (isWindows) showFileInExplorer(pathname);
 		else showFileInFolder(pathname);
 		
 	}

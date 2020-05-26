@@ -17,7 +17,6 @@ const COMPARISONS_HISTORY = 'comparisons';
 
 export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 
-// tslint:disable-next-line: max-line-length
 	private _onDidChangeTreeData:vscode.EventEmitter<HistoryTreeItem|undefined> = new vscode.EventEmitter<HistoryTreeItem|undefined>();
 	public readonly onDidChangeTreeData:vscode.Event<HistoryTreeItem|undefined> = this._onDidChangeTreeData.event;
 	

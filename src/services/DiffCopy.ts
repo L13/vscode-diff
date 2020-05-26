@@ -132,12 +132,16 @@ export class DiffCopy {
 						vscode.window.showErrorMessage(error.message);
 					} else {
 						diff.status = 'unchanged';
-						if (!(<any>diff)['file' + to]) {
-							(<any>diff)['file' + to] = {
+						if (!(<File>(<any>diff)['file' + to])) {
+							(<File>(<any>diff)['file' + to]) = {
 								folder: folderTo,
 								path: dest,
 								relative: fileFrom.relative,
+								basename: fileFrom.basename,
+								dirname: fileFrom.dirname,
+								extname: fileFrom.extname,
 								type: fileFrom.type,
+								stat: lstatSync(dest),
 							};
 						}
 					}
