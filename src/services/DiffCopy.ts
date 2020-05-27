@@ -135,13 +135,15 @@ export class DiffCopy {
 						if (!(<File>(<any>diff)['file' + to])) {
 							(<File>(<any>diff)['file' + to]) = {
 								folder: folderTo,
-								path: dest,
 								relative: fileFrom.relative,
+								stat: lstatSync(dest),
+								
+								path: dest,
+								name: fileFrom.name,
 								basename: fileFrom.basename,
 								dirname: fileFrom.dirname,
 								extname: fileFrom.extname,
 								type: fileFrom.type,
-								stat: lstatSync(dest),
 							};
 						}
 					}

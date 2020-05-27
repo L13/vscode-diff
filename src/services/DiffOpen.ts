@@ -77,7 +77,7 @@ export class DiffOpen {
 					if (statB.isFile()) {
 						const left = vscode.Uri.file(fileA.path);
 						const right = vscode.Uri.file(fileB.path);
-						vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.relative} (${fileA.folder} ↔ ${fileB.folder})`, {
+						vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.folder} ↔ ${fileB.folder})`, {
 							// preserveFocus: false,
 							preview: false,
 							viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,

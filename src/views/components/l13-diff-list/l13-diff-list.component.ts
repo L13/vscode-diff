@@ -572,8 +572,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]
 		column.setAttribute('data-file', file.path);
 		
 		if (file.dirname) {
-			const dirname = document.createElement('SPAN');
-			dirname.classList.add(`-dirname`);
+			const dirname = document.createDocumentFragment();
 			
 			if (exists[0]) {
 				const dirnameExists = document.createElement('SPAN');

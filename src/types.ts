@@ -70,10 +70,11 @@ export type Favorite = {
 };
 
 export type File = {
-	path:string,
 	folder:string,
+	path:string,
 	relative:string,
 	stat?:fs.Stats,
+	name:string,
 	basename:string,
 	dirname:string,
 	extname:string,

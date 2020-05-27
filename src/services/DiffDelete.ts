@@ -175,10 +175,8 @@ function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
 	}).then(() => {
 		
 		for (const diff of diffs) {
-			const fileA = diff.fileA;
-			const fileB = diff.fileB;
-			if (fileA?.path.startsWith(pathname)) diff.fileA = null;
-			if (fileB?.path.startsWith(pathname)) diff.fileB = null;
+			if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
+			if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
 		}
 		
 	}, (error) => vscode.window.showErrorMessage(error.message));

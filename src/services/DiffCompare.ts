@@ -242,10 +242,10 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const relative = file.relative;
+		const id = file.relative;
 		
-		diffs[file.relative] = {
-			id: relative,
+		diffs[id] = {
+			id,
 			status: 'deleted',
 			type: file.type,
 			ignoredEOL: false,
@@ -267,8 +267,8 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 				
 		const file = result[pathname];
-		const relative = file.relative;
-		const diff = diffs[relative];
+		const id = file.relative;
+		const diff = diffs[id];
 		
 		if (diff) {
 			diff.status = 'unchanged';
@@ -317,8 +317,8 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				if (linkA !== linkB) diff.status = 'modified';
 			}
 		} else {
-			diffs[file.relative] = {
-				id: relative,
+			diffs[id] = {
+				id,
 				status: 'untracked',
 				type: file.type,
 				ignoredEOL: false,

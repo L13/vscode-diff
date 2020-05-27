@@ -16,8 +16,18 @@ l13-diff-list-body {
 				background: var(--vscode-list-activeSelectionBackground);
 				color: var(--vscode-list-activeSelectionForeground);
 					
-				l13-diff-list-file::before {
-					background: var(--vscode-list-activeSelectionForeground);
+				l13-diff-list-file {
+					
+					&::before {
+						background: var(--vscode-list-activeSelectionForeground);
+					}
+					
+					span {
+						
+						&.-exists {
+							color: var(--vscode-list-activeSelectionForeground);
+						}
+					}
 				}
 				
 				l13-diff-context {
@@ -55,9 +65,19 @@ l13-diff-list-row {
 		background: var(--vscode-list-inactiveSelectionBackground);
 		color: var(--vscode-list-inactiveSelectionForeground);
 			
-		l13-diff-list-file::before {
-			// Fixes icon which disappears if list loses focus ?!?
-			background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
+		l13-diff-list-file {
+			
+			& ::before {
+				// Fixes icon which disappears if list loses focus ?!?
+				background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
+			}
+					
+			span {
+				
+				&.-exists {
+					color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
+				}
+			}
 		}
 		
 		&:hover {
@@ -80,9 +100,12 @@ l13-diff-list-row {
 		color: var(--vscode-gitDecoration-modifiedResourceForeground);
 	}
 	
-	// &.-unchanged {
+	&.-unchanged {
 		
-	// }
+		l13-diff-list-file.-folder span.-exists {
+			padding-right: 0;
+		}
+	}
 	
 	// &.-ignored {
 		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
@@ -148,10 +171,6 @@ l13-diff-list-file {
 			-webkit-mask-image: url('list-file.svg');
 			mask-image: url('list-file.svg');
 		}
-		
-		span.-dirname {
-			padding-right: 5px;
-		}
 	}
 	
 	&.-folder {
@@ -161,8 +180,15 @@ l13-diff-list-file {
 			mask-image: url('list-folder.svg');
 		}
 		
-		span.-basename {
-			opacity: 0.7;
+		span {
+			
+			&.-basename {
+				opacity: 0.7;
+			}
+			
+			&.-missing {
+				padding-right: 0;
+			}
 		}
 	}
 	
@@ -172,25 +198,20 @@ l13-diff-list-file {
 			-webkit-mask-image: url('list-symlink.svg');
 			mask-image: url('list-symlink.svg');
 		}
-		
-		span.-dirname {
-			padding-right: 5px;
-		}
 	}
 	
 	span {
 		
-		&.-dirname {
-			opacity: 0.7;
-		}
-		
 		&.-exists {
 			color: var(--vscode-foreground);
+			opacity: 0.7;
+			padding-right: 5px;
 		}
 		
-		// &.-missing {
-			
-		// }
+		&.-missing {
+			opacity: 0.7;
+			padding-right: 5px;
+		}
 		
 		&.-ignored {
 			color: var(--vscode-foreground);
