@@ -1,15 +1,15 @@
 //	Imports ____________________________________________________________________
 
+const child_process = require('child_process');
 const del = require('del');
-
+const fs = require('fs');
+const glob = require('glob');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const file2json = require('./plugins/gulp-file2json');
 const rollup = require('rollup');
-const typescript = require('rollup-plugin-typescript');
 
-const glob = require('glob');
-const fs = require('fs');
+const file2json = require('./plugins/gulp-file2json');
+const typescript = require('rollup-plugin-typescript');
 
 //	Variables __________________________________________________________________
 
@@ -187,9 +187,68 @@ gulp.task('script:services', () => {
 	
 });
 
-gulp.task('script', gulp.series('script:view', 'script:services'));
+gulp.task('script:tests', () => {
+	
+	const promises = [];
+	
+	['src/index.ts'].concat(glob.sync('src/**/*.test.ts')).forEach((filename) => {
+		
+		promises.push(rollup.rollup({
+			input: filename,
+			external: [
+				'assert',
+				'glob',
+				'fs',
+				'mocha',
+				'path',
+			],
+			plugins: [
+				typescript({
+					target: 'es6',
+					lib: [
+						'es6',
+					],
+					strict: true,
+					removeComments: true,
+				}),
+			]
+		}).then(bundle => {
+			
+			return bundle.write({
+				file: filename.replace(/^src/, 'test').replace(/\.ts$/, '.js'),
+				format: 'cjs',
+				name: 'l13difftests',
+				globals: {
+					assert: 'assert',
+					glob: 'glob',
+					fs: 'fs',
+					mocha: 'mocha',
+					path: 'path',
+				},
+			});
+			
+		}));
+		
+	});
+	
+	return Promise.all(promises);
+	
+});
 
-gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script'));
+gulp.task('test', (done) => {
+	
+	const tests = child_process.spawn('npm', ['test']).on('close', () => done());
+
+	let logger = (buffer) => buffer.toString().split(/\n/).forEach((message) => message && console.log(message));
+
+	tests.stdout.on('data', logger);
+	tests.stderr.on('data', logger);
+	
+});
+
+gulp.task('script', gulp.parallel('script:view', 'script:services', 'script:tests'));
+
+gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'test'));
 
 gulp.task('watch', () => {
 	
@@ -205,16 +264,21 @@ gulp.task('watch', () => {
 	], gulp.parallel('icons:fix'));
 	
 	gulp.watch([
-		'src/views/**/*.ts',
+		'src/views/**/!(*.test).ts',
 		'src/types.ts',
 	], gulp.parallel('script:view'));
 	
 	gulp.watch([
 		'src/extension.ts',
 		'src/types.ts',
-		'src/services/**/*.ts',
-		'src/utilities/**/*.ts',
+		'src/services/**/!(*.test).ts',
+		'src/commands/**/!(*.test).ts',
 	], gulp.parallel('script:services'));
+	
+	gulp.watch([
+		'src/index.ts',
+		'src/**/*.test.ts',
+	], gulp.series('script:tests', 'test'));
 	
 });
 

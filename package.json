@@ -374,7 +374,7 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "gulp build",
 		"watch": "gulp watch",
-		"test": "npm run compile",
+		"test": "mocha",
 		"test-diff": "node ./diff/index.js --clean --create-all"
 	},
 	"devDependencies": {

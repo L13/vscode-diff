@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { basename, dirname, extname, join, sep } from 'path';
 import * as vscode from 'vscode';
 
-import { normalizeBuffer, trimTrailingWhitespace } from './@l13/buffers';
+import { normalizeLineEnding, trimTrailingWhitespace } from './@l13/buffers';
 import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/fse';
 import { parse } from './@l13/jsons';
 
@@ -297,8 +297,8 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 						diff.ignoredWhitespace = true;
 					}
 					if (ignoreEndOfLine) {
-						bufferA = normalizeBuffer(bufferA);
-						bufferB = normalizeBuffer(bufferB);
+						bufferA = normalizeLineEnding(bufferA);
+						bufferB = normalizeLineEnding(bufferB);
 						diff.ignoredEOL = true;
 					}
 					if (!bufferA.equals(bufferB)) diff.status = 'modified';

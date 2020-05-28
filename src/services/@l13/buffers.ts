@@ -12,7 +12,7 @@ const push = Array.prototype.push;
 
 //	Exports ____________________________________________________________________
 
-export function normalizeBuffer (buffer:Buffer) {
+export function normalizeLineEnding (buffer:Buffer) {
 	
 	return hasUTF16BOM(buffer) ? normalizeUTF16Buffer(buffer) : normalizeAsciiBuffer(buffer);
 	
@@ -92,12 +92,8 @@ function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
 	
 	stream: while (i < length) {
 		const value = buffer[i++];
-		if (value === 13 || value === 10 || i === length) {
-			if (!cache.length) {
-				newBuffer.push(value);
-				continue stream;
-			}
-			if (i === length) cache.push(value);
+		if (value === 10 || value === 13 || i === length) {
+			if (i === length && value !== 10 && value !== 13) cache.push(value);
 			let j = 0;
 			let k = cache.length;
 			start: while (j < k) {
@@ -108,8 +104,8 @@ function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
 				}
 				break start;
 			}
-			if (j === k) {
-				newBuffer.push(value);
+			if (k === j) {
+				if (value === 10 || value === 13) newBuffer.push(value);
 				cache = [];
 				continue stream;
 			}
@@ -122,7 +118,7 @@ function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
 				break end;
 			}
 			push.apply(newBuffer, cache.slice(j, k));
-			newBuffer.push(value);
+			if (value === 10 || value === 13) newBuffer.push(value);
 			cache = [];
 		} else cache.push(value);
 	}
