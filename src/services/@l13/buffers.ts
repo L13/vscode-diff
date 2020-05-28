@@ -140,11 +140,11 @@ function trimTrailingWhitespaceForUTF16 (buffer:Buffer) :Buffer {
 		if (valueA === 0 && (valueB === 10 || valueB === 13)
 		|| valueB === 0 && (valueA === 10 || valueA === 13)
 		|| i === length) {
-			if (!cache.length) {
-				newBuffer.push(valueA, valueB);
-				continue stream;
+			if (i === length &&
+				(valueA !== 0 && valueB !== 10 && valueB !== 13
+				&& valueB !== 0 && valueA !== 10 && valueA !== 13)) {
+					cache.push(valueA, valueB);
 			}
-			if (i === length) cache.push(valueA, valueB);
 			let j = 0;
 			let k = cache.length;
 			start: while (j < k) {
@@ -158,7 +158,10 @@ function trimTrailingWhitespaceForUTF16 (buffer:Buffer) :Buffer {
 				break start;
 			}
 			if (j === k) {
-				newBuffer.push(valueA, valueB);
+				if (valueA === 0 && (valueB === 10 || valueB === 13)
+					|| valueB === 0 && (valueA === 10 || valueA === 13)) {
+						newBuffer.push(valueA, valueB);
+				}
 				cache = [];
 				continue stream;
 			}
@@ -173,7 +176,10 @@ function trimTrailingWhitespaceForUTF16 (buffer:Buffer) :Buffer {
 				break end;
 			}
 			push.apply(newBuffer, cache.slice(j, k));
-			newBuffer.push(valueA, valueB);
+			if (valueA === 0 && (valueB === 10 || valueB === 13)
+				|| valueB === 0 && (valueA === 10 || valueA === 13)) {
+					newBuffer.push(valueA, valueB);
+			}
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}

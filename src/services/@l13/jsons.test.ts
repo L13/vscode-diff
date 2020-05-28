@@ -126,7 +126,7 @@ describe('jsons', () => {
 			
 		});
 		
-		it('ignore quotes in strings', () => {
+		it('ignore double quotes in strings', () => {
 			
 			assert.deepEqual({ 'a"': 1 }, parse(`{
 				"a\\"": 1
