@@ -246,7 +246,7 @@ gulp.task('test', (done) => {
 	
 });
 
-gulp.task('script', gulp.parallel('script:view', 'script:services', 'script:tests'));
+gulp.task('script', gulp.series('script:view', 'script:services', 'script:tests'));
 
 gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'test'));
 
