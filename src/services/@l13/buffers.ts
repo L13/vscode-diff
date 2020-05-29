@@ -14,25 +14,25 @@ const push = Array.prototype.push;
 
 export function normalizeLineEnding (buffer:Buffer) {
 	
-	return hasUTF16BOM(buffer) ? normalizeUTF16Buffer(buffer) : normalizeAsciiBuffer(buffer);
+	if (buffer[0] === 254 && buffer[1] === 255) return normalizeUTF16BE(buffer);
+	if (buffer[0] === 255 && buffer[1] === 254) return normalizeUTF16LE(buffer);
+	
+	return normalizeAscii(buffer);
 	
 }
 
 export function trimTrailingWhitespace (buffer:Buffer) :Buffer {
 	
-	return hasUTF16BOM(buffer) ? trimTrailingWhitespaceForUTF16(buffer) : trimTrailingWhitespaceForAscii(buffer);
+	if (buffer[0] === 254 && buffer[1] === 255) return trimTrailingWhitespaceUTF16BE(buffer);
+	if (buffer[0] === 255 && buffer[1] === 254) return trimTrailingWhitespaceUTF16LE(buffer);
+	
+	return trimTrailingWhitespaceAscii(buffer);
 	
 }
 
 //	Functions __________________________________________________________________
 
-function hasUTF16BOM (buffer:Buffer) {
-	
-	return buffer[0] === 254 && buffer[1] === 255 || buffer[0] === 255 && buffer[1] === 254;
-	
-}
-
-function normalizeAsciiBuffer (buffer:Buffer) {
+function normalizeAscii (buffer:Buffer) {
 	
 	const length = buffer.length;
 	const cache = [];
@@ -49,7 +49,7 @@ function normalizeAsciiBuffer (buffer:Buffer) {
 	
 }
 
-function normalizeUTF16Buffer (buffer:Buffer) {
+function normalizeUTF16BE (buffer:Buffer) {
 	
 	const length = buffer.length;
 	const cache = [];
@@ -59,26 +59,33 @@ function normalizeUTF16Buffer (buffer:Buffer) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
 		if (valueA === 0 && valueB === 13) {
-			if (buffer[i] !== 0 && buffer[i + 1] !== 10) {
-				cache[cache.length] = 0;
-				cache[cache.length] = 10;
-			}
-		} else if (valueA === 13 && valueB === 0) {
-			if (buffer[i] !== 10 && buffer[i + 1] !== 0) {
-				cache[cache.length] = 10;
-				cache[cache.length] = 0;
-			}
-		} else {
-			cache[cache.length] = valueA;
-			cache[cache.length] = valueB;
-		}
+			if (buffer[i] !== 0 && buffer[i + 1] !== 10) cache.push(0, 10);
+		} else cache.push(valueA, valueB);
 	}
 	
 	return Buffer.from(cache);
 	
 }
 
-function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
+function normalizeUTF16LE (buffer:Buffer) {
+	
+	const length = buffer.length;
+	const cache = [];
+	let i = 0;
+	
+	while (i < length) {
+		const valueA = buffer[i++];
+		const valueB = buffer[i++];
+		if (valueA === 13 && valueB === 0) {
+			if (buffer[i] !== 10 && buffer[i + 1] !== 0) cache.push(10, 0);
+		} else cache.push(valueA, valueB);
+	}
+	
+	return Buffer.from(cache);
+	
+}
+
+function trimTrailingWhitespaceAscii (buffer:Buffer) :Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [];
@@ -127,7 +134,7 @@ function trimTrailingWhitespaceForAscii (buffer:Buffer) :Buffer {
 	
 }
 
-function trimTrailingWhitespaceForUTF16 (buffer:Buffer) :Buffer {
+function trimTrailingWhitespaceUTF16BE (buffer:Buffer) :Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
@@ -137,49 +144,82 @@ function trimTrailingWhitespaceForUTF16 (buffer:Buffer) :Buffer {
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
-		if (valueA === 0 && (valueB === 10 || valueB === 13)
-		|| valueB === 0 && (valueA === 10 || valueA === 13)
-		|| i === length) {
-			if (i === length &&
-				(valueA !== 0 && valueB !== 10 && valueB !== 13
-				&& valueB !== 0 && valueA !== 10 && valueA !== 13)) {
-					cache.push(valueA, valueB);
-			}
+		if (valueA === 0 && (valueB === 10 || valueB === 13) || i === length) {
+			if (i === length && valueA !== 0 && valueB !== 10 && valueB !== 13) cache.push(valueA, valueB);
 			let j = 0;
 			let k = cache.length;
 			start: while (j < k) {
 				const cacheValueA = cache[j];
 				const cacheValueB = cache[j + 1];
-				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)
-				|| cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
 					j += 2;
 					continue start;
 				}
 				break start;
 			}
 			if (j === k) {
-				if (valueA === 0 && (valueB === 10 || valueB === 13)
-					|| valueB === 0 && (valueA === 10 || valueA === 13)) {
-						newBuffer.push(valueA, valueB);
-				}
+				if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
 				cache = [];
 				continue stream;
 			}
 			end: while (k > j) {
 				const cacheValueA = cache[k - 2];
 				const cacheValueB = cache[k - 1];
-				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)
-				|| cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
 					k -= 2;
 					continue end;
 				}
 				break end;
 			}
 			push.apply(newBuffer, cache.slice(j, k));
-			if (valueA === 0 && (valueB === 10 || valueB === 13)
-				|| valueB === 0 && (valueA === 10 || valueA === 13)) {
-					newBuffer.push(valueA, valueB);
+			if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
+			cache = [];
+		} else cache.push(valueA, valueB);
+	}
+	
+	return Buffer.from(newBuffer);
+	
+}
+
+function trimTrailingWhitespaceUTF16LE (buffer:Buffer) :Buffer {
+	
+	const length = buffer.length;
+	const newBuffer = [buffer[0], buffer[1]];
+	let cache = [];
+	let i = 2;
+	
+	stream: while (i < length) {
+		const valueA = buffer[i++];
+		const valueB = buffer[i++];
+		if (valueB === 0 && (valueA === 10 || valueA === 13) || i === length) {
+			if (i === length && valueB !== 0 && valueA !== 10 && valueA !== 13) cache.push(valueA, valueB);
+			let j = 0;
+			let k = cache.length;
+			start: while (j < k) {
+				const cacheValueA = cache[j];
+				const cacheValueB = cache[j + 1];
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+					j += 2;
+					continue start;
+				}
+				break start;
 			}
+			if (j === k) {
+				if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
+				cache = [];
+				continue stream;
+			}
+			end: while (k > j) {
+				const cacheValueA = cache[k - 2];
+				const cacheValueB = cache[k - 1];
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+					k -= 2;
+					continue end;
+				}
+				break end;
+			}
+			push.apply(newBuffer, cache.slice(j, k));
+			if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}

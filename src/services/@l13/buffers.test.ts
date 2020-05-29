@@ -4,7 +4,7 @@ import { normalizeLineEnding, trimTrailingWhitespace } from './buffers';
 
 describe('buffers', () => {
 	
-	describe('.normalizeBuffer()', () => {
+	describe('.normalizeLineEnding()', () => {
 		
 		it('ASCII / UTF-8 don\'t change \\n', () => {
 			
@@ -80,25 +80,25 @@ describe('buffers', () => {
 		
 		it('UTF-16LE don\'t change \\n', () => {
 			
-			assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, 10, 0])), Buffer.from([254, 255, 10, 0]));
+			assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, 10, 0])), Buffer.from([255, 254, 10, 0]));
 			
 		});
 		
 		it('UTF-16LE change \\r to \\n', () => {
 			
-			assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, 13, 0])), Buffer.from([254, 255, 10, 0]));
+			assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, 13, 0])), Buffer.from([255, 254, 10, 0]));
 			
 		});
 		
 		it('UTF-16LE change \\r\\n to \\n', () => {
 			
-			assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, 13, 0, 10, 0])), Buffer.from([254, 255, 10, 0]));
+			assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, 13, 0, 10, 0])), Buffer.from([255, 254, 10, 0]));
 			
 		});
 		
 		it('UTF-16LE change \\n\\r to \\n\\n', () => {
 			
-			assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, 10, 0, 13, 0])), Buffer.from([254, 255, 10, 0, 10, 0]));
+			assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, 10, 0, 13, 0])), Buffer.from([255, 254, 10, 0, 10, 0]));
 			
 		});
 		
