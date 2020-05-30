@@ -238,6 +238,21 @@ describe('buffers', () => {
 				expect: [255, 254, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0],
 				toBe: [255, 254, 10, 0, 10, 0, 10, 0, 10, 0],
 			},
+			{
+				desc: 'UTF-16LE don\'t change multiple \\n with content',
+				expect: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
+				toBe: [255, 254, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE change multiple \\r to \\n with content',
+				expect: [255, 254, 65, 0, 13, 0, 65, 0, 13, 0, 65, 0, 13, 0, 65, 0],
+				toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE change multiple \\r\\n to \\n with content',
+				expect: [255, 254, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65, 0],
+				toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
+			},
 		];
 		
 		for (const test of tests) {
@@ -342,6 +357,11 @@ describe('buffers', () => {
 				toBe: [13],
 			},
 			{
+				desc: 'ASCII / UTF-8 ignore carriage return and line feed',
+				expect: [13, 10],
+				toBe: [13, 10],
+			},
+			{
 				desc: 'ASCII / UTF-8 ignore multiple line feed',
 				expect: [10, 10, 10],
 				toBe: [10, 10, 10],
@@ -350,6 +370,71 @@ describe('buffers', () => {
 				desc: 'ASCII / UTF-8 ignore multiple carriage return',
 				expect: [13, 13, 13],
 				toBe: [13, 13, 13],
+			},
+			{
+				desc: 'ASCII / UTF-8 ignore multiple carriage return and line feed',
+				expect: [13, 10, 13, 10, 13, 10],
+				toBe: [13, 10, 13, 10, 13, 10],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove trailing tab',
+				expect: [9, 65, 9],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove trailing vertical tab',
+				expect: [11, 65, 11],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove trailing form feed',
+				expect: [12, 65, 12],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove trailing space',
+				expect: [32, 65, 32],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove multipe trailing tab',
+				expect: [9, 9, 9, 65, 9, 9, 9],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove multipe trailing vertical tab',
+				expect: [11, 11, 11, 65, 11, 11, 11],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove multipe trailing form feed',
+				expect: [12, 12, 12, 65, 12, 12, 12],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 remove multipe trailing space',
+				expect: [32, 32, 32, 65, 32, 32, 32],
+				toBe: [65],
+			},
+			{
+				desc: 'ASCII / UTF-8 ignore tab in between',
+				expect: [9, 65, 9, 65, 9],
+				toBe: [65, 9, 65],
+			},
+			{
+				desc: 'ASCII / UTF-8 ignore vertical tab in between',
+				expect: [11, 65, 11, 65, 11],
+				toBe: [65, 11, 65],
+			},
+			{
+				desc: 'ASCII / UTF-8 ignore form feed in between',
+				expect: [12, 65, 12, 65, 12],
+				toBe: [65, 12, 65],
+			},
+			{
+				desc: 'ASCII / UTF-8 ignore space in between',
+				expect: [32, 65, 32, 65, 32],
+				toBe: [65, 32, 65],
 			},
 			{
 				desc: 'UTF-8 with BOM empty',
@@ -417,6 +502,71 @@ describe('buffers', () => {
 				toBe: [239, 187, 191, 13, 13, 13],
 			},
 			{
+				desc: 'UTF-8 with BOM ignore multiple carriage return and line feed',
+				expect: [239, 187, 191, 13, 10, 13, 10, 13, 10],
+				toBe: [239, 187, 191, 13, 10, 13, 10, 13, 10],
+			},
+			{
+				desc: 'UTF-8 with BOM remove trailing tab',
+				expect: [239, 187, 191, 9, 65, 9],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove trailing vertical tab',
+				expect: [239, 187, 191, 11, 65, 11],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove trailing form feed',
+				expect: [239, 187, 191, 12, 65, 12],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove trailing space',
+				expect: [239, 187, 191, 32, 65, 32],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove multiple trailing tab',
+				expect: [239, 187, 191, 9, 9, 9, 65, 9, 9, 9],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove multiple trailing vertical tab',
+				expect: [239, 187, 191, 11, 11, 11, 65, 11, 11, 11],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove multiple trailing form feed',
+				expect: [239, 187, 191, 12, 12, 12, 65, 12, 12, 12],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM remove multiple trailing space',
+				expect: [239, 187, 191, 32, 32, 32, 65, 32, 32, 32],
+				toBe: [239, 187, 191, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM ignore tab in between',
+				expect: [239, 187, 191, 9, 65, 9, 65, 9],
+				toBe: [239, 187, 191, 65, 9, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM ignore vertical tab in between',
+				expect: [239, 187, 191, 11, 65, 11, 65, 11],
+				toBe: [239, 187, 191, 65, 11, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM ignore form feed in between',
+				expect: [239, 187, 191, 12, 65, 12, 65, 12],
+				toBe: [239, 187, 191, 65, 12, 65],
+			},
+			{
+				desc: 'UTF-8 with BOM ignore space in between',
+				expect: [239, 187, 191, 32, 65, 32, 65, 32],
+				toBe: [239, 187, 191, 65, 32, 65],
+			},
+			{
 				desc: 'UTF-16BE empty',
 				expect: [254, 255],
 				toBe: [254, 255],
@@ -482,6 +632,71 @@ describe('buffers', () => {
 				toBe: [254, 255, 0, 13, 0, 13, 0, 13],
 			},
 			{
+				desc: 'UTF-16BE ignore multiple carriage return and line feed',
+				expect: [254, 255, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				toBe: [254, 255, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+			},
+			{
+				desc: 'UTF-16BE remove trailing tab',
+				expect: [254, 255, 0, 9, 0, 65, 0, 9],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove trailing vertical tab',
+				expect: [254, 255, 0, 11, 0, 65, 0, 11],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove trailing form feed',
+				expect: [254, 255, 0, 12, 0, 65, 0, 12],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove trailing space',
+				expect: [254, 255, 0, 32, 0, 65, 0, 32],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove multiple trailing tab',
+				expect: [254, 255, 0, 9, 0, 9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0, 9],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove multiple trailing vertical tab',
+				expect: [254, 255, 0, 11, 0, 11, 0, 11, 0, 65, 0, 11, 0, 11, 0, 11],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove multiple trailing form feed',
+				expect: [254, 255, 0, 12, 0, 12, 0, 12, 0, 65, 0, 12, 0, 12, 0, 12],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE remove multiple trailing space',
+				expect: [254, 255, 0, 32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0, 32],
+				toBe: [254, 255, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE ignore tab in between',
+				expect: [254, 255, 0, 9, 0, 65, 0, 9, 0, 65, 0, 9],
+				toBe: [254, 255, 0, 65, 0, 9, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE ignore vertical tab in between',
+				expect: [254, 255, 0, 11, 0, 65, 0, 11, 0, 65, 0, 11],
+				toBe: [254, 255, 0, 65, 0, 11, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE ignore form feed in between',
+				expect: [254, 255, 0, 12, 0, 65, 0, 12, 0, 65, 0, 12],
+				toBe: [254, 255, 0, 65, 0, 12, 0, 65],
+			},
+			{
+				desc: 'UTF-16BE ignore space in between',
+				expect: [254, 255, 0, 32, 0, 65, 0, 32, 0, 65, 0, 32],
+				toBe: [254, 255, 0, 65, 0, 32, 0, 65],
+			},
+			{
 				desc: 'UTF-16LE empty',
 				expect: [255, 254],
 				toBe: [255, 254],
@@ -545,6 +760,71 @@ describe('buffers', () => {
 				desc: 'UTF-16LE ignore multiple carriage return',
 				expect: [255, 254, 13, 0, 13, 0, 13, 0],
 				toBe: [255, 254, 13, 0, 13, 0, 13, 0],
+			},
+			{
+				desc: 'UTF-16LE ignore multiple carriage return and line feed',
+				expect: [255, 254, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+				toBe: [255, 254, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+			},
+			{
+				desc: 'UTF-16LE remove trailing tab',
+				expect: [255, 254, 9, 0, 65, 0, 9, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove trailing vertical tab',
+				expect: [255, 254, 11, 0, 65, 0, 11, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove trailing form feed',
+				expect: [255, 254, 12, 0, 65, 0, 12, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove trailing space',
+				expect: [255, 254, 32, 0, 65, 0, 32, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove multiple trailing tab',
+				expect: [255, 254, 9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove multiple trailing vertical tab',
+				expect: [255, 254, 11, 0, 11, 0, 11, 0, 65, 0, 11, 0, 11, 0, 11, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove multiple trailing form feed',
+				expect: [255, 254, 12, 0, 12, 0, 12, 0, 65, 0, 12, 0, 12, 0, 12, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE remove multiple trailing space',
+				expect: [255, 254, 32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0, 32, 0],
+				toBe: [255, 254, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE ignore tab in between',
+				expect: [255, 254, 9, 0, 65, 0, 9, 0, 65, 0, 9, 0],
+				toBe: [255, 254, 65, 0, 9, 0, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE ignore vertical tab in between',
+				expect: [255, 254, 11, 0, 65, 0, 11, 0, 65, 0, 11, 0],
+				toBe: [255, 254, 65, 0, 11, 0, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE ignore form feed in between',
+				expect: [255, 254, 12, 0, 65, 0, 12, 0, 65, 0, 12, 0],
+				toBe: [255, 254, 65, 0, 12, 0, 65, 0],
+			},
+			{
+				desc: 'UTF-16LE ignore space in between',
+				expect: [255, 254, 32, 0, 65, 0, 32, 0, 65, 0, 32, 0],
+				toBe: [255, 254, 65, 0, 32, 0, 65, 0],
 			},
 		];
 		
