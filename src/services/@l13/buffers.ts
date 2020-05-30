@@ -13,48 +13,48 @@ const push = Array.prototype.push;
 //	Exports ____________________________________________________________________
 
 export function normalizeLineEnding (buffer:Buffer) {
-	
+
 	if (buffer[0] === 254 && buffer[1] === 255) return normalizeUTF16BE(buffer);
 	if (buffer[0] === 255 && buffer[1] === 254) return normalizeUTF16LE(buffer);
-	
+
 	return normalizeAscii(buffer);
-	
+
 }
 
-export function trimTrailingWhitespace (buffer:Buffer) :Buffer {
-	
-	if (buffer[0] === 254 && buffer[1] === 255) return trimTrailingWhitespaceUTF16BE(buffer);
-	if (buffer[0] === 255 && buffer[1] === 254) return trimTrailingWhitespaceUTF16LE(buffer);
-	
-	return trimTrailingWhitespaceAscii(buffer);
-	
+export function trimWhitespace (buffer:Buffer) :Buffer {
+
+	if (buffer[0] === 254 && buffer[1] === 255) return trimWhitespaceUTF16BE(buffer);
+	if (buffer[0] === 255 && buffer[1] === 254) return trimWhitespaceUTF16LE(buffer);
+
+	return trimWhitespaceAscii(buffer);
+
 }
 
 //	Functions __________________________________________________________________
 
 function normalizeAscii (buffer:Buffer) {
-	
+
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-	
+
 	while (i < length) {
 		const value = buffer[i++];
 		if (value === 13) {
 			if (buffer[i] !== 10) cache[cache.length] = 10;
 		} else cache.push(value);
 	}
-	
+
 	return Buffer.from(cache);
-	
+
 }
 
 function normalizeUTF16BE (buffer:Buffer) {
-	
+
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-	
+
 	while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -62,17 +62,17 @@ function normalizeUTF16BE (buffer:Buffer) {
 			if (!(buffer[i] === 0 && buffer[i + 1] === 10)) cache.push(0, 10);
 		} else cache.push(valueA, valueB);
 	}
-	
+
 	return Buffer.from(cache);
-	
+
 }
 
 function normalizeUTF16LE (buffer:Buffer) {
-	
+
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-	
+
 	while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -80,23 +80,23 @@ function normalizeUTF16LE (buffer:Buffer) {
 			if (!(buffer[i] === 10 && buffer[i + 1] === 0)) cache.push(10, 0);
 		} else cache.push(valueA, valueB);
 	}
-	
+
 	return Buffer.from(cache);
-	
+
 }
 
-function trimTrailingWhitespaceAscii (buffer:Buffer) :Buffer {
-	
+function trimWhitespaceAscii (buffer:Buffer) :Buffer {
+
 	const length = buffer.length;
 	const newBuffer = [];
 	let cache = [];
 	let i = 0;
-	
+
 	if (buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191) { // UTF-8 BOM
 		newBuffer.push(239, 187, 191);
 		i = 3;
 	}
-	
+
 	stream: while (i < length) {
 		const value = buffer[i++];
 		if (value === 10 || value === 13 || i === length) {
@@ -105,7 +105,7 @@ function trimTrailingWhitespaceAscii (buffer:Buffer) :Buffer {
 			let k = cache.length;
 			start: while (j < k) {
 				const cacheValue = cache[j];
-				if (cacheValue === 9 || cacheValue === 11 || cacheValue === 12 || cacheValue === 32) {
+				if (cacheValue === 9 || cacheValue === 32) {
 					j++;
 					continue start;
 				}
@@ -118,7 +118,7 @@ function trimTrailingWhitespaceAscii (buffer:Buffer) :Buffer {
 			}
 			end: while (k > j) {
 				const cacheValue = cache[k - 1];
-				if (cacheValue === 9 || cacheValue === 11 || cacheValue === 12 || cacheValue === 32) {
+				if (cacheValue === 9 || cacheValue === 32) {
 					k--;
 					continue end;
 				}
@@ -129,18 +129,18 @@ function trimTrailingWhitespaceAscii (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(value);
 	}
-	
+
 	return Buffer.from(newBuffer);
-	
+
 }
 
-function trimTrailingWhitespaceUTF16BE (buffer:Buffer) :Buffer {
-	
+function trimWhitespaceUTF16BE (buffer:Buffer) :Buffer {
+
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
 	let cache = [];
 	let i = 2;
-	
+
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -151,7 +151,7 @@ function trimTrailingWhitespaceUTF16BE (buffer:Buffer) :Buffer {
 			start: while (j < k) {
 				const cacheValueA = cache[j];
 				const cacheValueB = cache[j + 1];
-				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 32)) {
 					j += 2;
 					continue start;
 				}
@@ -165,7 +165,7 @@ function trimTrailingWhitespaceUTF16BE (buffer:Buffer) :Buffer {
 			end: while (k > j) {
 				const cacheValueA = cache[k - 2];
 				const cacheValueB = cache[k - 1];
-				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 11 || cacheValueB === 12 || cacheValueB === 32)) {
+				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 32)) {
 					k -= 2;
 					continue end;
 				}
@@ -176,18 +176,18 @@ function trimTrailingWhitespaceUTF16BE (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}
-	
+
 	return Buffer.from(newBuffer);
-	
+
 }
 
-function trimTrailingWhitespaceUTF16LE (buffer:Buffer) :Buffer {
-	
+function trimWhitespaceUTF16LE (buffer:Buffer) :Buffer {
+
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
 	let cache = [];
 	let i = 2;
-	
+
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -198,7 +198,7 @@ function trimTrailingWhitespaceUTF16LE (buffer:Buffer) :Buffer {
 			start: while (j < k) {
 				const cacheValueA = cache[j];
 				const cacheValueB = cache[j + 1];
-				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 32)) {
 					j += 2;
 					continue start;
 				}
@@ -212,7 +212,7 @@ function trimTrailingWhitespaceUTF16LE (buffer:Buffer) :Buffer {
 			end: while (k > j) {
 				const cacheValueA = cache[k - 2];
 				const cacheValueB = cache[k - 1];
-				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 11 || cacheValueA === 12 || cacheValueA === 32)) {
+				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 32)) {
 					k -= 2;
 					continue end;
 				}
@@ -223,7 +223,7 @@ function trimTrailingWhitespaceUTF16LE (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}
-	
+
 	return Buffer.from(newBuffer);
-	
+
 }

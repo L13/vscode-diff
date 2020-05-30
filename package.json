@@ -352,7 +352,7 @@
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				},
-				"l13Diff.ignoreTrailingWhitespace": {
+				"l13Diff.ignoreTrimWhitespace": {
 					"type": "string",
 					"default": "default",
 					"enum": [
@@ -360,11 +360,11 @@
 						"on",
 						"off"
 					],
-					"description": "Indicates if trailing whitespace in text files should be ignored for a comparison.",
+					"description": "Indicates if leading and trailing whitespace in text files should be ignored for a comparison.",
 					"enumDescriptions": [
-						"Uses the VS Code property 'diffEditor.ignoreTrimWhitespace'.",
-						"Ignores trailing whitespace for a comparison in a text file.",
-						"Does not ignore trailing whitespace for a comparison in a text file."
+						"Uses the value of 'diffEditor.ignoreTrimWhitespace'.",
+						"Ignores leading and trailing whitespace for a comparison in a text file.",
+						"Does not ignore leading and trailing whitespace for a comparison in a text file."
 					]
 				}
 			}
