@@ -112,7 +112,7 @@ describe('jsons', () => {
 				desc: 'remove multi line comment between member',
 				expect: `
 				{
-					"a":/* test */1 
+					"a":/* test */1
 				}
 				`,
 				toBe: { a: 1 },
@@ -152,6 +152,139 @@ describe('jsons', () => {
 				}/* test */
 				/* test */`,
 				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment',
+				expect: `/*
+				test
+				*/{
+					"a": 1
+				}
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment at object start',
+				expect: `
+				{/*
+					test
+				*/
+					"a": 1
+				}
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment before member',
+				expect: `
+				{
+					/*
+					test
+					*/"a": 1
+				}
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment between member',
+				expect: `
+				{
+					"a":/*
+					test
+					*/1
+				}
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment after member',
+				expect: `
+				{
+					"a": 1 /*
+					test
+					*/
+				}
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment at object end',
+				expect: `
+				{
+					"a": 1
+				}/*
+				test
+				*/
+				`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger multi line comment at documnt end',
+				expect: `
+				{
+					"a": 1
+				}
+				/*
+					test
+				*/`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'remove bigger all multi line comments',
+				expect: `/*
+				test
+				*/
+				{/*
+					test
+				*//*
+					test
+				*/"a":/*
+					test
+				*/1/*
+					test
+				*/
+				}/*
+					test
+				*//*
+					test
+				*/`,
+				toBe: { a: 1 },
+			},
+			{
+				desc: 'ignore single line comment inside multiline comment',
+				expect: `{
+					"a": 1 /* // */
+				}
+				`,
+				toBe: { 'a': 1 },
+			},
+			{
+				desc: 'ignore multil line comment start inside multiline comment',
+				expect: `{
+					"a": 1 /* /* */
+				}
+				`,
+				toBe: { 'a': 1 },
+			},
+			{
+				desc: 'ignore single line comment inside bigger multiline comment',
+				expect: `{
+					"a": 1 /*
+					//
+				*/
+				}
+				`,
+				toBe: { 'a': 1 },
+			},
+			{
+				desc: 'ignore multil line comment start inside bigger multiline comment',
+				expect: `{
+					"a": 1 /*
+					/*
+				*/
+				}
+				`,
+				toBe: { 'a': 1 },
 			},
 			{
 				desc: 'ignore single line comment in key',
