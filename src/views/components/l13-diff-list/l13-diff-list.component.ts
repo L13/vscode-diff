@@ -596,7 +596,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]
 		basename.classList.add(`-basename`);
 		column.appendChild(basename);
 
-		if (diff.ignoredEOL || diff.ignoredWhitespace) {
+		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');
 			const values = [];
 			if (diff.ignoredEOL) values.push('eol');
@@ -618,7 +618,7 @@ function detectExistingFolder (file:File, otherFolders:string[], sameFolders:str
 	const dirname = file.dirname;
 
 	for (const folder of otherFolders) {
-		if (dirname.startsWith(folder) && sameFolders.indexOf(folder) !== 1) {
+		if (dirname.startsWith(folder) && sameFolders.indexOf(folder) !== -1) {
 			return [folder, dirname.replace(folder, '')];
 		}
 	}
