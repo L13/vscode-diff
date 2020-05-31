@@ -618,7 +618,7 @@ function detectExistingFolder (file:File, otherFolders:string[], sameFolders:str
 	const dirname = file.dirname;
 
 	for (const folder of otherFolders) {
-		if (dirname.startsWith(folder) && sameFolders.indexOf(folder) !== -1) {
+		if (dirname.startsWith(folder) && sameFolders.includes(folder)) {
 			return [folder, dirname.replace(folder, '')];
 		}
 	}
