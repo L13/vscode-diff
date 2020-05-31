@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as vscode from 'vscode';
+
 
 //	Variables __________________________________________________________________
 
@@ -12,19 +12,14 @@ import * as vscode from 'vscode';
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
-
-	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
-
-}
-
-export function sortCaseInsensitive (a:string, b:string) {
-
-	a = a.toLowerCase();
-	b = b.toLowerCase();
-
-	return a < b ? -1 : a > b ? 1 : 0;
-
+export class DetailStats {
+	public total:number = 0;
+	public files:number = 0;
+	public folders:number = 0;
+	public symlinks:number = 0;
+	public size:number = 0;
+	public ignoredEOL:number = 0;
+	public ignoredWhitespace:number = 0;
 }
 
 //	Functions __________________________________________________________________

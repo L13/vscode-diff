@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { Diff, File } from '../../../types';
-import { addKeyListener, changePlatform, isMacOs, isOtherPlatform, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
+import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
@@ -124,7 +124,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					if (lastSelection) {
 					//	On Windows selection works exactly like macOS if shiftKey and ctrlKey is pressed
 					//	Otherwise Windows removes previous selection
-						if (isWindows && !ctrlKey || isOtherPlatform) {
+						if (isWindows && !ctrlKey || isLinux) {
 							this.unselect();
 						//	On Windows previous selection will be remembered
 						//	On Linux always last clicked item will be remembered
