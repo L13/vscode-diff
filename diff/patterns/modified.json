@@ -1,27 +1,27 @@
 {
 	"folder-a": {
-		"file-i.txt": ["i"],
-		"link-i.txt": "./file-i.txt",
+		"file-i [!].txt": ["i"],
+		"link-i [!].txt": "./file-i.txt",
 		"subfolder-i": null,
 		"subfolder-j": {
-			"file-j.txt": ["j"]
+			"file-j [!].txt": ["j"]
 		},
 		"subfolder-k": {
 			"subfolder-l": {
-				"file-l.txt": ["l"]
+				"file-l [!].txt": ["l"]
 			}
 		}
 	},
 	"folder-b": {
-		"file-i.txt": ["m"],
-		"link-i.txt": "./file-j.txt",
+		"file-i [!].txt": ["m"],
+		"link-i [!].txt": "./file-j.txt",
 		"subfolder-i": null,
 		"subfolder-j": {
-			"file-j.txt": ["n"]
+			"file-j [!].txt": ["n"]
 		},
 		"subfolder-k": {
 			"subfolder-l": {
-				"file-l.txt": ["o"]
+				"file-l [!].txt": ["o"]
 			}
 		}
 	}
