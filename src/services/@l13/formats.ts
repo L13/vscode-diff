@@ -19,23 +19,23 @@ const PB:number = KB * TB;
 //	Exports ____________________________________________________________________
 
 export function formatAmount (value:number, measure:Plural) {
-
+	
 	return `${value} ${measure[value] || measure.size}`;
-
+	
 }
 
 export function formatFileSize (size:number) {
-
+	
 	const bytes = formatAmount(size, pluralBytes);
-
+	
 	if (size > PB) return `${(size / PB).toFixed(2)} PB (${bytes})`;
 	if (size > TB) return `${(size / TB).toFixed(2)} TB (${bytes})`;
 	if (size > GB) return `${(size / GB).toFixed(2)} GB (${bytes})`;
 	if (size > MB) return `${(size / MB).toFixed(2)} MB (${bytes})`;
 	if (size > KB) return `${(size / KB).toFixed(2)} KB (${bytes})`;
-
+	
 	return bytes;
-
+	
 }
 
 //	Functions __________________________________________________________________

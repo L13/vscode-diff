@@ -35,7 +35,9 @@ export type Dialog = {
 	buttonRight?:string,
 };
 
-export type Dictionary<T> = { [token:string]:T };
+export type Dictionary<T> = {
+	[token:string]:T,
+};
 
 export type DiffStats = {
 	total:number,
@@ -94,6 +96,12 @@ export type Plural = {
 
 export type StatsMap = {
 	[pathname:string]:File
+};
+
+export type Test = {
+	desc:string,
+	expect:any,
+	toBe:any,
 };
 
 export type TextFiles = {

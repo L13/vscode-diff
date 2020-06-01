@@ -238,9 +238,9 @@ gulp.task('script:tests', () => {
 gulp.task('test', (done) => {
 	
 	const tests = child_process.spawn('npm', ['test']).on('close', () => done());
-
+	
 	let logger = (buffer) => buffer.toString().split(/\n/).forEach((message) => message && console.log(message));
-
+	
 	tests.stdout.on('data', logger);
 	tests.stderr.on('data', logger);
 	

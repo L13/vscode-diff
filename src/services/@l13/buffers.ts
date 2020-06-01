@@ -13,48 +13,48 @@ const push = Array.prototype.push;
 //	Exports ____________________________________________________________________
 
 export function normalizeLineEnding (buffer:Buffer) {
-
+	
 	if (buffer[0] === 254 && buffer[1] === 255) return normalizeUTF16BE(buffer);
 	if (buffer[0] === 255 && buffer[1] === 254) return normalizeUTF16LE(buffer);
-
+	
 	return normalizeAscii(buffer);
-
+	
 }
 
 export function trimWhitespace (buffer:Buffer) :Buffer {
-
+	
 	if (buffer[0] === 254 && buffer[1] === 255) return trimUTF16BE(buffer);
 	if (buffer[0] === 255 && buffer[1] === 254) return trimUTF16LE(buffer);
-
+	
 	return trimAscii(buffer);
-
+	
 }
 
 //	Functions __________________________________________________________________
 
 function normalizeAscii (buffer:Buffer) {
-
+	
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-
+	
 	while (i < length) {
 		const value = buffer[i++];
 		if (value === 13) {
 			if (buffer[i] !== 10) cache[cache.length] = 10;
 		} else cache.push(value);
 	}
-
+	
 	return Buffer.from(cache);
-
+	
 }
 
 function normalizeUTF16BE (buffer:Buffer) {
-
+	
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-
+	
 	while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -62,17 +62,17 @@ function normalizeUTF16BE (buffer:Buffer) {
 			if (!(buffer[i] === 0 && buffer[i + 1] === 10)) cache.push(0, 10);
 		} else cache.push(valueA, valueB);
 	}
-
+	
 	return Buffer.from(cache);
-
+	
 }
 
 function normalizeUTF16LE (buffer:Buffer) {
-
+	
 	const length = buffer.length;
 	const cache = [];
 	let i = 0;
-
+	
 	while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -80,24 +80,24 @@ function normalizeUTF16LE (buffer:Buffer) {
 			if (!(buffer[i] === 10 && buffer[i + 1] === 0)) cache.push(10, 0);
 		} else cache.push(valueA, valueB);
 	}
-
+	
 	return Buffer.from(cache);
-
+	
 }
 
 function trimAscii (buffer:Buffer) :Buffer {
-
+	
 	const length = buffer.length;
 	const newBuffer = [];
 	let cache = [];
 	let fixBOM = 0;
 	let i = 0;
-
+	
 	if (buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191) { // UTF-8 BOM
 		newBuffer.push(239, 187, 191);
 		i = fixBOM = 3;
 	}
-
+	
 	stream: while (i < length) {
 		const value = buffer[i++];
 		if (value === 10 || value === 13 || i === length) {
@@ -131,18 +131,18 @@ function trimAscii (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(value);
 	}
-
+	
 	return Buffer.from(newBuffer);
-
+	
 }
 
 function trimUTF16BE (buffer:Buffer) :Buffer {
-
+	
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
 	let cache = [];
 	let i = 2;
-
+	
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -179,18 +179,18 @@ function trimUTF16BE (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}
-
+	
 	return Buffer.from(newBuffer);
-
+	
 }
 
 function trimUTF16LE (buffer:Buffer) :Buffer {
-
+	
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
 	let cache = [];
 	let i = 2;
-
+	
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
@@ -227,7 +227,7 @@ function trimUTF16LE (buffer:Buffer) :Buffer {
 			cache = [];
 		} else cache.push(valueA, valueB);
 	}
-
+	
 	return Buffer.from(newBuffer);
-
+	
 }

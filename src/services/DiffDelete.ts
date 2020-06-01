@@ -1,6 +1,5 @@
 //	Imports ____________________________________________________________________
 
-import { sep } from 'path';
 import * as vscode from 'vscode';
 
 import { Dialog, Diff, File } from '../types';
@@ -71,7 +70,7 @@ export class DiffDelete {
 		
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
-
+		
 		vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll).then((value) => {
 				
 			if (value) this.deleteFiles(data, side, useTrash);
@@ -99,7 +98,7 @@ export class DiffDelete {
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
 		let dialog:Dialog = null;
 		const args = [];
-
+		
 		if (sides > 2) {
 			dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
 			if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
@@ -107,7 +106,7 @@ export class DiffDelete {
 		} else dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-
+		
 		vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
 				
 			if (value) this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
@@ -121,7 +120,7 @@ export class DiffDelete {
 		const diffs:Diff[] = data.diffResult.diffs;
 		const folders:string[] = [];
 		const files:string[] = [];
-	
+		
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
 			if (fileA && (side === 'all' || side === 'left')) separateFilesAndFolders(fileA, folders, files);

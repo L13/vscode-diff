@@ -1,27 +1,31 @@
+//	Imports ____________________________________________________________________
+
 import * as assert from 'assert';
 
 import { normalizeLineEnding, trimWhitespace } from './buffers';
 
-type Test = {
-	desc:string,
-	expect:number[],
-	toBe:number[],
-};
+import { Test } from '../../types';
+
+//	Variables __________________________________________________________________
+
+
+
+//	Initialize _________________________________________________________________
 
 describe('buffers', () => {
-
+	
 	describe('.normalizeLineEnding()', () => {
-
+		
 		function runTests (tests:Test[]) {
-
+			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(normalizeLineEnding(Buffer.from(test.expect)), Buffer.from(test.toBe)));
 			}
-
+			
 		}
-
+		
 		describe('ASCII / UTF-8', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -84,19 +88,19 @@ describe('buffers', () => {
 					toBe: [65, 10, 65, 10, 65, 10, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\r and \\n', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 10 && i !== 13) assert.deepEqual(normalizeLineEnding(Buffer.from([i])), Buffer.from([i]));
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-8 with BOM', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -159,19 +163,19 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 65, 10, 65, 10, 65, 10, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\r and \\n', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 10 && i !== 13) assert.deepEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i])), Buffer.from([239, 187, 191, i]));
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-16BE', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -234,21 +238,21 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\r and \\n', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, i, j])), Buffer.from([254, 255, i, j]));
 					}
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-16LE', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -311,33 +315,33 @@ describe('buffers', () => {
 					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
 				},
 			]);
-
+			
 			it('ignore all chars except \\r and \\n', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, i, j])), Buffer.from([255, 254, i, j]));
 					}
 				}
-
+				
 			});
-
+			
 		});
-
+		
 	});
-
+	
 	describe('.trimWhitespace()', () => {
-
+		
 		function runTests (tests:Test[]) {
-
+			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(trimWhitespace(Buffer.from(test.expect)), Buffer.from(test.toBe)));
 			}
-
+			
 		}
-
+		
 		describe('ASCII / UTF-8', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -425,21 +429,21 @@ describe('buffers', () => {
 					toBe: [65, 32, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\t and space', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						assert.deepEqual(trimWhitespace(Buffer.from([i])), Buffer.from([i]));
 					}
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-8 with BOM', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -522,21 +526,21 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 65, 32, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\t and space', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						assert.deepEqual(trimWhitespace(Buffer.from([239, 187, 191, i])), Buffer.from([239, 187, 191, i]));
 					}
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-16BE', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -619,9 +623,9 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 65, 0, 32, 0, 65],
 				},
 			]);
-
+			
 			it('ignore all chars except \\t and space', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
@@ -629,13 +633,13 @@ describe('buffers', () => {
 						}
 					}
 				}
-
+				
 			});
-
+			
 		});
-
+		
 		describe('UTF-16LE', () => {
-
+			
 			runTests([
 				{
 					desc: 'empty',
@@ -718,9 +722,9 @@ describe('buffers', () => {
 					toBe: [255, 254, 65, 0, 32, 0, 65, 0],
 				},
 			]);
-
+			
 			it('ignore all chars except \\t and space', () => {
-
+				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
@@ -728,10 +732,18 @@ describe('buffers', () => {
 						}
 					}
 				}
-
+				
 			});
-
+			
 		});
+		
 	});
-
+	
 });
+
+//	Exports ____________________________________________________________________
+
+
+
+//	Functions __________________________________________________________________
+

@@ -1,27 +1,31 @@
+//	Imports ____________________________________________________________________
+
 import * as assert from 'assert';
 
 import { parse } from './jsons';
 
-type Test = {
-	desc:string,
-	expect:string,
-	toBe:any,
-};
+import { Test } from '../../types';
+
+//	Variables __________________________________________________________________
+
+
+
+//	Initialize _________________________________________________________________
 
 describe('jsons', () => {
-
+	
 	describe('.parse()', () => {
-
+		
 		function runTests (tests:Test[]) {
-
+			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(parse(test.expect), test.toBe));
 			}
-
+			
 		}
-
+		
 		describe('no comments', () => {
-
+			
 			runTests([
 				{
 					desc: 'with number value',
@@ -38,11 +42,11 @@ describe('jsons', () => {
 					toBe: { a: '1' },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('remove single line comment', () => {
-
+			
 			runTests([
 				{
 					desc: 'at document atart',
@@ -99,11 +103,11 @@ describe('jsons', () => {
 					toBe: { a: 1 },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('remove multi line comment', () => {
-
+			
 			runTests([
 				{
 					desc: 'at document start',
@@ -178,11 +182,11 @@ describe('jsons', () => {
 					toBe: { a: 1 },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('remove bigger multi line comments', () => {
-
+			
 			runTests([
 				{
 					desc: 'at document start',
@@ -282,11 +286,11 @@ describe('jsons', () => {
 					toBe: { a: 1 },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignnore single line comment inside', () => {
-
+			
 			runTests([
 				{
 					desc: 'multi line comment',
@@ -307,11 +311,11 @@ describe('jsons', () => {
 					toBe: { 'a': 1 },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('multi line comment start inside', () => {
-
+			
 			runTests([
 				{
 					desc: 'multi line comment',
@@ -332,11 +336,11 @@ describe('jsons', () => {
 					toBe: { 'a': 1 },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignore single line comment in', () => {
-
+			
 			runTests([
 				{
 					desc: 'key',
@@ -357,11 +361,11 @@ describe('jsons', () => {
 					toBe: { 'a': '1// test' },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignore multi line comment in string in', () => {
-
+			
 			runTests([
 				{
 					desc: 'key',
@@ -382,11 +386,11 @@ describe('jsons', () => {
 					toBe: { 'a': '1/* test */' },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignore double quote', () => {
-
+			
 			runTests([
 				{
 					desc: 'in key',
@@ -452,11 +456,11 @@ describe('jsons', () => {
 					toBe: { 'a': '1"' },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignore double quotes', () => {
-
+			
 			runTests([
 				{
 					desc: 'in key and value',
@@ -480,11 +484,11 @@ describe('jsons', () => {
 					toBe: { 'a"': '1"' },
 				},
 			]);
-
+			
 		});
-
+		
 		describe('ignore multiple double quotes', () => {
-
+			
 			runTests([
 				{
 					desc: 'in key and value',
@@ -493,7 +497,7 @@ describe('jsons', () => {
 					}`,
 					toBe: { '"""': '"""' },
 				},
-
+				
 				{
 					desc: 'at key and value start',
 					expect: `{
@@ -501,7 +505,7 @@ describe('jsons', () => {
 					}`,
 					toBe: { '"""a': '"""1' },
 				},
-
+				
 				{
 					desc: 'at key and value end',
 					expect: `{
@@ -510,9 +514,16 @@ describe('jsons', () => {
 					toBe: { 'a"""': '1"""' },
 				},
 			]);
-
+			
 		});
-
+		
 	});
-
+	
 });
+
+//	Exports ____________________________________________________________________
+
+
+
+//	Functions __________________________________________________________________
+
