@@ -193,6 +193,12 @@ export class DiffPanel {
 		
 	}
 	
+	public static send (name:string, data:any) {
+		
+		if (DiffPanel.currentPanel) DiffPanel.currentPanel.msg.send(name, data);
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________

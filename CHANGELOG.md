@@ -6,6 +6,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ### Added
 - Added context menu for copy, delete and reveal file to list items.
 - Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
+- Added auto update of view if a file has been saved and is part of the current comparison.
 
 ### Changed
 - Changed icons for copy files.

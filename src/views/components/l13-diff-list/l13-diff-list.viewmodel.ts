@@ -59,6 +59,8 @@ export class L13DiffListViewModel extends ViewModel {
 		msg.on('copy:left', (data) => this.updateCopiedList(data.diffResult));
 		msg.on('copy:right', (data) => this.updateCopiedList(data.diffResult));
 		msg.on('delete:files', (data) => this.updateDeletedList(data.diffResult));
+		msg.on('update:files', (data) => this.updateFiles(data.files));
+		msg.on('update:diffs', (data) => this.updateDiffList(data.diffResult));
 		
 	}
 	
@@ -138,6 +140,47 @@ export class L13DiffListViewModel extends ViewModel {
 		this.items = this.items.slice(); // Refreshs the view
 		
 		this.dispatchEvent('deleted');
+		
+	}
+	
+	public updateFiles (files:string[]) {
+		console.log(files);
+		const diffs = this.items.filter(({ fileA, fileB }) => {
+			
+			if (!fileA || !fileB) return false;
+			
+			return files.includes(fileA.path) || files.includes(fileB.path);
+			
+		});
+		
+		if (diffs.length) {
+			msg.send('update:diffs', {
+				diffResult: {
+					pathA: this.diffResult.pathA,
+					pathB: this.diffResult.pathB,
+					diffs,
+				},
+			});
+		}
+		
+	}
+	
+	public updateDiffList (diffResult:DiffResult) {
+		
+		const diffs = diffResult.diffs;
+		
+		diffs.forEach((diff:Diff) => { // Update original diff with new diff
+			
+			const originalDiff = this.map[diff.id];
+			
+			this.items.splice(this.items.indexOf(originalDiff), 1, diff);
+			this.map[diff.id] = diff;
+			
+		});
+		
+		this.items = this.items.slice(); // Refreshs the view
+		
+		this.dispatchEvent('updated');
 		
 	}
 	

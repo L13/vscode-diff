@@ -59,6 +59,7 @@ export class DiffCompare {
 		this.history = DiffHistory.createProvider(context);
 		
 		msg.on('create:diffs', (data) => this.createDiffs(data));
+		msg.on('update:diffs', (data) => this.updateDiffs(data));
 		
 	}
 	
@@ -108,6 +109,26 @@ export class DiffCompare {
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
 		else this.postError(`The left and right path can't be compared!`, pathA, pathB);
+		
+	}
+	
+	private updateDiffs (data:any) :void {
+		
+		const workspace = vscode.workspace;
+		const ignoreEndOfLine = workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
+		const useDefault = workspace.getConfiguration('l13Diff').get('ignoreTrimWhitespace', 'default');
+		const ignoreTrimWhitespace = useDefault === 'default' ? workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', true) : useDefault === 'on';
+		
+		data.diffResult.diffs.forEach((diff:Diff) => {
+			
+			diff.fileA.stat = lstatSync(diff.fileA.path);
+			diff.fileB.stat = lstatSync(diff.fileB.path);
+			
+			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace);
+			
+		});
+		
+		this.msg.send('update:diffs', data);
 		
 	}
 	
@@ -271,53 +292,7 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 		const id = file.relative;
 		const diff = diffs[id];
 		
-		if (diff) {
-			diff.status = 'unchanged';
-			
-			const fileB = diff.fileB = file;
-			const fileA = <File>diff.fileA;
-			
-			const statA = <fs.Stats>fileA.stat;
-			const statB = <fs.Stats>fileB.stat;
-			
-			if (fileA.type !== fileB.type) {
-				diff.status = 'conflicting';
-				diff.type = 'mixed';
-			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
-					(textfiles.extensions.includes(fileA.extname) ||
-					textfiles.filenames.includes(fileA.basename) ||
-					textfiles.glob && textfiles.glob.test(fileA.basename))) {
-					let bufferA = fs.readFileSync(fileA.path);
-					let bufferB = fs.readFileSync(fileB.path);
-				//	If files are equal normalizing is not necessary
-					if (statA.size === statB.size && bufferA.equals(bufferB)) return;
-					if (ignoreTrimWhitespace) {
-						bufferA = trimWhitespace(bufferA);
-						bufferB = trimWhitespace(bufferB);
-						diff.ignoredWhitespace = true;
-					}
-					if (ignoreEndOfLine) {
-						bufferA = normalizeLineEnding(bufferA);
-						bufferB = normalizeLineEnding(bufferB);
-						diff.ignoredEOL = true;
-					}
-					if (!bufferA.equals(bufferB)) diff.status = 'modified';
-				} else {
-					if (statA.size !== statB.size) {
-						diff.status = 'modified';
-					} else {
-						const bufferA = fs.readFileSync(fileA.path);
-						const bufferB = fs.readFileSync(fileB.path);
-						if (!bufferA.equals(bufferB)) diff.status = 'modified';
-					}
-				}
-			} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
-				const linkA = fs.readlinkSync(fileA.path);
-				const linkB = fs.readlinkSync(fileB.path);
-				if (linkA !== linkB) diff.status = 'modified';
-			}
-		} else {
+		if (!diff) {
 			diffs[id] = {
 				id,
 				status: 'untracked',
@@ -327,9 +302,56 @@ function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				fileA: null,
 				fileB: file,
 			};
-		}
+		} else compareDiff(diff, <File>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
 		
 	});
+	
+}
+
+function compareDiff (diff:Diff, fileA:File, fileB:File, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
+	
+	diff.status = 'unchanged';
+	
+	const statA = <fs.Stats>fileA.stat;
+	const statB = <fs.Stats>fileB.stat;
+	
+	if (fileA.type !== fileB.type) {
+		diff.status = 'conflicting';
+		diff.type = 'mixed';
+	} else if (fileA.type === 'file' && fileB.type === 'file') {
+		if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
+			(textfiles.extensions.includes(fileA.extname) ||
+			textfiles.filenames.includes(fileA.basename) ||
+			textfiles.glob && textfiles.glob.test(fileA.basename))) {
+			let bufferA = fs.readFileSync(fileA.path);
+			let bufferB = fs.readFileSync(fileB.path);
+		//	If files are equal normalizing is not necessary
+			if (statA.size === statB.size && bufferA.equals(bufferB)) return;
+			if (ignoreTrimWhitespace) {
+				bufferA = trimWhitespace(bufferA);
+				bufferB = trimWhitespace(bufferB);
+				diff.ignoredWhitespace = true;
+			}
+			if (ignoreEndOfLine) {
+				bufferA = normalizeLineEnding(bufferA);
+				bufferB = normalizeLineEnding(bufferB);
+				diff.ignoredEOL = true;
+			}
+			if (!bufferA.equals(bufferB)) diff.status = 'modified';
+		} else {
+			if (statA.size !== statB.size) {
+				diff.status = 'modified';
+			} else {
+				const bufferA = fs.readFileSync(fileA.path);
+				const bufferB = fs.readFileSync(fileB.path);
+				if (!bufferA.equals(bufferB)) diff.status = 'modified';
+			}
+		}
+	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
+		const linkA = fs.readlinkSync(fileA.path);
+		const linkB = fs.readlinkSync(fileB.path);
+		if (linkA !== linkB) diff.status = 'modified';
+	}
 	
 }
 

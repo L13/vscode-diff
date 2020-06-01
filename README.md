@@ -10,6 +10,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 - Added context menu for copy, delete and reveal file to list items.
 - Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
+- Added auto update of view if a file has been saved and is part of the current comparison.
 
 ## Features
 
@@ -29,6 +30,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
+* Provides a context menu for list items to copy, delete or reveal a file.
+* Ignores line endings in text files for a comparison.
+* Ignores leading and trailing whitespace in text files.
+* Auto updates the list view if a file has been saved and is part of the current comparison.
 
 ### Welcome
 

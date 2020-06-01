@@ -6,7 +6,8 @@ import { DiffPanel } from '../services/DiffPanel';
 
 //	Variables __________________________________________________________________
 
-
+let updateFiles:string[] = [];
+let timeoutId:NodeJS.Timeout = null;
 
 //	Initialize _________________________________________________________________
 
@@ -47,7 +48,24 @@ export function activate (context:vscode.ExtensionContext) {
 		});
 	}
 	
+	vscode.workspace.onDidSaveTextDocument(({ fileName }) => {
+		
+		if (fileName && DiffPanel.currentPanel) {
+			if (timeoutId !== null) clearTimeout(timeoutId);
+			updateFiles.push(fileName);
+			timeoutId = setTimeout(sendUpdateFiles, 200);
+		}
+		
+	});
+	
 }
 
 //	Functions __________________________________________________________________
 
+function sendUpdateFiles () {
+	
+	DiffPanel.send('update:files', { files: updateFiles });
+	updateFiles = [];
+	timeoutId = null;
+	
+}
