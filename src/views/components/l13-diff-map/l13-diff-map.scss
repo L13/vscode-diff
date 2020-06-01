@@ -5,14 +5,21 @@
 }
 
 div {
-    background: var(--l13-scrollbar-background);
-    box-shadow: inset 0 0 1px 0 #b9b9b9;
+    background-color: var(--vscode-scrollbarSlider-background);
     box-sizing: border-box;
     height: 10px;
     position: absolute;
     top: 0;
     right: 0;
     width: 100%;
+    
+    &:hover {
+        background-color: var(--vscode-scrollbarSlider-hoverBackground);
+    }
+    
+    &:active {
+        background-color: var(--vscode-scrollbarSlider-activeBackground);
+    }
 }
 
 canvas {
