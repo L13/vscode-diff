@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { formatAmount, formatFileSize } from './@l13/formats';
+import { formatAmount, formatFileSize } from './@l13/utils/formats';
 
 import { Diff, File, Plural } from '../types';
 import { DiffResult } from './DiffResult';

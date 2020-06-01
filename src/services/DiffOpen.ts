@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Diff, File } from '../types';
-import { isMacOs, isWindows } from './@l13/os/platforms';
+import { isMacOs, isWindows } from './@l13/nodes/platforms';
 import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________

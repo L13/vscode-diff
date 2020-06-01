@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Uri } from '../types';
-import { isMacOs, isWindows } from './@l13/os/platforms';
+import { isMacOs, isWindows } from './@l13/nodes/platforms';
 import { workspacePaths } from './common';
 import { DiffCompare } from './DiffCompare';
 import { DiffCopy } from './DiffCopy';

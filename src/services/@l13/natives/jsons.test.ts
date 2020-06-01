@@ -4,7 +4,7 @@ import * as assert from 'assert';
 
 import { parse } from './jsons';
 
-import { Test } from '../../types';
+import { Test } from '../../../types';
 
 //	Variables __________________________________________________________________
 

@@ -1,12 +1,12 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, join, sep } from 'path';
+import { join } from 'path';
 import * as vscode from 'vscode';
 
-import { normalizeLineEnding, trimWhitespace } from './@l13/buffers';
-import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/fse';
-import { parse } from './@l13/jsons';
+import { parse } from './@l13/natives/jsons';
+import { normalizeLineEnding, trimWhitespace } from './@l13/nodes/buffers';
+import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/nodes/fse';
 
 import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
 import { sortCaseInsensitive } from './common';

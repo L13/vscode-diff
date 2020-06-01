@@ -23,7 +23,7 @@ const findPattern = /width="100%" height="100%" viewBox="0 0 (\d+) (\d+)"/;
 
 gulp.task('clean', () => {
 	
-	return del(['.cache', 'media', 'out']);
+	return del(['.cache', 'media', 'out', 'test']);
 	
 });
 

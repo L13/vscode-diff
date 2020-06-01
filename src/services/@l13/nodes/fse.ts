@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Callback, Options, WalkTreeJob } from '../../types';
+import { Callback, Options, WalkTreeJob } from '../../../types';
 
 //	Variables __________________________________________________________________
 

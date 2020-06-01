@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, lstatSync, mkdirsSync } from './@l13/fse';
+import { copyFile, lstatSync, mkdirsSync } from './@l13/nodes/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
 import { DiffMessage } from './DiffMessage';
