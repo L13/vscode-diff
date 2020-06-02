@@ -4,15 +4,19 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ## [0.24.0] - 2020-06-07
 
 ### Added
-- Added context menu for copy, delete and reveal file to list items.
+- Added context menu to copy, delete and reveal a file in the list view.
 - Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
-- Added auto update of view if a file has been saved and is part of the current comparison.
+- Added auto update for list view if a file has been saved and is part of the current comparison.
+- Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
+- Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
+- Added output messages if files have been copied, deleted or updated.
 
 ### Changed
 - Changed icons for copy files.
 
 ### Removed
 - Removed auto selection focus for first menu item, because of usability bug `copy & paste -> enter`.
+- Removed info message when files have been copied.
 
 ## [0.23.0] - 2020-05-23
 

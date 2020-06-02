@@ -33,6 +33,7 @@ export type Dialog = {
 	buttonAll:string,
 	buttonLeft?:string,
 	buttonRight?:string,
+	buttonOk?:string,
 };
 
 export type Dictionary<T> = {

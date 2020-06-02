@@ -13,7 +13,7 @@ import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
-
+const BUTTON_COPY_DONT_ASK_AGAIN = 'Copy, don\'t ask again';
 
 //	Initialize _________________________________________________________________
 
@@ -89,17 +89,22 @@ export class DiffCopy {
 	
 	private showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') :void {
 		
+		const confirmCopy = vscode.workspace.getConfiguration('l13Diff').get('confirmCopy', true);
 		const length = data.diffResult.diffs.length;
 		
 		if (!length) return;
 		
-		const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
-		
-		vscode.window.showInformationMessage(text, { modal: true }, 'Copy').then((value) => {
-			
-			if (value) this.copyFromTo(data, from, to);
-			
-		});
+		if (confirmCopy) {
+			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
+			vscode.window.showInformationMessage(text, { modal: true }, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN).then((value) => {
+				
+				if (value) {
+					if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
+					this.copyFromTo(data, from, to);
+				}
+				
+			});
+		} else this.copyFromTo(data, from, to);;
 		
 	}
 	

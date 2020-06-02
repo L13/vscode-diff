@@ -29,12 +29,14 @@ const simpleTrashDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
+	buttonOk: 'Move, don\'t ask again',
 };
 
 const simpleDeleteDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
+	buttonOk: 'Delete, don\'t ask again',
 };
 
 //	Initialize _________________________________________________________________
@@ -75,13 +77,19 @@ export class DiffDelete {
 		if (!diffs.length) return;
 		
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
+		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
-		vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll).then((value) => {
-				
-			if (value) this.deleteFiles(data, side, useTrash);
-				
-		});
+		if (confirmDelete) {
+			vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll, dialog.buttonOk).then((value) => {
+					
+				if (value) {
+					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+					this.deleteFiles(data, side, useTrash);
+				}
+					
+			});
+		} else this.deleteFiles(data, side, useTrash);
 		
 	}
 	
@@ -102,22 +110,32 @@ export class DiffDelete {
 		}
 		
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
-		let dialog:Dialog = null;
-		const args = [];
+		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
 		
-		if (sides > 2) {
-			dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
-			if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
-			else args.push(dialog.buttonRight, dialog.buttonLeft);
-		} else dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
-		
-		const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-		
-		vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
-				
-			if (value) this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-				
-		});
+		if (confirmDelete || sides > 2) {
+			let dialog:Dialog = null;
+			const args = [];
+			
+			if (sides > 2) {
+				dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
+				if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
+				else args.push(dialog.buttonRight, dialog.buttonLeft);
+			} else {
+				dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+				args.push(dialog.buttonOk);
+			}
+			
+			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
+			
+			vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
+					
+				if (value) {
+					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+					this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
+				}
+					
+			});
+		} else this.deleteFiles(data, 'all', useTrash);
 		
 	}
 	

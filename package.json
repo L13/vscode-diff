@@ -366,6 +366,16 @@
 						"Ignores leading and trailing whitespace for a comparison in a text file.",
 						"Does not ignore leading and trailing whitespace for a comparison in a text file."
 					]
+				},
+				"l13Diff.confirmCopy": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when copying files."
+				},
+				"l13Diff.confirmDelete": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when deleting files."
 				}
 			}
 		}

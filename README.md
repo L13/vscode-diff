@@ -8,9 +8,12 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## What's new in L13 Diff 0.24.0
 
-- Added context menu for copy, delete and reveal file to list items.
+- Added context menu to copy, delete and reveal a file in the list view.
 - Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
-- Added auto update of view if a file has been saved and is part of the current comparison.
+- Added auto update for list view if a file has been saved and is part of the current comparison.
+- Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
+- Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
+- Added output messages if files have been copied, deleted or updated.
 
 ## Features
 
@@ -84,6 +87,8 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
+* `l13Diff.confirmCopy` - If true confirm dialog for copying files does not appear.
+* `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
 	* `default` (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
