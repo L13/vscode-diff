@@ -121,10 +121,17 @@ export class DiffCompare {
 		
 		data.diffResult.diffs.forEach((diff:Diff) => {
 			
+			const status = diff.status;
+			let statusInfo = ` Files are still '${status}'.`;
+			
 			diff.fileA.stat = lstatSync(diff.fileA.path);
 			diff.fileB.stat = lstatSync(diff.fileB.path);
 			
 			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace);
+			
+			if (status !== diff.status) statusInfo = ` Status has changed from '${status}' to '${diff.status}'.`;
+			
+			this.output.log(`Compared diff "${diff.id}".${statusInfo}`);
 			
 		});
 		
@@ -153,7 +160,7 @@ export class DiffCompare {
 		
 		this.saveRecentlyUsed(data.pathA, data.pathB);
 		this.saveHistory(pathA, pathB);
-		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
+		this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
 			preview: false,
@@ -168,7 +175,7 @@ export class DiffCompare {
 		
 		this.saveRecentlyUsed(data.pathA, data.pathB);
 		this.saveHistory(pathA, pathB);
-		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
+		this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
 			
@@ -207,7 +214,7 @@ export class DiffCompare {
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.output.log(`Scanning folder '${dirnameA}'`);
+		this.output.log(`Scanning folder "${dirnameA}"`);
 		
 		walkTree(dirnameA, { ignore }, (errorA, resultA) => {
 			
@@ -215,7 +222,7 @@ export class DiffCompare {
 			
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.output.log(`Scanning folder '${dirnameB}'`);
+			this.output.log(`Scanning folder "${dirnameB}"`);
 			
 			walkTree(dirnameB, { ignore }, (errorB, resultB) => {
 				

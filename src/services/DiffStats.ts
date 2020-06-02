@@ -72,7 +72,7 @@ export class DiffStats {
 		
 		return `INFO
 
-Compared:    ${formatBasicStats(`${this.pathA.pathname} ↔ ${this.pathB.pathname}`, this.all)}
+Compared:    "${formatBasicStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}"`, this.all)}
 
 Left Path:   ${formatBasicStats(this.pathA.pathname, this.pathA)}
 
@@ -87,7 +87,11 @@ Conflicts:   ${this.conflicting.total}
 Created:     ${formatDetail(this.untracked)}
 Deleted:     ${formatDetail(this.deleted)}
 Modified:    ${formatDetail(this.modified)}
-Unchanged:   ${formatDetail(this.unchanged)}`;
+Unchanged:   ${formatDetail(this.unchanged)}
+
+
+UPDATES
+`;
 		
 	}
 	
@@ -134,7 +138,7 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 
 function formatBasicStats (name:string, stats:DetailStats|FolderStats) {
 	
-	return `${name}
+	return `"${name}"
 Entries:     ${formatDetail(stats)}
 Size:        ${formatFileSize(stats.size)}`;
 	

@@ -18,7 +18,7 @@ export class DiffOutput {
 	
 	public static currentOutput:DiffOutput|undefined;
 	
-	public constructor () {
+	private constructor () {
 		
 		this.output = vscode.window.createOutputChannel('L13 Diff');
 		

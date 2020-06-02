@@ -7,7 +7,9 @@ import * as vscode from 'vscode';
 import { copyFile, lstatSync, mkdirsSync } from './@l13/nodes/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
+
 import { DiffMessage } from './DiffMessage';
+import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
@@ -21,9 +23,13 @@ import { DiffMessage } from './DiffMessage';
 
 export class DiffCopy {
 	
+	private readonly output:DiffOutput;
+	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
+		
+		this.output = DiffOutput.createOutput();
 		
 		this.msg.on('copy:left', (data) => this.showCopyFromToDialog(data, 'A', 'B'));
 		this.msg.on('copy:right', (data) => this.showCopyFromToDialog(data, 'B', 'A'));
@@ -107,8 +113,6 @@ export class DiffCopy {
 			tasks: length,
 			done: () => {
 				
-				if (!job.error) vscode.window.showInformationMessage(`Copied ${length} file${length === 1 ? '' : 's'} to '${folderTo}'`);
-				
 				if (!job.tasks) this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
 				
 			},
@@ -131,6 +135,7 @@ export class DiffCopy {
 						job.error = error;
 						vscode.window.showErrorMessage(error.message);
 					} else {
+						this.output.log(`Copied ${diff.type} "${fileFrom.path}" to "${folderTo}".`);
 						diff.status = 'unchanged';
 						if (!(<File>(<any>diff)['file' + to])) {
 							(<File>(<any>diff)['file' + to]) = {

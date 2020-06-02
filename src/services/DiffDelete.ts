@@ -3,7 +3,9 @@
 import * as vscode from 'vscode';
 
 import { Dialog, Diff, File } from '../types';
+
 import { DiffMessage } from './DiffMessage';
+import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
@@ -43,9 +45,13 @@ const simpleDeleteDialog:Dialog = {
 
 export class DiffDelete {
 	
+	private readonly output:DiffOutput;
+	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
+		
+		this.output = DiffOutput.createOutput();
 		
 		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
 		this.msg.on('delete:left', (data) => this.showDeleteFileDialog(data, 'left'));
@@ -115,6 +121,32 @@ export class DiffDelete {
 		
 	}
 	
+	private deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
+		
+		return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
+			recursive: true,
+			useTrash,
+		}).then(() => {
+			
+			let type = null;
+			
+			for (const diff of diffs) {
+				if (diff.fileA?.path === pathname) type = diff.fileA.type;
+				if (diff.fileB?.path === pathname) type = diff.fileB.type;
+				
+				if (type) {
+					this.output.log(`Deleted ${type} "${pathname}".`);
+					type = null;
+				}
+				
+				if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
+				if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
+			}
+			
+		}, (error) => vscode.window.showErrorMessage(error.message));
+		
+	}
+	
 	private deleteFiles (data:any, side:'all'|'left'|'right', useTrash:boolean) :void {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
@@ -133,7 +165,7 @@ export class DiffDelete {
 		
 		const promises = [];
 		
-		for (const file of folders.concat(files)) promises.push(deleteFile(diffs, file, useTrash));
+		for (const file of folders.concat(files)) promises.push(this.deleteFile(diffs, file, useTrash));
 		
 		Promise.all(promises).then(() => {
 			
@@ -163,21 +195,5 @@ function removeSubfiles (folders:string[], files:string[]) {
 			if (file !== folder && file.startsWith(folder)) files.splice(--i , 1);
 		}
 	}
-	
-}
-
-function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
-	
-	return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
-		recursive: true,
-		useTrash,
-	}).then(() => {
-		
-		for (const diff of diffs) {
-			if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
-			if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
-		}
-		
-	}, (error) => vscode.window.showErrorMessage(error.message));
 	
 }
