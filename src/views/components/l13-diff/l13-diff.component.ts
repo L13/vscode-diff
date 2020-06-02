@@ -137,9 +137,13 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.actions.addEventListener('copy', (event) => {
 			
+			disable();
 			this.list.copy((<any>event).detail.from);
 			
 		});
+		
+		this.list.addEventListener('copy', () => disable());
+		this.list.addEventListener('delete', () => disable());
 		
 		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
 			
@@ -153,6 +157,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		});
 		
 		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+		
+		msg.on('cancel', () => enable());
 		
 		msg.on('update:paths', (data) => {
 			

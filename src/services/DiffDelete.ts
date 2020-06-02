@@ -86,7 +86,7 @@ export class DiffDelete {
 				if (value) {
 					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
 					this.deleteFiles(data, side, useTrash);
-				}
+				} else this.msg.send('cancel');
 					
 			});
 		} else this.deleteFiles(data, side, useTrash);
@@ -132,7 +132,7 @@ export class DiffDelete {
 				if (value) {
 					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
 					this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-				}
+				} else this.msg.send('cancel');
 					
 			});
 		} else this.deleteFiles(data, 'all', useTrash);

@@ -101,7 +101,7 @@ export class DiffCopy {
 				if (value) {
 					if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
 					this.copyFromTo(data, from, to);
-				}
+				} else this.msg.send('cancel');
 				
 			});
 		} else this.copyFromTo(data, from, to);;

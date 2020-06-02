@@ -144,7 +144,7 @@ export class L13DiffListViewModel extends ViewModel {
 	}
 	
 	public updateFiles (files:string[]) {
-		console.log(files);
+		
 		const diffs = this.items.filter(({ fileA, fileB }) => {
 			
 			if (!fileA || !fileB) return false;
