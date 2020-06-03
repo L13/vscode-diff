@@ -2,8 +2,8 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffMapViewModelService } from './l13-diff-map.service';
-import { L13DiffMapViewModel } from './l13-diff-map.viewmodel';
+import { L13DiffNavigatorViewModelService } from './l13-diff-navigator.service';
+import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -19,14 +19,14 @@ const round = Math.round;
 //	Exports ____________________________________________________________________
 
 @L13Component({
-	name: 'l13-diff-map',
-	service: L13DiffMapViewModelService,
-	styles: [styles['l13-diff-map/l13-diff-map.css']],
-	template: templates['l13-diff-map/l13-diff-map.html'],
+	name: 'l13-diff-navigator',
+	service: L13DiffNavigatorViewModelService,
+	styles: [styles['l13-diff-navigator/l13-diff-navigator.css']],
+	template: templates['l13-diff-navigator/l13-diff-navigator.html'],
 })
-export class L13DiffMapComponent extends L13Element<L13DiffMapViewModel> {
+export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewModel> {
 	
-	@L13Query('#map')
+	@L13Query('#navigator')
 	public canvas:HTMLCanvasElement;
 	
 	@L13Query('div')

@@ -10,8 +10,8 @@ import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.co
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMapComponent } from '../l13-diff-map/l13-diff-map.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
 import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
@@ -79,8 +79,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-compare')
 	private compare:L13DiffCompareComponent;
 	
-	@L13Query('l13-diff-map')
-	private map:L13DiffMapComponent;
+	@L13Query('l13-diff-navigator')
+	private navigator:L13DiffNavigatorComponent;
 	
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
@@ -158,12 +158,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		search.addEventListener('animationend', () => {
 			
 			if (search.classList.contains('-moveout')) {
-				this.map.classList.remove('-widgets');
+				this.navigator.classList.remove('-widgets');
 				search.classList.remove('-moveout');
 				search.viewmodel.disable();
 				search.remove();
 			} else {
-				this.map.classList.add('-widgets');
+				this.navigator.classList.add('-widgets');
 				search.classList.remove('-movein');
 			}
 			
@@ -218,19 +218,19 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-	//	map view
+	//	navigator view
 		
-		this.map.addEventListener('scroll', () => {
+		this.navigator.addEventListener('scroll', () => {
 			
 			const list = this.list;
-			const map = this.map;
+			const navigator = this.navigator;
 			
-			list.scrollTop = round(map.scrollbar.offsetTop / map.offsetHeight * list.scrollHeight);
+			list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.offsetHeight * list.scrollHeight);
 			
 		});
 		
-		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
-		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
+		this.navigator.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
+		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
 		document.addEventListener('theme', () => this.updateMap());
 		
@@ -318,9 +318,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	private setScrollbarPosition () {
 		
 		const list = this.list;
-		const map = this.map;
+		const navigator = this.navigator;
 		
-		map.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
+		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.offsetHeight)}px`;
 		
 	}
 	
@@ -348,8 +348,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
-		this.map.buildMap(values, this.list.offsetHeight);
-		this.map.style.top = this.panel.offsetHeight + 'px';
+		this.navigator.buildMap(values, this.list.offsetHeight);
+		this.navigator.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
 		
 	}

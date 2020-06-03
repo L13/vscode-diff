@@ -12,7 +12,7 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Exports ____________________________________________________________________
 
-export class L13DiffMapViewModel extends ViewModel {
+export class L13DiffNavigatorViewModel extends ViewModel {
 	
 	
 	

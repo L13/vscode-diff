@@ -30,9 +30,9 @@ import './components/l13-diff-list/l13-diff-list.component';
 import './components/l13-diff-list/l13-diff-list.service';
 import './components/l13-diff-list/l13-diff-list.viewmodel';
 
-import './components/l13-diff-map/l13-diff-map.component';
-import './components/l13-diff-map/l13-diff-map.service';
-import './components/l13-diff-map/l13-diff-map.viewmodel';
+import './components/l13-diff-navigator/l13-diff-navigator.component';
+import './components/l13-diff-navigator/l13-diff-navigator.service';
+import './components/l13-diff-navigator/l13-diff-navigator.viewmodel';
 
 import './components/l13-diff-menu/l13-diff-menu.component';
 import './components/l13-diff-menu/l13-diff-menu.service';
