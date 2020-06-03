@@ -105,7 +105,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public buildMap (items:any[], listHeight:number) {
+	public build (items:any[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvas;

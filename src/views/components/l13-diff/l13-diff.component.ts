@@ -167,7 +167,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				search.classList.remove('-movein');
 			}
 			
-			this.updateMap();
+			this.updateNavigator();
 			
 		});
 		
@@ -204,9 +204,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
 		
-		this.list.addEventListener('refresh', () => this.updateMap());
+		this.list.addEventListener('refresh', () => this.updateNavigator());
 		
-		window.addEventListener('resize', () => this.updateMap());
+		window.addEventListener('resize', () => this.updateNavigator());
 		
 		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
 		
@@ -232,7 +232,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.navigator.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
 		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
-		document.addEventListener('theme', () => this.updateMap());
+		document.addEventListener('theme', () => this.updateNavigator());
 		
 	//	messages
 		
@@ -338,9 +338,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private updateMap () :void {
+	private updateNavigator () :void {
 			
-		let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:any[] = [];
 		
 		while (element) {
@@ -348,7 +348,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
-		this.navigator.buildMap(values, this.list.offsetHeight);
+		this.navigator.build(values, this.list.offsetHeight);
 		this.navigator.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
 		

@@ -5,7 +5,7 @@ export default {
 	"l13-diff-context/l13-diff-context.html": "<button id=\"copy\"></button><button id=\"reveal\"></button><button id=\"delete\"></button>",
 	"l13-diff-input/l13-diff-input.html": "<input type=\"text\" [(model)]=\"value\" [disabled]=\"disabled\">\n<button (click)=\"openDialog()\" [disabled]=\"disabled\"></button>\n<slot></slot>",
 	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts></l13-diff-shortcuts>",
-	"l13-diff-list/l13-diff-list.html": "<l13-diff-list-body></l13-diff-list-body>",
+	"l13-diff-list/l13-diff-list.html": "<l13-diff-list-content></l13-diff-list-content>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
 	"l13-diff-navigator/l13-diff-navigator.html": "<canvas id=\"navigator\"></canvas><div></div>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",
