@@ -104,7 +104,7 @@ l13-diff-list {
 	position: relative;
 	margin: 0 30px 0 0;
 	transition: margin-top 0.1s linear;
-	z-index: 0;
+	z-index: 1;
 	
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
@@ -124,7 +124,8 @@ l13-diff-navigator {
 	position: absolute;
 	right: 0;
 	top: 75px;
-	width: 30px;
+	width: 44px;
+	z-index: 0;
 	
 	&.-widgets {
 		margin-top: 34px;

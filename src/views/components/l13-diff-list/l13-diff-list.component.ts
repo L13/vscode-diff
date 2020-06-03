@@ -245,15 +245,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		to.classList.add('-selected');
 		elements[elements.length] = to;
 		
+		this.dispatchCustomEvent('selected');
+		
 		return elements;
 		
 	}
 	
-	private selectItem (element:HTMLElement) {
+	private selectItem (element:HTMLElement, dispatchEvent:boolean = true) {
 		
 		element.classList.add('-selected');
 		this.cacheSelectionHistory.push(element);
 		scrollElementIntoView(this, element);
+		
+		if (dispatchEvent) this.dispatchCustomEvent('selected');
 		
 	}
 	
@@ -391,8 +395,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			} else if (key === 'PageUp') {
 				const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
 				let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
-				if (!lastSelection) this.selectItem(currentElement);
-				if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
+				if (!lastSelection) this.selectItem(currentElement, false);
+				else if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
 				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
 			} else if (key === 'Home') {
 				if (!lastSelection) this.selectItem(this.getFirstItem());
@@ -418,8 +422,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				const viewHeight = this.offsetHeight;
 				const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
 				let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
-				if (!lastSelection) this.selectItem(currentElement);
-				if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
+				if (!lastSelection) this.selectItem(currentElement, false);
+				else if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
 				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
 			} else if (key === 'End') {
 				if (!lastSelection) this.selectItem(this.getLastItem());

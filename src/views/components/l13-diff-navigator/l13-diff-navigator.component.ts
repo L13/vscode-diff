@@ -26,8 +26,11 @@ const round = Math.round;
 })
 export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewModel> {
 	
-	@L13Query('#navigator')
-	public canvas:HTMLCanvasElement;
+	@L13Query('#ruler')
+	public canvasRuler:HTMLCanvasElement;
+	
+	@L13Query('#map')
+	public canvasMap:HTMLCanvasElement;
 	
 	@L13Query('div')
 	public scrollbar:HTMLDivElement;
@@ -36,17 +39,22 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	private scrollbarMaxY:number = 0;
 	
-	private context:CanvasRenderingContext2D = null;
+	private contextRuler:CanvasRenderingContext2D = null;
+	
+	private contextMap:CanvasRenderingContext2D = null;
 	
 	public constructor () {
 		
 		super();
 		
-		this.context = this.canvas.getContext('2d');
-		this.canvas.width = this.offsetWidth;
+		this.contextRuler = this.canvasRuler.getContext('2d');
+		this.canvasRuler.width = 14;
+		
+		this.contextMap = this.canvasMap.getContext('2d');
+		this.canvasMap.width = 30;
 		
 		this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
-		this.canvas.addEventListener('mousedown', this.moveScrollbar);
+		this.canvasMap.addEventListener('mousedown', this.moveScrollbar);
 		
 	}
 	
@@ -61,7 +69,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	private scrollbarDown = (event:MouseEvent, offsetY?:number) => {
 		
-		document.body.classList.add('-unselectable');
+		document.documentElement.classList.add('-unselectable');
 		
 		this.scrollbarOffsetY = offsetY || event.offsetY;
 		
@@ -88,7 +96,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		document.removeEventListener('mousemove', this.scrollbarMove);
 		document.removeEventListener('mouseup', this.scrollbarUp);
 		
-		document.body.classList.remove('-unselectable');
+		document.documentElement.classList.remove('-unselectable');
 		
 		this.dispatchCustomEvent('mouseupscroll');
 		
@@ -105,11 +113,48 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
+	public clearSelection () :void {
+		
+		const canvas = this.canvasRuler;
+		const context = this.contextRuler;
+		
+		context.clearRect(0, 0, canvas.height, canvas.height);
+		
+	}
+	
+	public buildSelection (items:any[], listHeight:number) :void {
+		
+		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
+		const canvas = this.canvasRuler;
+		const context = this.contextRuler;
+		const computedStyle = getComputedStyle(document.documentElement);
+		const color = computedStyle.getPropertyValue('--vscode-editorOverviewRuler-selectionHighlightForeground');
+		
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		canvas.height = listHeight; // clears the canvas, too
+		
+		items.reduce((y, { offsetHeight, selected }) => {
+
+			const h = offsetHeight / total * canvas.height;
+		
+			if (!selected) return y += h;
+		
+			const roundY = round(y);
+		
+			context.fillStyle = color;
+			context.fillRect(5, roundY - 2, 4, 5);
+		
+			return y += h;
+		
+		}, 0);
+		
+	}
+	
 	public build (items:any[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
-		const canvas = this.canvas;
-		const context = this.context;
+		const canvas = this.canvasMap;
+		const context = this.contextMap;
 		const computedStyle = getComputedStyle(document.documentElement);
 		const colors:any = {
 			conflicting: computedStyle.getPropertyValue('--vscode-gitDecoration-conflictingResourceForeground'),
@@ -119,33 +164,33 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		};
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		canvas.height = listHeight;
+		canvas.height = listHeight; // clears the canvas, too
 		
 		if (total !== listHeight) {
 			this.scrollbar.style.display = 'block';
 			this.scrollbar.style.height = `${ round(listHeight / total * canvas.height) }px`;
-			this.scrollbarMaxY = this.offsetHeight - this.scrollbar.offsetHeight;
+			this.scrollbarMaxY = listHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		
 		items.reduce((y, { status, offsetHeight }) => {
-
+			
 			const h = offsetHeight / total * canvas.height;
 			const color = colors[status];
-		
+			
 			if (!color) return y += h;
-		
+			
 			const roundY = round(y);
 			let x = 0;
 			let width = canvas.width;
-		
+			
 			if (status === 'deleted') width /= 2;
 			else if (status === 'untracked') x = width /= 2;
-		
+			
 			context.fillStyle = color;
 			context.fillRect(x, roundY, width, round(y + h) - roundY || 1);
-		
+			
 			return y += h;
-		
+			
 		}, 0);
 		
 	}

@@ -7,7 +7,7 @@ export default {
 	"l13-diff-intro/l13-diff-intro.html": "<l13-diff-shortcuts></l13-diff-shortcuts>",
 	"l13-diff-list/l13-diff-list.html": "<l13-diff-list-content></l13-diff-list-content>",
 	"l13-diff-menu/l13-diff-menu.html": "<l13-diff-menu-lists></l13-diff-menu-lists>",
-	"l13-diff-navigator/l13-diff-navigator.html": "<canvas id=\"navigator\"></canvas><div></div>",
+	"l13-diff-navigator/l13-diff-navigator.html": "<canvas id=\"ruler\"></canvas><canvas id=\"map\"></canvas><div></div>",
 	"l13-diff-panel/l13-diff-panel.html": "<l13-diff-loading [if]=\"loading\"></l13-diff-loading>\n<slot></slot>",
 	"l13-diff-search/l13-diff-search.html": "<div id=\"l13_resizer\"></div>\n<div class=\"l13-input\">\n\t<input id=\"l13_searchterm\" type=\"text\" [(model)]=\"searchterm\" [disabled]=\"disabled\">\n\t<input id=\"l13_case_sensitive\" type=\"checkbox\" [(model)]=\"useCaseSensitive\" [disabled]=\"disabled\">\n\t<input id=\"l13_use_regexp\" type=\"checkbox\" [(model)]=\"useRegExp\" [disabled]=\"disabled\">\n\t<div class=\"l13-message\" [if]=\"error\">{{ error }}</div>\n</div>\n<input id=\"l13_use_files\" class=\"-option\" type=\"checkbox\" [(model)]=\"useFiles\" [disabled]=\"disabled\">\n<input id=\"l13_use_folders\" class=\"-option\" type=\"checkbox\" [(model)]=\"useFolders\" [disabled]=\"disabled\">\n<input id=\"l13_use_symlinks\" class=\"-option\" type=\"checkbox\" [(model)]=\"useSymlinks\" [disabled]=\"disabled\">\n<input id=\"l13_use_conflicts\" class=\"-option\" type=\"checkbox\" [(model)]=\"useConflicts\" [disabled]=\"disabled\">\n<button id=\"l13_close\" [disabled]=\"disabled\"></button>",
 	"l13-diff-swap/l13-diff-swap.html": "<button [disabled]=\"disabled\"></button>",

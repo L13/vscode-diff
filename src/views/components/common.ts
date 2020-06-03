@@ -80,7 +80,7 @@ export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputE
 
 function initThemeChangeListener () {
 	
-	const observer = new MutationObserver(() => document.dispatchEvent(new CustomEvent('theme', { bubbles: false })));
+	const observer = new MutationObserver(() => window.dispatchEvent(new CustomEvent('theme', { bubbles: false })));
 	
 	observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 	

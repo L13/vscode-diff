@@ -199,8 +199,19 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.list.addEventListener('copy', () => disable());
 		this.list.addEventListener('delete', () => disable());
 		
-		this.list.addEventListener('selected', () => actionsVM.enableCopy());
-		this.list.addEventListener('unselected', () => actionsVM.disableCopy());
+		this.list.addEventListener('selected', () => {
+			
+			actionsVM.enableCopy();
+			this.updateSelection();
+			
+		});
+		
+		this.list.addEventListener('unselected', () => {
+			
+			actionsVM.disableCopy();
+			this.navigator.clearSelection();
+			
+		});
 		
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
 		
@@ -225,14 +236,19 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			const list = this.list;
 			const navigator = this.navigator;
 			
-			list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.offsetHeight * list.scrollHeight);
+			list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.canvasMap.offsetHeight * list.scrollHeight);
 			
 		});
 		
 		this.navigator.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
 		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
-		document.addEventListener('theme', () => this.updateNavigator());
+		window.addEventListener('theme', () => {
+			
+			this.updateNavigator();
+			this.updateSelection();
+			
+		});
 		
 	//	messages
 		
@@ -320,7 +336,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		const list = this.list;
 		const navigator = this.navigator;
 		
-		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.offsetHeight)}px`;
+		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight)}px`;
 		
 	}
 	
@@ -338,16 +354,37 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
+	private updateSelection () :void {
+			
+		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
+		const values:any[] = [];
+		
+		while (element) {
+			values.push({
+				selected: element.classList.contains('-selected'),
+				offsetHeight: element.offsetHeight,
+			});
+			element = <HTMLElement>element.nextElementSibling;
+		}
+		
+		this.navigator.buildSelection(values, this.list.offsetHeight);
+		
+	}
+	
 	private updateNavigator () :void {
 			
 		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:any[] = [];
 		
 		while (element) {
-			values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+			values.push({
+				status: element.getAttribute('data-status'),
+				offsetHeight: element.offsetHeight,
+			});
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
+		this.navigator.clearSelection();
 		this.navigator.build(values, this.list.offsetHeight);
 		this.navigator.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
