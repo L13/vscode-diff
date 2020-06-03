@@ -139,7 +139,7 @@ gulp.task('script:view', () => {
 	}).then(bundle => {
 		
 		return bundle.write({
-			file: './media/main.js',
+			file: 'media/main.js',
 			format: 'iife',
 			name: 'l13diffview',
 		});
@@ -172,7 +172,7 @@ gulp.task('script:services', () => {
 	}).then(bundle => {
 		
 		return bundle.write({
-			file: './out/extension.js',
+			file: 'out/extension.js',
 			format: 'cjs',
 			name: 'l13diffservices',
 			globals: {
@@ -191,10 +191,12 @@ gulp.task('script:tests', () => {
 	
 	const promises = [];
 	
-	['src/index.ts'].concat(glob.sync('src/**/*.test.ts')).forEach((filename) => {
+	[{ in: 'src/test/index.ts', out: 'test/index.js'}]
+	.concat(createInOut('src/**/*.test.ts'))
+	.forEach((file) => {
 		
 		promises.push(rollup.rollup({
-			input: filename,
+			input: file.in,
 			external: [
 				'assert',
 				'glob',
@@ -215,7 +217,7 @@ gulp.task('script:tests', () => {
 		}).then(bundle => {
 			
 			return bundle.write({
-				file: filename.replace(/^src/, 'test').replace(/\.ts$/, '.js'),
+				file: file.out,
 				format: 'cjs',
 				name: 'l13difftests',
 				globals: {
@@ -284,3 +286,15 @@ gulp.task('watch', () => {
 
 //	Functions __________________________________________________________________
 
+function createInOut (pattern) {
+	
+	return glob.sync(pattern).map((filename) => {
+		
+		return {
+			in: filename,
+			out: filename.replace(/^src/, 'test').replace(/\.ts$/, '.js'),
+		};
+		
+	});
+	
+}

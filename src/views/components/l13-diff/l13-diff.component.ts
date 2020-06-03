@@ -104,27 +104,23 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		const search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
 		search.vmId = 'search';
 		
+	//	input view
+		
 		this.left.menu = menu;
 		this.right.menu = menu;
+		
+		this.left.addEventListener('compare', () => this.initCompare());
+		this.right.addEventListener('compare', () => this.initCompare());
+		
+	//	compare view
+		
+		this.compare.addEventListener('compare', () => this.initCompare());
+		
+	//	swap view
 			
-		this.swap.addEventListener('swap', ({ detail }:any) => {
-			
-			if (detail.altKey) {
-				const viewmodel = this.list.viewmodel;
-				
-				if (viewmodel.items.length) {
-					viewmodel.swapList();
-					leftVM.value = viewmodel.diffResult.pathA;
-					rightVM.value = viewmodel.diffResult.pathB;
-				}
-			} else {
-				const value = leftVM.value;
-				
-				leftVM.value = rightVM.value;
-				rightVM.value = value;
-			}
-			
-		});
+		this.swap.addEventListener('swap', ({ detail }:any) => this.swapInputs(detail.altKey));
+		
+	//	actions view
 		
 		this.actions.addEventListener('select', (event) => {
 			
@@ -142,66 +138,15 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		this.list.addEventListener('copy', () => disable());
-		this.list.addEventListener('delete', () => disable());
-		
-		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
-			
-			if (!search.parentNode) {
-				search.viewmodel.enable().then(() => search.focus());
-				this.widgets.appendChild(search);
-				this.list.classList.add('-widgets');
-				search.classList.add('-movein');
-			} else search.focus();
-			
-		});
-		
-		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
-		
-		msg.on('cancel', () => enable());
-		
-		msg.on('update:paths', (data) => {
-			
-			if (data.uris.length) {
-				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
-				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-				if (data.compare) this.initCompare();
-			}
-			
-		});
-		
-		msg.on('save:favorite', () => {
-			
-			msg.send('save:favorite', {
-				pathA: this.left.viewmodel.value,
-				pathB: this.right.viewmodel.value,
-			});
-			
-		});
-		
-		msg.on('init:view', (data) => {
-			
-			msg.removeMessageListener('init:view');
-			
-			if (data.uris.length) {
-				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
-				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-			} else {
-				this.left.viewmodel.value = data.workspaces[0] || '';
-				this.right.viewmodel.value = data.workspaces[1] || '';
-			}
-			
-			if (data.panel?.views) viewsVM.setState(data.panel?.views);
-			if (data.panel?.search) searchVM.setState(data.panel?.search);
-			
-			if (data.compare) this.initCompare();
-			
-		});
+	//	views view
 		
 		viewsVM.on('update', () => this.savePanelState());
-		searchVM.on('update', () => this.savePanelState());
 		
-		search.viewmodel.disable();
+	//	search view
+		
+		searchVM.disable();
+		
+		searchVM.on('update', () => this.savePanelState());
 		
 		search.addEventListener('close', () => {
 			
@@ -226,33 +171,23 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		listVM.on('compared', () => {
+		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
 			
-			enable();
-			this.list.focus();
-			
-		});
-		
-		listVM.on('copied', () => {
-			
-			enable();
-			this.list.focus();
+			if (!search.parentNode) {
+				search.viewmodel.enable().then(() => search.focus());
+				this.widgets.appendChild(search);
+				this.list.classList.add('-widgets');
+				search.classList.add('-movein');
+			} else search.focus();
 			
 		});
 		
-		listVM.on('deleted', () => {
-			
-			enable();
-			this.list.focus();
-			
-		});
+	//	list view
 		
-		listVM.on('updated', () => {
-			
-			enable();
-			this.list.focus();
-			
-		});
+		listVM.on('compared', () => this.enable());
+		listVM.on('copied', () => this.enable());
+		listVM.on('deleted', () => this.enable());
+		listVM.on('updated', () => this.enable());
 		
 		listVM.on('filtered', () => {
 			
@@ -261,17 +196,19 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		this.list.addEventListener('copy', () => disable());
+		this.list.addEventListener('delete', () => disable());
+		
 		this.list.addEventListener('selected', () => actionsVM.enableCopy());
 		this.list.addEventListener('unselected', () => actionsVM.disableCopy());
 		
+		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		
 		this.list.addEventListener('refresh', () => this.updateMap());
+		
 		window.addEventListener('resize', () => this.updateMap());
 		
-		this.compare.addEventListener('compare', () => this.initCompare());
-		this.left.addEventListener('compare', () => this.initCompare());
-		this.right.addEventListener('compare', () => this.initCompare());
-		
-		document.addEventListener('theme', () => this.updateMap());
+		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
 		
 		document.addEventListener('mouseup', ({ target }) => {
 			
@@ -281,7 +218,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+	//	map view
 		
 		this.map.addEventListener('scroll', () => {
 			
@@ -295,7 +232,58 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
 		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
+		document.addEventListener('theme', () => this.updateMap());
+		
+	//	messages
+		
+		msg.on('cancel', () => this.enable());
+		
+		msg.on('update:paths', (data) => {
+			
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+				if (data.compare) this.initCompare();
+			}
+			
+		});
+		
+		msg.on('save:favorite', () => {
+			
+			msg.send('save:favorite', {
+				pathA: this.left.viewmodel.value,
+				pathB: this.right.viewmodel.value,
+			});
+			
+		});
+		
+		msg.on('init:view', (data) => {
+			
+			msg.removeMessageListener('init:view');
+			
+			if (data.panel?.views) viewsVM.setState(data.panel.views);
+			if (data.panel?.search) searchVM.setState(data.panel.search);
+			
+			if (data.uris.length) {
+				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
+				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
+			} else {
+				this.left.viewmodel.value = data.workspaces[0] || '';
+				this.right.viewmodel.value = data.workspaces[1] || '';
+			}
+			
+			if (data.compare) this.initCompare();
+			
+		});
+		
 		msg.send('init:view');
+		
+	}
+	
+	private enable () :void {
+		
+		enable();
+		this.list.focus();
 		
 	}
 	
@@ -305,6 +293,25 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			views: viewsVM.getState(),
 			search: searchVM.getState(),
 		});
+		
+	}
+	
+	private swapInputs (altKey:boolean) :void {
+		
+		if (altKey) {
+			const viewmodel = this.list.viewmodel;
+			
+			if (viewmodel.items.length) {
+				viewmodel.swapList();
+				leftVM.value = viewmodel.diffResult.pathA;
+				rightVM.value = viewmodel.diffResult.pathB;
+			}
+		} else {
+			const value = leftVM.value;
+			
+			leftVM.value = rightVM.value;
+			rightVM.value = value;
+		}
 		
 	}
 	
