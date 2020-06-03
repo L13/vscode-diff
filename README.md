@@ -14,6 +14,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 - Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
 - Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
 - Added output messages if files have been copied, deleted or updated.
+- Diff panel state will be saved between sessions.
 
 ## Features
 

@@ -179,7 +179,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		msg.on('init:paths', (data) => {
+		msg.on('init:view', (data) => {
+			
+			msg.removeMessageListener('init:view');
 			
 			if (data.uris.length) {
 				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
@@ -189,11 +191,17 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				this.right.viewmodel.value = data.workspaces[1] || '';
 			}
 			
-			msg.removeMessageListener('init:paths');
+			if (data.panel?.views) viewsVM.setState(data.panel?.views);
+			if (data.panel?.search) searchVM.setState(data.panel?.search);
 			
 			if (data.compare) this.initCompare();
 			
 		});
+		
+		viewsVM.on('update', () => this.savePanelState());
+		searchVM.on('update', () => this.savePanelState());
+		
+		search.viewmodel.disable();
 		
 		search.addEventListener('close', () => {
 			
@@ -287,7 +295,16 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
 		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
-		msg.send('init:paths');
+		msg.send('init:view');
+		
+	}
+	
+	private savePanelState () :void {
+		
+		msg.send('save:panelstate', {
+			views: viewsVM.getState(),
+			search: searchVM.getState(),
+		});
 		
 	}
 	

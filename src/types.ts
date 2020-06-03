@@ -95,6 +95,16 @@ export type Plural = {
 	[index:number]:string,
 };
 
+export type SearchState = {
+	searchterm:string,
+	useRegExp:boolean,
+	useCaseSensitive:boolean,
+	useFiles:boolean,
+	useFolders:boolean,
+	useSymlinks:boolean,
+	useConflicts:boolean,
+};
+
 export type StatsMap = {
 	[pathname:string]:File
 };
@@ -113,6 +123,13 @@ export type TextFiles = {
 
 export type Uri = {
 	fsPath:string,
+};
+
+export type ViewsState = {
+	unchangedChecked:boolean,
+	deletedChecked:boolean,
+	modifiedChecked:boolean,
+	untrackedChecked:boolean,
 };
 
 export type WalkTreeJob = {

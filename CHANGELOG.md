@@ -10,9 +10,13 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
 - Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
 - Added output messages if files have been copied, deleted or updated.
+- Diff panel state will be saved between sessions.
 
 ### Changed
 - Changed icons for copy files.
+
+### Fixed
+- Fixed navigator if diff panel is open and theme will be changed.
 
 ### Removed
 - Removed auto selection focus for first menu item, because of usability bug `copy & paste -> enter`.

@@ -140,7 +140,7 @@ export class DiffCopy {
 						job.error = error;
 						vscode.window.showErrorMessage(error.message);
 					} else {
-						this.output.log(`Copied ${diff.type} "${fileFrom.path}" to "${folderTo}".`);
+						this.output.log(`Copied ${diff.type} "${fileFrom.name}" from "${fileFrom.folder}" to "${folderTo}".`);
 						diff.status = 'unchanged';
 						if (!(<File>(<any>diff)['file' + to])) {
 							(<File>(<any>diff)['file' + to]) = {

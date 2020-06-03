@@ -24,6 +24,8 @@ const random = Math.random;
 
 const platform = isMacOs ? 'mac' : isWindows ? 'win' : 'linux';
 
+const PANEL_STATE = 'view';
+
 //	Initialize _________________________________________________________________
 
 
@@ -87,9 +89,10 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('init:paths', () => {
+		this.msg.on('init:view', () => {
 			
-			this.msg.send('init:paths', {
+			this.msg.send('init:view', {
+				panel: this.context.globalState.get(PANEL_STATE),
 				uris: mapUris(uris),
 				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 				compare,
@@ -98,6 +101,8 @@ export class DiffPanel {
 		});
 		
 		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.pathA, data.pathB));
+		
+		this.msg.on('save:panelstate', (data) => this.savePanelState(data));
 		
 		this.setContextForFocus(true);
 		
@@ -115,6 +120,12 @@ export class DiffPanel {
 		}
 		
 		this.setContextForFocus(false);
+		
+	}
+	
+	private savePanelState (data:any) :void {
+		
+		this.context.globalState.update(PANEL_STATE, data);
 		
 	}
 	
