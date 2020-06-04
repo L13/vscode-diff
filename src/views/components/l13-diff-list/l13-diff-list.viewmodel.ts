@@ -97,19 +97,19 @@ export class L13DiffListViewModel extends ViewModel {
 	public updateCopiedList (diffResult:DiffResult) {
 		
 		const diffs = diffResult.diffs;
+		const items = this.items = this.items.slice(); // Refreshs the view
+		const map = this.map;
 		
 		diffs.forEach((diff:Diff) => { // Update original diff with new diff
 			
-			const originalDiff = this.map[diff.id];
+			const originalDiff = map[diff.id];
 			
-			this.items.splice(this.items.indexOf(originalDiff), 1, diff);
-			this.map[diff.id] = diff;
+			items.splice(items.indexOf(originalDiff), 1, diff);
+			map[diff.id] = diff;
 			
 		});
 		
 		updateCopiedParentFolders(this.items, diffs);
-		
-		this.items = this.items.slice(); // Refreshs the view
 		
 		this.dispatchEvent('copied');
 		
@@ -118,32 +118,32 @@ export class L13DiffListViewModel extends ViewModel {
 	public updateDeletedList (diffResult:DiffResult) {
 		
 		const diffs = diffResult.diffs;
+		const items = this.items = this.items.slice(); // Refreshs the view
+		const map = this.map;
 		
 		diffs.forEach((diff:Diff) => { // Update original diff with new diff
 			
-			const originalDiff = this.map[diff.id];
+			const originalDiff = map[diff.id];
 			
 			if (diff.fileA || diff.fileB) {
-				this.items.splice(this.items.indexOf(originalDiff), 1, diff);
-				this.map[diff.id] = diff;
+				items.splice(items.indexOf(originalDiff), 1, diff);
+				map[diff.id] = diff;
 				if (!diff.fileA) diff.status = 'untracked';
 				if (!diff.fileB) diff.status = 'deleted';
 			} else {
-				this.items.splice(this.items.indexOf(originalDiff), 1);
-				delete this.map[diff.id];
+				items.splice(items.indexOf(originalDiff), 1);
+				delete map[diff.id];
 			}
 			
 		});
 		
 		updateDeletedSubfiles(this.items, diffs);
 		
-		this.items = this.items.slice(); // Refreshs the view
-		
 		this.dispatchEvent('deleted');
 		
 	}
 	
-	public updateFiles (files:string[]) {
+	private updateFiles (files:string[]) {
 		
 		const diffs = this.items.filter(({ fileA, fileB }) => {
 			
@@ -168,17 +168,17 @@ export class L13DiffListViewModel extends ViewModel {
 	public updateDiffList (diffResult:DiffResult) {
 		
 		const diffs = diffResult.diffs;
+		const items = this.items = this.items.slice(); // Refreshs the view
+		const map = this.map;
 		
 		diffs.forEach((diff:Diff) => { // Update original diff with new diff
 			
-			const originalDiff = this.map[diff.id];
+			const originalDiff = map[diff.id];
 			
-			this.items.splice(this.items.indexOf(originalDiff), 1, diff);
-			this.map[diff.id] = diff;
+			items.splice(items.indexOf(originalDiff), 1, diff);
+			map[diff.id] = diff;
 			
 		});
-		
-		this.items = this.items.slice(); // Refreshs the view
 		
 		this.dispatchEvent('updated');
 		
@@ -188,6 +188,8 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		const diffResult = this.diffResult;
 		const pathA = diffResult.pathA;
+		
+		this.items = this.items.slice(); // Refreshs the view
 		
 		diffResult.pathA = diffResult.pathB;
 		diffResult.pathB = pathA;
@@ -204,9 +206,9 @@ export class L13DiffListViewModel extends ViewModel {
 			
 		});
 		
-		this.items = this.items.slice(); // Refreshs the view
-		
 		this.filter();
+		
+		this.dispatchEvent('swapped');
 		
 	}
 	
@@ -236,14 +238,6 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public copy (from:'left'|'right', ids:string[]) :void {
-		
-		const diffResult = this.getCopyListByIds(ids, from);
-		
-		if (diffResult.diffs.length) msg.send(`copy:${from}`, { diffResult });
-		
-	}
-	
 	private getDiffsByIds (ids:string[]) {
 		
 		const items = ids.map((id) => this.map[id]);
@@ -253,6 +247,14 @@ export class L13DiffListViewModel extends ViewModel {
 			pathB: this.diffResult.pathB,
 			diffs: items,
 		};
+		
+	}
+	
+	public copy (from:'left'|'right', ids:string[]) :void {
+		
+		const diffResult = this.getCopyListByIds(ids, from);
+		
+		if (diffResult.diffs.length) msg.send(`copy:${from}`, { diffResult });
 		
 	}
 	
