@@ -188,10 +188,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			const fileNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file'));
-			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
+			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const ids = rowNode.classList.contains('-selected') ? this.getIdsBySelection() : [rowNode.getAttribute('data-id')];
 			
 			this.dispatchCustomEvent('copy');
-			this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', [id]);
+			this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
 			
 		});
 		
@@ -200,10 +201,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
+			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const isSelected = rowNode.classList.contains('-selected');
+			const ids = isSelected ? this.getIdsBySelection() : [rowNode.getAttribute('data-id')];
 			
 			this.dispatchCustomEvent('delete');
-			this.viewmodel.delete([id], fileNode.nextElementSibling ? 'left' : 'right');
+			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
 			
 		});
 		
