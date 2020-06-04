@@ -168,6 +168,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			}
 			
 			this.updateNavigator();
+			this.updateSelection();
 			
 		});
 		
@@ -214,10 +215,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		});
 		
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		this.list.addEventListener('filtered', () => this.updateNavigator());
 		
-		this.list.addEventListener('refresh', () => this.updateNavigator());
-		
-		window.addEventListener('resize', () => this.updateNavigator());
+		window.addEventListener('resize', () => {
+			
+			this.updateNavigator();
+			this.updateSelection();
+			
+		});
 		
 		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
 		
@@ -384,7 +389,6 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
-		this.navigator.clearSelection();
 		this.navigator.build(values, this.list.offsetHeight);
 		this.navigator.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
