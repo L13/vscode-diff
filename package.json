@@ -385,7 +385,7 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"test-diff": "node ./diff/index.js --clean --create-all"
+		"test-files": "node ./diff/index.js --shared --create-all"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
