@@ -2,15 +2,17 @@
 
 import { Plural } from '../../../types';
 
+const floor = Math.floor;
+const log = Math.log;
+const pow = Math.pow;
+
 //	Variables __________________________________________________________________
 
 const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
 
+const byteUnits = [pluralBytes.size, 'KB', 'MB', 'GB', 'TB', 'PB'];
 const KB:number = 1024;
-const MB:number = KB * KB;
-const GB:number = KB * MB;
-const TB:number = KB * GB;
-const PB:number = KB * TB;
+const logKB:number = log(KB);
 
 //	Initialize _________________________________________________________________
 
@@ -18,9 +20,9 @@ const PB:number = KB * TB;
 
 //	Exports ____________________________________________________________________
 
-export function formatAmount (value:number, measure:Plural) {
+export function formatAmount (value:number, units:Plural) {
 	
-	return `${value} ${measure[value] || measure.size}`;
+	return `${value} ${units[value] || units.size}`;
 	
 }
 
@@ -28,13 +30,13 @@ export function formatFileSize (size:number) {
 	
 	const bytes = formatAmount(size, pluralBytes);
 	
-	if (size > PB) return `${(size / PB).toFixed(2)} PB (${bytes})`;
-	if (size > TB) return `${(size / TB).toFixed(2)} TB (${bytes})`;
-	if (size > GB) return `${(size / GB).toFixed(2)} GB (${bytes})`;
-	if (size > MB) return `${(size / MB).toFixed(2)} MB (${bytes})`;
-	if (size > KB) return `${(size / KB).toFixed(2)} KB (${bytes})`;
+	if (size < KB) return bytes;
 	
-	return bytes;
+	let i = floor(log(size) / logKB);
+	
+	if (!byteUnits[i]) i = byteUnits.length - 1;
+	
+	return `${parseFloat((size / pow(KB, i)).toFixed(2))} ${byteUnits[i]} (${bytes})`;
 	
 }
 

@@ -23,8 +23,7 @@ const push = Array.prototype.push;
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
-const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
+const findPlaceholder = /^\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
 const textfiles:TextFiles = {
@@ -81,10 +80,6 @@ export class DiffCompare {
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
-		
-		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
-			return this.postEmptyResult(pathA, pathB);
-		}
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
 		pathB = vscode.Uri.file(pathB).fsPath;
@@ -396,7 +391,7 @@ function buildWhitelistForTextFiles () {
 function parsePredefinedVariables (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholders, function (match, placeholder, value) {
+	return pathname.replace(findPlaceholder, function (match, placeholder, value) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		

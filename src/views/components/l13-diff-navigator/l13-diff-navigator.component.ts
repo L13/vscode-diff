@@ -137,14 +137,12 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 
 			const h = offsetHeight / total * canvas.height;
 		
-			if (!selected) return y += h;
-		
-			const roundY = round(y);
+			if (!selected) return y + h;
 		
 			context.fillStyle = color;
-			context.fillRect(5, roundY - 2, 4, 5);
+			context.fillRect(5, round(y + h / 2) - 2, 4, 5);
 		
-			return y += h;
+			return y + h;
 		
 		}, 0);
 		
@@ -177,7 +175,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 			const h = offsetHeight / total * canvas.height;
 			const color = colors[status];
 			
-			if (!color) return y += h;
+			if (!color) return y + h;
 			
 			const roundY = round(y);
 			let x = 0;
@@ -189,7 +187,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 			context.fillStyle = color;
 			context.fillRect(x, roundY, width, round(y + h) - roundY || 1);
 			
-			return y += h;
+			return y + h;
 			
 		}, 0);
 		

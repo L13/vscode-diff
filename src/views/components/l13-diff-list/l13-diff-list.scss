@@ -72,12 +72,12 @@ l13-diff-list-row {
 				background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
 			}
 					
-			span {
+			// span {
 				
-				&.-exists {
-					color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
-				}
-			}
+				// &.-exists {
+					// color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
+				// }
+			// }
 		}
 		
 		&:hover {
