@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { join } from 'path';
+import { join, isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { parse } from './@l13/natives/jsons';
@@ -80,6 +80,26 @@ export class DiffCompare {
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
+		
+		if (!pathA) {
+			vscode.window.showErrorMessage(`The left path is empty.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!pathB) {
+			vscode.window.showErrorMessage(`The right path is empty.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!isAbsolute(pathA)) {
+			vscode.window.showErrorMessage(`The left path is not absolute.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!isAbsolute(pathB)) {
+			vscode.window.showErrorMessage(`The right path is not absolute.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
 		pathB = vscode.Uri.file(pathB).fsPath;
@@ -174,10 +194,14 @@ export class DiffCompare {
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
 			
-			if (error) vscode.window.showErrorMessage(error.message);
-			
-			if (!diffResult) this.status.update();
-			else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (error) {
+				diffResult = new DiffResult(pathA, pathB);
+				vscode.window.showErrorMessage(error.message);
+				this.status.update();
+			} else {
+				if (!diffResult) this.status.update();
+				else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+			}
 			
 			this.msg.send('create:diffs', { diffResult });
 			

@@ -18,7 +18,7 @@
 		"file-c [=].txt": ["c"],
 		"file-d [!].txt": ["d"],
 		"file-e [!].txt": ["e"],
-		"link-a [+].txt": "./file-a [].txt"
+		"link-a [-].txt": "./file-a [-].txt"
 	},
 	"folder-b": {
 		"subfolder-b": null,

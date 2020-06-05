@@ -225,6 +225,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		});
 		
 		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => this.initCompare());
 		
 		document.addEventListener('mouseup', ({ target }) => {
 			
@@ -303,7 +304,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	private enable () :void {
 		
-		enable();
+		enable(!this.list.content.querySelector('.-selected'));
 		this.list.focus();
 		
 	}
@@ -399,12 +400,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
-function enable () {
+function enable (disableCopy:boolean = true) {
 	
 	panelVM.loading = false;
 	
 	actionsVM.enable();
-	actionsVM.disableCopy();
+	if (disableCopy) actionsVM.disableCopy();
 	compareVM.enable();
 	leftVM.enable();
 	listVM.enable();
