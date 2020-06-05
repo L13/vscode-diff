@@ -136,8 +136,34 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### Swap Button
 
+#### All platforms
+
 * `Click` - Swaps just the values of the input fields.
 * `Alt + Click` - Swaps the values of the input fields and the diff result.
+
+#### macOS
+
+* `Cmd + S` - Same as `Click`.
+* `Alt + Cmd + S` - Same as `Alt + Click`.
+
+#### Windows / Linux
+
+* `Ctrl + S` - Same as `Click`.
+* `Alt + Ctrl + S` - Same as `Alt + Click`.
+
+### Compare Button
+
+#### All platforms
+
+* `Click` - Start a comparison.
+
+#### macOS
+
+* `Cmd + C` - Same as `Click`.
+
+#### Windows / Linux
+
+* `Ctrl + C` - Same as `Click`.
 
 ### List
 

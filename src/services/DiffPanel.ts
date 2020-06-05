@@ -24,7 +24,7 @@ const random = Math.random;
 
 const platform = isMacOs ? 'mac' : isWindows ? 'win' : 'linux';
 
-const PANEL_STATE = 'view';
+const PANEL_STATE = 'panelState';
 
 //	Initialize _________________________________________________________________
 
