@@ -160,10 +160,8 @@ export class DiffPanel {
 	
 	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
-		const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
-		
 		if (DiffPanel.currentPanel) {
-			DiffPanel.currentPanel.panel.reveal(column);
+			DiffPanel.currentPanel.panel.reveal();
 			if (uris) {
 				DiffPanel.currentPanel.msg.send('update:paths', {
 					uris: mapUris(uris),
@@ -174,7 +172,7 @@ export class DiffPanel {
 		}
 		
 		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff', {
-			viewColumn: column || vscode.ViewColumn.Active,
+			viewColumn: vscode.ViewColumn.Active,
 		}, {
 			enableScripts: true,
 			localResourceRoots: [

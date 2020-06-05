@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
+import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffCompareViewModelService } from './l13-diff-compare.service';
 import { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
@@ -32,6 +32,11 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 	public constructor () {
 		
 		super();
+		
+		setLabel(this.button, 'Compare', {
+			key: 'Ctrl+C',
+			mac: 'Cmd+C',
+		});
 		
 		this.button.addEventListener('click', () => this.dispatchCustomEvent('compare'));
 		

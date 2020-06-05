@@ -116,9 +116,30 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.compare.addEventListener('compare', () => this.initCompare());
 		
+		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, (event) => {
+			
+			event.stopPropagation();
+			this.initCompare();
+			
+		});
+			
 	//	swap view
 			
 		this.swap.addEventListener('swap', ({ detail }:any) => this.swapInputs(detail.altKey));
+		
+		addKeyListener(window, { key: 'Ctrl+S', mac: 'Cmd+S' }, (event) => {
+			
+			event.stopPropagation();
+			this.swapInputs();
+			
+		});
+		
+		addKeyListener(window, { key: 'Alt+Ctrl+S', mac: 'Alt+Cmd+S' }, (event) => {
+			
+			event.stopPropagation();
+			this.swapInputs(true);
+			
+		});
 		
 	//	actions view
 		
@@ -217,15 +238,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
 		this.list.addEventListener('filtered', () => this.updateNavigator());
 		
-		window.addEventListener('resize', () => {
-			
-			this.updateNavigator();
-			this.updateSelection();
-			
-		});
-		
-		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
-		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => this.initCompare());
+		addKeyListener(window, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
 		
 		document.addEventListener('mouseup', ({ target }) => {
 			
@@ -250,6 +263,13 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
 		
 		window.addEventListener('theme', () => {
+			
+			this.updateNavigator();
+			this.updateSelection();
+			
+		});
+		
+		window.addEventListener('resize', () => {
 			
 			this.updateNavigator();
 			this.updateSelection();
@@ -318,7 +338,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private swapInputs (altKey:boolean) :void {
+	private swapInputs (altKey:boolean = false) :void {
 		
 		if (altKey) {
 			const viewmodel = this.list.viewmodel;
