@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
+import { EventListener } from '../../../types';
 import { Event } from './event.class';
-import { EventListener } from './types';
+
+const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
-
-const push = Array.prototype.push;
 
 const LISTENERS = Symbol.for('listeners');
 

@@ -15,7 +15,7 @@ l13-diff-loading {
 	position: absolute;
 	right: 0;
 	width: 100%;
-	z-index: 3;
+	z-index: 4;
 	
 	&::after {
 		animation: loading 2s linear infinite;

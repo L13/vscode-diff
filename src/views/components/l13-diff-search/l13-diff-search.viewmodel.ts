@@ -2,6 +2,8 @@
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
+import { SearchState } from '../../../types';
+
 //	Variables __________________________________________________________________
 
 const SEARCHTERM = Symbol.for('searchterm');
@@ -81,6 +83,34 @@ export class L13DiffSearchViewModel extends ViewModel {
 		this.disabled = false;
 		
 		return this.requestUpdate();
+		
+	}
+	
+	public getState () :SearchState {
+		
+		return {
+			searchterm: this.searchterm,
+			useRegExp: this.useRegExp,
+			useCaseSensitive: this.useCaseSensitive,
+			useFiles: this.useFiles,
+			useFolders: this.useFolders,
+			useSymlinks: this.useSymlinks,
+			useConflicts: this.useConflicts,
+		};
+		
+	}
+	
+	public setState (state:SearchState) :void {
+		
+		this.searchterm = state.searchterm;
+		this.useRegExp = state.useRegExp;
+		this.useCaseSensitive = state.useCaseSensitive;
+		this.useFiles = state.useFiles;
+		this.useFolders = state.useFolders;
+		this.useSymlinks = state.useSymlinks;
+		this.useConflicts = state.useConflicts;
+		
+		this.requestUpdate();
 		
 	}
 	

@@ -21,12 +21,6 @@ export class DiffMenu {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public static clearHistory (context:vscode.ExtensionContext) :void {
-		
-		context.globalState.update(MENU_HISTORY, []);
-		
-	}
-	
 	public constructor (private msg:DiffMessage, context:vscode.ExtensionContext) {
 		
 		this.context = context;
@@ -60,6 +54,12 @@ export class DiffMenu {
 		addToRecentlyUsed(history, pathA);
 		
 		context.globalState.update(MENU_HISTORY, history.slice(0, maxRecentlyUsedLength));
+		
+	}
+	
+	public static clearHistory (context:vscode.ExtensionContext) :void {
+		
+		context.globalState.update(MENU_HISTORY, []);
 		
 	}
 	

@@ -10,8 +10,8 @@ import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.co
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMapComponent } from '../l13-diff-map/l13-diff-map.component';
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
 import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
 import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
 import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
@@ -79,8 +79,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-compare')
 	private compare:L13DiffCompareComponent;
 	
-	@L13Query('l13-diff-map')
-	private map:L13DiffMapComponent;
+	@L13Query('l13-diff-navigator')
+	private navigator:L13DiffNavigatorComponent;
 	
 	@L13Query('l13-diff-list')
 	private list:L13DiffListComponent;
@@ -104,27 +104,49 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		const search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
 		search.vmId = 'search';
 		
+	//	input view
+		
 		this.left.menu = menu;
 		this.right.menu = menu;
+		
+		this.left.addEventListener('compare', () => this.initCompare());
+		this.right.addEventListener('compare', () => this.initCompare());
+		
+	//	compare view
+		
+		this.compare.addEventListener('compare', () => this.initCompare());
+		
+		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => {
 			
-		this.swap.addEventListener('swap', ({ detail }:any) => {
-			
-			if (detail.altKey) {
-				const viewmodel = this.list.viewmodel;
-				
-				if (viewmodel.items.length) {
-					viewmodel.swapList();
-					leftVM.value = viewmodel.diffResult.pathA;
-					rightVM.value = viewmodel.diffResult.pathB;
-				}
-			} else {
-				const value = leftVM.value;
-				
-				leftVM.value = rightVM.value;
-				rightVM.value = value;
+			if (!this.left.focused && !this.right.focused) {
+				event.stopPropagation();
+				event.preventDefault();
+				this.initCompare();
 			}
 			
 		});
+			
+	//	swap view
+			
+		this.swap.addEventListener('swap', ({ detail }:any) => this.swapInputs(detail.altKey));
+		
+		addKeyListener(window, { key: 'Ctrl+S', mac: 'Cmd+S' }, (event) => {
+			
+			event.stopPropagation();
+			event.preventDefault();
+			this.swapInputs();
+			
+		});
+		
+		addKeyListener(window, { key: 'Alt+Ctrl+S', mac: 'Alt+Cmd+S' }, (event) => {
+			
+			event.stopPropagation();
+			event.preventDefault();
+			this.swapInputs(true);
+			
+		});
+		
+	//	actions view
 		
 		this.actions.addEventListener('select', (event) => {
 			
@@ -137,7 +159,42 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.actions.addEventListener('copy', (event) => {
 			
+			disable();
 			this.list.copy((<any>event).detail.from);
+			
+		});
+		
+	//	views view
+		
+		viewsVM.on('update', () => this.savePanelState());
+		
+	//	search view
+		
+		searchVM.disable();
+		
+		searchVM.on('update', () => this.savePanelState());
+		
+		search.addEventListener('close', () => {
+			
+			this.list.classList.remove('-widgets');
+			search.classList.add('-moveout');
+			
+		});
+		
+		search.addEventListener('animationend', () => {
+			
+			if (search.classList.contains('-moveout')) {
+				this.navigator.classList.remove('-widgets');
+				search.classList.remove('-moveout');
+				search.viewmodel.disable();
+				search.remove();
+			} else {
+				this.navigator.classList.add('-widgets');
+				search.classList.remove('-movein');
+			}
+			
+			this.updateNavigator();
+			this.updateSelection();
 			
 		});
 		
@@ -152,7 +209,81 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		addKeyListener(this.actions, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+	//	list view
+		
+		listVM.on('compared', () => this.enable());
+		listVM.on('copied', () => this.enable());
+		listVM.on('deleted', () => this.enable());
+		listVM.on('updated', () => this.enable());
+		
+		listVM.on('filtered', () => {
+			
+			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
+			this.intro.style.display = listVM.items.length ? 'none' : 'block';
+			
+		});
+		
+		this.list.addEventListener('copy', () => disable());
+		this.list.addEventListener('delete', () => disable());
+		
+		this.list.addEventListener('selected', () => {
+			
+			actionsVM.enableCopy();
+			this.updateSelection();
+			
+		});
+		
+		this.list.addEventListener('unselected', () => {
+			
+			actionsVM.disableCopy();
+			this.navigator.clearSelection();
+			
+		});
+		
+		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
+		this.list.addEventListener('filtered', () => this.updateNavigator());
+		
+		addKeyListener(window, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+		
+		document.addEventListener('mouseup', ({ target }) => {
+			
+			if (this.list.disabled) return;
+			
+			if (target === document.body || target === document.documentElement) this.list.unselect();
+			
+		});
+		
+	//	navigator view
+		
+		this.navigator.addEventListener('scroll', () => {
+			
+			const list = this.list;
+			const navigator = this.navigator;
+			
+			list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.canvasMap.offsetHeight * list.scrollHeight);
+			
+		});
+		
+		this.navigator.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
+		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
+		
+		window.addEventListener('theme', () => {
+			
+			this.updateNavigator();
+			this.updateSelection();
+			
+		});
+		
+		window.addEventListener('resize', () => {
+			
+			this.updateNavigator();
+			this.updateSelection();
+			
+		});
+		
+	//	messages
+		
+		msg.on('cancel', () => this.enable());
 		
 		msg.on('update:paths', (data) => {
 			
@@ -173,7 +304,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		msg.on('init:paths', (data) => {
+		msg.on('init:view', (data) => {
+			
+			msg.removeMessageListener('init:view');
+			
+			if (data.panel?.views) viewsVM.setState(data.panel.views);
+			if (data.panel?.search) searchVM.setState(data.panel.search);
 			
 			if (data.uris.length) {
 				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
@@ -183,104 +319,55 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				this.right.viewmodel.value = data.workspaces[1] || '';
 			}
 			
-			msg.removeMessageListener('init:paths');
-			
 			if (data.compare) this.initCompare();
 			
 		});
 		
-		search.addEventListener('close', () => {
-			
-			this.list.classList.remove('-widgets');
-			search.classList.add('-moveout');
-			
+		msg.send('init:view');
+		
+	}
+	
+	private enable () :void {
+		
+		enable(!this.list.content.querySelector('.-selected'));
+		this.list.focus();
+		
+	}
+	
+	private savePanelState () :void {
+		
+		msg.send('save:panelstate', {
+			views: viewsVM.getState(),
+			search: searchVM.getState(),
 		});
 		
-		search.addEventListener('animationend', () => {
+	}
+	
+	private swapInputs (altKey:boolean = false) :void {
+		
+		if (altKey) {
+			const viewmodel = this.list.viewmodel;
 			
-			if (search.classList.contains('-moveout')) {
-				this.map.classList.remove('-widgets');
-				search.classList.remove('-moveout');
-				search.viewmodel.disable();
-				search.remove();
-			} else {
-				this.map.classList.add('-widgets');
-				search.classList.remove('-movein');
+			if (viewmodel.items.length) {
+				viewmodel.swapList();
+				leftVM.value = viewmodel.diffResult.pathA;
+				rightVM.value = viewmodel.diffResult.pathB;
 			}
+		} else {
+			const value = leftVM.value;
 			
-			this.updateMap();
-			
-		});
-		
-		listVM.on('compared', () => {
-			
-			enable();
-			this.list.focus();
-			
-		});
-		
-		listVM.on('copied', () => {
-			
-			enable();
-			this.list.focus();
-			
-		});
-		listVM.on('deleted', () => {
-			
-			enable();
-			this.list.focus();
-			
-		});
-		
-		listVM.on('filtered', () => {
-			
-			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
-			this.intro.style.display = listVM.items.length ? 'none' : 'block';
-			
-		});
-		
-		this.list.addEventListener('selected', () => actionsVM.enableCopy());
-		this.list.addEventListener('unselected', () => actionsVM.disableCopy());
-		
-		this.list.addEventListener('refresh', () => this.updateMap());
-		window.addEventListener('resize', () => this.updateMap());
-		
-		this.compare.addEventListener('compare', () => this.initCompare());
-		this.left.addEventListener('compare', () => this.initCompare());
-		this.right.addEventListener('compare', () => this.initCompare());
-		
-		document.addEventListener('mouseup', ({ target }) => {
-			
-			if (this.list.disabled) return;
-			
-			if (target === document.body || target === document.documentElement) this.list.unselect();
-			
-		});
-		
-		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
-		
-		this.map.addEventListener('scroll', () => {
-			
-			const list = this.list;
-			const map = this.map;
-			
-			list.scrollTop = round(map.scrollbar.offsetTop / map.offsetHeight * list.scrollHeight);
-			
-		});
-		
-		this.map.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
-		this.map.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
-		
-		msg.send('init:paths');
+			leftVM.value = rightVM.value;
+			rightVM.value = value;
+		}
 		
 	}
 	
 	private setScrollbarPosition () {
 		
 		const list = this.list;
-		const map = this.map;
+		const navigator = this.navigator;
 		
-		map.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * map.offsetHeight)}px`;
+		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight)}px`;
 		
 	}
 	
@@ -298,18 +385,38 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private updateMap () :void {
+	private updateSelection () :void {
 			
-		let element:HTMLElement = <HTMLElement>this.list.list.firstElementChild;
+		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:any[] = [];
 		
 		while (element) {
-			values.push({ status: element.getAttribute('data-status'), offsetHeight: element.offsetHeight });
+			values.push({
+				selected: element.classList.contains('-selected'),
+				offsetHeight: element.offsetHeight,
+			});
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
-		this.map.buildMap(values, this.list.offsetHeight);
-		this.map.style.top = this.panel.offsetHeight + 'px';
+		this.navigator.buildSelection(values, this.list.offsetHeight);
+		
+	}
+	
+	private updateNavigator () :void {
+			
+		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
+		const values:any[] = [];
+		
+		while (element) {
+			values.push({
+				status: element.getAttribute('data-status'),
+				offsetHeight: element.offsetHeight,
+			});
+			element = <HTMLElement>element.nextElementSibling;
+		}
+		
+		this.navigator.build(values, this.list.offsetHeight);
+		this.navigator.style.top = this.panel.offsetHeight + 'px';
 		this.setScrollbarPosition();
 		
 	}
@@ -318,12 +425,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
-function enable () {
+function enable (disableCopy:boolean = true) {
 	
 	panelVM.loading = false;
 	
 	actionsVM.enable();
-	actionsVM.disableCopy();
+	if (disableCopy) actionsVM.disableCopy();
 	compareVM.enable();
 	leftVM.enable();
 	listVM.enable();

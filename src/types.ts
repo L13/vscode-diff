@@ -2,6 +2,8 @@
 
 import * as fs from 'fs';
 
+import { Event } from './views/@l13/events/event.class';
+
 //	Variables __________________________________________________________________
 
 
@@ -29,12 +31,16 @@ export type CopyFilesJob = {
 
 export type Dialog = {
 	text:string,
+	textSingle?:string,
 	buttonAll:string,
 	buttonLeft?:string,
 	buttonRight?:string,
+	buttonOk?:string,
 };
 
-export type Dictionary<T> = { [token:string]:T };
+export type Dictionary<T> = {
+	[token:string]:T,
+};
 
 export type DiffStats = {
 	total:number,
@@ -56,13 +62,13 @@ export type Diff = {
 	id:string,
 	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
 	type:'file'|'folder'|'symlink'|'mixed',
+	ignoredWhitespace:boolean,
 	ignoredEOL:boolean,
-	basename:string,
-	dirname:string,
-	extname:string,
 	fileA:null|File,
 	fileB:null|File,
 };
+
+export type EventListener = (event?:Event, ...args:any[]) => void;
 
 export type Favorite = {
 	fileA:string,
@@ -71,11 +77,22 @@ export type Favorite = {
 };
 
 export type File = {
-	path:string,
 	folder:string,
+	path:string,
 	relative:string,
 	stat?:fs.Stats,
+	name:string,
+	basename:string,
+	dirname:string,
+	extname:string,
 	type?:'file'|'folder'|'symlink',
+};
+
+export type Keybinding = {
+	title?:string,
+	key:string,
+	mac?:string,
+	win?:string,
 };
 
 export type MessageListener = (...args:any[]) => void;
@@ -89,8 +106,36 @@ export type Plural = {
 	[index:number]:string,
 };
 
+export type SearchState = {
+	searchterm:string,
+	useRegExp:boolean,
+	useCaseSensitive:boolean,
+	useFiles:boolean,
+	useFolders:boolean,
+	useSymlinks:boolean,
+	useConflicts:boolean,
+};
+
+export type Shortcut = {
+	key:string,
+	altKey:boolean,
+	ctrlKey:boolean,
+	metaKey:boolean,
+	shiftKey:boolean,
+};
+
+export type SimpleMap = {
+	[code:string]:string,
+};
+
 export type StatsMap = {
-	[pathname:string]:File
+	[pathname:string]:File,
+};
+
+export type Test = {
+	desc:string,
+	expect:any,
+	toBe:any,
 };
 
 export type TextFiles = {
@@ -101,6 +146,13 @@ export type TextFiles = {
 
 export type Uri = {
 	fsPath:string,
+};
+
+export type ViewsState = {
+	unchangedChecked:boolean,
+	deletedChecked:boolean,
+	modifiedChecked:boolean,
+	untrackedChecked:boolean,
 };
 
 export type WalkTreeJob = {

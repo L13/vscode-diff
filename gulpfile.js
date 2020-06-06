@@ -1,15 +1,15 @@
 //	Imports ____________________________________________________________________
 
+const child_process = require('child_process');
 const del = require('del');
-
+const fs = require('fs');
+const glob = require('glob');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const file2json = require('./plugins/gulp-file2json');
 const rollup = require('rollup');
-const typescript = require('rollup-plugin-typescript');
 
-const glob = require('glob');
-const fs = require('fs');
+const file2json = require('./plugins/gulp-file2json');
+const typescript = require('rollup-plugin-typescript');
 
 //	Variables __________________________________________________________________
 
@@ -23,7 +23,7 @@ const findPattern = /width="100%" height="100%" viewBox="0 0 (\d+) (\d+)"/;
 
 gulp.task('clean', () => {
 	
-	return del(['.cache', 'media', 'out']);
+	return del(['.cache', 'media', 'out', 'test']);
 	
 });
 
@@ -139,7 +139,7 @@ gulp.task('script:view', () => {
 	}).then(bundle => {
 		
 		return bundle.write({
-			file: './media/main.js',
+			file: 'media/main.js',
 			format: 'iife',
 			name: 'l13diffview',
 		});
@@ -153,6 +153,7 @@ gulp.task('script:services', () => {
 	return rollup.rollup({
 		input: 'src/extension.ts',
 		external: [
+			'child_process',
 			'fs',
 			'path',
 			'vscode',
@@ -171,10 +172,11 @@ gulp.task('script:services', () => {
 	}).then(bundle => {
 		
 		return bundle.write({
-			file: './out/extension.js',
+			file: 'out/extension.js',
 			format: 'cjs',
 			name: 'l13diffservices',
 			globals: {
+				child_process: 'child_process',
 				fs: 'fs',
 				path: 'path',
 				vscode: 'vscode',
@@ -185,9 +187,70 @@ gulp.task('script:services', () => {
 	
 });
 
-gulp.task('script', gulp.series('script:view', 'script:services'));
+gulp.task('script:tests', () => {
+	
+	const promises = [];
+	
+	[{ in: 'src/test/index.ts', out: 'test/index.js'}]
+	.concat(createInOut('src/**/*.test.ts'))
+	.forEach((file) => {
+		
+		promises.push(rollup.rollup({
+			input: file.in,
+			external: [
+				'assert',
+				'glob',
+				'fs',
+				'mocha',
+				'path',
+			],
+			plugins: [
+				typescript({
+					target: 'es6',
+					lib: [
+						'es6',
+					],
+					strict: true,
+					removeComments: true,
+				}),
+			]
+		}).then(bundle => {
+			
+			return bundle.write({
+				file: file.out,
+				format: 'cjs',
+				name: 'l13difftests',
+				globals: {
+					assert: 'assert',
+					glob: 'glob',
+					fs: 'fs',
+					mocha: 'mocha',
+					path: 'path',
+				},
+			});
+			
+		}));
+		
+	});
+	
+	return Promise.all(promises);
+	
+});
 
-gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script'));
+gulp.task('test', (done) => {
+	
+	const tests = child_process.spawn('npm', ['test']).on('close', () => done());
+	
+	let logger = (buffer) => buffer.toString().split(/\n/).forEach((message) => message && console.log(message));
+	
+	tests.stdout.on('data', logger);
+	tests.stderr.on('data', logger);
+	
+});
+
+gulp.task('script', gulp.series('script:view', 'script:services', 'script:tests'));
+
+gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'test'));
 
 gulp.task('watch', () => {
 	
@@ -203,18 +266,35 @@ gulp.task('watch', () => {
 	], gulp.parallel('icons:fix'));
 	
 	gulp.watch([
-		'src/views/**/*.ts',
+		'src/views/**/!(*.test).ts',
 		'src/types.ts',
 	], gulp.parallel('script:view'));
 	
 	gulp.watch([
 		'src/extension.ts',
 		'src/types.ts',
-		'src/services/**/*.ts',
-		'src/utilities/**/*.ts',
+		'src/services/**/!(*.test).ts',
+		'src/commands/**/!(*.test).ts',
 	], gulp.parallel('script:services'));
+	
+	gulp.watch([
+		'src/index.ts',
+		'src/**/*.test.ts',
+	], gulp.series('script:tests', 'test'));
 	
 });
 
 //	Functions __________________________________________________________________
 
+function createInOut (pattern) {
+	
+	return glob.sync(pattern).map((filename) => {
+		
+		return {
+			in: filename,
+			out: filename.replace(/^src/, 'test').replace(/\.ts$/, '.js'),
+		};
+		
+	});
+	
+}

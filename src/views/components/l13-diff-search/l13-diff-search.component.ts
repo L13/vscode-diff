@@ -100,7 +100,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 	private resizeDown = (event:MouseEvent) => {
 		
-		document.body.classList.add('-unselectable');
+		document.documentElement.classList.add('-unselectable');
 		document.body.style.cursor = 'col-resize';
 		
 		this.right = this.getBoundingClientRect().right;
@@ -128,7 +128,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.removeEventListener('mousemove', this.resizeMove);
 		document.removeEventListener('mouseup', this.resizeUp);
 		
-		document.body.classList.remove('-unselectable');
+		document.documentElement.classList.remove('-unselectable');
 		document.body.style.cursor = '';
 		
 	}

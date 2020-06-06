@@ -8,14 +8,14 @@
 l13-diff-panel {
 	background: var(--vscode-sideBar-background);
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 }
 
 l13-diff-folders {
 	background: var(--vscode-sideBar-background);
 	display: flex;
 	position: relative;
-	z-index: 3;
+	z-index: 4;
 }
 	
 l13-diff-input {
@@ -23,7 +23,7 @@ l13-diff-input {
 	margin: 10px 10px 0 15px;
 	position: relative;
 	width: 50%;
-	z-index: 2;
+	z-index: 3;
 	
 	&:first-child {
 		margin: 10px 15px 0 10px;
@@ -35,14 +35,14 @@ l13-diff-menu {
 	overflow: auto;
 	position: absolute;
 	width: 100%;
-	z-index: 4;
+	z-index: 5;
 }
 
 l13-diff-swap {
 	left: calc(50% - 10px);
 	position: absolute;
 	top: 10px;
-	z-index: 2;
+	z-index: 3;
 }
 
 l13-diff-tools {
@@ -50,7 +50,7 @@ l13-diff-tools {
 	display: flex;
 	padding: 10px 0 7px 0;
 	position: relative;
-	z-index: 2;
+	z-index: 3;
 }
 	
 l13-diff-views,
@@ -65,7 +65,7 @@ l13-diff-actions {
 l13-diff-widgets {
 	display: block;
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 }
 
 l13-diff-search {
@@ -104,7 +104,7 @@ l13-diff-list {
 	position: relative;
 	margin: 0 30px 0 0;
 	transition: margin-top 0.1s linear;
-	z-index: 0;
+	z-index: 1;
 	
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
@@ -120,11 +120,12 @@ l13-diff-list {
 	}
 }
 
-l13-diff-map {
+l13-diff-navigator {
 	position: absolute;
 	right: 0;
 	top: 75px;
-	width: 30px;
+	width: 44px;
+	z-index: 0;
 	
 	&.-widgets {
 		margin-top: 34px;

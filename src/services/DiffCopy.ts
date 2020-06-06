@@ -4,14 +4,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, lstatSync, mkdirsSync } from './@l13/fse';
+import { copyFile, lstatSync, mkdirsSync } from './@l13/nodes/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
+
 import { DiffMessage } from './DiffMessage';
+import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
-
+const BUTTON_COPY_DONT_ASK_AGAIN = 'Copy, don\'t ask again';
 
 //	Initialize _________________________________________________________________
 
@@ -21,9 +23,13 @@ import { DiffMessage } from './DiffMessage';
 
 export class DiffCopy {
 	
+	private readonly output:DiffOutput;
+	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
+		
+		this.output = DiffOutput.createOutput();
 		
 		this.msg.on('copy:left', (data) => this.showCopyFromToDialog(data, 'A', 'B'));
 		this.msg.on('copy:right', (data) => this.showCopyFromToDialog(data, 'B', 'A'));
@@ -83,17 +89,22 @@ export class DiffCopy {
 	
 	private showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') :void {
 		
+		const confirmCopy = vscode.workspace.getConfiguration('l13Diff').get('confirmCopy', true);
 		const length = data.diffResult.diffs.length;
 		
 		if (!length) return;
 		
-		const text = `Copy ${length} file${length === 1 ? '' : 's'} to "${data.diffResult['path' + to]}"?`;
-		
-		vscode.window.showInformationMessage(text, { modal: true }, 'Copy').then((value) => {
-			
-			if (value) this.copyFromTo(data, from, to);
-			
-		});
+		if (confirmCopy) {
+			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
+			vscode.window.showInformationMessage(text, { modal: true }, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN).then((value) => {
+				
+				if (value) {
+					if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
+					this.copyFromTo(data, from, to);
+				} else this.msg.send('cancel');
+				
+			});
+		} else this.copyFromTo(data, from, to);;
 		
 	}
 	
@@ -106,8 +117,6 @@ export class DiffCopy {
 			error: null,
 			tasks: length,
 			done: () => {
-				
-				if (!job.error) vscode.window.showInformationMessage(`Copied ${length} file${length === 1 ? '' : 's'} to '${folderTo}'`);
 				
 				if (!job.tasks) this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
 				
@@ -131,12 +140,19 @@ export class DiffCopy {
 						job.error = error;
 						vscode.window.showErrorMessage(error.message);
 					} else {
+						this.output.log(`Copied ${diff.type} "${fileFrom.name}" from "${fileFrom.folder}" to "${folderTo}".`);
 						diff.status = 'unchanged';
-						if (!(<any>diff)['file' + to]) {
-							(<any>diff)['file' + to] = {
+						if (!(<File>(<any>diff)['file' + to])) {
+							(<File>(<any>diff)['file' + to]) = {
 								folder: folderTo,
-								path: dest,
 								relative: fileFrom.relative,
+								stat: lstatSync(dest),
+								
+								path: dest,
+								name: fileFrom.name,
+								basename: fileFrom.basename,
+								dirname: fileFrom.dirname,
+								extname: fileFrom.extname,
 								type: fileFrom.type,
 							};
 						}

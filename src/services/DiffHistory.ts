@@ -1,9 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { join, normalize, sep } from 'path';
+import { normalize, sep } from 'path';
 import * as vscode from 'vscode';
 
 import { Comparison } from '../types';
+
+import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 //	Variables __________________________________________________________________
 
@@ -16,8 +18,7 @@ const COMPARISONS_HISTORY = 'comparisons';
 //	Exports ____________________________________________________________________
 
 export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
-
-// tslint:disable-next-line: max-line-length
+	
 	private _onDidChangeTreeData:vscode.EventEmitter<HistoryTreeItem|undefined> = new vscode.EventEmitter<HistoryTreeItem|undefined>();
 	public readonly onDidChangeTreeData:vscode.Event<HistoryTreeItem|undefined> = this._onDidChangeTreeData.event;
 	
@@ -30,13 +31,13 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 		return DiffHistory.currentProvider || (DiffHistory.currentProvider = new DiffHistory(context));
 		
 	}
-
+	
 	private constructor (private context:vscode.ExtensionContext) {
 		
 		this.comparisons = this.context.globalState.get(COMPARISONS_HISTORY) || [];
 		
 	}
-
+	
 	public refresh () :void {
 		
 		this.comparisons = this.context.globalState.get(COMPARISONS_HISTORY) || [];
@@ -44,13 +45,13 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 		this._onDidChangeTreeData.fire();
 		
 	}
-
+	
 	public getTreeItem (element:HistoryTreeItem) :vscode.TreeItem {
 		
 		return element;
 		
 	}
-
+	
 	public getChildren () :Thenable<HistoryTreeItem[]> {
 		
 		const list:(HistoryTreeItem)[] = [];
@@ -58,7 +59,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 		if (!this.comparisons.length) return Promise.resolve(list);
 		
 		return Promise.resolve(list.concat(this.comparisons.map((comparison) => new HistoryTreeItem(comparison))));
-
+		
 	}
 	
 	public static saveComparison (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
@@ -119,46 +120,10 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 }
 
-// tslint:disable-next-line: max-classes-per-file
-class HistoryTreeItem extends vscode.TreeItem {
-	
-	public command = {
-		arguments: [this],
-		command: 'l13Diff.openComparison',
-		title: 'Open Comparison',
-	};
-	
-	public iconPath = {
-		light: join(__filename, '..', '..', 'images', 'history-item-light.svg'),
-		dark: join(__filename, '..', '..', 'images', 'history-item-dark.svg'),
-	};
-	
-	public contextValue = 'history';
-	
-	public constructor (public readonly comparison:Comparison) {
-		
-		super(comparison.label);
-		
-	}
-	
-	public get tooltip () :string {
-		
-		return `${this.comparison.fileA} ↔ ${this.comparison.fileB}`;
-		
-	}
-	
-	public get description () :string {
-		
-		return `${this.comparison.desc || ''}`;
-		
-	}
-	
-}
-
 //	Functions __________________________________________________________________
 
 function formatNameAndDesc (comparison:Comparison) :Comparison {
-		
+	
 	const fileA:string[] = normalize(comparison.fileA).split(sep);
 	const fileB:string[] = normalize(comparison.fileB).split(sep);
 	const desc:string[] = [];
@@ -171,7 +136,7 @@ function formatNameAndDesc (comparison:Comparison) :Comparison {
 		desc.push(fileA.shift());
 		fileB.shift();
 	}
-
+	
 //	Fix for absolute and network paths if folders are part of the root
 	if (desc.length && desc.join('') === '') {
 		desc.forEach((value, index) => {

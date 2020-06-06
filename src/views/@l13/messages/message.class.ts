@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { MessageListener } from './types';
+import { MessageListener } from '../../../types';
 
 //	Variables __________________________________________________________________
 
