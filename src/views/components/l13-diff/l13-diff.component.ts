@@ -116,10 +116,13 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.compare.addEventListener('compare', () => this.initCompare());
 		
-		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, (event) => {
+		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => {
 			
-			event.stopPropagation();
-			this.initCompare();
+			if (!this.left.focused && !this.right.focused) {
+				event.stopPropagation();
+				event.preventDefault();
+				this.initCompare();
+			}
 			
 		});
 			
@@ -130,6 +133,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		addKeyListener(window, { key: 'Ctrl+S', mac: 'Cmd+S' }, (event) => {
 			
 			event.stopPropagation();
+			event.preventDefault();
 			this.swapInputs();
 			
 		});
@@ -137,6 +141,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		addKeyListener(window, { key: 'Alt+Ctrl+S', mac: 'Alt+Cmd+S' }, (event) => {
 			
 			event.stopPropagation();
+			event.preventDefault();
 			this.swapInputs(true);
 			
 		});

@@ -37,6 +37,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 	
 	public menu:L13DiffMenuComponent;
 	
+	public focused:boolean = false;
+	
 	public constructor () {
 		
 		super();
@@ -47,6 +49,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 			const menu = this.menu;
 			
+			this.focused = true;
 			this.appendChild(menu);
 			
 		//	Weird focus blur switch if click is outside of panel view.
@@ -61,6 +64,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 			const menu = this.menu;
 			
+			this.focused = true;
 			this.appendChild(menu);
 			
 		//	Weird focus blur switch if click is outside of panel view.
@@ -72,6 +76,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		this.input.addEventListener('blur', async () => {
 			
 			const menu = this.menu;
+			
+			this.focused = false;
 			
 			if (!menu.isCursorInMenu && menu.parentNode === this) menu.remove();
 			
