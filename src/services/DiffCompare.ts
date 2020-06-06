@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { join, isAbsolute } from 'path';
+import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 
 import { parse } from './@l13/natives/jsons';
@@ -19,7 +19,7 @@ import { DiffResult } from './DiffResult';
 import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
 
-const push = Array.prototype.push;
+const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
 

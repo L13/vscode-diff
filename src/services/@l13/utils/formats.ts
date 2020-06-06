@@ -2,9 +2,7 @@
 
 import { Plural } from '../../../types';
 
-const floor = Math.floor;
-const log = Math.log;
-const pow = Math.pow;
+const { floor, log, pow } = Math;
 
 //	Variables __________________________________________________________________
 

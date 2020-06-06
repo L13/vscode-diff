@@ -8,9 +8,11 @@ import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 import styles from '../styles';
 import templates from '../templates';
 
+const { round } = Math;
+
 //	Variables __________________________________________________________________
 
-const round = Math.round;
+
 
 //	Initialize _________________________________________________________________
 

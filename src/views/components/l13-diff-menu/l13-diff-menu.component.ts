@@ -10,9 +10,11 @@ import { removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
+const { indexOf } = Array.prototype;
+
 //	Variables __________________________________________________________________
 
-const indexOf = Array.prototype.indexOf;
+
 
 //	Initialize _________________________________________________________________
 

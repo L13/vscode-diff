@@ -17,8 +17,7 @@ import { DiffOpen } from './DiffOpen';
 import { DiffOutput } from './DiffOutput';
 import { DiffStatus } from './DiffStatus';
 
-const floor = Math.floor;
-const random = Math.random;
+const { floor, random } = Math;
 
 //	Variables __________________________________________________________________
 

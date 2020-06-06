@@ -1,6 +1,5 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModelService } from './view-model-service.abstract';
 import { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________

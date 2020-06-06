@@ -3,24 +3,9 @@
 import { isMacOs, isWindows } from '../os/platforms';
 import keycodes from './keyboard.us';
 
-const fromCharCode = String.fromCharCode;
+import { Keybinding, Shortcut, SimpleMap } from '../../../types';
 
-type SimpleMap = { [code:string]:string };
-
-type Keybinding = {
-	title?:string,
-	key:string,
-	mac?:string,
-	win?:string,
-};
-
-type Shortcut = {
-	key:string,
-	altKey:boolean,
-	ctrlKey:boolean,
-	metaKey:boolean,
-	shiftKey:boolean,
-};
+const { fromCharCode } = String;
 
 //	Variables __________________________________________________________________
 

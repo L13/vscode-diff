@@ -2,6 +2,8 @@
 
 import * as fs from 'fs';
 
+import { Event } from './views/@l13/events/event.class';
+
 //	Variables __________________________________________________________________
 
 
@@ -66,6 +68,8 @@ export type Diff = {
 	fileB:null|File,
 };
 
+export type EventListener = (event?:Event, ...args:any[]) => void;
+
 export type Favorite = {
 	fileA:string,
 	fileB:string,
@@ -82,6 +86,13 @@ export type File = {
 	dirname:string,
 	extname:string,
 	type?:'file'|'folder'|'symlink',
+};
+
+export type Keybinding = {
+	title?:string,
+	key:string,
+	mac?:string,
+	win?:string,
 };
 
 export type MessageListener = (...args:any[]) => void;
@@ -105,8 +116,20 @@ export type SearchState = {
 	useConflicts:boolean,
 };
 
+export type Shortcut = {
+	key:string,
+	altKey:boolean,
+	ctrlKey:boolean,
+	metaKey:boolean,
+	shiftKey:boolean,
+};
+
+export type SimpleMap = {
+	[code:string]:string,
+};
+
 export type StatsMap = {
-	[pathname:string]:File
+	[pathname:string]:File,
 };
 
 export type Test = {
