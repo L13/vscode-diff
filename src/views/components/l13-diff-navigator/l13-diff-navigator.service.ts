@@ -3,7 +3,7 @@
 import { ViewModelConstructor } from '../../@l13/component/types';
 import { ViewModelService } from '../../@l13/component/view-model-service.abstract';
 
-import { L13DiffMapViewModel } from './l13-diff-map.viewmodel';
+import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -15,9 +15,9 @@ import { L13DiffMapViewModel } from './l13-diff-map.viewmodel';
 
 //	Exports ____________________________________________________________________
 
-export class L13DiffMapViewModelService extends ViewModelService<L13DiffMapViewModel> {
+export class L13DiffNavigatorViewModelService extends ViewModelService<L13DiffNavigatorViewModel> {
 	
-	public vmc:ViewModelConstructor<L13DiffMapViewModel> = L13DiffMapViewModel;
+	public vmc:ViewModelConstructor<L13DiffNavigatorViewModel> = L13DiffNavigatorViewModel;
 	
 }
 

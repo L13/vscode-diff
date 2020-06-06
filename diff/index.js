@@ -11,7 +11,7 @@ const trimOption = /^\-\-/;
 const args = process.argv.slice(2);
 
 let action = '';
-let values = [];
+let names = [];
 
 let root = path.join(__dirname, 'test');
 
@@ -52,7 +52,7 @@ params: while (args.length) {
 	switch (args[0]) {
 		case '--help': console.log(manual); process.exit(); break params;
 		case '--': args.shift(); break params;
-		case '--create': [action, values] = parseOptions(args); break;
+		case '--create': [action, names] = parseOptions(args); break;
 		case '--random': action = 'random'; args.shift(); break;
 		case '--shared': root = '/Users/Shared/L13 Diff'; args.shift(); break;
 		case '--create-all': action = 'all'; args.shift(); break;
@@ -62,10 +62,10 @@ params: while (args.length) {
 
 switch (action) {
 	case 'create':
-		let value;
-		while ((value = values.shift())) {
-			removeFilesAndFolders(path.join(root, value));
-			createFilesAndFolders(path.join(root, value), require(path.join(__dirname, 'patterns', value)));
+		let name;
+		while ((name = names.shift())) {
+			removeFilesAndFolders(path.join(root, name));
+			createFilesAndFolders(path.join(root, name), require(path.join(__dirname, 'patterns', name)));
 		}
 		break;
 	case 'random':
@@ -74,12 +74,12 @@ switch (action) {
 		break;
 	case 'all':
 		const files = fs.readdirSync(path.join(__dirname, 'patterns'));
-		removeFilesAndFolders(path.join(root));
-		files.forEach((value) => {
+		files.forEach((name) => {
 			
-			value = path.basename(value, '.json');
+			name = path.basename(name, path.extname(name));
 			
-			createFilesAndFolders(path.join(root, value), require(path.join(__dirname, 'patterns', value)));
+			removeFilesAndFolders(path.join(root, name));
+			createFilesAndFolders(path.join(root, name), require(path.join(__dirname, 'patterns', name)));
 			
 		});
 		break;

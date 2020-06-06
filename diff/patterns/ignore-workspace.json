@@ -1,5 +1,8 @@
 {
 	"folder-a": {
+		"README.md": [
+			"Requires that both folders for the comparison have to be in the same workspace."
+		],
 		".vscode": {
 			"settings.json": [{
 				"l13Diff.ignore": [
@@ -31,7 +34,7 @@
 		],
 		"settings": {
 			"l13Diff.ignore": [
-				
+
 			]
 		}
 	}]

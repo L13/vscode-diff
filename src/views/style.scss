@@ -4,6 +4,13 @@ html {
 	height: 100%;
 }
 
+html.-unselectable body * {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
 body {
 	background: var(--vscode-sideBar-background);
 	color: var(--vscode-foreground);
@@ -11,13 +18,6 @@ body {
 	line-height: 1.3;
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
-	
-	&.-unselectable * {
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
 	
 	&.vscode-dark {
 		// Fixes the missing selection color if default dark theme is selected
@@ -35,6 +35,7 @@ body {
 		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
 		
 		--l13-icon-background: #c5c5c5;
+		--l13-icon-activeBackground: #ffffff;
 	}
 	
 	&.vscode-light {
@@ -53,5 +54,6 @@ body {
 		--l13-scrollbar-background: rgba(0, 0, 0, 0.1);
 		
 		--l13-icon-background: #414141;
+		--l13-icon-activeBackground: #414141;
 	}
 }

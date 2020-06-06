@@ -1,0 +1,69 @@
+:host {
+	box-sizing: border-box;
+	height: calc(100% - 2px);
+	padding: 2px 7px 0 2px;
+	
+	button {
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		height: 16px;
+		margin: 0 0 0 5px;
+		position: relative;
+		transition: transform 0.1s;
+		width: 16px;
+		z-index: 1;
+		
+		&.-active {
+			transform: scale(1.2, 1.2);
+			
+			&::before {
+				background-color: var(--l13-icon-activeBackground);
+			}
+		}
+		
+		&:focus {
+			outline: solid 1px var(--vscode-focusBorder, transparent);
+		}
+	
+		&::before {
+			background-color: var(--l13-icon-background);
+			content: '';
+			display: block;
+			height: 100%;
+			left: 0;
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 0;
+			transition: background-color 0.1s;
+			width: 100%;
+		}
+		
+		&#copy {
+			
+			&::before {
+				-webkit-mask-image: url('copy-file.svg');
+				mask-image: url('copy-file.svg');
+			}
+		}
+		
+		&#delete {
+			
+			&::before {
+				-webkit-mask-image: url('delete-file.svg');
+				mask-image: url('delete-file.svg');
+			}
+		}
+		
+		&#reveal {
+			
+			&::before {
+				-webkit-mask-image: url('reveal-file.svg');
+				mask-image: url('reveal-file.svg');
+			}
+		}
+	}
+}

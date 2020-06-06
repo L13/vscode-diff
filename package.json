@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.23.0",
+	"version": "0.24.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -351,6 +351,31 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
+				},
+				"l13Diff.ignoreTrimWhitespace": {
+					"type": "string",
+					"default": "default",
+					"enum": [
+						"default",
+						"on",
+						"off"
+					],
+					"description": "Indicates if leading and trailing whitespace in text files should be ignored for a comparison.",
+					"enumDescriptions": [
+						"Uses the value of 'diffEditor.ignoreTrimWhitespace'.",
+						"Ignores leading and trailing whitespace for a comparison in a text file.",
+						"Does not ignore leading and trailing whitespace for a comparison in a text file."
+					]
+				},
+				"l13Diff.confirmCopy": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when copying files."
+				},
+				"l13Diff.confirmDelete": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when deleting files."
 				}
 			}
 		}
@@ -359,8 +384,8 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "gulp build",
 		"watch": "gulp watch",
-		"test": "npm run compile",
-		"test-diff": "node ./diff/index.js --clean --create-all"
+		"test": "mocha",
+		"test-files": "node ./diff/index.js --shared --create-all"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",

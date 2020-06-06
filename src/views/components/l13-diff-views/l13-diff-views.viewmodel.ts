@@ -2,6 +2,8 @@
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
+import { ViewsState } from '../../../types';
+
 //	Variables __________________________________________________________________
 
 
@@ -37,6 +39,28 @@ export class L13DiffViewsViewModel extends ViewModel {
 	public modifiedChecked:boolean = true;
 	
 	public untrackedChecked:boolean = true;
+	
+	public getState () :ViewsState {
+		
+		return {
+			unchangedChecked: this.unchangedChecked,
+			deletedChecked: this.deletedChecked,
+			modifiedChecked: this.modifiedChecked,
+			untrackedChecked: this.untrackedChecked,
+		};
+		
+	}
+	
+	public setState (state:ViewsState) :void {
+		
+		this.unchangedChecked = state.unchangedChecked;
+		this.deletedChecked = state.deletedChecked;
+		this.modifiedChecked = state.modifiedChecked;
+		this.untrackedChecked = state.untrackedChecked;
+		
+		this.requestUpdate();
+		
+	}
 	
 }
 

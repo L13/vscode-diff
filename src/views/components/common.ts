@@ -14,6 +14,7 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 window.addEventListener('load', () => {
 	
 	detectPlatform();
+	initThemeChangeListener();
 	
 	document.body.appendChild(document.createElement('l13-diff'));
 	
@@ -76,3 +77,11 @@ export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputE
 }
 
 //	Functions __________________________________________________________________
+
+function initThemeChangeListener () {
+	
+	const observer = new MutationObserver(() => window.dispatchEvent(new CustomEvent('theme', { bubbles: false })));
+	
+	observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+	
+}

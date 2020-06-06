@@ -1,13 +1,16 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { basename, dirname, extname, join, sep } from 'path';
+import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 
-import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/fse';
+import { parse } from './@l13/natives/jsons';
+import { normalizeLineEnding, trimWhitespace } from './@l13/nodes/buffers';
+import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/nodes/fse';
 
 import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
-import { removeCommentsFromJSON, sortCaseInsensitive } from './common';
+import { sortCaseInsensitive } from './common';
+
 import { DiffHistory } from './DiffHistory';
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
@@ -16,12 +19,11 @@ import { DiffResult } from './DiffResult';
 import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
 
-const push = Array.prototype.push;
+const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
-const findPlaceholders = /\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/g;
+const findPlaceholder = /^\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
 const textfiles:TextFiles = {
@@ -56,6 +58,7 @@ export class DiffCompare {
 		this.history = DiffHistory.createProvider(context);
 		
 		msg.on('create:diffs', (data) => this.createDiffs(data));
+		msg.on('update:diffs', (data) => this.updateDiffs(data));
 		
 	}
 	
@@ -78,7 +81,23 @@ export class DiffCompare {
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
 		
-		if (findPlaceholder.test(pathA) || findPlaceholder.test(pathB)) {
+		if (!pathA) {
+			vscode.window.showErrorMessage(`The left path is empty.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!pathB) {
+			vscode.window.showErrorMessage(`The right path is empty.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!isAbsolute(pathA)) {
+			vscode.window.showErrorMessage(`The left path is not absolute.`);
+			return this.postEmptyResult(pathA, pathB);
+		}
+		
+		if (!isAbsolute(pathB)) {
+			vscode.window.showErrorMessage(`The right path is not absolute.`);
 			return this.postEmptyResult(pathA, pathB);
 		}
 		
@@ -108,6 +127,33 @@ export class DiffCompare {
 		
 	}
 	
+	private updateDiffs (data:any) :void {
+		
+		const workspace = vscode.workspace;
+		const ignoreEndOfLine = workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
+		const useDefault = workspace.getConfiguration('l13Diff').get('ignoreTrimWhitespace', 'default');
+		const ignoreTrimWhitespace = useDefault === 'default' ? workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', true) : useDefault === 'on';
+		
+		data.diffResult.diffs.forEach((diff:Diff) => {
+			
+			const status = diff.status;
+			let statusInfo = ` Files are still '${status}'.`;
+			
+			diff.fileA.stat = lstatSync(diff.fileA.path);
+			diff.fileB.stat = lstatSync(diff.fileB.path);
+			
+			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace);
+			
+			if (status !== diff.status) statusInfo = ` Status has changed from '${status}' to '${diff.status}'.`;
+			
+			this.output.log(`Compared diff "${diff.id}".${statusInfo}`);
+			
+		});
+		
+		this.msg.send('update:diffs', data);
+		
+	}
+	
 	private saveRecentlyUsed (pathA:string, pathB:string) :void {
 		
 		DiffMenu.saveRecentlyUsed(this.context, pathA, pathB);
@@ -129,7 +175,7 @@ export class DiffCompare {
 		
 		this.saveRecentlyUsed(data.pathA, data.pathB);
 		this.saveHistory(pathA, pathB);
-		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
+		this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
 			preview: false,
@@ -144,14 +190,18 @@ export class DiffCompare {
 		
 		this.saveRecentlyUsed(data.pathA, data.pathB);
 		this.saveHistory(pathA, pathB);
-		this.output.log(`Comparing '${pathA}' ↔ '${pathB}'`);
+		this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
 		this.createDiffList(pathA, pathB, (error:null|Error, diffResult:undefined|DiffResult) => {
 			
-			if (error) vscode.window.showErrorMessage(error.message);
-			
-			if (!diffResult) this.status.update();
-			else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (error) {
+				diffResult = new DiffResult(pathA, pathB);
+				vscode.window.showErrorMessage(error.message);
+				this.status.update();
+			} else {
+				if (!diffResult) this.status.update();
+				else if (!diffResult.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+			}
 			
 			this.msg.send('create:diffs', { diffResult });
 			
@@ -183,7 +233,7 @@ export class DiffCompare {
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		this.output.log(`Scanning folder '${dirnameA}'`);
+		this.output.log(`Scanning folder "${dirnameA}"`);
 		
 		walkTree(dirnameA, { ignore }, (errorA, resultA) => {
 			
@@ -191,14 +241,14 @@ export class DiffCompare {
 			
 			createListA(diffs, <StatsMap>resultA);
 			
-			this.output.log(`Scanning folder '${dirnameB}'`);
+			this.output.log(`Scanning folder "${dirnameB}"`);
 			
 			walkTree(dirnameB, { ignore }, (errorB, resultB) => {
-			
+				
 				if (errorB) return callback(errorB);
 				
 				this.output.log('Comparing files');
-					
+				
 				createListB(diffs, <StatsMap>resultB);
 				
 				this.output.log('Compared files');
@@ -221,7 +271,7 @@ export class DiffCompare {
 		});
 		
 	}
-	
+
 }
 
 //	Functions __________________________________________________________________
@@ -239,17 +289,14 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const relative = file.relative;
-		const name = dirname(relative);
+		const id = file.relative;
 		
-		diffs[file.relative] = {
-			id: relative,
-			basename: basename(relative),
-			dirname: name !== '.' ? name + sep : '',
-			extname: extname(relative),
+		diffs[id] = {
+			id,
 			status: 'deleted',
 			type: file.type,
 			ignoredEOL: false,
+			ignoredWhitespace: false,
 			fileA: file,
 			fileB: null,
 		};
@@ -260,69 +307,77 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
-	const ignoreEndOfLine = vscode.workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
+	const workspace = vscode.workspace;
+	const ignoreEndOfLine = workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
+	const useDefault = workspace.getConfiguration('l13Diff').get('ignoreTrimWhitespace', 'default');
+	const ignoreTrimWhitespace = useDefault === 'default' ? workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', true) : useDefault === 'on';
 	
 	Object.keys(result).forEach((pathname) => {
-				
-		const file = result[pathname];
-		const relative = file.relative;
-		const diff = diffs[relative];
 		
-		if (diff) {
-			diff.status = 'unchanged';
-			
-			const fileB = diff.fileB = file;
-			const fileA = <File>diff.fileA;
-			
-			const statA = <fs.Stats>fileA.stat;
-			const statB = <fs.Stats>fileB.stat;
-			
-			if (fileA.type !== fileB.type) {
-				diff.status = 'conflicting';
-				diff.type = 'mixed';
-			} else if (fileA.type === 'file' && fileB.type === 'file') {
-				if (ignoreEndOfLine &&
-					(textfiles.extensions.includes(diff.extname) ||
-					textfiles.filenames.includes(diff.basename) ||
-					textfiles.glob && textfiles.glob.test(diff.basename))) {
-					const bufferA = fs.readFileSync(fileA.path);
-					const bufferB = fs.readFileSync(fileB.path);
-				//	If files are equal normalizing is not necessary
-					if (statA.size === statB.size && bufferA.equals(bufferB)) return;
-					const maxLength = Math.max(bufferA.length, bufferB.length);
-					diff.ignoredEOL = true;
-					if (!normalizeBuffer(bufferA, maxLength).equals(normalizeBuffer(bufferB, maxLength))) diff.status = 'modified';
-				} else {
-					if (statA.size !== statB.size) {
-						diff.status = 'modified';
-					} else {
-						const bufferA = fs.readFileSync(fileA.path);
-						const bufferB = fs.readFileSync(fileB.path);
-						if (!bufferA.equals(bufferB)) diff.status = 'modified';
-					}
-				}
-			} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
-				const linkA = fs.readlinkSync(fileA.path);
-				const linkB = fs.readlinkSync(fileB.path);
-				if (linkA !== linkB) diff.status = 'modified';
-			}
-		} else {
-			const name = dirname(relative);
-			
-			diffs[file.relative] = {
-				id: relative,
-				basename: basename(relative),
-				dirname: name !== '.' ? name + sep : '',
-				extname: extname(relative),
+		const file = result[pathname];
+		const id = file.relative;
+		const diff = diffs[id];
+		
+		if (!diff) {
+			diffs[id] = {
+				id,
 				status: 'untracked',
 				type: file.type,
 				ignoredEOL: false,
+				ignoredWhitespace: false,
 				fileA: null,
 				fileB: file,
 			};
-		}
+		} else compareDiff(diff, <File>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
 		
 	});
+	
+}
+
+function compareDiff (diff:Diff, fileA:File, fileB:File, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
+	
+	diff.status = 'unchanged';
+	
+	const statA = <fs.Stats>fileA.stat;
+	const statB = <fs.Stats>fileB.stat;
+	
+	if (fileA.type !== fileB.type) {
+		diff.status = 'conflicting';
+		diff.type = 'mixed';
+	} else if (fileA.type === 'file' && fileB.type === 'file') {
+		if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
+			(textfiles.extensions.includes(fileA.extname) ||
+			textfiles.filenames.includes(fileA.basename) ||
+			textfiles.glob && textfiles.glob.test(fileA.basename))) {
+			let bufferA = fs.readFileSync(fileA.path);
+			let bufferB = fs.readFileSync(fileB.path);
+		//	If files are equal normalizing is not necessary
+			if (statA.size === statB.size && bufferA.equals(bufferB)) return;
+			if (ignoreTrimWhitespace) {
+				bufferA = trimWhitespace(bufferA);
+				bufferB = trimWhitespace(bufferB);
+				diff.ignoredWhitespace = true;
+			}
+			if (ignoreEndOfLine) {
+				bufferA = normalizeLineEnding(bufferA);
+				bufferB = normalizeLineEnding(bufferB);
+				diff.ignoredEOL = true;
+			}
+			if (!bufferA.equals(bufferB)) diff.status = 'modified';
+		} else {
+			if (statA.size !== statB.size) {
+				diff.status = 'modified';
+			} else {
+				const bufferA = fs.readFileSync(fileA.path);
+				const bufferB = fs.readFileSync(fileB.path);
+				if (!bufferA.equals(bufferB)) diff.status = 'modified';
+			}
+		}
+	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
+		const linkA = fs.readlinkSync(fileA.path);
+		const linkB = fs.readlinkSync(fileB.path);
+		if (linkA !== linkB) diff.status = 'modified';
+	}
 	
 }
 
@@ -334,7 +389,7 @@ function buildWhitelistForTextFiles () {
 	textfiles.filenames = [];
 	
 	vscode.extensions.all.forEach((extension) => {
-	
+		
 		const packageJSON = extension.packageJSON;
 		
 		if (packageJSON.contributes && packageJSON.contributes.languages) {
@@ -357,36 +412,10 @@ function buildWhitelistForTextFiles () {
 	
 }
 
-function hasUTF16BOM (buffer:Buffer) {
-	
-	return buffer[0] === 254 && buffer[1] === 255 || buffer[0] === 255 && buffer[1] === 254;
-	
-}
-
-function normalizeBuffer (buffer:Buffer, maxLength:number) {
-	
-	const cache = Buffer.alloc(maxLength);
-	const length = buffer.length;
-	const utf16Fix = hasUTF16BOM(buffer) ? 1 : 0;
-	let index = 0;
-	let i = 0;
-	
-	while (i < length) {
-		const value = buffer[i++];
-		if (value === 13) {
-			if (buffer[i + utf16Fix] !== 10) cache[index++] = 10;
-			i += utf16Fix;
-		} else cache[index++] = value;
-	}
-	
-	return cache;
-	
-}
-
 function parsePredefinedVariables (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholders, function (match, placeholder, value) {
+	return pathname.replace(findPlaceholder, function (match, placeholder, value) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		
@@ -437,7 +466,7 @@ function loadSettingsIgnore (pathname:string) :string[] {
 	if (stat && stat.isFile()) {
 		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
 		try {
-			json = JSON.parse(removeCommentsFromJSON(content));
+			json = parse(content);
 		} catch {
 			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
 		}
@@ -449,7 +478,7 @@ function loadSettingsIgnore (pathname:string) :string[] {
 
 function useWorkspaceSettings (pathname:string) :boolean {
 	
-	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.indexOf(folder.uri.fsPath) === 0);
+	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.startsWith(folder.uri.fsPath));
 	
 }
 

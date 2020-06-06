@@ -3,12 +3,15 @@
 import * as vscode from 'vscode';
 
 import { Dialog, Diff, File } from '../types';
+
 import { DiffMessage } from './DiffMessage';
+import { DiffOutput } from './DiffOutput';
 
 //	Variables __________________________________________________________________
 
 const selectableTrashDialog:Dialog = {
 	text: 'Which files should be moved to the trash?',
+	textSingle: 'Which file should be moved to the trash?',
 	buttonAll: 'Move All to Trash',
 	buttonLeft: 'Move Left to Trash',
 	buttonRight: 'Move Right to Trash',
@@ -16,6 +19,7 @@ const selectableTrashDialog:Dialog = {
 
 const selectableDeleteDialog:Dialog = {
 	text: 'Which files should be permanently deleted?',
+	textSingle: 'Which file should be permanently deleted?',
 	buttonAll: 'Delete All',
 	buttonLeft: 'Delete Left',
 	buttonRight: 'Delete Right',
@@ -23,12 +27,16 @@ const selectableDeleteDialog:Dialog = {
 
 const simpleTrashDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
+	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
+	buttonOk: 'Move, don\'t ask again',
 };
 
 const simpleDeleteDialog:Dialog = {
 	text: 'Are you sure to delete all selected files?',
+	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
+	buttonOk: 'Delete, don\'t ask again',
 };
 
 //	Initialize _________________________________________________________________
@@ -39,11 +47,17 @@ const simpleDeleteDialog:Dialog = {
 
 export class DiffDelete {
 	
+	private readonly output:DiffOutput;
+	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
 		
+		this.output = DiffOutput.createOutput();
+		
 		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
+		this.msg.on('delete:left', (data) => this.showDeleteFileDialog(data, 'left'));
+		this.msg.on('delete:right', (data) => this.showDeleteFileDialog(data, 'right'));
 		
 	}
 	
@@ -53,6 +67,29 @@ export class DiffDelete {
 			const disposable = this.disposables.pop();
 			if (disposable) disposable.dispose();
 		}
+		
+	}
+	
+	private showDeleteFileDialog (data:any, side:'left'|'right') :void {
+		
+		const diffs:Diff[] = data.diffResult.diffs;
+		
+		if (!diffs.length) return;
+		
+		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
+		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
+		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		
+		if (confirmDelete) {
+			vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll, dialog.buttonOk).then((value) => {
+					
+				if (value) {
+					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+					this.deleteFiles(data, side, useTrash);
+				} else this.msg.send('cancel');
+					
+			});
+		} else this.deleteFiles(data, side, useTrash);
 		
 	}
 	
@@ -73,20 +110,58 @@ export class DiffDelete {
 		}
 		
 		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
-		let dialog:Dialog = null;
-		const args = [];
-
-		if (sides > 2) {
-			dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
-			if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
-			else args.push(dialog.buttonRight, dialog.buttonLeft);
-		} else dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
-
-		vscode.window.showInformationMessage(dialog.text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
+		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
+		
+		if (confirmDelete || sides > 2) {
+			let dialog:Dialog = null;
+			const args = [];
+			
+			if (sides > 2) {
+				dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
+				if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
+				else args.push(dialog.buttonRight, dialog.buttonLeft);
+			} else {
+				dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+				args.push(dialog.buttonOk);
+			}
+			
+			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
+			
+			vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
+					
+				if (value) {
+					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+					this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
+				} else this.msg.send('cancel');
+					
+			});
+		} else this.deleteFiles(data, 'all', useTrash);
+		
+	}
+	
+	private deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
+		
+		return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
+			recursive: true,
+			useTrash,
+		}).then(() => {
+			
+			let type = null;
+			
+			for (const diff of diffs) {
+				if (diff.fileA?.path === pathname) type = diff.fileA.type;
+				if (diff.fileB?.path === pathname) type = diff.fileB.type;
 				
-			if (value) this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
+				if (type) {
+					this.output.log(`Deleted ${type} "${pathname}".`);
+					type = null;
+				}
 				
-		});
+				if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
+				if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
+			}
+			
+		}, (error) => vscode.window.showErrorMessage(error.message));
 		
 	}
 	
@@ -95,7 +170,7 @@ export class DiffDelete {
 		const diffs:Diff[] = data.diffResult.diffs;
 		const folders:string[] = [];
 		const files:string[] = [];
-	
+		
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
 			if (fileA && (side === 'all' || side === 'left')) separateFilesAndFolders(fileA, folders, files);
@@ -108,7 +183,7 @@ export class DiffDelete {
 		
 		const promises = [];
 		
-		for (const file of folders.concat(files)) promises.push(deleteFile(diffs, file, useTrash));
+		for (const file of folders.concat(files)) promises.push(this.deleteFile(diffs, file, useTrash));
 		
 		Promise.all(promises).then(() => {
 			
@@ -135,26 +210,8 @@ function removeSubfiles (folders:string[], files:string[]) {
 		let i = 0;
 		let file;
 		while ((file = files[i++])) {
-			if (file !== folder && file.indexOf(folder) === 0) files.splice(--i , 1);
+			if (file !== folder && file.startsWith(folder)) files.splice(--i , 1);
 		}
 	}
-	
-}
-
-function deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
-	
-	return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
-		recursive: true,
-		useTrash,
-	}).then(() => {
-		
-		for (const diff of diffs) {
-			const fileA = diff.fileA;
-			const fileB = diff.fileB;
-			if (fileA && fileA.path.indexOf(pathname) === 0) diff.fileA = null;
-			if (fileB && fileB.path.indexOf(pathname) === 0) diff.fileB = null;
-		}
-		
-	}, (error) => vscode.window.showErrorMessage(error.message));
 	
 }

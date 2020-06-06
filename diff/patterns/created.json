@@ -1,14 +1,14 @@
 {
 	"folder-a": null,
 	"folder-b": {
-		"file-e.txt": ["e"],
+		"file-e [+].txt": ["e"],
 		"folder-e": null,
 		"folder-f": {
-			"file-f.txt": ["f"]
+			"file-f [+].txt": ["f"]
 		},
 		"folder-g": {
 			"subfolder-h": {
-				"file-h.txt": ["h"]
+				"file-h [+].txt": ["h"]
 			}
 		}
 	}

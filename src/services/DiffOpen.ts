@@ -1,9 +1,12 @@
 //	Imports ____________________________________________________________________
 
+import { spawn } from 'child_process';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Diff, File } from '../types';
+import { isMacOs, isWindows } from './@l13/nodes/platforms';
 import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
@@ -20,10 +23,12 @@ export class DiffOpen {
 	
 	private disposables:vscode.Disposable[] = [];
 	
-	public constructor (private msg:DiffMessage) {
+	public constructor (msg:DiffMessage) {
 		
 		msg.on('open:diffToSide', (data) => this.open(data, true));
 		msg.on('open:diff', (data) => this.open(data, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false)));
+		
+		msg.on('reveal:file', (data) => this.reveal(data));
 		
 	}
 	
@@ -72,7 +77,7 @@ export class DiffOpen {
 					if (statB.isFile()) {
 						const left = vscode.Uri.file(fileA.path);
 						const right = vscode.Uri.file(fileB.path);
-						vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.relative} (${fileA.folder} ↔ ${fileB.folder})`, {
+						vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.folder} ↔ ${fileB.folder})`, {
 							// preserveFocus: false,
 							preview: false,
 							viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
@@ -105,7 +110,55 @@ export class DiffOpen {
 		
 	}
 	
+	private reveal (data:any) :void {
+		
+		const pathname:string = data.pathname;
+		
+		if (isMacOs) showFileInFinder(pathname);
+		else if (isWindows) showFileInExplorer(pathname);
+		else showFileInFolder(pathname);
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________
 
+function showFileInFinder (pathname:string) {
+	
+	const process = spawn('open', ['-R', pathname || '/']);
+	
+	process.on('error', (error:Error) => {
+		
+		process.kill();
+		vscode.window.showErrorMessage(error.message);
+		
+	});
+	
+}
+
+function showFileInExplorer (pathname:string) {
+	
+	const process = spawn('explorer', ['/select,', pathname || 'c:\\']);
+	
+	process.on('error', (error:Error) => {
+		
+		process.kill();
+		vscode.window.showErrorMessage(error.message);
+		
+	});
+	
+}
+
+function showFileInFolder (pathname:string) {
+	
+	const process = spawn('xdg-open', [path.dirname(pathname) || '/']);
+	
+	process.on('error', (error:Error) => {
+		
+		process.kill();
+		vscode.window.showErrorMessage(error.message);
+		
+	});
+	
+}

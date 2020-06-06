@@ -3,11 +3,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Callback, Options, WalkTreeJob } from '../../types';
+import { Callback, Options, WalkTreeJob } from '../../../types';
 
 //	Variables __________________________________________________________________
 
 const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
+const sep = path.sep;
 
 //	Initialize _________________________________________________________________
 
@@ -170,17 +171,25 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				if (job.error) return; // If error no further actions
 				if (statError) return job.done(statError);
 				
-				const nextRelative = path.join(relative, name);
+				const currentRelative = path.join(relative, name);
+				let currentDirname = path.dirname(currentRelative);
+				
+				currentDirname = currentDirname === '.' ? '' : currentDirname + sep;
 				
 				if (stat.isDirectory()) {
 					job.result[pathname] = {
 						folder: cwd,
-						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
 						stat,
+						
+						path: pathname + sep,
+						name: currentRelative + sep,
+						basename: path.basename(currentRelative) + sep,
+						dirname: currentDirname,
+						extname: '',
 						type: 'folder',
 					};
-					return _walktree(job, cwd, nextRelative);
+					return _walktree(job, cwd, currentRelative);
 				}
 				
 				job.tasks--;
@@ -188,17 +197,27 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				if (stat.isFile()) {
 					job.result[pathname] = {
 						folder: cwd,
-						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
 						stat,
+						
+						path: pathname,
+						name: currentRelative,
+						basename: path.basename(currentRelative),
+						dirname: currentDirname,
+						extname: path.extname(currentRelative),
 						type: 'file',
 					};
 				} else if (stat.isSymbolicLink()) {
 					job.result[pathname] = {
 						folder: cwd,
-						path: pathname,
-						relative: nextRelative,
+						relative: currentRelative,
 						stat,
+						
+						path: pathname,
+						name: currentRelative,
+						basename: path.basename(currentRelative),
+						dirname: currentDirname,
+						extname: '',
 						type: 'symlink',
 					};
 				}
@@ -215,7 +234,6 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 
 export function mkdirsSync (dirname:string) {
 	
-	const sep = path.sep;
 	const dirnames = dirname.split(sep);
 	const base = dirnames.shift() || sep;
 	

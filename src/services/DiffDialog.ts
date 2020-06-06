@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffMessage } from './DiffMessage';
-
 import * as vscode from 'vscode';
+
+import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 

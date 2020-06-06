@@ -10,7 +10,7 @@
 		},
 		"CVS": null,
 		".DS_Store": [""],
-		"file-a": ["a"]
+		"file-a [-].txt": ["a"]
 	},
 	"folder-b": null
 }

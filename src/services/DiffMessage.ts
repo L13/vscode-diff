@@ -21,7 +21,7 @@ export class DiffMessage {
 	public constructor (private panel:vscode.WebviewPanel, disposables:vscode.Disposable[]) {
 		
 		panel.webview.onDidReceiveMessage((message) => {
-	
+			
 			const command = message.command;
 			const data = message.data;
 			const listeners = this[LISTENERS][command];

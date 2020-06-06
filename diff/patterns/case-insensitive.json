@@ -1,22 +1,22 @@
 {
 	"folder-a": {
-		"file-a1.txt": ["a"],
-		"file-A2.txt": ["A"],
-		"file-c3.txt": ["c"],
-		"file-C4.txt": ["C"],
-		"file-d5.txt": ["d"],
-		"file-D6.txt": ["D"],
-		"file-e7.txt": ["e"],
-		"file-E8.txt": ["E"]
+		"file-a1 [-].txt": ["a"],
+		"file-A2 [-].txt": ["A"],
+		"file-c3 [=].txt": ["c"],
+		"file-C4 [=].txt": ["C"],
+		"file-d5 [!].txt": ["d"],
+		"file-D6 [!].txt": ["D"],
+		"file-e7 [!].txt": ["e"],
+		"file-E8 [!].txt": ["E"]
 	},
 	"folder-b": {
-		"file-b1.txt": ["b"],
-		"file-B2.txt": ["B"],
-		"file-c3.txt": ["c"],
-		"file-C4.txt": ["C"],
-		"file-d5.txt": ["dd"],
-		"file-D6.txt": ["DD"],
-		"file-e7.txt": ["f"],
-		"file-E8.txt": ["F"]
+		"file-b1 [+].txt": ["b"],
+		"file-B2 [+].txt": ["B"],
+		"file-c3 [=].txt": ["c"],
+		"file-C4 [=].txt": ["C"],
+		"file-d5 [!].txt": ["dd"],
+		"file-D6 [!].txt": ["DD"],
+		"file-e7 [!].txt": ["f"],
+		"file-E8 [!].txt": ["F"]
 	}
 }

@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { WorkspaceFolder } from 'vscode';
+import * as vscode from 'vscode';
 
 //	Variables __________________________________________________________________
 
-const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)/g;
+
 
 //	Initialize _________________________________________________________________
 
@@ -12,28 +12,18 @@ const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:readonly WorkspaceFolder[]|undefined) {
+export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
 	
-	return (workspaceFolders || []).map((item:WorkspaceFolder) => item.uri.fsPath);
+	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
 	
 }
 
 export function sortCaseInsensitive (a:string, b:string) {
-					
+	
 	a = a.toLowerCase();
 	b = b.toLowerCase();
 	
 	return a < b ? -1 : a > b ? 1 : 0;
-	
-}
-
-export function removeCommentsFromJSON (text:string) :string {
-	
-	return text.replace(findComments, (match, comment) => {
-		
-		return comment ? '' : match;
-		
-	});
 	
 }
 

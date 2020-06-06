@@ -6,11 +6,16 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.23.0
+## What's new in L13 Diff 0.24.0
 
-- Added history view for previous comparisons.
-- Added welcome view for favorites.
-- Added support for `l13Diff.ignore` in local `.vscode/settings.json` files.
+- Added context menu to copy, delete and reveal a file in the list view.
+- Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
+- Added auto update for list view if a file has been saved and is part of the current comparison.
+- Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
+- Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
+- Added output messages if files have been copied, deleted or updated.
+- Diff panel state will be saved between sessions.
+- Added overview ruler for selections in list view to scrollbar.
 
 ## Features
 
@@ -30,6 +35,10 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Provides logging and stats for the current diff.
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
+* Provides a context menu for list items to copy, delete or reveal a file.
+* Ignores line endings in text files for a comparison.
+* Ignores leading and trailing whitespace in text files.
+* Auto updates the list view if a file has been saved in the same window as the comparison.
 
 ### Welcome
 
@@ -80,7 +89,15 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.ignoreEndOfLine` - Set true if a comparison for text files should ignore line endings (CR/LF). Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
+* `l13Diff.confirmCopy` - If true confirm dialog for copying files does not appear.
+* `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
+* `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
+	* `default` (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
+	* `on` Ignores leading and trailing whitespace for a comparison in a text file.
+	* `off` Does not ignore leading and trailing whitespace for a comparison in a text file.
+
+[1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
 ## Predefined Variables
 
@@ -90,7 +107,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## Mouse and Keyboard Shortcuts
 
-### Global 
+### Global
 
 #### macOS
 
@@ -119,8 +136,34 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### Swap Button
 
+#### All platforms
+
 * `Click` - Swaps just the values of the input fields.
 * `Alt + Click` - Swaps the values of the input fields and the diff result.
+
+#### macOS
+
+* `Cmd + S` - Same as `Click`.
+* `Alt + Cmd + S` - Same as `Alt + Click`.
+
+#### Windows / Linux
+
+* `Ctrl + S` - Same as `Click`.
+* `Alt + Ctrl + S` - Same as `Alt + Click`.
+
+### Compare Button
+
+#### All platforms
+
+* `Click` - Start a comparison.
+
+#### macOS
+
+* `Cmd + C` - Same as `Click`.
+
+#### Windows / Linux
+
+* `Ctrl + C` - Same as `Click`.
 
 ### List
 
@@ -157,6 +200,25 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `PageUp/PageDown` - Move the cursor to the start/end of the previous/next page of the list view.
 * `Shift + PageUp/PageDown` - Add all list items of the previous/next page to the selection.
 * `Delete` - Delete selected files and folders. Opens a dialog to choose which files (left, right or all) should be deleted.
+
+### List Context Menu
+
+#### All platforms
+
+* `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied.
+* `Delete` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be deleted. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
+
+#### macOS
+
+* `Reveal in Finder` - Shows the current file in the finder.
+
+#### Windows
+
+* `Reveal in Explorer` - Shows the current file in the explorer.
+
+#### Linux
+
+* `Open Containing Folder` - Shows the current file in the file manager.
 
 ### Search Widget
 
