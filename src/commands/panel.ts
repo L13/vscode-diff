@@ -19,18 +19,16 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', (...uris:any[]) => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', async (...uris:any[]) => {
 		
 		if (!uris.length) {
-			vscode.window.showOpenDialog({
+			const dialogUris = await vscode.window.showOpenDialog({
 				canSelectFiles: true,
 				canSelectFolders: true,
 				canSelectMany: true,
-			}).then((dialogUris) => {
-				
-				if (dialogUris) DiffPanel.createOrShow(context, dialogUris.slice(0, 2));
-				
 			});
+			
+			if (dialogUris) DiffPanel.createOrShow(context, dialogUris.slice(0, 2));
 		} else DiffPanel.createOrShow(context, uris[1].slice(0, 2));
 		
 	}));

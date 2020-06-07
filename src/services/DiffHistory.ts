@@ -87,27 +87,25 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 		
 	}
 	
-	public static removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
+	public static async removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
-		vscode.window.showInformationMessage(`Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`, { modal: true }, 'Delete').then((value) => {
+		const text = `Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`;
+		const value = await vscode.window.showInformationMessage(text, { modal: true }, 'Delete');
+		
+		if (value) {
+			const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 			
-			if (value) {
-				
-				const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
-				
-				for (let i = 0; i < comparisons.length; i++) {
-					if (comparisons[i].label === comparison.label) {
-						comparisons.splice(i, 1);
-						context.globalState.update(COMPARISONS_HISTORY, comparisons);
-						DiffHistory.createProvider(context).refresh();
-						return;
-					}
+			for (let i = 0; i < comparisons.length; i++) {
+				if (comparisons[i].label === comparison.label) {
+					comparisons.splice(i, 1);
+					context.globalState.update(COMPARISONS_HISTORY, comparisons);
+					DiffHistory.createProvider(context).refresh();
+					return;
 				}
-				
-				vscode.window.showErrorMessage(`Comparison does not exist`);
 			}
 			
-		});
+			vscode.window.showErrorMessage(`Comparison does not exist`);
+		}
 		
 	}
 	

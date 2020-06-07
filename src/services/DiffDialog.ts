@@ -33,19 +33,17 @@ export class DiffDialog {
 		
 	}
 	
-	private open () :void {
+	private async open () {
 		
-		vscode.window.showOpenDialog({
+		const uris = await vscode.window.showOpenDialog({
 			canSelectFiles: true,
 			canSelectFolders: true,
 			canSelectMany: false,
-		}).then((uris) => {
-			
-			const folder = uris ? uris[0].fsPath : null;
-			
-			this.msg.send('open:dialog', { folder });
-			
 		});
+		
+		const folder = uris ? uris[0].fsPath : null;
+		
+		this.msg.send('open:dialog', { folder });
 		
 	}
 	

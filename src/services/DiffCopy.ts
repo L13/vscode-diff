@@ -87,7 +87,7 @@ export class DiffCopy {
 		
 	}
 	
-	private showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') :void {
+	private async showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') {
 		
 		const confirmCopy = vscode.workspace.getConfiguration('l13Diff').get('confirmCopy', true);
 		const length = data.diffResult.diffs.length;
@@ -96,14 +96,12 @@ export class DiffCopy {
 		
 		if (confirmCopy) {
 			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
-			vscode.window.showInformationMessage(text, { modal: true }, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN).then((value) => {
+			const value = await vscode.window.showInformationMessage(text, { modal: true }, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
-				if (value) {
-					if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
-					this.copyFromTo(data, from, to);
-				} else this.msg.send('cancel');
-				
-			});
+			if (value) {
+				if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
+				this.copyFromTo(data, from, to);
+			} else this.msg.send('cancel');
 		} else this.copyFromTo(data, from, to);;
 		
 	}

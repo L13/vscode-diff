@@ -70,7 +70,7 @@ export class DiffDelete {
 		
 	}
 	
-	private showDeleteFileDialog (data:any, side:'left'|'right') :void {
+	private async showDeleteFileDialog (data:any, side:'left'|'right') {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		
@@ -81,19 +81,16 @@ export class DiffDelete {
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
-			vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll, dialog.buttonOk).then((value) => {
-					
-				if (value) {
-					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
-					this.deleteFiles(data, side, useTrash);
-				} else this.msg.send('cancel');
-					
-			});
+			const value = await vscode.window.showInformationMessage(dialog.textSingle, { modal: true }, dialog.buttonAll, dialog.buttonOk);
+			if (value) {
+				if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+				this.deleteFiles(data, side, useTrash);
+			} else this.msg.send('cancel');
 		} else this.deleteFiles(data, side, useTrash);
 		
 	}
 	
-	private showDeleteFilesDialog (data:any) :void {
+	private async showDeleteFilesDialog (data:any) {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		
@@ -126,46 +123,45 @@ export class DiffDelete {
 			}
 			
 			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-			
-			vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args).then((value) => {
-					
-				if (value) {
-					if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
-					this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-				} else this.msg.send('cancel');
-					
-			});
+			const value = await vscode.window.showInformationMessage(text, { modal: true }, dialog.buttonAll, ...args);
+				
+			if (value) {
+				if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+				this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
+			} else this.msg.send('cancel');
 		} else this.deleteFiles(data, 'all', useTrash);
 		
 	}
 	
-	private deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
+	private async deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
 		
-		return vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
-			recursive: true,
-			useTrash,
-		}).then(() => {
+		try {
+			await vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
+				recursive: true,
+				useTrash,
+			});
+		} catch (error) {
+			return vscode.window.showErrorMessage(error.message);
+		}
+		
+		let type = null;
+		
+		for (const diff of diffs) {
+			if (diff.fileA?.path === pathname) type = diff.fileA.type;
+			if (diff.fileB?.path === pathname) type = diff.fileB.type;
 			
-			let type = null;
-			
-			for (const diff of diffs) {
-				if (diff.fileA?.path === pathname) type = diff.fileA.type;
-				if (diff.fileB?.path === pathname) type = diff.fileB.type;
-				
-				if (type) {
-					this.output.log(`Deleted ${type} "${pathname}".`);
-					type = null;
-				}
-				
-				if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
-				if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
+			if (type) {
+				this.output.log(`Deleted ${type} "${pathname}".`);
+				type = null;
 			}
 			
-		}, (error) => vscode.window.showErrorMessage(error.message));
+			if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;
+			if (diff.fileB?.path.startsWith(pathname)) diff.fileB = null;
+		}
 		
 	}
 	
-	private deleteFiles (data:any, side:'all'|'left'|'right', useTrash:boolean) :void {
+	private async deleteFiles (data:any, side:'all'|'left'|'right', useTrash:boolean) {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		const folders:string[] = [];
@@ -185,11 +181,9 @@ export class DiffDelete {
 		
 		for (const file of folders.concat(files)) promises.push(this.deleteFile(diffs, file, useTrash));
 		
-		Promise.all(promises).then(() => {
-			
-			this.msg.send('delete:files', data);
-			
-		});
+		await Promise.all(promises);
+		
+		this.msg.send('delete:files', data)
 		
 	}
 	

@@ -56,7 +56,7 @@ export abstract class ViewModel extends EventDispatcher {
 		let promise = refreshComponents.get(this);
 		
 		if (!promise) {
-			promise = new Promise((resolve, reject) => {
+			promise = new Promise((resolve) => {
 				
 				requestAnimationFrame(() => {
 					

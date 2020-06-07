@@ -42,16 +42,14 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeComparison', ({ comparison }) => DiffHistory.removeComparison(context, comparison)));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', async () => {
 		
-		vscode.window.showInformationMessage('Delete the complete history?', { modal: true }, 'Delete').then((value) => {
-			
-			if (value) {
-				DiffMenu.clearHistory(context);
-				DiffHistory.clearComparisons(context);
-			}
-			
-		});
+		const value = await vscode.window.showInformationMessage('Delete the complete history?', { modal: true }, 'Delete');
+		
+		if (value) {
+			DiffMenu.clearHistory(context);
+			DiffHistory.clearComparisons(context);
+		}
 		
 	}));
 	
