@@ -6,7 +6,7 @@ import { Dialog, Diff, File } from '../types';
 
 import { DiffDialog } from './DiffDialog';
 import { DiffMessage } from './DiffMessage';
-import { DiffOutput } from './DiffOutput';
+import { DiffSettings } from './DiffSettings';
 
 //	Variables __________________________________________________________________
 
@@ -48,13 +48,12 @@ const simpleDeleteDialog:Dialog = {
 
 export class DiffDelete {
 	
-	private readonly output:DiffOutput;
+	private _onDidDeleteFile:vscode.EventEmitter<File> = new vscode.EventEmitter<File>();
+	public readonly onDidDeleteFile:vscode.Event<File> = this._onDidDeleteFile.event;
 	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
-		
-		this.output = DiffOutput.createOutput();
 		
 		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
 		this.msg.on('delete:left', (data) => this.showDeleteFileDialog(data, 'left'));
@@ -77,14 +76,14 @@ export class DiffDelete {
 		
 		if (!diffs.length) return;
 		
-		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
-		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
+		const useTrash:boolean = DiffSettings.enableTrash();
+		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
 			const value = await DiffDialog.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
 			if (value) {
-				if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false);
 				this.deleteFiles(data, side, useTrash);
 			} else this.msg.send('cancel');
 		} else this.deleteFiles(data, side, useTrash);
@@ -107,8 +106,8 @@ export class DiffDelete {
 			if (sides > 2) break;
 		}
 		
-		const useTrash:boolean = vscode.workspace.getConfiguration('files').get('enableTrash', true);
-		const confirmDelete:boolean = vscode.workspace.getConfiguration('l13Diff').get('confirmDelete', true);
+		const useTrash:boolean = DiffSettings.enableTrash();
+		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
 		
 		if (confirmDelete || sides > 2) {
 			let dialog:Dialog = null;
@@ -127,7 +126,7 @@ export class DiffDelete {
 			const value = await DiffDialog.confirm(text, dialog.buttonAll, ...args);
 				
 			if (value) {
-				if (value === dialog.buttonOk) vscode.workspace.getConfiguration('l13Diff').update('confirmDelete', false, true);
+				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false, true);
 				this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
 			} else this.msg.send('cancel');
 		} else this.deleteFiles(data, 'all', useTrash);
@@ -145,15 +144,15 @@ export class DiffDelete {
 			return vscode.window.showErrorMessage(error.message);
 		}
 		
-		let type = null;
+		let file = null;
 		
 		for (const diff of diffs) {
-			if (diff.fileA?.path === pathname) type = diff.fileA.type;
-			if (diff.fileB?.path === pathname) type = diff.fileB.type;
+			if (diff.fileA?.path === pathname) file = diff.fileA;
+			if (diff.fileB?.path === pathname) file = diff.fileB;
 			
-			if (type) {
-				this.output.log(`Deleted ${type} "${pathname}".`);
-				type = null;
+			if (file) {
+				this._onDidDeleteFile.fire(file);
+				file = null;
 			}
 			
 			if (diff.fileA?.path.startsWith(pathname)) diff.fileA = null;

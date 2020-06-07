@@ -10,7 +10,7 @@ import { CopyFilesJob, Diff, File } from '../types';
 
 import { DiffDialog } from './DiffDialog';
 import { DiffMessage } from './DiffMessage';
-import { DiffOutput } from './DiffOutput';
+import { DiffSettings } from './DiffSettings';
 
 //	Variables __________________________________________________________________
 
@@ -24,13 +24,12 @@ const BUTTON_COPY_DONT_ASK_AGAIN = 'Copy, don\'t ask again';
 
 export class DiffCopy {
 	
-	private readonly output:DiffOutput;
+	private _onDidCopyFile:vscode.EventEmitter<{ from:File, to:File }> = new vscode.EventEmitter<{ from:File, to:File }>();
+	public readonly onDidCopyFile:vscode.Event<{ from:File, to:File }> = this._onDidCopyFile.event;
 	
 	private disposables:vscode.Disposable[] = [];
 	
 	public constructor (private msg:DiffMessage) {
-		
-		this.output = DiffOutput.createOutput();
 		
 		this.msg.on('copy:left', (data) => this.showCopyFromToDialog(data, 'A', 'B'));
 		this.msg.on('copy:right', (data) => this.showCopyFromToDialog(data, 'B', 'A'));
@@ -90,7 +89,7 @@ export class DiffCopy {
 	
 	private async showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') {
 		
-		const confirmCopy = vscode.workspace.getConfiguration('l13Diff').get('confirmCopy', true);
+		const confirmCopy = DiffSettings.get('confirmCopy', true);
 		const length = data.diffResult.diffs.length;
 		
 		if (!length) return;
@@ -100,7 +99,7 @@ export class DiffCopy {
 			const value = await DiffDialog.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
 			if (value) {
-				if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);
+				if (value === BUTTON_COPY_DONT_ASK_AGAIN) DiffSettings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
 			} else this.msg.send('cancel');
 		} else this.copyFromTo(data, from, to);;
@@ -139,7 +138,6 @@ export class DiffCopy {
 						job.error = error;
 						vscode.window.showErrorMessage(error.message);
 					} else {
-						this.output.log(`Copied ${diff.type} "${fileFrom.name}" from "${fileFrom.folder}" to "${folderTo}".`);
 						diff.status = 'unchanged';
 						if (!(<File>(<any>diff)['file' + to])) {
 							(<File>(<any>diff)['file' + to]) = {
@@ -155,6 +153,10 @@ export class DiffCopy {
 								type: fileFrom.type,
 							};
 						}
+						this._onDidCopyFile.fire({
+							from: (<File>(<any>diff)['file' + from]),
+							to: (<File>(<any>diff)['file' + to]),
+						});
 					}
 					
 					if (!job.tasks) job.done();

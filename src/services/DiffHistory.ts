@@ -2,11 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { remove } from '../@l13/natvies/arrays';
 import { Comparison } from '../types';
 import { formatNameAndDesc } from './@l13/utils/formats';
 
 import { DiffDialog } from './DiffDialog';
+import { DiffSettings } from './DiffSettings';
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 //	Variables __________________________________________________________________
@@ -66,7 +66,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 	public static saveComparison (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
 		
-		const maxHistoryEntriesLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxHistoryEntries', 10);
+		const maxHistoryEntriesLength:number = <number>DiffSettings.get('maxHistoryEntries', 10);
 		const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 		let comparison:Comparison = null;
 		let i = 0;

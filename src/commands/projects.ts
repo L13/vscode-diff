@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 import { DiffPanel } from '../services/DiffPanel';
+import { DiffSettings } from '../services/DiffSettings';
 
 //	Variables __________________________________________________________________
 
@@ -18,7 +19,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareProjectWithWorkspace', async ({ project }) => {
 		
-		const compare = vscode.workspace.getConfiguration('l13Diff').get('openFavoriteAndCompare', false);
+		const compare = DiffSettings.get('openFavoriteAndCompare', false);
 		const workspaces = workspaceFoldersQuickPickItems();
 		
 		if (workspaces.length > 1) {

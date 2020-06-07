@@ -7,7 +7,6 @@ import * as vscode from 'vscode';
 
 import { Diff, File } from '../types';
 import { isMacOs, isWindows } from './@l13/nodes/platforms';
-import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -21,27 +20,7 @@ import { DiffMessage } from './DiffMessage';
 
 export class DiffOpen {
 	
-	private disposables:vscode.Disposable[] = [];
-	
-	public constructor (msg:DiffMessage) {
-		
-		msg.on('open:diffToSide', (data) => this.open(data, true));
-		msg.on('open:diff', (data) => this.open(data, vscode.workspace.getConfiguration('l13Diff').get('openToSide', false)));
-		
-		msg.on('reveal:file', (data) => this.reveal(data));
-		
-	}
-	
-	public dispose () :void {
-		
-		while (this.disposables.length) {
-			const disposable = this.disposables.pop();
-			if (disposable) disposable.dispose();
-		}
-		
-	}
-	
-	private openFile (file:File, openToSide:boolean) :void {
+	private static openFile (file:File, openToSide:boolean) :void {
 		
 		fs.lstat(file.path, (error, stat) => {
 			
@@ -50,7 +29,6 @@ export class DiffOpen {
 			if (stat.isFile()) {
 				const pathname = vscode.Uri.file(file.path);
 				vscode.commands.executeCommand('vscode.open', pathname, {
-					// preserveFocus: false,
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
@@ -60,7 +38,7 @@ export class DiffOpen {
 		
 	}
 	
-	private openDiff (diff:Diff, openToSide:boolean) :void {
+	private static openDiff (diff:Diff, openToSide:boolean) :void {
 		
 		const fileA:File = <File>diff.fileA;
 		
@@ -91,26 +69,26 @@ export class DiffOpen {
 		
 	}
 	
-	private open (data:any, openToSide:boolean) :void {
+	public static open (data:any, openToSide:boolean) :void {
 		
 		const diff:Diff = data.diff;
 		
 		switch (diff.status) {
 			case 'deleted':
-				this.openFile(<File>diff.fileA, openToSide);
+				DiffOpen.openFile(<File>diff.fileA, openToSide);
 				break;
 			case 'modified':
 			case 'unchanged':
-				this.openDiff(diff, openToSide);
+				DiffOpen.openDiff(diff, openToSide);
 				break;
 			case 'untracked':
-				this.openFile(<File>diff.fileB, openToSide);
+				DiffOpen.openFile(<File>diff.fileB, openToSide);
 				break;
 		}
 		
 	}
 	
-	private reveal (data:any) :void {
+	public static reveal (data:any) :void {
 		
 		const pathname:string = data.pathname;
 		

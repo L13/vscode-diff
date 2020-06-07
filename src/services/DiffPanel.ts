@@ -17,6 +17,7 @@ import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOpen } from './DiffOpen';
 import { DiffOutput } from './DiffOutput';
+import { DiffSettings } from './DiffSettings';
 import { DiffStatus } from './DiffStatus';
 
 const { floor, random } = Math;
@@ -47,9 +48,7 @@ export class DiffPanel {
 	
 	private readonly dialog:DiffDialog;
 	private readonly msg:DiffMessage;
-	private readonly open:DiffOpen;
-	private readonly menu:DiffMenu;
-	private readonly list:DiffCompare;
+	private readonly compare:DiffCompare;
 	private readonly copy:DiffCopy;
 	private readonly delete:DiffDelete;
 	
@@ -62,23 +61,21 @@ export class DiffPanel {
 		
 		this.status = DiffStatus.createStatusBar(context);
 		this.output = DiffOutput.createOutput();
+		
 		this.msg = new DiffMessage(panel, this.disposables);
+		
 		this.dialog = new DiffDialog(this.msg);
-		this.open = new DiffOpen(this.msg);
-		this.menu = new DiffMenu(this.msg, context);
 		this.copy = new DiffCopy(this.msg);
 		this.delete = new DiffDelete(this.msg);
-		this.list = new DiffCompare(this.msg, context);
+		this.compare = new DiffCompare(this.msg, context);
 		
 		this.disposables.push(this.status);
 		this.disposables.push(this.output);
 		this.disposables.push(this.msg);
 		this.disposables.push(this.dialog);
-		this.disposables.push(this.open);
-		this.disposables.push(this.menu);
 		this.disposables.push(this.copy);
 		this.disposables.push(this.delete);
-		this.disposables.push(this.list);
+		this.disposables.push(this.compare);
 		
 		this.panel.title = 'Diff';
 		this.panel.webview.html = this.getHTMLforDiff(this.panel.webview);
@@ -92,10 +89,32 @@ export class DiffPanel {
 			
 		});
 		
+		this.delete.onDidDeleteFile((file) => this.output.log(`Deleted ${file.type} "${file.path}".`));
+		
+		this.copy.onDidCopyFile(({ from, to }) => {
+			
+			this.output.log(`Copied ${from.type} "${from.name}" from "${from.folder}" to "${to.folder}".`);
+			
+		});
+		
+		this.msg.on('open:diffToSide', (data) => DiffOpen.open(data, true));
+		this.msg.on('open:diff', (data) => DiffOpen.open(data, DiffSettings.get('openToSide', false)));
+		
+		this.msg.on('reveal:file', (data) => DiffOpen.reveal(data));
+		
+		this.msg.on('update:menu', () => {
+			
+			this.msg.send('update:menu', {
+				history: DiffMenu.getHistory(context),
+				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
+			});
+			
+		});
+		
 		this.msg.on('init:view', () => {
 			
 			this.msg.send('init:view', {
-				panel: this.context.globalState.get(PANEL_STATE),
+				panel: context.globalState.get(PANEL_STATE),
 				uris: mapUris(uris),
 				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 				compare,
@@ -103,7 +122,7 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(this.context, data.pathA, data.pathB));
+		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(context, data.pathA, data.pathB));
 		
 		this.msg.on('save:panelstate', (data) => this.savePanelState(data));
 		

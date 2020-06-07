@@ -3,8 +3,8 @@
 import * as vscode from 'vscode';
 
 import { remove } from '../@l13/natvies/arrays';
-import { workspacePaths } from './common';
-import { DiffMessage } from './DiffMessage';
+
+import { DiffSettings } from './DiffSettings';
 
 //	Variables __________________________________________________________________
 
@@ -18,37 +18,15 @@ const MENU_HISTORY = 'history';
 
 export class DiffMenu {
 	
-	private readonly context:vscode.ExtensionContext;
-	
-	private disposables:vscode.Disposable[] = [];
-	
-	public constructor (private msg:DiffMessage, context:vscode.ExtensionContext) {
+	public static getHistory (context:vscode.ExtensionContext) {
 		
-		this.context = context;
-		
-		this.msg.on('update:menu', () => {
-			
-			this.msg.send('update:menu', {
-				history: this.context.globalState.get(MENU_HISTORY) || [],
-				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
-			});
-			
-		});
-		
-	}
-	
-	public dispose () :void {
-		
-		while (this.disposables.length) {
-			const disposable = this.disposables.pop();
-			if (disposable) disposable.dispose();
-		}
+		return context.globalState.get(MENU_HISTORY) || []
 		
 	}
 	
 	public static saveRecentlyUsed (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
 		
-		const maxRecentlyUsedLength:number = <number>vscode.workspace.getConfiguration('l13Diff').get('maxRecentlyUsed', 10);
+		const maxRecentlyUsedLength:number = <number>DiffSettings.get('maxRecentlyUsed', 10);
 		const history:string[] = context.globalState.get(MENU_HISTORY) || [];
 		
 		addToRecentlyUsed(history, pathB);

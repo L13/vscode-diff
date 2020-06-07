@@ -1,14 +1,13 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { isAbsolute, join } from 'path';
+import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
-import { parse } from './@l13/natives/jsons';
 import { normalizeLineEnding, trimWhitespace } from './@l13/nodes/buffers';
-import { createFindGlob, lstatSync, walkTree, walkUp } from './@l13/nodes/fse';
+import { lstatSync, walkTree } from './@l13/nodes/fse';
 
-import { Dictionary, Diff, File, StatsMap, TextFiles } from '../types';
+import { Dictionary, Diff, File, StatsMap } from '../types';
 import { sortCaseInsensitive } from './common';
 
 import { DiffHistory } from './DiffHistory';
@@ -16,27 +15,18 @@ import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 import { DiffResult } from './DiffResult';
+import { DiffSettings, textfiles } from './DiffSettings';
 import { DiffStats } from './DiffStats';
 import { DiffStatus } from './DiffStatus';
-
-const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
 
 const findPlaceholder = /^\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
-const textfiles:TextFiles = {
-	extensions: [],
-	filenames: [],
-	glob: null,
-};
-
 //	Initialize _________________________________________________________________
 
-buildWhitelistForTextFiles();
 
-vscode.extensions.onDidChange(() => buildWhitelistForTextFiles());
 
 //	Exports ____________________________________________________________________
 
@@ -129,10 +119,8 @@ export class DiffCompare {
 	
 	private updateDiffs (data:any) :void {
 		
-		const workspace = vscode.workspace;
-		const ignoreEndOfLine = workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
-		const useDefault = workspace.getConfiguration('l13Diff').get('ignoreTrimWhitespace', 'default');
-		const ignoreTrimWhitespace = useDefault === 'default' ? workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', true) : useDefault === 'on';
+		const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
+		const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
 		
 		data.diffResult.diffs.forEach((diff:Diff) => {
 			
@@ -171,7 +159,7 @@ export class DiffCompare {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
-		const openToSide = vscode.workspace.getConfiguration('l13Diff').get('openToSide', false);
+		const openToSide = DiffSettings.get('openToSide', false);
 		
 		this.saveRecentlyUsed(data.pathA, data.pathB);
 		this.saveHistory(pathA, pathB);
@@ -229,7 +217,7 @@ export class DiffCompare {
 		if (!isDirectory(dirnameA)) return callback(new Error(`Path '${dirnameA}' is not a folder!`));
 		if (!isDirectory(dirnameB)) return callback(new Error(`Path '${dirnameB}' is not a folder!`));
 		
-		const ignore = getSettingsIgnore(dirnameA, dirnameB);
+		const ignore = DiffSettings.getIgnore(dirnameA, dirnameB);
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
@@ -307,10 +295,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
-	const workspace = vscode.workspace;
-	const ignoreEndOfLine = workspace.getConfiguration('l13Diff').get('ignoreEndOfLine', false);
-	const useDefault = workspace.getConfiguration('l13Diff').get('ignoreTrimWhitespace', 'default');
-	const ignoreTrimWhitespace = useDefault === 'default' ? workspace.getConfiguration('diffEditor').get('ignoreTrimWhitespace', true) : useDefault === 'on';
+	const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
+	const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
 	
 	Object.keys(result).forEach((pathname) => {
 		
@@ -381,37 +367,6 @@ function compareDiff (diff:Diff, fileA:File, fileB:File, ignoreEndOfLine:boolean
 	
 }
 
-function buildWhitelistForTextFiles () {
-	
-	const config = vscode.workspace.getConfiguration();
-	
-	textfiles.extensions = ['.txt'];
-	textfiles.filenames = [];
-	
-	vscode.extensions.all.forEach((extension) => {
-		
-		const packageJSON = extension.packageJSON;
-		
-		if (packageJSON.contributes && packageJSON.contributes.languages) {
-			packageJSON.contributes.languages.forEach((language:any) => {
-				
-				if (language.extensions) push.apply(textfiles.extensions, language.extensions);
-				if (language.filenames) push.apply(textfiles.filenames, language.filenames);
-				
-			});
-		}
-		
-	});
-	
-	if (config.has('files.associations')) {
-		textfiles.glob = createFindGlob(Object.keys(config.get<object>('files.associations', {})));
-	} else textfiles.glob = null;
-	
-	textfiles.extensions.sort();
-	textfiles.filenames.sort();
-	
-}
-
 function parsePredefinedVariables (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
@@ -450,44 +405,5 @@ function parsePredefinedVariables (pathname:string) {
 		return match;
 		
 	});
-	
-}
-
-function loadSettingsIgnore (pathname:string) :string[] {
-	
-	const codePath = walkUp(pathname, '.vscode');
-	
-	if (!codePath) return null;
-	
-	const codeSettingsPath = join(codePath, 'settings.json');
-	const stat = lstatSync(codeSettingsPath);
-	let json:any = {};
-	
-	if (stat && stat.isFile()) {
-		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
-		try {
-			json = parse(content);
-		} catch {
-			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
-		}
-	}
-	
-	return json['l13Diff.ignore'] || null;
-	
-}
-
-function useWorkspaceSettings (pathname:string) :boolean {
-	
-	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.startsWith(folder.uri.fsPath));
-	
-}
-
-function getSettingsIgnore (pathA:string, pathB:string) :string[] {
-	
-	const ignores = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore', []);
-	const ignoresA:string[] = useWorkspaceSettings(pathA) ? ignores : loadSettingsIgnore(pathA) || ignores;
-	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
-	
-	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
 	
 }
