@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { Favorite } from '../types';
 import { sortCaseInsensitive } from './common';
 
+import { DiffDialog } from './DiffDialog';
 import { FavoriteTreeItem } from './trees/FavoriteTreeItem';
 
 //	Variables __________________________________________________________________
@@ -83,8 +84,8 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 			favorites.push(favorite);
 			saveFavorite(context, favorites);
 		} else {
-			const val = await vscode.window.showInformationMessage(`Overwrite favorite "${favorite.label}"?`, { modal: true }, 'Ok');
-			if (val) {
+			const value = await DiffDialog.confirm(`Overwrite favorite "${favorite.label}"?`, 'Ok');
+			if (value) {
 				favorites[index] = favorite;
 				saveFavorite(context, favorites);
 			}
@@ -122,7 +123,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 	
 	public static async removeFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
-		const value = await vscode.window.showInformationMessage(`Delete favorite "${favorite.label}"?`, { modal: true }, 'Delete');
+		const value = await DiffDialog.confirm(`Delete favorite "${favorite.label}"?`, 'Delete');
 		
 		if (value) {
 			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
@@ -143,7 +144,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItem> 
 	
 	public static async clearFavorites (context:vscode.ExtensionContext) {
 		
-		const value = await vscode.window.showInformationMessage(`Delete all favorites?'`, { modal: true }, 'Delete');
+		const value = await DiffDialog.confirm(`Delete all favorites?'`, 'Delete');
 		
 		if (value) {
 			context.globalState.update(FAVORITES, []);

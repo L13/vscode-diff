@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { remove } from '../../../@l13/natvies/arrays';
 import { Diff, File } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
@@ -135,10 +136,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				} else if (isMetaKey(ctrlKey, metaKey)) {
 					listRow.classList.toggle('-selected');
 					this.cacheSelectedListItems = [];
-					if (!listRow.classList.contains('-selected')) {
-						const index = this.cacheSelectionHistory.indexOf(listRow);
-						if (index !== -1) this.cacheSelectionHistory.splice(index, 1);
-					} else this.cacheSelectionHistory.push(listRow);
+					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
+					else this.cacheSelectionHistory.push(listRow);
 					if (this.content.querySelector('.-selected')) this.dispatchCustomEvent('selected');
 					else this.dispatchCustomEvent('unselected');
 				} else {

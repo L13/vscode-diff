@@ -17,7 +17,7 @@ let timeoutId:NodeJS.Timeout = null;
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.create(context)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', async (...uris:any[]) => {
 		
@@ -28,8 +28,8 @@ export function activate (context:vscode.ExtensionContext) {
 				canSelectMany: true,
 			});
 			
-			if (dialogUris) DiffPanel.createOrShow(context, dialogUris.slice(0, 2));
-		} else DiffPanel.createOrShow(context, uris[1].slice(0, 2));
+			if (dialogUris) DiffPanel.create(context, dialogUris.slice(0, 2));
+		} else DiffPanel.create(context, uris[1].slice(0, 2));
 		
 	}));
 	

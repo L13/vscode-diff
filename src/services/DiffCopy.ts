@@ -8,6 +8,7 @@ import { copyFile, lstatSync, mkdirsSync } from './@l13/nodes/fse';
 
 import { CopyFilesJob, Diff, File } from '../types';
 
+import { DiffDialog } from './DiffDialog';
 import { DiffMessage } from './DiffMessage';
 import { DiffOutput } from './DiffOutput';
 
@@ -96,7 +97,7 @@ export class DiffCopy {
 		
 		if (confirmCopy) {
 			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
-			const value = await vscode.window.showInformationMessage(text, { modal: true }, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
+			const value = await DiffDialog.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
 			if (value) {
 				if (value === BUTTON_COPY_DONT_ASK_AGAIN) vscode.workspace.getConfiguration('l13Diff').update('confirmCopy', false, true);

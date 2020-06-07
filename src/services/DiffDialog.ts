@@ -47,6 +47,12 @@ export class DiffDialog {
 		
 	}
 	
+	public static async confirm (text:string, ...buttons:string[]) {
+		
+		return await vscode.window.showInformationMessage(text, { modal: true }, ...buttons);
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________

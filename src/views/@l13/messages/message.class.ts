@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { remove } from '../../../@l13/natvies/arrays';
 import { MessageListener } from '../../../types';
 
 //	Variables __________________________________________________________________
@@ -45,20 +46,16 @@ export class Message {
 		
 	}
 	
-	public removeMessageListener (name:string, listener?:MessageListener) :boolean {
+	public removeMessageListener (name:string, listener?:MessageListener) {
 		
 		if (!listener) return delete this[LISTENERS][name];
 		
 		const listeners:null|MessageListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
-			const index = listeners.indexOf(listener);
-			if (index !== -1) listeners.splice(index, 1);
+			remove(listeners, listener);
 			if (!listeners.length) delete this[LISTENERS][name];
-			return index !== -1;
 		}
-		
-		return false;
 		
 	}
 	

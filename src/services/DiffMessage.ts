@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import { remove } from '../@l13/natvies/arrays';
 import { MessageListener } from '../types';
 
 //	Variables __________________________________________________________________
@@ -51,8 +52,7 @@ export class DiffMessage {
 		const listeners:null|MessageListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
-			const index = listeners.indexOf(listener);
-			if (index !== -1) listeners.splice(index, 1);
+			remove(listeners, listener);
 			if (!listeners.length) delete this[LISTENERS][name];
 		}
 		

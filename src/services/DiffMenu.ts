@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import { remove } from '../@l13/natvies/arrays';
 import { workspacePaths } from './common';
 import { DiffMessage } from './DiffMessage';
 
@@ -69,10 +70,7 @@ export class DiffMenu {
 
 function addToRecentlyUsed (history:string[], path:string) {
 	
-	const index = history.indexOf(path);
-	
-	if (index !== -1) history.splice(index, 1);
-	
+	remove(history, path);
 	history.unshift(path);
 	
 }

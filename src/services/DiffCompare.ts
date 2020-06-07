@@ -83,22 +83,22 @@ export class DiffCompare {
 		
 		if (!pathA) {
 			vscode.window.showErrorMessage(`The left path is empty.`);
-			return this.postEmptyResult(pathA, pathB);
+			return this.sendEmptyResult(pathA, pathB);
 		}
 		
 		if (!pathB) {
 			vscode.window.showErrorMessage(`The right path is empty.`);
-			return this.postEmptyResult(pathA, pathB);
+			return this.sendEmptyResult(pathA, pathB);
 		}
 		
 		if (!isAbsolute(pathA)) {
 			vscode.window.showErrorMessage(`The left path is not absolute.`);
-			return this.postEmptyResult(pathA, pathB);
+			return this.sendEmptyResult(pathA, pathB);
 		}
 		
 		if (!isAbsolute(pathB)) {
 			vscode.window.showErrorMessage(`The right path is not absolute.`);
-			return this.postEmptyResult(pathA, pathB);
+			return this.sendEmptyResult(pathA, pathB);
 		}
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
@@ -106,7 +106,7 @@ export class DiffCompare {
 		
 		if (pathA === pathB) {
 			vscode.window.showInformationMessage(`The left and right path is the same.`);
-			return this.postEmptyResult(pathA, pathB);
+			return this.sendEmptyResult(pathA, pathB);
 		}
 		
 		const statA = lstatSync(pathA);
@@ -182,7 +182,7 @@ export class DiffCompare {
 			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 		});
 		
-		this.postEmptyResult(pathA, pathB);
+		this.sendEmptyResult(pathA, pathB);
 		
 	}
 	
@@ -214,11 +214,11 @@ export class DiffCompare {
 		this.output.log(text);
 		vscode.window.showErrorMessage(text);
 		
-		this.postEmptyResult(pathA, pathB);
+		this.sendEmptyResult(pathA, pathB);
 		
 	}
 	
-	private postEmptyResult (pathA:string, pathB:string) {
+	private sendEmptyResult (pathA:string, pathB:string) {
 		
 		this.msg.send('create:diffs', { diffResult: new DiffResult(pathA, pathB) });
 		

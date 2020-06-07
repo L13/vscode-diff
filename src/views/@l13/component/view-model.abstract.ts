@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { remove } from '../../../@l13/natvies/arrays';
 import { EventDispatcher } from '../events/event-dispatcher.class';
 import { L13Element } from './component.abstract';
 
@@ -38,16 +39,13 @@ export abstract class ViewModel extends EventDispatcher {
 		
 		const components = this[COMPONENTS];
 		
-		if (components.indexOf(component) === -1) components.push(component);
+		if (!components.includes(component)) components.push(component);
 		
 	}
 	
 	public dispose (component:L13Element<ViewModel>) {
 		
-		const components = this[COMPONENTS];
-		const index = components.indexOf(component);
-		
-		if (index !== -1) components.splice(index, 1);
+		remove(this[COMPONENTS], component);
 		
 	}
 	

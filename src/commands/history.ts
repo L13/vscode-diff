@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import { DiffDialog } from '../services/DiffDialog';
 import { DiffHistory } from '../services/DiffHistory';
 import { DiffMenu } from '../services/DiffMenu';
 import { DiffPanel } from '../services/DiffPanel';
@@ -44,7 +45,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', async () => {
 		
-		const value = await vscode.window.showInformationMessage('Delete the complete history?', { modal: true }, 'Delete');
+		const value = await DiffDialog.confirm('Delete the complete history?', 'Delete');
 		
 		if (value) {
 			DiffMenu.clearHistory(context);

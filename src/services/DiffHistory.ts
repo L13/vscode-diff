@@ -1,10 +1,12 @@
 //	Imports ____________________________________________________________________
 
-import { normalize, sep } from 'path';
 import * as vscode from 'vscode';
 
+import { remove } from '../@l13/natvies/arrays';
 import { Comparison } from '../types';
+import { formatNameAndDesc } from './@l13/utils/formats';
 
+import { DiffDialog } from './DiffDialog';
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 //	Variables __________________________________________________________________
@@ -76,12 +78,14 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 			}
 		}
 		
-		comparisons.unshift(formatNameAndDesc({
+		const [label, desc] = formatNameAndDesc(pathA, pathB);
+		
+		comparisons.unshift({
 			fileA: pathA,
 			fileB: pathB,
-			label: '',
-			desc: '',
-		}));
+			label,
+			desc,
+		});
 		
 		context.globalState.update(COMPARISONS_HISTORY, comparisons.slice(0, maxHistoryEntriesLength));
 		
@@ -90,7 +94,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	public static async removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
 		const text = `Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`;
-		const value = await vscode.window.showInformationMessage(text, { modal: true }, 'Delete');
+		const value = await DiffDialog.confirm(text, 'Delete');
 		
 		if (value) {
 			const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
@@ -120,35 +124,3 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 
 //	Functions __________________________________________________________________
 
-function formatNameAndDesc (comparison:Comparison) :Comparison {
-	
-	const fileA:string[] = normalize(comparison.fileA).split(sep);
-	const fileB:string[] = normalize(comparison.fileB).split(sep);
-	const desc:string[] = [];
-	
-//	Remove last entry if path has a slash/backslash at the end
-	if (!fileA[fileA.length - 1]) fileA.pop();
-	if (!fileB[fileB.length - 1]) fileB.pop();
-	
-	while (fileA.length > 1 && fileB.length > 1 && fileA[0] === fileB[0]) {
-		desc.push(fileA.shift());
-		fileB.shift();
-	}
-	
-//	Fix for absolute and network paths if folders are part of the root
-	if (desc.length && desc.join('') === '') {
-		desc.forEach((value, index) => {
-			
-			fileA.splice(index, 0, value);
-			fileB.splice(index, 0, value);
-			
-		});
-		desc.splice(0, desc.length);
-	}
-	
-	comparison.label = `${fileA.join(sep)} ↔ ${fileB.join(sep)}`;
-	comparison.desc = desc.join(sep);
-	
-	return comparison;
-	
-}
