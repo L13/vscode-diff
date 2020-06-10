@@ -7,6 +7,7 @@ import * as history from './commands/history';
 import * as output from './commands/output';
 import * as panel from './commands/panel';
 import * as projects from './commands/projects';
+import * as settings from './commands/settings';
 
 //	Variables __________________________________________________________________
 
@@ -25,6 +26,7 @@ export function activate (context:vscode.ExtensionContext) {
 	output.activate(context);
 	panel.activate(context);
 	projects.activate(context);
+	settings.activate(context);
 	
 }
 

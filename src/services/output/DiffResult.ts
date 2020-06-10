@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as vscode from 'vscode';
+import { Diff } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -12,18 +12,15 @@ import * as vscode from 'vscode';
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
+export class DiffResult {
 	
-	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
+	public diffs:Diff[] = [];
 	
-}
-
-export function sortCaseInsensitive (a:string, b:string) {
-	
-	a = a.toLowerCase();
-	b = b.toLowerCase();
-	
-	return a < b ? -1 : a > b ? 1 : 0;
+	public constructor (public pathA:string, public pathB:string) {
+		
+		
+		
+	}
 	
 }
 

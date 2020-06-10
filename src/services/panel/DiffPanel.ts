@@ -3,22 +3,24 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { remove } from '../@l13/natvies/arrays';
-import { Uri } from '../types';
-import { isMacOs, isWindows } from './@l13/nodes/platforms';
-import { workspacePaths } from './common';
+import { remove } from '../../@l13/natvies/arrays';
+import { Diff, Uri } from '../../types';
+import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 
-import { DiffCompare } from './DiffCompare';
-import { DiffCopy } from './DiffCopy';
-import { DiffDelete } from './DiffDelete';
-import { DiffDialog } from './DiffDialog';
-import { DiffFavorites } from './DiffFavorites';
+import { DiffCompare } from '../actions/DiffCompare';
+import { DiffCopy } from '../actions/DiffCopy';
+import { DiffDelete } from '../actions/DiffDelete';
+import { DiffOpen } from '../actions/DiffOpen';
+import { DiffDialog } from '../common/DiffDialog';
+import { DiffSettings } from '../common/DiffSettings';
+import { DiffOutput } from '../output/DiffOutput';
+import { DiffResult } from '../output/DiffResult';
+import { DiffStats } from '../output/DiffStats';
+import { DiffStatus } from '../output/DiffStatus';
+import { DiffFavorites } from '../sidebar/DiffFavorites';
+import { DiffHistory } from '../sidebar/DiffHistory';
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
-import { DiffOpen } from './DiffOpen';
-import { DiffOutput } from './DiffOutput';
-import { DiffSettings } from './DiffSettings';
-import { DiffStatus } from './DiffStatus';
 
 const { floor, random } = Math;
 
@@ -38,6 +40,7 @@ export class DiffPanel {
 	
 	public static currentPanel:DiffPanel|undefined;
 	public static currentPanels:DiffPanel[] = [];
+	
 	public static readonly viewType = 'l13Diff';
 	
 	private readonly panel:vscode.WebviewPanel;
@@ -46,7 +49,6 @@ export class DiffPanel {
 	private readonly status:DiffStatus;
 	private readonly output:DiffOutput;
 	
-	private readonly dialog:DiffDialog;
 	private readonly msg:DiffMessage;
 	private readonly compare:DiffCompare;
 	private readonly copy:DiffCopy;
@@ -64,18 +66,16 @@ export class DiffPanel {
 		
 		this.msg = new DiffMessage(panel, this.disposables);
 		
-		this.dialog = new DiffDialog(this.msg);
 		this.copy = new DiffCopy(this.msg);
 		this.delete = new DiffDelete(this.msg);
-		this.compare = new DiffCompare(this.msg, context);
+		this.compare = new DiffCompare();
 		
-		this.disposables.push(this.status);
-		this.disposables.push(this.output);
-		this.disposables.push(this.msg);
-		this.disposables.push(this.dialog);
+		this.disposables.push(this.compare);
 		this.disposables.push(this.copy);
 		this.disposables.push(this.delete);
-		this.disposables.push(this.compare);
+		this.disposables.push(this.status);
+		this.disposables.push(this.msg);
+		this.disposables.push(this.output);
 		
 		this.panel.title = 'Diff';
 		this.panel.webview.html = this.getHTMLforDiff(this.panel.webview);
@@ -84,8 +84,76 @@ export class DiffPanel {
 		
 		this.panel.onDidChangeViewState(({ webviewPanel }) => {
 			
-			this.setContextForFocus(webviewPanel.active);
+			this.setContextFocus(webviewPanel.active);
 			if (webviewPanel.active) DiffPanel.currentPanel = this;
+			
+		});
+		
+		this.msg.on('create:diffs', (data) => this.compare.createDiffs(data));
+		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));
+		
+		this.compare.onDidNoCompare((diffResult:DiffResult) => {
+			
+			this.msg.send('create:diffs', { diffResult });
+			
+		});
+		
+		this.compare.onInitCompare(() => {
+			
+			this.status.update();
+			this.output.clear();
+			this.output.msg('LOG');
+			this.output.msg();
+			
+		});
+		
+		this.compare.onDidUpdateDiff((diff:Diff) => {
+			
+			const status = diff.status;
+			let statusInfo = ` Files are still '${status}'.`;
+			
+			if (status !== diff.status) statusInfo = ` Status has changed from '${status}' to '${diff.status}'.`;
+			
+			this.output.log(`Compared diff "${diff.id}".${statusInfo}`);
+			
+		});
+		
+		this.compare.onDidUpdateAllDiffs((diffResult:DiffResult) => {
+			
+			this.msg.send('update:diffs', { diffResult });
+			
+		});
+		
+		this.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
+			
+			this.saveRecentlyUsed(data.pathA, data.pathB);
+			this.saveHistory(pathA, pathB);
+			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
+			
+		});
+		
+		this.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
+			
+			this.saveRecentlyUsed(data.pathA, data.pathB);
+			this.saveHistory(pathA, pathB);
+			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
+			
+		});
+		
+		this.compare.onDidCompareFolders((diffResult:DiffResult) => {
+			
+			const diffStats = new DiffStats(diffResult);
+			const total = diffStats.all.total;
+			
+			this.status.update(`Compared ${total} entr${total === 1 ? 'y' : 'ies'}`);
+			
+			this.output.msg();
+			this.output.msg();
+			this.output.msg(diffStats.report());
+			
+			if (!diffResult) this.status.update();
+			
+			this.msg.send('create:diffs', { diffResult });
 			
 		});
 		
@@ -111,6 +179,14 @@ export class DiffPanel {
 			
 		});
 		
+		this.msg.on('open:dialog', async () => {
+			
+			const folder = await DiffDialog.open();
+			
+			this.msg.send('open:dialog', { folder });
+			
+		});
+		
 		this.msg.on('init:view', () => {
 			
 			this.msg.send('init:view', {
@@ -126,7 +202,7 @@ export class DiffPanel {
 		
 		this.msg.on('save:panelstate', (data) => this.savePanelState(data));
 		
-		this.setContextForFocus(true);
+		this.setContextFocus(true);
 		
 	}
 	
@@ -155,8 +231,21 @@ export class DiffPanel {
 		});
 		
 		if (!DiffPanel.currentPanel || !DiffPanel.currentPanel.panel.active) {
-			this.setContextForFocus(false);
+			this.setContextFocus(false);
 		}
+		
+	}
+	
+	private saveRecentlyUsed (pathA:string, pathB:string) :void {
+		
+		DiffMenu.saveRecentlyUsed(this.context, pathA, pathB);
+		
+	}
+	
+	private saveHistory (pathA:string, pathB:string) {
+		
+		DiffHistory.saveComparison(this.context, pathA, pathB);
+		DiffHistory.currentProvider?.refresh();
 		
 	}
 	
@@ -166,7 +255,7 @@ export class DiffPanel {
 		
 	}
 	
-	private setContextForFocus (value:boolean) {
+	private setContextFocus (value:boolean) {
 		
 		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
@@ -278,5 +367,11 @@ function nonce () {
 function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
+	
+}
+
+function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
+	
+	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
 	
 }

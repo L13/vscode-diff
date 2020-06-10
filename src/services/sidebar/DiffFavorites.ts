@@ -2,10 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import { Favorite } from '../types';
-import { sortCaseInsensitive } from './common';
+import { sortCaseInsensitive } from '../../@l13/natvies/arrays';
+import { Favorite } from '../../types';
 
-import { DiffDialog } from './DiffDialog';
+import { DiffDialog } from '../common/DiffDialog';
 import { FavoriteTreeItem } from './trees/FavoriteTreeItem';
 
 //	Variables __________________________________________________________________

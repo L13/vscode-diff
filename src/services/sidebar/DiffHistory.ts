@@ -2,11 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { Comparison } from '../types';
-import { formatNameAndDesc } from './@l13/utils/formats';
+import { Comparison } from '../../types';
+import { formatNameAndDesc } from '../@l13/utils/formats';
 
-import { DiffDialog } from './DiffDialog';
-import { DiffSettings } from './DiffSettings';
+import { DiffDialog } from '../common/DiffDialog';
+import { DiffSettings } from '../common/DiffSettings';
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 //	Variables __________________________________________________________________

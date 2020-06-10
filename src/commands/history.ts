@@ -2,10 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import { DiffDialog } from '../services/DiffDialog';
-import { DiffHistory } from '../services/DiffHistory';
-import { DiffMenu } from '../services/DiffMenu';
-import { DiffPanel } from '../services/DiffPanel';
+import { DiffDialog } from '../services/common/DiffDialog';
+import { DiffMenu } from '../services/panel/DiffMenu';
+import { DiffPanel } from '../services/panel/DiffPanel';
+import { DiffHistory } from '../services/sidebar/DiffHistory';
 
 //	Variables __________________________________________________________________
 

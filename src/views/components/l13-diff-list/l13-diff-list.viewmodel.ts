@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffResult } from '../../../services/DiffResult';
+import { DiffResult } from '../../../services/output/DiffResult';
 import { Diff, File } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { L13DiffListPipe } from './l13-diff-list.interface';

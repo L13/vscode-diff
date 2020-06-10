@@ -4,13 +4,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, lstatSync, mkdirsSync } from './@l13/nodes/fse';
+import { copyFile, lstatSync, mkdirsSync } from '../@l13/nodes/fse';
 
-import { CopyFilesJob, Diff, File } from '../types';
+import { CopyFilesJob, Diff, File } from '../../types';
 
-import { DiffDialog } from './DiffDialog';
-import { DiffMessage } from './DiffMessage';
-import { DiffSettings } from './DiffSettings';
+import { DiffDialog } from '../common/DiffDialog';
+import { DiffSettings } from '../common/DiffSettings';
+import { DiffMessage } from '../panel/DiffMessage';
 
 //	Variables __________________________________________________________________
 

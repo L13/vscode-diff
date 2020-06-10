@@ -2,11 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { Dialog, Diff, File } from '../types';
+import { Dialog, Diff, File } from '../../types';
 
-import { DiffDialog } from './DiffDialog';
-import { DiffMessage } from './DiffMessage';
-import { DiffSettings } from './DiffSettings';
+import { DiffDialog } from '../common/DiffDialog';
+import { DiffSettings } from '../common/DiffSettings';
+import { DiffMessage } from '../panel/DiffMessage';
 
 //	Variables __________________________________________________________________
 

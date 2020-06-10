@@ -4,10 +4,10 @@ import * as fs from 'fs';
 import { join } from 'path';
 import * as vscode from 'vscode';
 
-import { parse } from './@l13/natives/jsons';
-import { createFindGlob, lstatSync, walkUp } from './@l13/nodes/fse';
+import { parse } from '../@l13/natives/jsons';
+import { createFindGlob, lstatSync, walkUp } from '../@l13/nodes/fse';
 
-import { TextFiles } from '../types';
+import { TextFiles } from '../../types';
 
 const { push } = Array.prototype;
 

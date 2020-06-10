@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { DiffPanel } from '../services/DiffPanel';
-import { DiffSettings } from '../services/DiffSettings';
+import { DiffSettings } from '../services/common/DiffSettings';
+import { DiffPanel } from '../services/panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 

@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { DiffOutput } from '../services/DiffOutput';
+import { DiffOutput } from '../services/output/DiffOutput';
 
 //	Variables __________________________________________________________________
 

@@ -2,9 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import { DiffFavorites } from '../services/DiffFavorites';
-import { DiffPanel } from '../services/DiffPanel';
-import { DiffSettings } from '../services/DiffSettings';
+import { DiffSettings } from '../services/common/DiffSettings';
+import { DiffPanel } from '../services/panel/DiffPanel';
+import { DiffFavorites } from '../services/sidebar/DiffFavorites';
 
 //	Variables __________________________________________________________________
 

@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { remove } from '../@l13/natvies/arrays';
-import { MessageListener } from '../types';
+import { remove } from '../../@l13/natvies/arrays';
+import { MessageListener } from '../../types';
 
 //	Variables __________________________________________________________________
 

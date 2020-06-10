@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "L13 Diff" extension will be documented in this file.
 
+## [0.25.0] - 2020-06-21
+
+### Added
+- Added multi panel support.
+
 ## [0.24.0] - 2020-06-07
 
 ### Added
