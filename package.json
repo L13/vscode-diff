@@ -124,6 +124,14 @@
 				"title": "Open & Compare"
 			},
 			{
+				"command": "l13Diff.openFavoriteInNewPanel",
+				"title": "Open in New Panel",
+				"icon": {
+					"light": "images/open-diff-light.svg",
+					"dark": "images/open-diff-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.renameFavorite",
 				"title": "Rename"
 			},
@@ -146,6 +154,14 @@
 			{
 				"command": "l13Diff.openComparisonAndCompare",
 				"title": "Open & Compare"
+			},
+			{
+				"command": "l13Diff.openComparisonInNewPanel",
+				"title": "Open in New Panel",
+				"icon": {
+					"light": "images/open-diff-light.svg",
+					"dark": "images/open-diff-dark.svg"
+				}
 			},
 			{
 				"command": "l13Diff.removeComparison",
@@ -238,6 +254,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.openFavoriteInNewPanel",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.renameFavorite",
 					"when": "false"
 				},
@@ -255,6 +275,10 @@
 				},
 				{
 					"command": "l13Diff.openComparisonAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openComparisonInNewPanel",
 					"when": "false"
 				},
 				{
@@ -300,6 +324,11 @@
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
+					"command": "l13Diff.openFavoriteInNewPanel",
+					"group": "inline",
+					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
 					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
@@ -317,6 +346,11 @@
 				{
 					"command": "l13Diff.openComparisonAndCompare",
 					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.openComparisonInNewPanel",
+					"group": "inline",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{

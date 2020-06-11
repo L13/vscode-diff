@@ -61,7 +61,10 @@ export class DiffStatus {
 		remove(DiffStatus.status, this);
 		DiffStatus.currentStatus = DiffStatus.status[DiffStatus.status.length - 1];
 		
-		if (!DiffStatus.status.length) DiffStatus.statusBarItem.dispose();
+		if (!DiffStatus.status.length && DiffStatus.statusBarItem) {
+			DiffStatus.statusBarItem.dispose();
+			DiffStatus.statusBarItem = undefined;
+		}
 		
 	}
 	

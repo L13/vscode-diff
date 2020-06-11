@@ -42,6 +42,12 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openFavoriteInNewPanel', ({ favorite }) => {
+		
+		DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
+		
+	}));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.addToFavorites', () => DiffPanel.addToFavorites()));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.renameFavorite', ({ favorite }) => DiffFavorites.renameFavorite(context, favorite)));

@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import { remove } from '../../@l13/natvies/arrays';
 import { Diff, Uri } from '../../types';
 import { isMacOs, isWindows } from '../@l13/nodes/platforms';
+import { formatNameAndDesc } from '../@l13/utils/formats';
 
 import { DiffCompare } from '../actions/DiffCompare';
 import { DiffCopy } from '../actions/DiffCopy';
@@ -74,7 +75,7 @@ export class DiffPanel {
 		this.disposables.push(this.output);
 		this.disposables.push(this.status);
 		
-		this.panel.title = 'Diff';
+		this.setTitle();
 		this.panel.webview.html = this.getHTMLforDiff(this.panel.webview);
 		
 		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
@@ -82,6 +83,7 @@ export class DiffPanel {
 		this.panel.onDidChangeViewState(({ webviewPanel }) => {
 			
 			this.setContextFocus(webviewPanel.active);
+			
 			if (webviewPanel.active) {
 				DiffPanel.currentPanel = this;
 				this.status.activate();
@@ -131,6 +133,7 @@ export class DiffPanel {
 			
 			this.saveRecentlyUsed(data.pathA, data.pathB);
 			this.saveHistory(pathA, pathB);
+			this.setTitle(pathA, pathB);
 			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 			
 		}, null, this.disposables);
@@ -139,6 +142,7 @@ export class DiffPanel {
 			
 			this.saveRecentlyUsed(data.pathA, data.pathB);
 			this.saveHistory(pathA, pathB);
+			this.setTitle(pathA, pathB);
 			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 			
 		}, null, this.disposables);
@@ -244,7 +248,9 @@ export class DiffPanel {
 	
 	public dispose () :void {
 		
-		remove(DiffPanel.currentPanels, this);
+		const currentPanels = DiffPanel.currentPanels;
+		
+		remove(currentPanels, this);
 		
 		this.panel.dispose();
 		
@@ -253,22 +259,31 @@ export class DiffPanel {
 			if (disposable) disposable.dispose();
 		}
 		
-		DiffPanel.currentPanel = DiffPanel.currentPanels[DiffPanel.currentPanels.length - 1];
+		DiffPanel.currentPanel = currentPanels[currentPanels.length - 1];
 		
-		DiffPanel.currentPanels.some((diffPanel) => {
-			
+		for (const diffPanel of currentPanels) {
 			if (diffPanel.panel.active) {
 				DiffPanel.currentPanel = diffPanel;
-				return true;
+				break;
 			}
-			
-			return false;
-			
-		});
+		}
 		
 		if (!DiffPanel.currentPanel || !DiffPanel.currentPanel.panel.active) {
 			this.setContextFocus(false);
 		}
+		
+	}
+	
+	private setTitle (pathA?:string, pathB?:string) {
+		
+		let title = 'Diff';
+		
+		if (pathA && pathB) {
+			const [label, desc] = formatNameAndDesc(pathA, pathB);
+			title = `${label} (${desc})`;
+		}
+		
+		this.panel.title = title;
 		
 	}
 	

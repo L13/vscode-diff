@@ -41,6 +41,12 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openComparisonInNewPanel', ({ comparison }) => {
+		
+		DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+		
+	}));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeComparison', ({ comparison }) => DiffHistory.removeComparison(context, comparison)));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', async () => {

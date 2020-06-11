@@ -84,7 +84,10 @@ export class DiffOutput {
 		remove(DiffOutput.outputs, this);
 		DiffOutput.currentOutput = DiffOutput.outputs[DiffOutput.outputs.length - 1];
 		
-		if (!DiffOutput.outputs.length) DiffOutput.output.dispose();
+		if (!DiffOutput.outputs.length && DiffOutput.output) {
+			DiffOutput.output.dispose();
+			DiffOutput.output = undefined;
+		}
 		
 	}
 	
