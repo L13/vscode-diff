@@ -75,6 +75,8 @@ export class DiffOutput {
 	
 	public clear () :void {
 		
+		this.lines = [];
+		
 		DiffOutput.output.clear();
 		
 	}

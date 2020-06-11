@@ -94,14 +94,7 @@ export class DiffPanel {
 		
 	//	compare
 		
-		this.msg.on('create:diffs', (data) => this.compare.createDiffs(data));
-		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));
-		
-		this.compare.onDidNoCompare((diffResult:DiffResult) => {
-			
-			this.msg.send('create:diffs', { diffResult });
-			
-		}, null, this.disposables);
+		this.msg.on('create:diffs', (data) => this.compare.initCompare(data));
 		
 		this.compare.onInitCompare(() => {
 			
@@ -111,6 +104,79 @@ export class DiffPanel {
 			this.output.msg();
 			
 		}, null, this.disposables);
+		
+		this.compare.onDidNotCompare((diffResult:DiffResult) => {
+			
+			this.msg.send('create:diffs', { diffResult });
+			
+		}, null, this.disposables);
+		
+	// compare files
+		
+		this.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
+			
+			this.saveRecentlyUsed(data.pathA, data.pathB);
+			this.saveHistory(pathA, pathB);
+			this.setTitle(pathA, pathB);
+			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
+			
+		}, null, this.disposables);
+		
+		this.compare.onDidCompareFiles((diffResult:DiffResult) => {
+			
+			this.msg.send('create:diffs', { diffResult });
+			
+		}, null, this.disposables);
+		
+	//	compare folders
+		
+		this.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
+			
+			this.saveRecentlyUsed(data.pathA, data.pathB);
+			this.saveHistory(pathA, pathB);
+			this.setTitle(pathA, pathB);
+			this.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);
+			
+		}, null, this.disposables);
+		
+		this.compare.onStartScanFolder((pathname) => {
+			
+			this.output.log(`Scanning "${pathname}"`);
+			
+		}, null, this.disposables);
+		
+		this.compare.onEndScanFolder((result) => {
+			
+			const total = Object.entries(result).length;
+			
+			this.output.log(`Found ${total} entr${total === 1 ? 'y' : 'ies'}`);
+			
+		}, null, this.disposables);
+		
+		this.compare.onDidCompareFolders((diffResult:DiffResult) => {
+			
+			const diffStats = new DiffStats(diffResult);
+			const total = diffStats.all.total;
+			const text = `Compared ${total} entr${total === 1 ? 'y' : 'ies'}`;
+			
+			this.status.update(text);
+			
+			if (total) this.output.log(text);
+			else vscode.window.showInformationMessage('No files or folders to compare!');
+			
+			this.output.msg();
+			this.output.msg();
+			this.output.msg(diffStats.report());
+			
+			if (!diffResult) this.status.update();
+			
+			this.msg.send('create:diffs', { diffResult });
+			
+		}, null, this.disposables);
+		
+	//	update diffs
+		
+		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
@@ -126,41 +192,6 @@ export class DiffPanel {
 		this.compare.onDidUpdateAllDiffs((diffResult:DiffResult) => {
 			
 			this.msg.send('update:diffs', { diffResult });
-			
-		}, null, this.disposables);
-		
-		this.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
-			
-			this.saveRecentlyUsed(data.pathA, data.pathB);
-			this.saveHistory(pathA, pathB);
-			this.setTitle(pathA, pathB);
-			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
-			
-		}, null, this.disposables);
-		
-		this.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
-			
-			this.saveRecentlyUsed(data.pathA, data.pathB);
-			this.saveHistory(pathA, pathB);
-			this.setTitle(pathA, pathB);
-			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
-			
-		}, null, this.disposables);
-		
-		this.compare.onDidCompareFolders((diffResult:DiffResult) => {
-			
-			const diffStats = new DiffStats(diffResult);
-			const total = diffStats.all.total;
-			
-			this.status.update(`Compared ${total} entr${total === 1 ? 'y' : 'ies'}`);
-			
-			this.output.msg();
-			this.output.msg();
-			this.output.msg(diffStats.report());
-			
-			if (!diffResult) this.status.update();
-			
-			this.msg.send('create:diffs', { diffResult });
 			
 		}, null, this.disposables);
 		
@@ -239,6 +270,8 @@ export class DiffPanel {
 				workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 				compare,
 			});
+			
+			this.msg.removeMessageListener('init:view');
 			
 		});
 		

@@ -33,11 +33,14 @@ export class DiffCompare {
 	private _onInitCompare:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onInitCompare:vscode.Event<undefined> = this._onInitCompare.event;
 	
+	private _onDidNotCompare:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidNotCompare:vscode.Event<DiffResult> = this._onDidNotCompare.event;
+	
 	private _onStartCompareFiles:vscode.EventEmitter<Start> = new vscode.EventEmitter<Start>();
 	public readonly onStartCompareFiles:vscode.Event<Start> = this._onStartCompareFiles.event;
 	
-	private _onDidCompareFiles:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onDidCompareFiles:vscode.Event<undefined> = this._onDidCompareFiles.event;
+	private _onDidCompareFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidCompareFiles:vscode.Event<DiffResult> = this._onDidCompareFiles.event;
 	
 	private _onStartCompareFolders:vscode.EventEmitter<Start> = new vscode.EventEmitter<Start>();
 	public readonly onStartCompareFolders:vscode.Event<Start> = this._onStartCompareFolders.event;
@@ -51,53 +54,39 @@ export class DiffCompare {
 	private _onDidUpdateAllDiffs:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidUpdateAllDiffs:vscode.Event<DiffResult> = this._onDidUpdateAllDiffs.event;
 	
-	private _onDidNoCompare:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidNoCompare:vscode.Event<DiffResult> = this._onDidNoCompare.event;
+	private _onStartScanFolder:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
+	public readonly onStartScanFolder:vscode.Event<string> = this._onStartScanFolder.event;
 	
-	private disposables:vscode.Disposable[] = [];
+	private _onEndScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
+	public readonly onEndScanFolder:vscode.Event<StatsMap> = this._onEndScanFolder.event;
 	
-	public constructor () {
-		
-		//
-		
-	}
-	
-	public dispose () :void {
-		
-		while (this.disposables.length) {
-			const disposable = this.disposables.pop();
-			if (disposable) disposable.dispose();
-		}
-		
-	}
-	
-	public createDiffs (data:any) :void {
+	public initCompare (data:any) :void {
 		
 		this._onInitCompare.fire(data);
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
 		
-		if (!pathA) return this.sendEmptyResult(`The left path is empty.`, pathA, pathB);
-		if (!pathB) return this.sendEmptyResult(`The right path is empty.`, pathA, pathB);
+		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
+		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
 		
-		if (!isAbsolute(pathA)) return this.sendEmptyResult(`The left path is not absolute.`, pathA, pathB);
-		if (!isAbsolute(pathB)) return this.sendEmptyResult(`The right path is not absolute.`, pathA, pathB);
+		if (!isAbsolute(pathA)) return this.onError(`The left path is not absolute.`, pathA, pathB);
+		if (!isAbsolute(pathB)) return this.onError(`The right path is not absolute.`, pathA, pathB);
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
 		pathB = vscode.Uri.file(pathB).fsPath;
 		
-		if (pathA === pathB) return this.sendEmptyResult(`The left and right path is the same.`, pathA, pathB);
+		if (pathA === pathB) return this.onError(`The left and right path is the same.`, pathA, pathB);
 		
 		const statA = lstatSync(pathA);
-		if (!statA) return this.sendEmptyResult(`The left path "${pathA}" does not exist.`, pathA, pathB);
+		if (!statA) return this.onError(`The left path "${pathA}" does not exist.`, pathA, pathB);
 		
 		const statB = lstatSync(pathB);
-		if (!statB) return this.sendEmptyResult(`The right path "${pathB}" does not exist.`, pathA, pathB);
+		if (!statB) return this.onError(`The right path "${pathB}" does not exist.`, pathA, pathB);
 		
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
-		else this.sendEmptyResult(`The left and right path can't be compared!`, pathA, pathB);
+		else this.onError(`The left and right path can't be compared!`, pathA, pathB);
 		
 	}
 	
@@ -134,9 +123,7 @@ export class DiffCompare {
 			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 		});
 		
-		this.sendEmptyResult('', pathA, pathB);
-		
-		this._onDidCompareFiles.fire();
+		this._onDidCompareFiles.fire(new DiffResult(pathA, pathB));
 		
 	}
 	
@@ -147,55 +134,58 @@ export class DiffCompare {
 		let diffResult = null;
 			
 		try {
-			diffResult = await this.createDiffList(pathA, pathB);
-			if (!diffResult?.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+			diffResult = await this.createDiffs(pathA, pathB);
+			this._onDidCompareFolders.fire(diffResult);
 		} catch (error) {
-			diffResult = new DiffResult(pathA, pathB);
-			vscode.window.showErrorMessage(error.message);
+			this.onError(error.message, pathA, pathB);
 		}
-				
-		this._onDidCompareFolders.fire(diffResult);
 		
 	}
 	
 	
-	private sendEmptyResult (text:string, pathA:string, pathB:string) {
+	private onError (text:string, pathA:string, pathB:string) {
 		
-		if (text) vscode.window.showErrorMessage(text);
+		vscode.window.showErrorMessage(text);
 		
-		this._onDidNoCompare.fire(new DiffResult(pathA, pathB));
+		this._onDidNotCompare.fire(new DiffResult(pathA, pathB));
 		
 	}
 	
-	private async createDiffList (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
-		
-		const ignore = DiffSettings.getIgnore(dirnameA, dirnameB);
-		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
-		const diffs:Dictionary<Diff> = {};
+	public async scanFolder (dirname:string, ignore:string[]) :Promise<StatsMap> {
 		
 		return new Promise((resolve, reject) => {
 			
-			walkTree(dirnameA, { ignore }, (errorA, resultA) => {
+			this._onStartScanFolder.fire(dirname);
+			
+			walkTree(dirname, { ignore }, (error, result) => {
 				
-				if (errorA) return reject(errorA);
+				if (error) return reject(error);
 				
-				createListA(diffs, <StatsMap>resultA);
+				this._onEndScanFolder.fire(result);
 				
-				walkTree(dirnameB, { ignore }, (errorB, resultB) => {
-					
-					if (errorB) return reject(errorB);
-					
-					createListB(diffs, <StatsMap>resultB);
-					
-					diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
-					
-					resolve(diffResult);
-					
-				});
+				resolve(result);
 				
 			});
 			
 		});
+		
+	}
+	
+	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
+		
+		const ignore = DiffSettings.getIgnore(dirnameA, dirnameB);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, ignore);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, ignore);
+		const diffs:Dictionary<Diff> = {};
+		
+		createListA(diffs, resultA);
+		compareWithListB(diffs, resultB);
+		
+		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
+		
+		diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
+		
+		return diffResult;
 		
 	}
 
@@ -224,7 +214,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 }
 
-function createListB (diffs:Dictionary<Diff>, result:StatsMap) {
+function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 	const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
 	const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
@@ -332,7 +322,6 @@ function parsePredefinedVariables (pathname:string) {
 				return folder.uri.fsPath;
 		}
 		
-		vscode.window.showErrorMessage(`Variable '${match}' not valid!`);
 		return match;
 		
 	});

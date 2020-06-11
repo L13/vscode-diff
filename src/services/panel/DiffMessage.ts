@@ -47,7 +47,9 @@ export class DiffMessage {
 		
 	}
 	
-	public removeMessageListener (name:string, listener:MessageListener) :void {
+	public removeMessageListener (name:string, listener?:MessageListener) :void {
+		
+		if (!listener) delete this[LISTENERS][name];
 		
 		const listeners:null|MessageListener[] = this[LISTENERS][name] || null;
 		
