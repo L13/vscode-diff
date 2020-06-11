@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { remove } from '../../@l13/natvies/arrays';
+
 //	Variables __________________________________________________________________
 
 
@@ -14,56 +16,75 @@ import * as vscode from 'vscode';
 
 export class DiffOutput {
 	
-	private output:vscode.OutputChannel = null;
+	private static output:vscode.OutputChannel|undefined;
 	
 	public static currentOutput:DiffOutput|undefined;
 	
-	private constructor () {
+	private static outputs:DiffOutput[] = [];
+	
+	private lines:string[] = [];
+	
+	public constructor () {
 		
-		this.output = vscode.window.createOutputChannel('L13 Diff');
+		if (!DiffOutput.output) {
+			DiffOutput.output = vscode.window.createOutputChannel('L13 Diff');
+		}
+		
+		DiffOutput.currentOutput = this;
+		
+	}
+	
+	public activate () {
+		
+		DiffOutput.currentOutput = this;
+		DiffOutput.output.clear();
+		
+		this.lines.forEach((line) => DiffOutput.output.appendLine(line));
 		
 	}
 	
 	public log (text:string) :void {
 		
-		this.output.appendLine(`[${createTimestamp()}] ${text}`);
+		const line = `[${createTimestamp()}] ${text}`;
+		
+		this.lines.push(line);
+		
+		DiffOutput.output.appendLine(line);
 		
 	}
 	
-	public msg (text:string = '') :void {
+	public msg (line:string = '') :void {
 		
-		this.output.appendLine(text);
+		this.lines.push(line);
+		
+		DiffOutput.output.appendLine(line);
 		
 	}
 	
 	public show () :void {
 		
-		this.output.show();
+		DiffOutput.output.show();
 		
 	}
 	
 	public hide () :void {
 		
-		this.output.hide();
+		DiffOutput.output.hide();
 		
 	}
 	
 	public clear () :void {
 		
-		this.output.clear();
+		DiffOutput.output.clear();
 		
 	}
 	
 	public dispose () :void {
 		
-		this.output.dispose();
-		DiffOutput.currentOutput = undefined;
+		remove(DiffOutput.outputs, this);
+		DiffOutput.currentOutput = DiffOutput.outputs[DiffOutput.outputs.length - 1];
 		
-	}
-	
-	public static createOutput () {
-		
-		return DiffOutput.currentOutput || (DiffOutput.currentOutput = new DiffOutput());
+		if (!DiffOutput.outputs.length) DiffOutput.output.dispose();
 		
 	}
 	

@@ -6,7 +6,6 @@ import { Dialog, Diff, File } from '../../types';
 
 import { DiffDialog } from '../common/DiffDialog';
 import { DiffSettings } from '../common/DiffSettings';
-import { DiffMessage } from '../panel/DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -51,26 +50,13 @@ export class DiffDelete {
 	private _onDidDeleteFile:vscode.EventEmitter<File> = new vscode.EventEmitter<File>();
 	public readonly onDidDeleteFile:vscode.Event<File> = this._onDidDeleteFile.event;
 	
-	private disposables:vscode.Disposable[] = [];
+	private _onDidDeleteFiles:vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
+	public readonly onDidDeleteFiles:vscode.Event<any> = this._onDidDeleteFiles.event;
 	
-	public constructor (private msg:DiffMessage) {
-		
-		this.msg.on('delete:files', (data) => this.showDeleteFilesDialog(data));
-		this.msg.on('delete:left', (data) => this.showDeleteFileDialog(data, 'left'));
-		this.msg.on('delete:right', (data) => this.showDeleteFileDialog(data, 'right'));
-		
-	}
+	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	public dispose () :void {
-		
-		while (this.disposables.length) {
-			const disposable = this.disposables.pop();
-			if (disposable) disposable.dispose();
-		}
-		
-	}
-	
-	private async showDeleteFileDialog (data:any, side:'left'|'right') {
+	public async showDeleteFileDialog (data:any, side:'left'|'right') {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		
@@ -85,12 +71,12 @@ export class DiffDelete {
 			if (value) {
 				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false);
 				this.deleteFiles(data, side, useTrash);
-			} else this.msg.send('cancel');
+			} else this._onDidCancel.fire();
 		} else this.deleteFiles(data, side, useTrash);
 		
 	}
 	
-	private async showDeleteFilesDialog (data:any) {
+	public async showDeleteFilesDialog (data:any) {
 		
 		const diffs:Diff[] = data.diffResult.diffs;
 		
@@ -128,7 +114,7 @@ export class DiffDelete {
 			if (value) {
 				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false, true);
 				this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-			} else this.msg.send('cancel');
+			} else this._onDidCancel.fire();
 		} else this.deleteFiles(data, 'all', useTrash);
 		
 	}
@@ -183,7 +169,7 @@ export class DiffDelete {
 		
 		await Promise.all(promises);
 		
-		this.msg.send('delete:files', data)
+		this._onDidDeleteFiles.fire(data);
 		
 	}
 	

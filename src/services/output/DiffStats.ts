@@ -72,7 +72,7 @@ export class DiffStats {
 		
 		return `INFO
 
-Compared:    "${formatBasicStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}"`, this.all)}
+Compared:    ${formatBasicStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}`, this.all)}
 
 Left Path:   ${formatBasicStats(this.pathA.pathname, this.pathA)}
 

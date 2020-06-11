@@ -61,21 +61,18 @@ export class DiffPanel {
 		this.panel = panel;
 		this.context = context;
 		
-		this.status = DiffStatus.createStatusBar(context);
-		this.output = DiffOutput.createOutput();
-		
 		this.msg = new DiffMessage(panel, this.disposables);
 		
-		this.copy = new DiffCopy(this.msg);
-		this.delete = new DiffDelete(this.msg);
+		this.status = new DiffStatus(context);
+		this.output = new DiffOutput();
+		
+		this.copy = new DiffCopy();
+		this.delete = new DiffDelete();
 		this.compare = new DiffCompare();
 		
-		this.disposables.push(this.compare);
-		this.disposables.push(this.copy);
-		this.disposables.push(this.delete);
-		this.disposables.push(this.status);
 		this.disposables.push(this.msg);
 		this.disposables.push(this.output);
+		this.disposables.push(this.status);
 		
 		this.panel.title = 'Diff';
 		this.panel.webview.html = this.getHTMLforDiff(this.panel.webview);
@@ -85,9 +82,15 @@ export class DiffPanel {
 		this.panel.onDidChangeViewState(({ webviewPanel }) => {
 			
 			this.setContextFocus(webviewPanel.active);
-			if (webviewPanel.active) DiffPanel.currentPanel = this;
+			if (webviewPanel.active) {
+				DiffPanel.currentPanel = this;
+				this.status.activate();
+				this.output.activate();
+			}
 			
-		});
+		}, null, this.disposables);
+		
+	//	compare
 		
 		this.msg.on('create:diffs', (data) => this.compare.createDiffs(data));
 		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));
@@ -96,7 +99,7 @@ export class DiffPanel {
 			
 			this.msg.send('create:diffs', { diffResult });
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onInitCompare(() => {
 			
@@ -105,7 +108,7 @@ export class DiffPanel {
 			this.output.msg('LOG');
 			this.output.msg();
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
@@ -116,13 +119,13 @@ export class DiffPanel {
 			
 			this.output.log(`Compared diff "${diff.id}".${statusInfo}`);
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onDidUpdateAllDiffs((diffResult:DiffResult) => {
 			
 			this.msg.send('update:diffs', { diffResult });
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
 			
@@ -130,7 +133,7 @@ export class DiffPanel {
 			this.saveHistory(pathA, pathB);
 			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
 			
@@ -138,7 +141,7 @@ export class DiffPanel {
 			this.saveHistory(pathA, pathB);
 			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 			
-		});
+		}, null, this.disposables);
 		
 		this.compare.onDidCompareFolders((diffResult:DiffResult) => {
 			
@@ -155,20 +158,55 @@ export class DiffPanel {
 			
 			this.msg.send('create:diffs', { diffResult });
 			
-		});
+		}, null, this.disposables);
 		
-		this.delete.onDidDeleteFile((file) => this.output.log(`Deleted ${file.type} "${file.path}".`));
+	//	copy
+		
+		this.msg.on('copy:left', (data) => this.copy.showCopyFromToDialog(data, 'A', 'B'));
+		this.msg.on('copy:right', (data) => this.copy.showCopyFromToDialog(data, 'B', 'A'));
+		
+		this.copy.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
 		this.copy.onDidCopyFile(({ from, to }) => {
 			
 			this.output.log(`Copied ${from.type} "${from.name}" from "${from.folder}" to "${to.folder}".`);
 			
-		});
+		}, null, this.disposables);
+		
+		this.copy.onDidCopyFiles(({ data, from }) => {
+			
+			this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
+			
+		}, null, this.disposables);
+		
+	//	delete
+		
+		this.msg.on('delete:files', (data) => this.delete.showDeleteFilesDialog(data));
+		this.msg.on('delete:left', (data) => this.delete.showDeleteFileDialog(data, 'left'));
+		this.msg.on('delete:right', (data) => this.delete.showDeleteFileDialog(data, 'right'));
+		
+		this.delete.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
+		
+		this.delete.onDidDeleteFile((file) => this.output.log(`Deleted ${file.type} "${file.path}".`), null, this.disposables);
+		
+		this.delete.onDidDeleteFiles((data) => this.msg.send('delete:files', data), null, this.disposables);
+		
+	//	open
 		
 		this.msg.on('open:diffToSide', (data) => DiffOpen.open(data, true));
 		this.msg.on('open:diff', (data) => DiffOpen.open(data, DiffSettings.get('openToSide', false)));
 		
 		this.msg.on('reveal:file', (data) => DiffOpen.reveal(data));
+		
+		this.msg.on('open:dialog', async () => {
+			
+			const folder = await DiffDialog.open();
+			
+			this.msg.send('open:dialog', { folder });
+			
+		});
+		
+	//	menu
 		
 		this.msg.on('update:menu', () => {
 			
@@ -179,13 +217,15 @@ export class DiffPanel {
 			
 		});
 		
-		this.msg.on('open:dialog', async () => {
-			
-			const folder = await DiffDialog.open();
-			
-			this.msg.send('open:dialog', { folder });
-			
-		});
+	//	favorites
+		
+		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(context, data.pathA, data.pathB));
+		
+	//	panel state
+		
+		this.msg.on('save:panelstate', (data) => this.savePanelState(data));
+		
+	//	init
 		
 		this.msg.on('init:view', () => {
 			
@@ -197,10 +237,6 @@ export class DiffPanel {
 			});
 			
 		});
-		
-		this.msg.on('save:favorite', (data) => DiffFavorites.addFavorite(context, data.pathA, data.pathB));
-		
-		this.msg.on('save:panelstate', (data) => this.savePanelState(data));
 		
 		this.setContextFocus(true);
 		

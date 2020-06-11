@@ -10,7 +10,6 @@ import { CopyFilesJob, Diff, File } from '../../types';
 
 import { DiffDialog } from '../common/DiffDialog';
 import { DiffSettings } from '../common/DiffSettings';
-import { DiffMessage } from '../panel/DiffMessage';
 
 //	Variables __________________________________________________________________
 
@@ -27,25 +26,13 @@ export class DiffCopy {
 	private _onDidCopyFile:vscode.EventEmitter<{ from:File, to:File }> = new vscode.EventEmitter<{ from:File, to:File }>();
 	public readonly onDidCopyFile:vscode.Event<{ from:File, to:File }> = this._onDidCopyFile.event;
 	
-	private disposables:vscode.Disposable[] = [];
+	private _onDidCopyFiles:vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }> = new vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }>();
+	public readonly onDidCopyFiles:vscode.Event<{ data:any, from:'A'|'B', to:'A'|'B' }> = this._onDidCopyFiles.event;
 	
-	public constructor (private msg:DiffMessage) {
-		
-		this.msg.on('copy:left', (data) => this.showCopyFromToDialog(data, 'A', 'B'));
-		this.msg.on('copy:right', (data) => this.showCopyFromToDialog(data, 'B', 'A'));
-		
-	}
+	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	public dispose () :void {
-		
-		while (this.disposables.length) {
-			const disposable = this.disposables.pop();
-			if (disposable) disposable.dispose();
-		}
-		
-	}
-	
-	private copy (file:File, dest:string, callback:any) :void {
+	private async copy (file:File, dest:string) :Promise<any> {
 		
 		const stat = lstatSync(file.path);
 		
@@ -55,39 +42,51 @@ export class DiffCopy {
 				if (!statDest) {
 					try {
 						mkdirsSync(dest);
-						callback();
+						return Promise.resolve();
 					} catch (error) {
-						callback(error);
+						return Promise.reject(error);
 					}
 				} else {
-					if (statDest.isDirectory()) callback();
-					else callback(new Error(`'${dest}' exists, but is not a folder!`));
+					if (statDest.isDirectory()) return Promise.resolve();
+					return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 				}
 			} else if (stat.isFile()) {
 				if (!statDest || statDest.isFile()) {
-					copyFile(file.path, dest, (error:Error) => {
+					return new Promise((resolve, reject) => {
 						
-						if (error) callback(error);
-						else callback();
+						copyFile(file.path, dest, (error:Error) => {
+						
+							if (error) reject(error);
+							else resolve();
+							
+						});
 						
 					});
-				} else callback(new Error(`'${dest}' exists, but is not a file!`));
+				}
+				return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
 			} else if (stat.isSymbolicLink()) {
 				if (!statDest || statDest.isSymbolicLink()) {
 					if (statDest) fs.unlinkSync(dest);
-					fs.symlink(fs.readlinkSync(file.path), dest, (error:Error) => {
+					return new Promise((resolve, reject) => {
 						
-						if (error) callback(error);
-						else callback();
+						fs.symlink(fs.readlinkSync(file.path), dest, (error:Error) => {
+						
+							if (error) reject(error);
+							else resolve();
+							
+						});
 						
 					});
-				} else callback(new Error(`'${dest}' exists, but is not a symbolic link!`));
+				}
+				return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
 			}
-		} else callback(new Error(`'${dest}' doesn't exist!`));
+		}
+		
+		return Promise.reject(new Error(`'${dest}' doesn't exist!`));
 		
 	}
 	
-	private async showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') {
+	public async showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') {
 		
 		const confirmCopy = DiffSettings.get('confirmCopy', true);
 		const length = data.diffResult.diffs.length;
@@ -101,7 +100,7 @@ export class DiffCopy {
 			if (value) {
 				if (value === BUTTON_COPY_DONT_ASK_AGAIN) DiffSettings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
-			} else this.msg.send('cancel');
+			} else this._onDidCancel.fire();
 		} else this.copyFromTo(data, from, to);;
 		
 	}
@@ -116,12 +115,12 @@ export class DiffCopy {
 			tasks: length,
 			done: () => {
 				
-				if (!job.tasks) this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
+				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to});
 				
 			},
 		};
 		
-		diffs.forEach((diff:Diff) => {
+		diffs.forEach(async (diff:Diff) => {
 			
 			if (diff.status === 'unchanged') return --job.tasks;
 			
@@ -130,38 +129,40 @@ export class DiffCopy {
 			
 			if (stat) {
 				const dest = path.join(folderTo, fileFrom.relative);
-				this.copy(fileFrom, dest, (error:null|Error) => {
-					
-					--job.tasks;
-					
-					if (error) {
-						job.error = error;
-						vscode.window.showErrorMessage(error.message);
-					} else {
-						diff.status = 'unchanged';
-						if (!(<File>(<any>diff)['file' + to])) {
-							(<File>(<any>diff)['file' + to]) = {
-								folder: folderTo,
-								relative: fileFrom.relative,
-								stat: lstatSync(dest),
-								
-								path: dest,
-								name: fileFrom.name,
-								basename: fileFrom.basename,
-								dirname: fileFrom.dirname,
-								extname: fileFrom.extname,
-								type: fileFrom.type,
-							};
-						}
-						this._onDidCopyFile.fire({
-							from: (<File>(<any>diff)['file' + from]),
-							to: (<File>(<any>diff)['file' + to]),
-						});
+				
+				try {
+					await this.copy(fileFrom, dest);
+					diff.status = 'unchanged';
+				
+					if (!(<File>(<any>diff)['file' + to])) {
+						(<File>(<any>diff)['file' + to]) = {
+							folder: folderTo,
+							relative: fileFrom.relative,
+							stat: lstatSync(dest),
+							
+							path: dest,
+							name: fileFrom.name,
+							basename: fileFrom.basename,
+							dirname: fileFrom.dirname,
+							extname: fileFrom.extname,
+							type: fileFrom.type,
+						};
 					}
 					
-					if (!job.tasks) job.done();
+					this._onDidCopyFile.fire({
+						from: (<File>(<any>diff)['file' + from]),
+						to: (<File>(<any>diff)['file' + to]),
+					});
 					
-				});
+				} catch (error) {
+					job.error = error;
+					vscode.window.showErrorMessage(error.message);
+				}
+				
+				--job.tasks;
+				
+				if (!job.tasks) job.done();
+					
 			} else {
 				--job.tasks;
 				--length;

@@ -144,17 +144,16 @@ export class DiffCompare {
 		
 		this._onStartCompareFolders.fire({ data, pathA, pathB });
 		
-		const diffResult = await this.createDiffList(pathA, pathB); //, (error:null|Error, diffResult:undefined|DiffResult) => {
+		let diffResult = null;
 			
-			// if (error) {
-				// diffResult = new DiffResult(pathA, pathB);
-				// vscode.window.showErrorMessage(error.message);
-				// this.status.update();
-			// } else {
-				// if (!diffResult) this.status.update();
-				// /*else*/ if (!diffResult?.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
-			// }
-		
+		try {
+			diffResult = await this.createDiffList(pathA, pathB);
+			if (!diffResult?.diffs.length) vscode.window.showInformationMessage('No files or folders to compare!');
+		} catch (error) {
+			diffResult = new DiffResult(pathA, pathB);
+			vscode.window.showErrorMessage(error.message);
+		}
+				
 		this._onDidCompareFolders.fire(diffResult);
 		
 	}
@@ -174,17 +173,17 @@ export class DiffCompare {
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			
 			walkTree(dirnameA, { ignore }, (errorA, resultA) => {
 				
-				if (errorA) return resolve();
+				if (errorA) return reject(errorA);
 				
 				createListA(diffs, <StatsMap>resultA);
 				
 				walkTree(dirnameB, { ignore }, (errorB, resultB) => {
 					
-					if (errorB) return resolve();
+					if (errorB) return reject(errorB);
 					
 					createListB(diffs, <StatsMap>resultB);
 					

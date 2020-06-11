@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { remove } from '../../@l13/natvies/arrays';
+
 //	Variables __________________________________________________________________
 
 
@@ -14,38 +16,52 @@ import * as vscode from 'vscode';
 
 export class DiffStatus {
 	
-	private readonly statusBarItem:vscode.StatusBarItem;
+	private static statusBarItem:vscode.StatusBarItem|undefined;
 	
-	public static currentStatusBar:DiffStatus|undefined = undefined;
+	public static currentStatus:DiffStatus|undefined;
 	
-	private constructor (context:vscode.ExtensionContext) {
+	private static status:DiffStatus[] = [];
+	
+	private currentText = '';
+	
+	public constructor (context:vscode.ExtensionContext) {
 		
-		this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-		this.statusBarItem.command = 'l13Diff.showOutput';
-		this.statusBarItem.tooltip = 'L13 Diff Output';
+		if (!DiffStatus.statusBarItem) {
+			DiffStatus.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+			DiffStatus.statusBarItem.command = 'l13Diff.showOutput';
+			DiffStatus.statusBarItem.tooltip = 'L13 Diff Output';
+			DiffStatus.statusBarItem.show();
+			context.subscriptions.push(DiffStatus.statusBarItem);
+		}
+		
 		this.update();
-		this.statusBarItem.show();
 		
-		context.subscriptions.push(this.statusBarItem);
+		DiffStatus.currentStatus = this;
+		DiffStatus.status.push(this);
+		
+	}
+	
+	public activate () {
+		
+		DiffStatus.currentStatus = this;
+		DiffStatus.statusBarItem.text = this.currentText;
 		
 	}
 	
 	public update (text:string = '') :void {
 		
-		this.statusBarItem.text = '$(file-submodule) ' + (text || 'L13 Diff');
+		this.currentText = '$(file-submodule) ' + (text || 'L13 Diff');
+		
+		if (DiffStatus.currentStatus === this) DiffStatus.statusBarItem.text = this.currentText;
 		
 	}
 	
 	public dispose () :void {
 		
-		this.statusBarItem.dispose();
-		DiffStatus.currentStatusBar = undefined;
+		remove(DiffStatus.status, this);
+		DiffStatus.currentStatus = DiffStatus.status[DiffStatus.status.length - 1];
 		
-	}
-	
-	public static createStatusBar (context:vscode.ExtensionContext) :DiffStatus {
-		
-		return DiffStatus.currentStatusBar || (DiffStatus.currentStatusBar = new DiffStatus(context));
+		if (!DiffStatus.status.length) DiffStatus.statusBarItem.dispose();
 		
 	}
 	
