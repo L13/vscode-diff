@@ -204,13 +204,9 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.copy.onInitMultiCopy(({ ids, pathA, pathB, from }) => {
+		this.copy.onInitMultiCopy(({ data, from }) => {
 			
-			DiffPanel.currentPanels.forEach((diffPanel) => {
-				
-				diffPanel.msg.send(`multi-copy:${from}`, { ids, pathA, pathB });
-				
-			});
+			DiffPanel.currentPanels.forEach((diffPanel) => diffPanel.msg.send(`multi-copy:${from}`, data));
 			
 		});
 		

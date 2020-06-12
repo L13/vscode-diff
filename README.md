@@ -6,16 +6,12 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.24.0
+## What's new in L13 Diff 0.25.0
 
-- Added context menu to copy, delete and reveal a file in the list view.
-- Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
-- Added auto update for list view if a file has been saved and is part of the current comparison.
-- Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
-- Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
-- Added output messages if files have been copied, deleted or updated.
-- Diff panel state will be saved between sessions.
-- Added overview ruler for selections in list view to scrollbar.
+- Added multi panel support.
+- Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
+- Added button to the top right to toggle ignore end of line.
+- Added button to the top right to toggle ignore trim whitespace.
 
 ## Features
 
@@ -39,6 +35,8 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Ignores line endings in text files for a comparison.
 * Ignores leading and trailing whitespace in text files.
 * Auto updates the list view if a file has been saved in the same window as the comparison.
+* Supports multiple panels
+* Copy the same files from the same location to multiple folders at once.
 
 ### Welcome
 
@@ -165,6 +163,13 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Ctrl + C` - Same as `Click`.
 
+### Actions
+
+#### Copy files to the left/right folder.
+
+* `Click` - Copy all selected files to the other folder.
+* `Alt + Click` - Copy all selected files in one diff panel in all other diff panels from one source to the other folders at once. Open two or more diff panels and make a comparison with the same folder on the same side. Select all the files you want to copy in one diff panel and press the button with `Alt + Click` to copy all the files from the same source to all other folders, too.
+
 ### List
 
 #### All platforms
@@ -205,7 +210,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### All platforms
 
-* `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied.
+* `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied. This button supports copying files to multiple folders at once with `Alt + Click`, too. Please read the description for `Copy files to the left/right folder` to see how it works.
 * `Delete` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be deleted. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
 
 #### macOS

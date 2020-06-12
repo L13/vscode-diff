@@ -29,8 +29,8 @@ export class DiffCopy {
 	private _onDidCopyFiles:vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }> = new vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }>();
 	public readonly onDidCopyFiles:vscode.Event<{ data:any, from:'A'|'B', to:'A'|'B' }> = this._onDidCopyFiles.event;
 	
-	private _onInitMultiCopy:vscode.EventEmitter<{ ids:string[], pathA:string, pathB:string, from:'left'|'right' }> = new vscode.EventEmitter<{ ids:string[], pathA:string, pathB:string, from:'left'|'right' }>();
-	public readonly onInitMultiCopy:vscode.Event<{ ids:string[], pathA:string, pathB:string, from:'left'|'right' }> = this._onInitMultiCopy.event;
+	private _onInitMultiCopy:vscode.EventEmitter<{ data:any, from:'left'|'right' }> = new vscode.EventEmitter<{ data:any, from:'left'|'right' }>();
+	public readonly onInitMultiCopy:vscode.Event<{ data:any, from:'left'|'right' }> = this._onInitMultiCopy.event;
 	
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
@@ -119,14 +119,8 @@ export class DiffCopy {
 		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" in all diff panels?`;
 		const value = await DiffDialog.confirm(text, 'Copy');
 		
-		if (value) {
-			this._onInitMultiCopy.fire({
-				ids: data.ids,
-				pathA: data.pathA,
-				pathB: data.pathB,
-				from,
-			});
-		} else this._onDidCancel.fire();
+		if (value) this._onInitMultiCopy.fire({ data, from });
+		else this._onDidCancel.fire();
 		
 	}
 	
@@ -134,10 +128,9 @@ export class DiffCopy {
 		
 		const folderTo = data.diffResult['path' + to];
 		const diffs:Diff[] = data.diffResult.diffs;
-		let length:number = diffs.length;
 		const job:CopyFilesJob = {
 			error: null,
-			tasks: length,
+			tasks: diffs.length,
 			done: () => {
 				
 				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to});
@@ -146,12 +139,6 @@ export class DiffCopy {
 		};
 		
 		diffs.forEach(async (diff:Diff) => {
-			
-			if (diff.status === 'unchanged') {
-				--job.tasks;
-				if (!job.tasks) job.done();
-				return;
-			}
 			
 			const fileFrom:File = (<any>diff)['file' + from];
 			const stat = lstatSync(fileFrom.path);
@@ -186,16 +173,10 @@ export class DiffCopy {
 				} catch (error) {
 					vscode.window.showErrorMessage(error.message);
 				}
-				
-				--job.tasks;
-				
-				if (!job.tasks) job.done();
-					
-			} else {
-				--job.tasks;
-				--length;
-				if (!job.tasks) job.done();
 			}
+			
+			--job.tasks;
+			if (!job.tasks) job.done();
 			
 		});
 		
