@@ -100,8 +100,7 @@ export class DiffPanel {
 			
 			this.status.update();
 			this.output.clear();
-			this.output.msg('LOG');
-			this.output.msg();
+			this.output.msg('LOG\n');
 			
 		}, null, this.disposables);
 		
@@ -115,8 +114,7 @@ export class DiffPanel {
 		
 		this.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
 			
-			this.saveRecentlyUsed(data.pathA, data.pathB);
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(data, pathA, pathB);
 			this.setTitle(pathA, pathB);
 			this.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 			
@@ -132,8 +130,7 @@ export class DiffPanel {
 		
 		this.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
 			
-			this.saveRecentlyUsed(data.pathA, data.pathB);
-			this.saveHistory(pathA, pathB);
+			this.saveHistory(data, pathA, pathB);
 			this.setTitle(pathA, pathB);
 			this.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);
 			
@@ -160,15 +157,10 @@ export class DiffPanel {
 			const text = `Compared ${total} entr${total === 1 ? 'y' : 'ies'}`;
 			
 			this.status.update(text);
-			
-			if (total) this.output.log(text);
-			else vscode.window.showInformationMessage('No files or folders to compare!');
-			
-			this.output.msg();
-			this.output.msg();
+			this.output.log(`${text}\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!diffResult) this.status.update();
+			if (!total) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', { diffResult });
 			
@@ -180,12 +172,7 @@ export class DiffPanel {
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
-			const status = diff.status;
-			let statusInfo = ` Files are still '${status}'.`;
-			
-			if (status !== diff.status) statusInfo = ` Status has changed from '${status}' to '${diff.status}'.`;
-			
-			this.output.log(`Compared diff "${diff.id}".${statusInfo}`);
+			this.output.log(`Compared "${diff.id}" again. Status is now '${diff.status}'.`);
 			
 		}, null, this.disposables);
 		
@@ -200,6 +187,9 @@ export class DiffPanel {
 		this.msg.on('copy:left', (data) => this.copy.showCopyFromToDialog(data, 'A', 'B'));
 		this.msg.on('copy:right', (data) => this.copy.showCopyFromToDialog(data, 'B', 'A'));
 		
+		this.msg.on('multi-copy:left', (data) => this.copy.showMultiCopyFromToDialog(data, 'left'));
+		this.msg.on('multi-copy:right', (data) => this.copy.showMultiCopyFromToDialog(data, 'right'));
+		
 		this.copy.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
 		this.copy.onDidCopyFile(({ from, to }) => {
@@ -213,6 +203,16 @@ export class DiffPanel {
 			this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
 			
 		}, null, this.disposables);
+		
+		this.copy.onInitMultiCopy(({ ids, pathA, pathB, from }) => {
+			
+			DiffPanel.currentPanels.forEach((diffPanel) => {
+				
+				diffPanel.msg.send(`multi-copy:${from}`, { ids, pathA, pathB });
+				
+			});
+			
+		});
 		
 	//	delete
 		
@@ -320,13 +320,9 @@ export class DiffPanel {
 		
 	}
 	
-	private saveRecentlyUsed (pathA:string, pathB:string) :void {
+	private saveHistory (data:any, pathA:string, pathB:string) {
 		
-		DiffMenu.saveRecentlyUsed(this.context, pathA, pathB);
-		
-	}
-	
-	private saveHistory (pathA:string, pathB:string) {
+		DiffMenu.saveRecentlyUsed(this.context, data.pathA, data.pathB);
 		
 		DiffHistory.saveComparison(this.context, pathA, pathB);
 		DiffHistory.currentProvider?.refresh();

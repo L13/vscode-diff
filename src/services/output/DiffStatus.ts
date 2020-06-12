@@ -43,8 +43,10 @@ export class DiffStatus {
 	
 	public activate () {
 		
-		DiffStatus.currentStatus = this;
-		DiffStatus.statusBarItem.text = this.currentText;
+		if (DiffStatus.currentStatus !== this) {
+			DiffStatus.currentStatus = this;
+			DiffStatus.statusBarItem.text = this.currentText;
+		}
 		
 	}
 	

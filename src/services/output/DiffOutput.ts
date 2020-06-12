@@ -36,20 +36,17 @@ export class DiffOutput {
 	
 	public activate () {
 		
-		DiffOutput.currentOutput = this;
-		DiffOutput.output.clear();
-		
-		this.lines.forEach((line) => DiffOutput.output.appendLine(line));
+		if (DiffOutput.currentOutput !== this) {
+			DiffOutput.currentOutput = this;
+			DiffOutput.output.clear();
+			this.lines.forEach((line) => DiffOutput.output.appendLine(line));
+		}
 		
 	}
 	
 	public log (text:string) :void {
 		
-		const line = `[${createTimestamp()}] ${text}`;
-		
-		this.lines.push(line);
-		
-		DiffOutput.output.appendLine(line);
+		this.msg(`[${createTimestamp()}] ${text}`);
 		
 	}
 	
@@ -57,19 +54,19 @@ export class DiffOutput {
 		
 		this.lines.push(line);
 		
-		DiffOutput.output.appendLine(line);
+		if (DiffOutput.currentOutput === this) DiffOutput.output.appendLine(line);
 		
 	}
 	
 	public show () :void {
 		
-		DiffOutput.output.show();
+		if (DiffOutput.currentOutput === this) DiffOutput.output.show();
 		
 	}
 	
 	public hide () :void {
 		
-		DiffOutput.output.hide();
+		if (DiffOutput.currentOutput === this) DiffOutput.output.hide();
 		
 	}
 	
@@ -77,7 +74,7 @@ export class DiffOutput {
 		
 		this.lines = [];
 		
-		DiffOutput.output.clear();
+		if (DiffOutput.currentOutput === this) DiffOutput.output.clear();
 		
 	}
 	

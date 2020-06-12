@@ -61,6 +61,8 @@ export class L13DiffListViewModel extends ViewModel {
 		msg.on('delete:files', (data) => this.updateDeletedList(data.diffResult));
 		msg.on('update:files', (data) => this.updateFiles(data.files));
 		msg.on('update:diffs', (data) => this.updateDiffList(data.diffResult));
+		msg.on('multi-copy:left', (data) => this.multiCopyFiles('left', data));
+		msg.on('multi-copy:right', (data) => this.multiCopyFiles('right', data));
 		
 	}
 	
@@ -255,6 +257,34 @@ export class L13DiffListViewModel extends ViewModel {
 		const diffResult = this.getCopyListByIds(ids, from);
 		
 		if (diffResult.diffs.length) msg.send(`copy:${from}`, { diffResult });
+		
+	}
+	
+	public multiCopy (from:'left'|'right', ids:string[]) :void {
+		
+		if (this.diffResult.pathA && this.diffResult.pathB) {
+			msg.send(`multi-copy:${from}`, {
+				ids,
+				pathA: this.diffResult.pathA,
+				pathB: this.diffResult.pathB,
+			});
+		}
+		
+	}
+	
+	private multiCopyFiles (from:'left'|'right', data:any) {
+		
+		if (from === 'left' && this.diffResult.pathA === data.pathA
+		|| from === 'right' && this.diffResult.pathB === data.pathB) {
+			const diffResult = this.getCopyListByIds(data.ids, from);
+			if (diffResult.diffs.length) {
+				this.dispatchEvent('multicopy');
+				msg.send(`copy:${from}`, {
+					diffResult,
+					silent: true,
+				});
+			}
+		}
 		
 	}
 	

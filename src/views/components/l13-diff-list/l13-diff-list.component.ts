@@ -182,7 +182,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
-		this.context.addEventListener('copy', ({ target }) => {
+		this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
 			if (this.disabled) return;
 			
@@ -195,7 +195,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (!isSelected) this.cacheCurrentSelections = selections;
 			
 			this.dispatchCustomEvent('copy');
-			this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			
+			if (detail.altKey) this.viewmodel.multiCopy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			else this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
 			
 		});
 		
@@ -500,6 +502,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public copy (from:'left'|'right') :void {
 		
 		this.viewmodel.copy(from, this.getIdsBySelection());
+		
+	}
+	
+	public multiCopy (from:'left'|'right') :void {
+		
+		this.viewmodel.multiCopy(from, this.getIdsBySelection());
 		
 	}
 	

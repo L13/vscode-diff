@@ -159,8 +159,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.actions.addEventListener('copy', (event) => {
 			
+			const detail = (<any>event).detail;
+			
 			disable();
-			this.list.copy((<any>event).detail.from);
+			
+			if (detail.altKey) this.list.multiCopy(detail.from);
+			else this.list.copy(detail.from);
 			
 		});
 		
@@ -216,6 +220,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		listVM.on('copied', () => this.enable());
 		listVM.on('deleted', () => this.enable());
 		listVM.on('updated', () => this.enable());
+		listVM.on('multicopy', () => disable());
 		
 		listVM.on('filtered', () => {
 			
