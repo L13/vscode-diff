@@ -13,6 +13,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 - Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
 - Added button to the top right to toggle ignore end of line.
 - Added button to the top right to toggle ignore trim whitespace.
+- Added see content of symbolic links in a readonly editor or diff editor.
 
 ## Features
 
@@ -182,8 +183,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
 * `Double Click` - Open a diff or file.
 * `Alt + Double Click` - Open diff or file to side.
-* `Enter` - Open diff or file.
-* `Ctrl + Enter` - Open diff or file to side.
+* `Enter` - Same as `Double Click`.
+* `Ctrl + Enter` - Same as `Alt + Double Click`.
 * `Escape` - Unselect all items in the list view.
 
 #### macOS

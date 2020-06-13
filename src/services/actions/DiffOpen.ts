@@ -25,21 +25,28 @@ import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 export class DiffOpen {
 	
-	private static openFile (file:DiffFile, openToSide:boolean) :void {
+	private static async openFile (file:DiffFile, openToSide:boolean) {
 		
-		fs.lstat(file.path, (error, stat) => {
-			
-			if (error) return vscode.window.showErrorMessage(error.message);
-			
+		try {
+			const stat = await lstat(file.path);
 			if (stat.isFile()) {
 				const pathname = vscode.Uri.file(file.path);
 				vscode.commands.executeCommand('vscode.open', pathname, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
+			} else if (stat.isDirectory()) {
+				//
+			} else if (stat.isSymbolicLink()) {
+				const pathname = SymlinkContentProvider.parse(file.path);
+				vscode.commands.executeCommand('vscode.open', pathname, {
+					preview: false,
+					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+				});
 			} else vscode.window.showErrorMessage(`File can't be opened! '${file.path}' is not a file!`);
-			
-		});
+		} catch (error) {
+			vscode.window.showErrorMessage(error.message);
+		}
 		
 	}
 	
@@ -59,12 +66,12 @@ export class DiffOpen {
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
 			} else if (statA.isDirectory() && statB.isDirectory()) {
-				const value = await DiffDialog.confirm(`Compare folder "${fileA.path}" with folder "${fileB.path}"`, 'Compare');
-				if (value) {
-					const left = vscode.Uri.file(fileA.path);
-					const right = vscode.Uri.file(fileB.path);
-					vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
-				}
+				// const value = await DiffDialog.confirm(`Compare folder "${fileA.path}" with folder "${fileB.path}"`, 'Compare');
+				// if (value) {
+				// 	const left = vscode.Uri.file(fileA.path);
+				// 	const right = vscode.Uri.file(fileB.path);
+				// 	vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
+				// }
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.path);
 				const right = SymlinkContentProvider.parse(fileB.path);

@@ -9,6 +9,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
 - Added button to the top right to toggle ignore end of line.
 - Added button to the top right to toggle ignore trim whitespace.
+- Added see content of symbolic links in a readonly editor or diff editor.
 
 ### Fixed
 - Fixed copying file for unchanged files.
