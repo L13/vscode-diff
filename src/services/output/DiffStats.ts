@@ -2,7 +2,7 @@
 
 import { formatAmount, formatFileSize } from '../@l13/utils/formats';
 
-import { Diff, File, Plural } from '../../types';
+import { Diff, DiffFile, Plural } from '../../types';
 import { DiffResult } from './DiffResult';
 
 import { DetailStats } from './stats/DetailStats';
@@ -99,7 +99,7 @@ UPDATES
 
 //	Functions __________________________________________________________________
 
-function countBasicStats (stats:FolderStats, file:File) {
+function countBasicStats (stats:FolderStats, file:DiffFile) {
 	
 	stats.total++;
 	stats.size += file.stat.size;

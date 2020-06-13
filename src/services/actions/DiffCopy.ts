@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 
 import { copyFile, lstatSync, mkdirsSync } from '../@l13/nodes/fse';
 
-import { CopyFilesJob, Diff, File } from '../../types';
+import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
 import { DiffDialog } from '../common/DiffDialog';
 import { DiffSettings } from '../common/DiffSettings';
@@ -23,19 +23,19 @@ const BUTTON_COPY_DONT_ASK_AGAIN = 'Copy, don\'t ask again';
 
 export class DiffCopy {
 	
-	private _onDidCopyFile:vscode.EventEmitter<{ from:File, to:File }> = new vscode.EventEmitter<{ from:File, to:File }>();
-	public readonly onDidCopyFile:vscode.Event<{ from:File, to:File }> = this._onDidCopyFile.event;
+	private _onDidCopyFile:vscode.EventEmitter<CopyFileEvent> = new vscode.EventEmitter<CopyFileEvent>();
+	public readonly onDidCopyFile:vscode.Event<CopyFileEvent> = this._onDidCopyFile.event;
 	
-	private _onDidCopyFiles:vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }> = new vscode.EventEmitter<{ data:any, from:'A'|'B', to:'A'|'B' }>();
-	public readonly onDidCopyFiles:vscode.Event<{ data:any, from:'A'|'B', to:'A'|'B' }> = this._onDidCopyFiles.event;
+	private _onDidCopyFiles:vscode.EventEmitter<CopyFilesEvent> = new vscode.EventEmitter<CopyFilesEvent>();
+	public readonly onDidCopyFiles:vscode.Event<CopyFilesEvent> = this._onDidCopyFiles.event;
 	
-	private _onInitMultiCopy:vscode.EventEmitter<{ data:any, from:'left'|'right' }> = new vscode.EventEmitter<{ data:any, from:'left'|'right' }>();
-	public readonly onInitMultiCopy:vscode.Event<{ data:any, from:'left'|'right' }> = this._onInitMultiCopy.event;
+	private _onInitMultiCopy:vscode.EventEmitter<MultiCopyEvent> = new vscode.EventEmitter<MultiCopyEvent>();
+	public readonly onInitMultiCopy:vscode.Event<MultiCopyEvent> = this._onInitMultiCopy.event;
 	
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	private async copy (file:File, dest:string) :Promise<any> {
+	private async copy (file:DiffFile, dest:string) :Promise<any> {
 		
 		const stat = lstatSync(file.path);
 		
@@ -89,15 +89,15 @@ export class DiffCopy {
 		
 	}
 	
-	public async showCopyFromToDialog (data:any, from:'A'|'B', to:'A'|'B') {
+	public async showCopyFromToDialog (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
 		const confirmCopy = DiffSettings.get('confirmCopy', true);
-		const length = data.diffResult.diffs.length;
+		const length = data.diffs.length;
 		
 		if (!length) return;
 		
-		if (confirmCopy && !data.silent) {
-			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffResult.diffs[0].id}"`} to "${data.diffResult['path' + to]}"?`;
+		if (confirmCopy && !data.multi) {
+			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffs[0].id}"`} to "${(<any>data)['path' + to]}"?`;
 			const value = await DiffDialog.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
 			if (value) {
@@ -108,7 +108,7 @@ export class DiffCopy {
 		
 	}
 	
-	public async showMultiCopyFromToDialog (data:any, from:'left'|'right') {
+	public async showMultiCopyFromToDialog (data:DiffMultiCopyMessage, from:'left'|'right') {
 		
 		const ids:string[] = data.ids;
 		const length = ids.length;
@@ -116,7 +116,7 @@ export class DiffCopy {
 		if (!length) return;
 		
 		const folderFrom = from === 'left' ? data.pathA : data.pathB;
-		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" in all diff panels?`;
+		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" across all diff panels?`;
 		const value = await DiffDialog.confirm(text, 'Copy');
 		
 		if (value) this._onInitMultiCopy.fire({ data, from });
@@ -124,23 +124,23 @@ export class DiffCopy {
 		
 	}
 	
-	private copyFromTo (data:any, from:'A'|'B', to:'A'|'B') :void {
+	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') :void {
 		
-		const folderTo = data.diffResult['path' + to];
-		const diffs:Diff[] = data.diffResult.diffs;
+		const folderTo = to === 'A' ? data.pathA : data.pathB;
+		const diffs:Diff[] = data.diffs;
 		const job:CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
 			done: () => {
 				
-				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to});
+				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to });
 				
 			},
 		};
 		
 		diffs.forEach(async (diff:Diff) => {
 			
-			const fileFrom:File = (<any>diff)['file' + from];
+			const fileFrom:DiffFile = (<any>diff)['file' + from];
 			const stat = lstatSync(fileFrom.path);
 			
 			if (stat) {
@@ -149,12 +149,13 @@ export class DiffCopy {
 				try {
 					await this.copy(fileFrom, dest);
 					diff.status = 'unchanged';
+					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
 				
-					if (!(<File>(<any>diff)['file' + to])) {
-						(<File>(<any>diff)['file' + to]) = {
+					if (!fileTo) {
+						fileTo = {
 							folder: folderTo,
 							relative: fileFrom.relative,
-							stat: lstatSync(dest),
+							stat: null,
 							
 							path: dest,
 							name: fileFrom.name,
@@ -163,12 +164,12 @@ export class DiffCopy {
 							extname: fileFrom.extname,
 							type: fileFrom.type,
 						};
+						if (to === 'A') diff.fileA = fileTo;
+						else diff.fileB = fileTo;
 					}
 					
-					this._onDidCopyFile.fire({
-						from: (<File>(<any>diff)['file' + from]),
-						to: (<File>(<any>diff)['file' + to]),
-					});
+					fileTo.stat = lstatSync(dest);
+					this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
 					
 				} catch (error) {
 					vscode.window.showErrorMessage(error.message);

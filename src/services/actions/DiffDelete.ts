@@ -2,10 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { Dialog, Diff, File } from '../../types';
+import { Dialog, Diff, DiffFile } from '../../types';
 
 import { DiffDialog } from '../common/DiffDialog';
 import { DiffSettings } from '../common/DiffSettings';
+import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
@@ -47,18 +48,18 @@ const simpleDeleteDialog:Dialog = {
 
 export class DiffDelete {
 	
-	private _onDidDeleteFile:vscode.EventEmitter<File> = new vscode.EventEmitter<File>();
-	public readonly onDidDeleteFile:vscode.Event<File> = this._onDidDeleteFile.event;
+	private _onDidDeleteFile:vscode.EventEmitter<DiffFile> = new vscode.EventEmitter<DiffFile>();
+	public readonly onDidDeleteFile:vscode.Event<DiffFile> = this._onDidDeleteFile.event;
 	
-	private _onDidDeleteFiles:vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
-	public readonly onDidDeleteFiles:vscode.Event<any> = this._onDidDeleteFiles.event;
+	private _onDidDeleteFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidDeleteFiles:vscode.Event<DiffResult> = this._onDidDeleteFiles.event;
 	
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	public async showDeleteFileDialog (data:any, side:'left'|'right') {
+	public async showDeleteFileDialog (data:DiffResult, side:'left'|'right') {
 		
-		const diffs:Diff[] = data.diffResult.diffs;
+		const diffs:Diff[] = data.diffs;
 		
 		if (!diffs.length) return;
 		
@@ -76,9 +77,9 @@ export class DiffDelete {
 		
 	}
 	
-	public async showDeleteFilesDialog (data:any) {
+	public async showDeleteFilesDialog (data:DiffResult) {
 		
-		const diffs:Diff[] = data.diffResult.diffs;
+		const diffs:Diff[] = data.diffs;
 		
 		if (!diffs.length) return;
 		
@@ -130,7 +131,7 @@ export class DiffDelete {
 			return vscode.window.showErrorMessage(error.message);
 		}
 		
-		let file = null;
+		let file:DiffFile = null;
 		
 		for (const diff of diffs) {
 			if (diff.fileA?.path === pathname) file = diff.fileA;
@@ -147,9 +148,9 @@ export class DiffDelete {
 		
 	}
 	
-	private async deleteFiles (data:any, side:'all'|'left'|'right', useTrash:boolean) {
+	private async deleteFiles (data:DiffResult, side:'all'|'left'|'right', useTrash:boolean) {
 		
-		const diffs:Diff[] = data.diffResult.diffs;
+		const diffs:Diff[] = data.diffs;
 		const folders:string[] = [];
 		const files:string[] = [];
 		
@@ -177,7 +178,7 @@ export class DiffDelete {
 
 //	Functions __________________________________________________________________
 
-function separateFilesAndFolders (file:File, folders:string[], files:string[]) {
+function separateFilesAndFolders (file:DiffFile, folders:string[], files:string[]) {
 	
 	if (file.type === 'folder') folders.push(file.path);
 	else files.push(file.path);

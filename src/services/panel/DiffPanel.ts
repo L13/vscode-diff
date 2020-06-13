@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { remove } from '../../@l13/natvies/arrays';
-import { Diff, Uri } from '../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
 import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 import { formatNameAndDesc } from '../@l13/utils/formats';
 
@@ -94,7 +94,7 @@ export class DiffPanel {
 		
 	//	compare
 		
-		this.msg.on('create:diffs', (data) => this.compare.initCompare(data));
+		this.msg.on('create:diffs', (data:DiffResult) => this.compare.initCompare(data));
 		
 		this.compare.onInitCompare(() => {
 			
@@ -104,9 +104,9 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.compare.onDidNotCompare((diffResult:DiffResult) => {
+		this.compare.onDidNotCompare((data:DiffResult) => {
 			
-			this.msg.send('create:diffs', { diffResult });
+			this.msg.send('create:diffs', data);
 			
 		}, null, this.disposables);
 		
@@ -120,9 +120,9 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.compare.onDidCompareFiles((diffResult:DiffResult) => {
+		this.compare.onDidCompareFiles((data:DiffResult) => {
 			
-			this.msg.send('create:diffs', { diffResult });
+			this.msg.send('create:diffs', data);
 			
 		}, null, this.disposables);
 		
@@ -136,13 +136,13 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.compare.onStartScanFolder((pathname) => {
+		this.compare.onStartScanFolder((pathname:string) => {
 			
 			this.output.log(`Scanning "${pathname}"`);
 			
 		}, null, this.disposables);
 		
-		this.compare.onEndScanFolder((result) => {
+		this.compare.onEndScanFolder((result:StatsMap) => {
 			
 			const total = Object.entries(result).length;
 			
@@ -150,9 +150,9 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.compare.onDidCompareFolders((diffResult:DiffResult) => {
+		this.compare.onDidCompareFolders((data:DiffResult) => {
 			
-			const diffStats = new DiffStats(diffResult);
+			const diffStats = new DiffStats(data);
 			const total = diffStats.all.total;
 			const text = `Compared ${total} entr${total === 1 ? 'y' : 'ies'}`;
 			
@@ -162,7 +162,7 @@ export class DiffPanel {
 			
 			if (!total) vscode.window.showInformationMessage('No files or folders to compare!');
 			
-			this.msg.send('create:diffs', { diffResult });
+			this.msg.send('create:diffs', data);
 			
 		}, null, this.disposables);
 		
@@ -176,7 +176,7 @@ export class DiffPanel {
 		
 	//	update diffs
 		
-		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));
+		this.msg.on('update:diffs', (data:DiffResult) => this.compare.updateDiffs(data));
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
@@ -186,17 +186,17 @@ export class DiffPanel {
 		
 		this.compare.onDidUpdateAllDiffs((diffResult:DiffResult) => {
 			
-			this.msg.send('update:diffs', { diffResult });
+			this.msg.send('update:diffs', diffResult);
 			
 		}, null, this.disposables);
 		
 	//	copy
 		
-		this.msg.on('copy:left', (data) => this.copy.showCopyFromToDialog(data, 'A', 'B'));
-		this.msg.on('copy:right', (data) => this.copy.showCopyFromToDialog(data, 'B', 'A'));
+		this.msg.on('copy:left', (data:DiffCopyMessage) => this.copy.showCopyFromToDialog(data, 'A', 'B'));
+		this.msg.on('copy:right', (data:DiffCopyMessage) => this.copy.showCopyFromToDialog(data, 'B', 'A'));
 		
-		this.msg.on('multi-copy:left', (data) => this.copy.showMultiCopyFromToDialog(data, 'left'));
-		this.msg.on('multi-copy:right', (data) => this.copy.showMultiCopyFromToDialog(data, 'right'));
+		this.msg.on('multi-copy:left', (data:DiffMultiCopyMessage) => this.copy.showMultiCopyFromToDialog(data, 'left'));
+		this.msg.on('multi-copy:right', (data:DiffMultiCopyMessage) => this.copy.showMultiCopyFromToDialog(data, 'right'));
 		
 		this.copy.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
@@ -210,32 +210,50 @@ export class DiffPanel {
 			
 			this.msg.send(from === 'A' ? 'copy:left' : 'copy:right', data);
 			
+			if (data.multi) {
+				DiffPanel.currentPanels.forEach((diffPanel) => {
+					
+					if (diffPanel !== this) diffPanel.msg.send('update:multi', data);
+					
+				});
+			}
+			
 		}, null, this.disposables);
 		
 		this.copy.onInitMultiCopy(({ data, from }) => {
 			
 			DiffPanel.currentPanels.forEach((diffPanel) => diffPanel.msg.send(`multi-copy:${from}`, data));
 			
-		});
+		}, null, this.disposables);
 		
 	//	delete
 		
-		this.msg.on('delete:files', (data) => this.delete.showDeleteFilesDialog(data));
-		this.msg.on('delete:left', (data) => this.delete.showDeleteFileDialog(data, 'left'));
-		this.msg.on('delete:right', (data) => this.delete.showDeleteFileDialog(data, 'right'));
+		this.msg.on('delete:files', (data:DiffResult) => this.delete.showDeleteFilesDialog(data));
+		this.msg.on('delete:left', (data:DiffResult) => this.delete.showDeleteFileDialog(data, 'left'));
+		this.msg.on('delete:right', (data:DiffResult) => this.delete.showDeleteFileDialog(data, 'right'));
 		
 		this.delete.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
-		this.delete.onDidDeleteFile((file) => this.output.log(`Deleted ${file.type} "${file.path}".`), null, this.disposables);
+		this.delete.onDidDeleteFile((file:DiffFile) => this.output.log(`Deleted ${file.type} "${file.path}".`), null, this.disposables);
 		
-		this.delete.onDidDeleteFiles((data) => this.msg.send('delete:files', data), null, this.disposables);
+		this.delete.onDidDeleteFiles((data:DiffResult) => {
+			
+			this.msg.send('delete:files', data);
+			
+			DiffPanel.currentPanels.forEach((diffPanel) => {
+					
+				if (diffPanel !== this) diffPanel.msg.send('update:multi', data);
+				
+			});
+			
+		}, null, this.disposables);
 		
 	//	open
 		
-		this.msg.on('open:diffToSide', (data) => DiffOpen.open(data, true));
-		this.msg.on('open:diff', (data) => DiffOpen.open(data, DiffSettings.get('openToSide', false)));
+		this.msg.on('open:diffToSide', (diff:Diff) => DiffOpen.open(diff, true));
+		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, DiffSettings.get('openToSide', false)));
 		
-		this.msg.on('reveal:file', (data) => DiffOpen.reveal(data));
+		this.msg.on('reveal:file', (pathname:string) => DiffOpen.reveal(pathname));
 		
 		this.msg.on('open:dialog', async () => {
 			
@@ -324,7 +342,7 @@ export class DiffPanel {
 		
 	}
 	
-	private saveHistory (data:any, pathA:string, pathB:string) {
+	private saveHistory (data:DiffInitMessage, pathA:string, pathB:string) {
 		
 		DiffMenu.saveRecentlyUsed(this.context, data.pathA, data.pathB);
 		

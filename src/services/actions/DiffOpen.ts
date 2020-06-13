@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, File } from '../../types';
+import { Diff, DiffFile } from '../../types';
 import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 
 //	Variables __________________________________________________________________
@@ -20,7 +20,7 @@ import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 
 export class DiffOpen {
 	
-	private static openFile (file:File, openToSide:boolean) :void {
+	private static openFile (file:DiffFile, openToSide:boolean) :void {
 		
 		fs.lstat(file.path, (error, stat) => {
 			
@@ -40,14 +40,14 @@ export class DiffOpen {
 	
 	private static openDiff (diff:Diff, openToSide:boolean) :void {
 		
-		const fileA:File = <File>diff.fileA;
+		const fileA:DiffFile = <DiffFile>diff.fileA;
 		
 		fs.lstat(fileA.path, (errorA, statA) => {
 			
 			if (errorA) return vscode.window.showErrorMessage(errorA.message);
 			
 			if (statA.isFile()) {
-				const fileB:File = <File>diff.fileB;
+				const fileB:DiffFile = <DiffFile>diff.fileB;
 				fs.lstat(fileB.path, (errorB, statB) => {
 					
 					if (errorB) return vscode.window.showErrorMessage(errorB.message);
@@ -69,28 +69,24 @@ export class DiffOpen {
 		
 	}
 	
-	public static open (data:any, openToSide:boolean) :void {
-		
-		const diff:Diff = data.diff;
+	public static open (diff:Diff, openToSide:boolean) :void {
 		
 		switch (diff.status) {
 			case 'deleted':
-				DiffOpen.openFile(<File>diff.fileA, openToSide);
+				DiffOpen.openFile(diff.fileA, openToSide);
 				break;
 			case 'modified':
 			case 'unchanged':
 				DiffOpen.openDiff(diff, openToSide);
 				break;
 			case 'untracked':
-				DiffOpen.openFile(<File>diff.fileB, openToSide);
+				DiffOpen.openFile(diff.fileB, openToSide);
 				break;
 		}
 		
 	}
 	
-	public static reveal (data:any) :void {
-		
-		const pathname:string = data.pathname;
+	public static reveal (pathname:string) :void {
 		
 		if (isMacOs) showFileInFinder(pathname);
 		else if (isWindows) showFileInExplorer(pathname);

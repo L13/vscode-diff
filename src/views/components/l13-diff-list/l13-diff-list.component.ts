@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/natvies/arrays';
-import { Diff, File } from '../../../types';
+import { Diff, DiffFile } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
@@ -82,7 +82,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
 						
-						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
+						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
 						
 					});
 					break;
@@ -154,7 +154,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
+			msg.send(altKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
 			
 		});
 		
@@ -224,7 +224,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-file');
 			
-			msg.send('reveal:file', { pathname });
+			msg.send('reveal:file', pathname);
 			
 		});
 		
@@ -611,7 +611,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
-function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]) {
+function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:string[]) {
 	
 	const column = document.createElement('l13-diff-list-file');
 	
@@ -659,7 +659,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]
 	
 }
 
-function detectExistingFolder (file:File, otherFolders:string[], sameFolders:string[]) {
+function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders:string[]) {
 	
 	if (!file) return null;
 	

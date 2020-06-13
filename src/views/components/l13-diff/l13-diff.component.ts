@@ -2,6 +2,8 @@
 
 import { addKeyListener, L13Component, L13Element, L13Query } from '../../@l13/core';
 
+import { DiffInitMessage } from '../../../types';
+
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
 
@@ -401,10 +403,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		listVM.items = [];
 		listVM.requestUpdate();
 		
-		msg.send('create:diffs', {
+		const diffInit:DiffInitMessage = {
 			pathA: leftVM.value,
 			pathB: rightVM.value,
-		});
+		};
+		
+		msg.send('create:diffs', diffInit);
 		
 	}
 	

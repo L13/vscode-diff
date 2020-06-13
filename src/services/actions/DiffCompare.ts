@@ -8,7 +8,7 @@ import { normalizeLineEnding, trimWhitespace } from '../@l13/nodes/buffers';
 import { lstatSync, walkTree } from '../@l13/nodes/fse';
 
 import { sortCaseInsensitive } from '../../@l13/natvies/arrays';
-import { Dictionary, Diff, File, StatsMap } from '../../types';
+import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
 import { DiffSettings, textfiles } from '../common/DiffSettings';
 import { DiffResult } from '../output/DiffResult';
@@ -20,11 +20,7 @@ const findEscapedEndingBrace = /\\\}/g;
 
 //	Initialize _________________________________________________________________
 
-type Start = {
-	data:any,
-	pathA:string,
-	pathB:string
-};
+
 
 //	Exports ____________________________________________________________________
 
@@ -36,14 +32,14 @@ export class DiffCompare {
 	private _onDidNotCompare:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidNotCompare:vscode.Event<DiffResult> = this._onDidNotCompare.event;
 	
-	private _onStartCompareFiles:vscode.EventEmitter<Start> = new vscode.EventEmitter<Start>();
-	public readonly onStartCompareFiles:vscode.Event<Start> = this._onStartCompareFiles.event;
+	private _onStartCompareFiles:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onStartCompareFiles:vscode.Event<StartEvent> = this._onStartCompareFiles.event;
 	
 	private _onDidCompareFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidCompareFiles:vscode.Event<DiffResult> = this._onDidCompareFiles.event;
 	
-	private _onStartCompareFolders:vscode.EventEmitter<Start> = new vscode.EventEmitter<Start>();
-	public readonly onStartCompareFolders:vscode.Event<Start> = this._onStartCompareFolders.event;
+	private _onStartCompareFolders:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onStartCompareFolders:vscode.Event<StartEvent> = this._onStartCompareFolders.event;
 	
 	private _onDidCompareFolders:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidCompareFolders:vscode.Event<DiffResult> = this._onDidCompareFolders.event;
@@ -60,9 +56,9 @@ export class DiffCompare {
 	private _onEndScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
 	public readonly onEndScanFolder:vscode.Event<StatsMap> = this._onEndScanFolder.event;
 	
-	public initCompare (data:any) :void {
+	public initCompare (data:DiffInitMessage) :void {
 		
-		this._onInitCompare.fire(data);
+		this._onInitCompare.fire();
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
@@ -90,12 +86,12 @@ export class DiffCompare {
 		
 	}
 	
-	public updateDiffs (data:any) :void {
+	public updateDiffs (data:DiffResult) :void {
 		
 		const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
 		const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
 		
-		data.diffResult.diffs.forEach((diff:Diff) => {
+		data.diffs.forEach((diff:Diff) => {
 			
 			diff.fileA.stat = lstatSync(diff.fileA.path);
 			diff.fileB.stat = lstatSync(diff.fileB.path);
@@ -106,11 +102,11 @@ export class DiffCompare {
 			
 		});
 		
-		this._onDidUpdateAllDiffs.fire(data.diffResult);
+		this._onDidUpdateAllDiffs.fire(data);
 		
 	}
 	
-	private compareFiles (data:any, pathA:string, pathB:string) {
+	private compareFiles (data:DiffInitMessage, pathA:string, pathB:string) {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
@@ -127,15 +123,12 @@ export class DiffCompare {
 		
 	}
 	
-	private async compareFolders (data:any, pathA:string, pathB:string) {
+	private async compareFolders (data:DiffInitMessage, pathA:string, pathB:string) {
 		
 		this._onStartCompareFolders.fire({ data, pathA, pathB });
 		
-		let diffResult = null;
-			
 		try {
-			diffResult = await this.createDiffs(pathA, pathB);
-			this._onDidCompareFolders.fire(diffResult);
+			this._onDidCompareFolders.fire(await this.createDiffs(pathA, pathB));
 		} catch (error) {
 			this.onError(error.message, pathA, pathB);
 		}
@@ -235,13 +228,13 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				fileA: null,
 				fileB: file,
 			};
-		} else compareDiff(diff, <File>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+		} else compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
 		
 	});
 	
 }
 
-function compareDiff (diff:Diff, fileA:File, fileB:File, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
+function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
 	
 	diff.status = 'unchanged';
 	
