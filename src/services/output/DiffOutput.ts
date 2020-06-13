@@ -31,6 +31,9 @@ export class DiffOutput {
 		}
 		
 		DiffOutput.currentOutput = this;
+		DiffOutput.outputs.push(this);
+		
+		this.clear();
 		
 	}
 	
@@ -81,9 +84,9 @@ export class DiffOutput {
 	public dispose () :void {
 		
 		remove(DiffOutput.outputs, this);
-		DiffOutput.currentOutput = DiffOutput.outputs[DiffOutput.outputs.length - 1];
 		
 		if (!DiffOutput.outputs.length && DiffOutput.output) {
+			DiffOutput.output.clear(); // Fixes uncleared output panel
 			DiffOutput.output.dispose();
 			DiffOutput.output = undefined;
 		}

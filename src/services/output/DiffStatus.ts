@@ -34,10 +34,10 @@ export class DiffStatus {
 			context.subscriptions.push(DiffStatus.statusBarItem);
 		}
 		
-		this.update();
-		
 		DiffStatus.currentStatus = this;
 		DiffStatus.status.push(this);
+		
+		this.update();
 		
 	}
 	
@@ -61,7 +61,6 @@ export class DiffStatus {
 	public dispose () :void {
 		
 		remove(DiffStatus.status, this);
-		DiffStatus.currentStatus = DiffStatus.status[DiffStatus.status.length - 1];
 		
 		if (!DiffStatus.status.length && DiffStatus.statusBarItem) {
 			DiffStatus.statusBarItem.dispose();

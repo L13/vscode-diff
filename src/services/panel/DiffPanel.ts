@@ -323,9 +323,11 @@ export class DiffPanel {
 			}
 		}
 		
-		if (!DiffPanel.currentPanel || !DiffPanel.currentPanel.panel.active) {
-			this.setContextFocus(false);
-		}
+		if (DiffPanel.currentPanel) {
+			DiffPanel.currentPanel.status.activate();
+			DiffPanel.currentPanel.output.activate();
+			this.setContextFocus(DiffPanel.currentPanel.panel.active);
+		} else this.setContextFocus(false);
 		
 	}
 	
