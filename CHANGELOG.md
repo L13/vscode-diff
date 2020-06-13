@@ -5,6 +5,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 
 ### Added
 - Added multi panel support.
+- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux.
 - Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
 - Added button to the top right to toggle ignore end of line.
 - Added button to the top right to toggle ignore trim whitespace.

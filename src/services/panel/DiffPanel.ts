@@ -166,6 +166,14 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
+	//	compare multi
+		
+		this.msg.on('compare:multi', () => {
+			
+			DiffPanel.currentPanels.forEach((diffPanel) => diffPanel.msg.send('compare:multi'));
+			
+		});
+		
 	//	update diffs
 		
 		this.msg.on('update:diffs', (data) => this.compare.updateDiffs(data));

@@ -9,6 +9,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 ## What's new in L13 Diff 0.25.0
 
 - Added multi panel support.
+- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux.
 - Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
 - Added button to the top right to toggle ignore end of line.
 - Added button to the top right to toggle ignore trim whitespace.
@@ -154,14 +155,17 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### All platforms
 
 * `Click` - Start a comparison.
+* `Alt + Click` - Start a comparison in all diff panels.
 
 #### macOS
 
 * `Cmd + C` - Same as `Click`.
+* `Alt + Cmd + C` - Same as `Alt + Click`.
 
 #### Windows / Linux
 
 * `Ctrl + C` - Same as `Click`.
+* `Alt + Ctrl + C` - Same as `Alt + Click`.
 
 ### Actions
 
