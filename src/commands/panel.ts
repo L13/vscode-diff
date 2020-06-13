@@ -69,7 +69,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 function sendUpdateFiles () {
 	
-	DiffPanel.send('update:files', { files: updateFiles });
+	DiffPanel.sendAll('update:files', { files: updateFiles });
 	updateFiles = [];
 	timeoutId = null;
 	

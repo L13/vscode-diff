@@ -448,6 +448,12 @@ export class DiffPanel {
 		
 	}
 	
+	public static sendAll (name:string, data:any) {
+		
+		DiffPanel.currentPanels.forEach((diffPanel) => diffPanel.msg.send(name, data));
+		
+	}
+	
 }
 
 //	Functions __________________________________________________________________
