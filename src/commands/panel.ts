@@ -19,6 +19,13 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.create(context)));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openAndCompare', (left, right, openToSide) => {
+		
+		if (openToSide) DiffPanel.create(context, [left, right], true);
+		else DiffPanel.createOrShow(context, [left, right], true);
+		
+	}));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', async (...uris:any[]) => {
 		
 		if (!uris.length) {

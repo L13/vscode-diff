@@ -8,6 +8,7 @@ import * as output from './commands/output';
 import * as panel from './commands/panel';
 import * as projects from './commands/projects';
 import * as settings from './commands/settings';
+import * as symlinks from './commands/symlinks';
 
 //	Variables __________________________________________________________________
 
@@ -27,6 +28,7 @@ export function activate (context:vscode.ExtensionContext) {
 	panel.activate(context);
 	projects.activate(context);
 	settings.activate(context);
+	symlinks.activate(context);
 	
 }
 
