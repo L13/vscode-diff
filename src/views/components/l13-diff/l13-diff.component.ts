@@ -310,6 +310,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		msg.on('cancel', () => this.enable());
 		
+		msg.on('focus', () => setTimeout(() => window.focus(), 0)); // Fixes losing focus if other tab has been closed
+		
 		msg.on('update:paths', (data) => {
 			
 			if (data.uris.length) {
@@ -355,6 +357,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	private enable () :void {
 		
 		enable(!this.list.content.querySelector('.-selected'));
+		
 		this.list.focus();
 		
 	}
