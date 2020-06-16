@@ -1,7 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { spawn } from 'child_process';
-import * as fs from 'fs';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -10,12 +9,11 @@ import { Diff, DiffFile } from '../../types';
 import { lstat } from '../@l13/nodes/fse';
 import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 
-import { DiffDialog } from '../common/DiffDialog';
 import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 //	Variables __________________________________________________________________
 
-
+const findBackslashEnd = /\\$/;
 
 //	Initialize _________________________________________________________________
 
@@ -105,9 +103,18 @@ export class DiffOpen {
 	
 	public static reveal (pathname:string) :void {
 		
-		if (isMacOs) showFileInFinder(pathname);
-		else if (isWindows) showFileInExplorer(pathname);
-		else showFileInFolder(pathname);
+		let process:ChildProcessWithoutNullStreams = null;
+		
+		if (isMacOs) process = showFileInFinder(pathname);
+		else if (isWindows) process = showFileInExplorer(pathname);
+		else process = showFileInFolder(pathname);
+		
+		process.on('error', (error:Error) => {
+			
+			process.kill();
+			vscode.window.showErrorMessage(error.message);
+			
+		});
 		
 	}
 	
@@ -117,39 +124,18 @@ export class DiffOpen {
 
 function showFileInFinder (pathname:string) {
 	
-	const process = spawn('open', ['-R', pathname || '/']);
-	
-	process.on('error', (error:Error) => {
-		
-		process.kill();
-		vscode.window.showErrorMessage(error.message);
-		
-	});
+	return spawn('open', ['-R', pathname || '/']);
 	
 }
 
 function showFileInExplorer (pathname:string) {
 	
-	const process = spawn('explorer', ['/select,', pathname || 'c:\\']);
-	
-	process.on('error', (error:Error) => {
-		
-		process.kill();
-		vscode.window.showErrorMessage(error.message);
-		
-	});
+	return spawn('explorer', ['/select,', pathname.replace(findBackslashEnd, '') || 'c:\\']);
 	
 }
 
 function showFileInFolder (pathname:string) {
 	
-	const process = spawn('xdg-open', [path.dirname(pathname) || '/']);
-	
-	process.on('error', (error:Error) => {
-		
-		process.kill();
-		vscode.window.showErrorMessage(error.message);
-		
-	});
+	return spawn('xdg-open', [path.dirname(pathname) || '/']);
 	
 }

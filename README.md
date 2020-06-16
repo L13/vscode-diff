@@ -8,12 +8,12 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ## What's new in L13 Diff 0.25.0
 
-- Added multi panel support.
-- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux.
-- Added multi copy support. Please read description for `Copy files to the left/right folder` with `Alt + Click` to see how it works.
-- Added button to the top right to toggle ignore end of line.
-- Added button to the top right to toggle ignore trim whitespace.
-- Added see content of symbolic links in a readonly editor or diff editor.
+- Added multi panel support. Open multiple panels by click on the new icon in the favorites view.
+- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux to start a comparison in all panels immediately.
+- Added multi copy support. Please read description at `Copy files to the left/right folder` for `Alt + Click` to see how it works.
+- Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
+- Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
+- Added to see the content of symbolic links in a readonly editor or diff editor.
 
 ## Features
 
@@ -37,7 +37,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Ignores line endings in text files for a comparison.
 * Ignores leading and trailing whitespace in text files.
 * Auto updates the list view if a file has been saved in the same window as the comparison.
-* Supports multiple panels
+* Open multiple panels by click on the icon in the favorites view.
 * Copy the same files from the same location to multiple folders at once.
 
 ### Welcome
