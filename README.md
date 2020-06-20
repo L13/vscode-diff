@@ -14,6 +14,7 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 - Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
 - Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
 - Added to see the content of symbolic links in a readonly editor or diff editor.
+- Added `Select for Compare`, `Compare with Selected` and `Compare Selected` to explorer list context menu.
 
 ## Features
 
@@ -93,9 +94,9 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
-	* `default` (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
-	* `on` Ignores leading and trailing whitespace for a comparison in a text file.
-	* `off` Does not ignore leading and trailing whitespace for a comparison in a text file.
+	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
+	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
+	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
 
 [1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 

@@ -10,11 +10,15 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 - Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
 - Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
 - Added to see the content of symbolic links in a readonly editor or diff editor.
+- Added `Select for Compare`, `Compare with Selected` and `Compare Selected` to explorer list context menu.
 
 ### Fixed
 - Fixed copying file for unchanged files.
 - Fixed `Reveal in Explorer` on windows for folders.
 - Fixed losing focus if another tab has been closed.
+
+### Removed
+- Removed `Open in L13 Diff` from explorer list context menu.
 
 ## [0.24.0] - 2020-06-07
 

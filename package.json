@@ -39,6 +39,9 @@
 		"onCommand:l13Diff.showOutput",
 		"onCommand:l13Diff.compareProjectWithWorkspace",
 		"onCommand:l13Diff.openProject",
+		"onCommand:l13Diff.selectForCompare",
+		"onCommand:l13Diff.compareWithSelected",
+		"onCommand:l13Diff.compareSelected",
 		"onView:l13DiffFavorites",
 		"onView:l13DiffHistory",
 		"onWebviewPanel:l13Diff"
@@ -210,6 +213,18 @@
 					"light": "images/toggle-eol-disabled-light.svg",
 					"dark": "images/toggle-eol-disabled-dark.svg"
 				}
+			},
+			{
+				"command": "l13Diff.selectForCompare",
+				"title": "Select for Compare"
+			},
+			{
+				"command": "l13Diff.compareWithSelected",
+				"title": "Compare with Selected"
+			},
+			{
+				"command": "l13Diff.compareSelected",
+				"title": "Compare Selected"
 			}
 		],
 		"keybindings": [
@@ -292,12 +307,35 @@
 				{
 					"command": "l13Diff.openProject",
 					"when": "false"
+				},
+				{
+					"command": "l13Diff.selectForCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareWithSelected",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareSelected",
+					"when": "false"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "l13Diff.open",
-					"group": "3_compare@1"
+					"command": "l13Diff.selectForCompare",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
+				},
+				{
+					"command": "l13Diff.compareWithSelected",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection && l13DiffSelectedFolder"
+				},
+				{
+					"command": "l13Diff.compareSelected",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listDoubleSelection"
 				}
 			],
 			"view/title": [

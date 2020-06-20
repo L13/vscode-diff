@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 import * as favorites from './commands/favorites';
 import * as history from './commands/history';
+import * as list from './commands/list';
 import * as output from './commands/output';
 import * as panel from './commands/panel';
 import * as projects from './commands/projects';
@@ -24,6 +25,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	favorites.activate(context);
 	history.activate(context);
+	list.activate(context);
 	output.activate(context);
 	panel.activate(context);
 	projects.activate(context);
