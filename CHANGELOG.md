@@ -6,7 +6,7 @@ All notable changes to the "L13 Diff" extension will be documented in this file.
 ### Added
 - Added multi panel support. Open multiple panels by click on the new icon in the favorites view.
 - Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux to start a comparison in all panels immediately.
-- Added multi copy support. Please read description at `Copy files to the left/right folder` for `Alt + Click` to see how it works.
+- Added multi copy support. Please read the description `Copy files to the left/right folder` for `Alt + Click` to see how it works.
 - Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
 - Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
 - Added to see the content of symbolic links in a readonly editor or diff editor.
