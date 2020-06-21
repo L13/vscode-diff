@@ -4,7 +4,7 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/preview.png)
 
-This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
+> This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
 ## What's new in Diff Folders 0.26.0
 
