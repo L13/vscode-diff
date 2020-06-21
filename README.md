@@ -9,7 +9,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in Diff Folders 0.26.0
 
 - Changed display name for extension from `L13 Diff` to `Diff Folders`.
-- Added drag'n drop support for path names in list view.
+- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Dragn Drop` t osee how it works.
 
 ## Features
 
@@ -17,7 +17,7 @@ Compare two folders in Visual Studio Code.
 * Supports a history for recently used files, folders and previous comparisons.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
-* Drag'n Drop files and folders from the Finder/Explorer into the input fields.
+* Drag'n drop files and folders from the Finder/Explorer into the input fields.
 * Copy files and folders from left to right or vi­ce ver­sa. Symbolic links on Windows can only be copied if Visual Studio Code runs in administrator mode otherwise an error occurs.
 * Select all files, folders and symlinks by status.
 * Toggle the visiblity of list items by status.
@@ -225,6 +225,10 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### Linux
 
 * `Open Containing Folder` - Shows the current file in the file manager.
+
+### List Drag'n Drop
+
+- `Drag'n Drop` - Drag a path in the list view to another path of the same type (file or symbolic link) and let it drop to open a diff with these two files. Paths can also be dropped into the input fields and the search widget.
 
 ### Search Widget
 
