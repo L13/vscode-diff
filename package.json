@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "L13 Diff",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.24.0",
+	"version": "0.25.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -39,6 +39,9 @@
 		"onCommand:l13Diff.showOutput",
 		"onCommand:l13Diff.compareProjectWithWorkspace",
 		"onCommand:l13Diff.openProject",
+		"onCommand:l13Diff.selectForCompare",
+		"onCommand:l13Diff.compareWithSelected",
+		"onCommand:l13Diff.compareSelected",
 		"onView:l13DiffFavorites",
 		"onView:l13DiffHistory",
 		"onWebviewPanel:l13Diff"
@@ -124,6 +127,14 @@
 				"title": "Open & Compare"
 			},
 			{
+				"command": "l13Diff.openFavoriteInNewPanel",
+				"title": "Open in New Panel",
+				"icon": {
+					"light": "images/open-diff-light.svg",
+					"dark": "images/open-diff-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.renameFavorite",
 				"title": "Rename"
 			},
@@ -148,6 +159,14 @@
 				"title": "Open & Compare"
 			},
 			{
+				"command": "l13Diff.openComparisonInNewPanel",
+				"title": "Open in New Panel",
+				"icon": {
+					"light": "images/open-diff-light.svg",
+					"dark": "images/open-diff-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.removeComparison",
 				"title": "Delete"
 			},
@@ -162,6 +181,50 @@
 			{
 				"command": "l13Diff.openProject",
 				"title": "Open in L13 Diff"
+			},
+			{
+				"command": "l13Diff.ignoreWhitespace",
+				"title": "Ignore Leading/Trailing Whitespace",
+				"icon": {
+					"light": "images/toggle-whitespace-light.svg",
+					"dark": "images/toggle-whitespace-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.compareWhitespace",
+				"title": "Compare Leading/Trailing Whitespace",
+				"icon": {
+					"light": "images/toggle-whitespace-disabled-light.svg",
+					"dark": "images/toggle-whitespace-disabled-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.ignoreEndOfLine",
+				"title": "Ignore End of Line",
+				"icon": {
+					"light": "images/toggle-eol-light.svg",
+					"dark": "images/toggle-eol-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.compareEndOfLine",
+				"title": "Compare End of Line",
+				"icon": {
+					"light": "images/toggle-eol-disabled-light.svg",
+					"dark": "images/toggle-eol-disabled-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.selectForCompare",
+				"title": "Select for Compare"
+			},
+			{
+				"command": "l13Diff.compareWithSelected",
+				"title": "Compare with Selected"
+			},
+			{
+				"command": "l13Diff.compareSelected",
+				"title": "Compare Selected"
 			}
 		],
 		"keybindings": [
@@ -206,6 +269,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.openFavoriteInNewPanel",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.renameFavorite",
 					"when": "false"
 				},
@@ -226,6 +293,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.openComparisonInNewPanel",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.removeComparison",
 					"when": "false"
 				},
@@ -236,12 +307,35 @@
 				{
 					"command": "l13Diff.openProject",
 					"when": "false"
+				},
+				{
+					"command": "l13Diff.selectForCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareWithSelected",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareSelected",
+					"when": "false"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "l13Diff.open",
-					"group": "3_compare@1"
+					"command": "l13Diff.selectForCompare",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
+				},
+				{
+					"command": "l13Diff.compareWithSelected",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection && l13DiffSelectedFolder"
+				},
+				{
+					"command": "l13Diff.compareSelected",
+					"group": "3_compare@1",
+					"when": "explorerResourceIsFolder && listDoubleSelection"
 				}
 			],
 			"view/title": [
@@ -268,6 +362,11 @@
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
+					"command": "l13Diff.openFavoriteInNewPanel",
+					"group": "inline",
+					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
 					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
@@ -285,6 +384,11 @@
 				{
 					"command": "l13Diff.openComparisonAndCompare",
 					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.openComparisonInNewPanel",
+					"group": "inline",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
@@ -307,7 +411,37 @@
 				{
 					"when": "l13DiffFocus",
 					"command": "l13Diff.addToFavorites",
-					"group": "navigation"
+					"group": "navigation@1"
+				},
+				{
+					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
+					"command": "l13Diff.ignoreEndOfLine",
+					"group": "navigation@2"
+				},
+				{
+					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
+					"command": "l13Diff.compareEndOfLine",
+					"group": "navigation@2"
+				},
+				{
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
+					"command": "l13Diff.ignoreWhitespace",
+					"group": "navigation@3"
+				},
+				{
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
+					"command": "l13Diff.ignoreWhitespace",
+					"group": "navigation@3"
+				},
+				{
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
+					"command": "l13Diff.compareWhitespace",
+					"group": "navigation@3"
+				},
+				{
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
+					"command": "l13Diff.compareWhitespace",
+					"group": "navigation@3"
 				}
 			]
 		},

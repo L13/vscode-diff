@@ -74,7 +74,7 @@ gulp.task('icons:json', () => {
 	
 });
 
-gulp.task('icons', gulp.series('icons:common', 'icons:json'));
+gulp.task('icons', gulp.series('icons:fix', 'icons:common', 'icons:json'));
 
 gulp.task('style:common', () => {
 	

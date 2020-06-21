@@ -2,6 +2,8 @@
 
 import { addKeyListener, L13Component, L13Element, L13Query } from '../../@l13/core';
 
+import { DiffInitMessage } from '../../../types';
+
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
 
@@ -114,7 +116,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	//	compare view
 		
-		this.compare.addEventListener('compare', () => this.initCompare());
+		this.compare.addEventListener('compare', (event) => {
+			
+			if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
+			else this.initCompare();
+			
+		});
+		
+		msg.on('compare:multi', () => this.initCompare());
 		
 		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => {
 			
@@ -122,6 +131,16 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 				event.stopPropagation();
 				event.preventDefault();
 				this.initCompare();
+			}
+			
+		});
+		
+		addKeyListener(window, { key: 'Alt+Ctrl+C', mac: 'Alt+Cmd+C' }, () => {
+			
+			if (!this.left.focused && !this.right.focused) {
+				event.stopPropagation();
+				event.preventDefault();
+				msg.send('compare:multi');
 			}
 			
 		});
@@ -159,8 +178,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		this.actions.addEventListener('copy', (event) => {
 			
+			const detail = (<any>event).detail;
+			
 			disable();
-			this.list.copy((<any>event).detail.from);
+			
+			if (detail.altKey) this.list.multiCopy(detail.from);
+			else this.list.copy(detail.from);
 			
 		});
 		
@@ -198,13 +221,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, () => {
+		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, async () => {
 			
 			if (!search.parentNode) {
-				search.viewmodel.enable().then(() => search.focus());
 				this.widgets.appendChild(search);
 				this.list.classList.add('-widgets');
 				search.classList.add('-movein');
+				await search.viewmodel.enable();
+				search.focus()
 			} else search.focus();
 			
 		});
@@ -215,6 +239,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		listVM.on('copied', () => this.enable());
 		listVM.on('deleted', () => this.enable());
 		listVM.on('updated', () => this.enable());
+		listVM.on('multicopy', () => disable());
 		
 		listVM.on('filtered', () => {
 			
@@ -285,6 +310,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		msg.on('cancel', () => this.enable());
 		
+		msg.on('focus', () => setTimeout(() => window.focus(), 0)); // Fixes losing focus if other tab has been closed
+		
 		msg.on('update:paths', (data) => {
 			
 			if (data.uris.length) {
@@ -330,6 +357,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	private enable () :void {
 		
 		enable(!this.list.content.querySelector('.-selected'));
+		
 		this.list.focus();
 		
 	}
@@ -378,10 +406,12 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		listVM.items = [];
 		listVM.requestUpdate();
 		
-		msg.send('create:diffs', {
+		const diffInit:DiffInitMessage = {
 			pathA: leftVM.value,
 			pathB: rightVM.value,
-		});
+		};
+		
+		msg.send('create:diffs', diffInit);
 		
 	}
 	

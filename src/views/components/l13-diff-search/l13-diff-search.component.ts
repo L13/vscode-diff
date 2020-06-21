@@ -78,10 +78,13 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		addKeyListener(this, { key: 'Escape' }, () => this.close());
 		
-		addKeyListener(this, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, () => {
+		addKeyListener(this, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, (event) => {
 			
 			this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
 			this.viewmodel.requestUpdate();
+			
+			event.preventDefault();
+			event.stopPropagation();
 			
 		});
 		

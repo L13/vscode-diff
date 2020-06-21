@@ -38,7 +38,7 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 			mac: 'Cmd+C',
 		});
 		
-		this.button.addEventListener('click', () => this.dispatchCustomEvent('compare'));
+		this.button.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('compare', { altKey }));
 		
 	}
 	

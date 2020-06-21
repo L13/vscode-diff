@@ -101,6 +101,21 @@ export function lstatSync (pathname:string) {
 	
 }
 
+export function lstat (pathname:string) :Promise<fs.Stats> {
+	
+	return new Promise((resolve, reject) => {
+		
+		fs.lstat(pathname, (error, stat) => {
+			
+			if (error) reject(error);
+			else resolve(stat);
+			
+		});
+		
+	});
+	
+}
+
 export function createFindGlob (ignore:string[]) {
 	
 	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
