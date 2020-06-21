@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
+import { remove } from '../../../@l13/natvies/arrays';
 import { EventListener } from '../../../types';
+
 import { Event } from './event.class';
 
 const { push } = Array.prototype;
@@ -39,7 +41,7 @@ export class EventDispatcher {
 		
 		if (!listeners) return false;
 		
-		return listeners.indexOf(listener) !== -1;
+		return listeners.includes(listener);
 		
 	}
 	
@@ -76,8 +78,7 @@ export class EventDispatcher {
 		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
-			const index = listeners.indexOf(listener);
-			if (index !== -1) listeners.splice(index, 1);
+			remove(listeners, listener);
 			if (!listeners.length) delete this[LISTENERS][name];
 		}
 		

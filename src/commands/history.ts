@@ -2,9 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import { DiffHistory } from '../services/DiffHistory';
-import { DiffMenu } from '../services/DiffMenu';
-import { DiffPanel } from '../services/DiffPanel';
+import { DiffDialog } from '../services/common/DiffDialog';
+import { DiffMenu } from '../services/panel/DiffMenu';
+import { DiffPanel } from '../services/panel/DiffPanel';
+import { DiffHistory } from '../services/sidebar/DiffHistory';
 
 //	Variables __________________________________________________________________
 
@@ -40,18 +41,22 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openComparisonInNewPanel', ({ comparison }) => {
+		
+		DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+		
+	}));
+	
 	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.removeComparison', ({ comparison }) => DiffHistory.removeComparison(context, comparison)));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.clearHistory', async () => {
 		
-		vscode.window.showInformationMessage('Delete the complete history?', { modal: true }, 'Delete').then((value) => {
-			
-			if (value) {
-				DiffMenu.clearHistory(context);
-				DiffHistory.clearComparisons(context);
-			}
-			
-		});
+		const value = await DiffDialog.confirm('Delete the complete history?', 'Delete');
+		
+		if (value) {
+			DiffMenu.clearHistory(context);
+			DiffHistory.clearComparisons(context);
+		}
 		
 	}));
 	

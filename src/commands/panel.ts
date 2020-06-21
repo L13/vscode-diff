@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { DiffPanel } from '../services/DiffPanel';
+import { DiffPanel } from '../services/panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -17,21 +17,26 @@ let timeoutId:NodeJS.Timeout = null;
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.createOrShow(context)));
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.create(context)));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', (...uris:any[]) => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openAndCompare', (left, right, openToSide) => {
+		
+		if (openToSide) DiffPanel.create(context, [left, right], true);
+		else DiffPanel.createOrShow(context, [left, right], true);
+		
+	}));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', async (...uris:any[]) => {
 		
 		if (!uris.length) {
-			vscode.window.showOpenDialog({
+			const dialogUris = await vscode.window.showOpenDialog({
 				canSelectFiles: true,
 				canSelectFolders: true,
 				canSelectMany: true,
-			}).then((dialogUris) => {
-				
-				if (dialogUris) DiffPanel.createOrShow(context, dialogUris.slice(0, 2));
-				
 			});
-		} else DiffPanel.createOrShow(context, uris[1].slice(0, 2));
+			
+			if (dialogUris) DiffPanel.create(context, dialogUris.slice(0, 2));
+		} else DiffPanel.create(context, uris[1].slice(0, 2));
 		
 	}));
 	
@@ -64,7 +69,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 function sendUpdateFiles () {
 	
-	DiffPanel.send('update:files', { files: updateFiles });
+	DiffPanel.sendAll('update:files', { files: updateFiles });
 	updateFiles = [];
 	timeoutId = null;
 	

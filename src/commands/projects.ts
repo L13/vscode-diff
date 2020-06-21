@@ -2,7 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { DiffPanel } from '../services/DiffPanel';
+import { DiffSettings } from '../services/common/DiffSettings';
+import { DiffPanel } from '../services/panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -16,17 +17,14 @@ import { DiffPanel } from '../services/DiffPanel';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareProjectWithWorkspace', ({ project }) => {
+	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareProjectWithWorkspace', async ({ project }) => {
 		
-		const compare = vscode.workspace.getConfiguration('l13Diff').get('openFavoriteAndCompare', false);
+		const compare = DiffSettings.get('openFavoriteAndCompare', false);
 		const workspaces = workspaceFoldersQuickPickItems();
 		
 		if (workspaces.length > 1) {
-			vscode.window.showQuickPick(workspaces).then((value:any) => {
-				
-				if (value) DiffPanel.createOrShow(context, [{ fsPath: value.description }, { fsPath: project.path }], compare);
-				
-			});
+			const value:any = await vscode.window.showQuickPick(workspaces);
+			if (value) DiffPanel.createOrShow(context, [{ fsPath: value.description }, { fsPath: project.path }], compare);
 		} else if (workspaces.length === 1) {
 			DiffPanel.createOrShow(context, [{ fsPath: workspaces[0].description }, { fsPath: project.path }], compare);
 		} else vscode.window.showErrorMessage('No workspace available!');

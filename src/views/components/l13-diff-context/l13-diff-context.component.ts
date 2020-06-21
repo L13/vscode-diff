@@ -49,7 +49,7 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 		addButtonActiveStyleEvents(this.buttonDelete);
 		addButtonActiveStyleEvents(this.buttonReveal);
 		
-		this.buttonCopy.addEventListener('click', () => this.dispatchCustomEvent('copy'));
+		this.buttonCopy.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('copy', { altKey }));
 		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
 		this.buttonReveal.addEventListener('click', () => this.dispatchCustomEvent('reveal'));
 		

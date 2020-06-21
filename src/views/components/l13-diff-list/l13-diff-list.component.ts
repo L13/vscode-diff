@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, File } from '../../../types';
+import { remove } from '../../../@l13/natvies/arrays';
+import { Diff, DiffFile } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
@@ -81,7 +82,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'Enter':
 					this.getIdsBySelection().forEach((id) => {
 						
-						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
+						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
 						
 					});
 					break;
@@ -135,10 +136,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				} else if (isMetaKey(ctrlKey, metaKey)) {
 					listRow.classList.toggle('-selected');
 					this.cacheSelectedListItems = [];
-					if (!listRow.classList.contains('-selected')) {
-						const index = this.cacheSelectionHistory.indexOf(listRow);
-						if (index !== -1) this.cacheSelectionHistory.splice(index, 1);
-					} else this.cacheSelectionHistory.push(listRow);
+					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
+					else this.cacheSelectionHistory.push(listRow);
 					if (this.content.querySelector('.-selected')) this.dispatchCustomEvent('selected');
 					else this.dispatchCustomEvent('unselected');
 				} else {
@@ -155,7 +154,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			msg.send(altKey ? 'open:diffToSide' : 'open:diff', { diff: this.viewmodel.getDiffById(id) });
+			msg.send(altKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
 			
 		});
 		
@@ -183,7 +182,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
-		this.context.addEventListener('copy', ({ target }) => {
+		this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
 			if (this.disabled) return;
 			
@@ -196,7 +195,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (!isSelected) this.cacheCurrentSelections = selections;
 			
 			this.dispatchCustomEvent('copy');
-			this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			
+			if (detail.altKey) this.viewmodel.multiCopy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			else this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
 			
 		});
 		
@@ -223,7 +224,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-file');
 			
-			msg.send('reveal:file', { pathname });
+			msg.send('reveal:file', pathname);
 			
 		});
 		
@@ -504,6 +505,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	public multiCopy (from:'left'|'right') :void {
+		
+		this.viewmodel.multiCopy(from, this.getIdsBySelection());
+		
+	}
+	
 	public delete () :void {
 		
 		this.viewmodel.delete(this.getIdsBySelection());
@@ -604,7 +611,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
-function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]) {
+function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:string[]) {
 	
 	const column = document.createElement('l13-diff-list-file');
 	
@@ -652,7 +659,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:File, exists:string[]
 	
 }
 
-function detectExistingFolder (file:File, otherFolders:string[], sameFolders:string[]) {
+function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders:string[]) {
 	
 	if (!file) return null;
 	

@@ -6,16 +6,15 @@ Compare two folders in Visual Studio Code.
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.24.0
+## What's new in L13 Diff 0.25.0
 
-- Added context menu to copy, delete and reveal a file in the list view.
-- Added `l13Diff.ignoreTrimWhitespace` to ignore leading and trailing whitespace in text files.
-- Added auto update for list view if a file has been saved and is part of the current comparison.
-- Added `l13Diff.confirmCopy` to avoid confirmation dailog. Added also button 'Copy, don't ask again' to dialog.
-- Added `l13Diff.confirmDelete` to avoid confirmation dailog. Added also button 'Delete, don't ask again' to dialog.
-- Added output messages if files have been copied, deleted or updated.
-- Diff panel state will be saved between sessions.
-- Added overview ruler for selections in list view to scrollbar.
+- Added multi panel support. Open multiple panels by click on the new icon in the favorites view.
+- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux to start a comparison in all panels immediately.
+- Added multi copy support. Please read the description `Copy files to the left/right folder` for `Alt + Click` to see how it works.
+- Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
+- Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
+- Added to see the content of symbolic links in a readonly editor or diff editor.
+- Added `Select for Compare`, `Compare with Selected` and `Compare Selected` to explorer list context menu.
 
 ## Features
 
@@ -39,6 +38,8 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Ignores line endings in text files for a comparison.
 * Ignores leading and trailing whitespace in text files.
 * Auto updates the list view if a file has been saved in the same window as the comparison.
+* Open multiple panels by click on the icon in the favorites view.
+* Copy the same files from the same location to multiple folders at once.
 
 ### Welcome
 
@@ -93,9 +94,9 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
-	* `default` (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
-	* `on` Ignores leading and trailing whitespace for a comparison in a text file.
-	* `off` Does not ignore leading and trailing whitespace for a comparison in a text file.
+	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
+	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
+	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
 
 [1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
@@ -156,14 +157,24 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### All platforms
 
 * `Click` - Start a comparison.
+* `Alt + Click` - Start a comparison in all diff panels.
 
 #### macOS
 
 * `Cmd + C` - Same as `Click`.
+* `Alt + Cmd + C` - Same as `Alt + Click`.
 
 #### Windows / Linux
 
 * `Ctrl + C` - Same as `Click`.
+* `Alt + Ctrl + C` - Same as `Alt + Click`.
+
+### Actions
+
+#### Copy files to the left/right folder.
+
+* `Click` - Copy all selected files to the other folder.
+* `Alt + Click` - Copy all selected files in one diff panel in all other diff panels from one source to the other folders at once. Open two or more diff panels and make a comparison with the same folder on the same side. Select all the files you want to copy in one diff panel and press the button with `Alt + Click` to copy all the files from the same source to all other folders, too.
 
 ### List
 
@@ -173,8 +184,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
 * `Double Click` - Open a diff or file.
 * `Alt + Double Click` - Open diff or file to side.
-* `Enter` - Open diff or file.
-* `Ctrl + Enter` - Open diff or file to side.
+* `Enter` - Same as `Double Click`.
+* `Ctrl + Enter` - Same as `Alt + Double Click`.
 * `Escape` - Unselect all items in the list view.
 
 #### macOS
@@ -205,7 +216,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### All platforms
 
-* `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied.
+* `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied. This button supports copying files to multiple folders at once with `Alt + Click`, too. Please read the description for `Copy files to the left/right folder` to see how it works.
 * `Delete` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be deleted. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
 
 #### macOS

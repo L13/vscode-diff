@@ -63,9 +63,9 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		addButtonActiveStyleEvents(this.selectAll);
 		addButtonActiveStyleEvents(this.copyLeft);
 		
-		this.copyRight.addEventListener('click', () => {
+		this.copyRight.addEventListener('click', ({ altKey }) => {
 			
-			this.dispatchCustomEvent('copy', { from: 'right' });
+			this.dispatchCustomEvent('copy', { from: 'right', altKey });
 			
 		});
 		
@@ -93,9 +93,9 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 			
 		});
 		
-		this.copyLeft.addEventListener('click', () => {
+		this.copyLeft.addEventListener('click', ({ altKey }) => {
 			
-			this.dispatchCustomEvent('copy', { from: 'left' });
+			this.dispatchCustomEvent('copy', { from: 'left', altKey });
 			
 		});
 		
