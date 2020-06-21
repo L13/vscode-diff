@@ -5,6 +5,8 @@ import { addKeyListener, L13Class, L13Component, L13Element, L13Query, setLabel 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
+import { DiffFile } from '../../../@types/diffs';
+
 import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
@@ -75,6 +77,17 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		
 		this.inputSearchterm.placeholder = 'Find';
+		
+		this.inputSearchterm.addEventListener('dragover', (event) => event.preventDefault());
+		
+		this.inputSearchterm.addEventListener('drop', ({ dataTransfer }:DragEvent) => {
+			
+			if (dataTransfer) {
+				const file = dataTransfer.getData('data-diff-file');
+				if (file) this.viewmodel.searchterm = (<DiffFile>JSON.parse(file)).name;
+			}
+			
+		});
 		
 		addKeyListener(this, { key: 'Escape' }, () => this.close());
 		

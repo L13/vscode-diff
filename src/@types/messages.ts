@@ -30,6 +30,10 @@ export type DiffMultiCopyMessage = {
 	pathB:string,
 };
 
+export type DiffOpenMessage = {
+	fsPath:string,
+};
+
 export type DiffResultMessage = {
 	diffs:Diff[],
 	pathA:string,

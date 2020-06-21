@@ -158,6 +158,76 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		let dragSrcElement:HTMLElement = null;
+		
+		this.content.addEventListener('dragstart', (event) => {
+			
+			if (this.disabled) return;
+			
+			dragSrcElement = (<HTMLElement>event.target);
+			
+			const columnNode = (<HTMLElement>dragSrcElement.closest('l13-diff-list-file'));
+			const rowNode = (<HTMLElement>columnNode.closest('l13-diff-list-row'));
+			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
+			const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
+			
+			dragSrcElement.style.opacity = '0.4';
+			event.dataTransfer.setData('data-diff-file', JSON.stringify(file));
+			
+		});
+		
+		this.content.addEventListener('dragover', (event) => {
+			
+			if (this.disabled) return;
+			
+			event.preventDefault();
+			
+		});
+		
+		this.content.addEventListener('dragexit', (event) => {
+			
+			event.preventDefault();
+			
+			dragSrcElement.style.opacity = '1';
+			dragSrcElement = null;
+			
+		});
+		
+		this.content.addEventListener('dragend', (event) => {
+			
+			event.preventDefault();
+			
+			dragSrcElement.style.opacity = '1';
+			dragSrcElement = null;
+			
+		});
+		
+		this.content.addEventListener('drop', (event) => {
+			
+			if (this.disabled) return;
+			
+			event.preventDefault()
+			
+			const target = (<HTMLElement>(<HTMLElement>event.target).closest('l13-diff-list-file'));
+			const rowNode = (<HTMLElement>target.closest('l13-diff-list-row'));
+			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
+			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
+			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+			
+			if (fileA.fsPath === fileB.fsPath) return;
+			
+			msg.send('open:diff', {
+				id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
+				status: 'modified',
+				type: fileA.type === fileB.type ? fileA.type : 'mixed',
+				ignoredWhitespace: false,
+				ignoredEOL: false,
+				fileA,
+				fileB,
+			});
+			
+		});
+		
 		this.content.addEventListener('mouseover', ({ target }) => {
 			
 			if (<HTMLElement>target === this.context) return;
@@ -619,6 +689,10 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-file', file.path);
 		
+		const path = document.createElement('SPAN');
+		path.draggable = true;
+		column.appendChild(path);
+		
 		if (file.dirname) {
 			const dirname = document.createDocumentFragment();
 			
@@ -636,13 +710,13 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 				dirname.appendChild(dirnameMissing);
 			}
 			
-			column.appendChild(dirname);
+			path.appendChild(dirname);
 		}
 		
 		const basename = document.createElement('SPAN');
 		basename.textContent = file.basename;
 		basename.classList.add(`-basename`);
-		column.appendChild(basename);
+		path.appendChild(basename);
 		
 		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');

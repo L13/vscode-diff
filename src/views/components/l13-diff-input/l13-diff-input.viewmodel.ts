@@ -4,6 +4,8 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 import { msg } from '../common';
 
+import { DiffOpenMessage } from '../../../@types/messages';
+
 //	Variables __________________________________________________________________
 
 const VALUE = Symbol.for('value');
@@ -47,9 +49,9 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	private openListener = (data:any) => {
+	private openListener = (data:DiffOpenMessage) => {
 			
-		if (data.folder) this.value = data.folder;
+		if (data.fsPath) this.value = data.fsPath;
 		
 		msg.removeMessageListener('open:dialog', this.openListener);
 		

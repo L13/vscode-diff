@@ -1,5 +1,13 @@
 # Change Log
-All notable changes to the "L13 Diff" extension will be documented in this file.
+All notable changes to the "Diff Folders" extension will be documented in this file.
+
+## [0.26.0] - 2020-07-05
+
+### Added
+- Added drag'n drop support for path names in list view.
+
+### Changed
+- Changed display name for extension from `L13 Diff` to `Diff Folders`.
 
 ## [0.25.0] - 2020-06-21
 

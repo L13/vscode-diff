@@ -203,7 +203,7 @@ export class DiffPanel {
 		
 		this.copy.onDidCopyFile(({ from, to }) => {
 			
-			this.output.log(`Copied ${from.type} "${from.name}" from "${from.folder}" to "${to.folder}".`);
+			this.output.log(`Copied ${from.type} "${from.name}" from "${from.root}" to "${to.root}".`);
 			
 		}, null, this.disposables);
 		
@@ -258,9 +258,9 @@ export class DiffPanel {
 		
 		this.msg.on('open:dialog', async () => {
 			
-			const folder = await DiffDialog.open();
+			const fsPath = await DiffDialog.open();
 			
-			this.msg.send('open:dialog', { folder });
+			this.msg.send('open:dialog', { fsPath });
 			
 		});
 		
@@ -334,7 +334,7 @@ export class DiffPanel {
 	
 	private setTitle (pathA?:string, pathB?:string) {
 		
-		let title = 'Diff';
+		let title = 'Diff Folders';
 		
 		if (pathA && pathB) {
 			const [label, desc] = formatNameAndDesc(pathA, pathB);
@@ -380,7 +380,7 @@ export class DiffPanel {
 				<meta charset="UTF-8">
 				<meta http-equiv="Content-Security-Policy" content="${csp}">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>L13 Diff</title>
+				<title>Diff Folders</title>
 				<link rel="stylesheet" nonce="${nonceToken}" href="${webview.asWebviewUri(styleUri)}">
 				<script nonce="${nonceToken}" src="${webview.asWebviewUri(scriptUri)}"></script>
 			</head>
@@ -391,7 +391,7 @@ export class DiffPanel {
 	
 	public static create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
-		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff', {
+		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff Folders', {
 			viewColumn: vscode.ViewColumn.Active,
 		}, {
 			enableScripts: true,

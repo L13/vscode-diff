@@ -7,6 +7,8 @@ import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
+import { DiffFile } from '../../../@types/diffs';
+
 import { addButtonActiveStyleEvents, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
@@ -130,12 +132,19 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 		});
 		
+		this.input.addEventListener('dragover', (event) => event.preventDefault());
+		
 		this.input.addEventListener('drop', ({ dataTransfer }:DragEvent) => {
 			
 			this.input.removeAttribute('data-value');
 			
-			if (dataTransfer && dataTransfer.files[0]) {
-				this.viewmodel.value = (<any>dataTransfer.files[0]).path;
+			if (dataTransfer) {
+				if (dataTransfer.files[0]) {
+					this.viewmodel.value = (<any>dataTransfer.files[0]).path;
+				} else {
+					const file = dataTransfer.getData('data-diff-file');
+					if (file) this.viewmodel.value = (<DiffFile>JSON.parse(file)).fsPath;
+				}
 			}
 			
 		});

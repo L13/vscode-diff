@@ -1,24 +1,19 @@
-# L13 Diff
+# Diff Folders (L13 Diff)
 
 Compare two folders in Visual Studio Code.
 
-![L13 Diff](images/preview.png)
+![Diff Folders](images/preview.png)
 
 This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
 
-## What's new in L13 Diff 0.25.0
+## What's new in Diff Folders 0.26.0
 
-- Added multi panel support. Open multiple panels by click on the new icon in the favorites view.
-- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux to start a comparison in all panels immediately.
-- Added multi copy support. Please read the description `Copy files to the left/right folder` for `Alt + Click` to see how it works.
-- Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
-- Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
-- Added to see the content of symbolic links in a readonly editor or diff editor.
-- Added `Select for Compare`, `Compare with Selected` and `Compare Selected` to explorer list context menu.
+- Changed display name for extension from `L13 Diff` to `Diff Folders`.
+- Added drag'n drop support for path names in list view.
 
 ## Features
 
-* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+* Supports extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 * Supports a history for recently used files, folders and previous comparisons.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
@@ -43,46 +38,46 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 
 ### Welcome
 
-![L13 Diff Welcome](images/preview-welcome.png)
+![Diff Folders Welcome](images/preview-welcome.png)
 
 ### Basics
 
-![L13 Diff Basics](images/preview-start.png)
+![Diff Folders Basics](images/preview-start.png)
 
 ### Menu
 
-![L13 Diff Menu](images/preview-menu.png)
+![Diff Folders Menu](images/preview-menu.png)
 
 ### Favorites
 
-![L13 Diff Favorites](images/preview-favorites.png)
+![Diff Folders Favorites](images/preview-favorites.png)
 
 ### History
 
-![L13 Diff History](images/preview-history.png)
+![Diff Folders History](images/preview-history.png)
 
 ### Search, filter or select
 
-![L13 Diff Search](images/preview-search.png)
+![Diff Folders Search](images/preview-search.png)
 
 ### List and navigator
 
-![L13 Diff Selection](images/preview-select.png)
+![Diff Folders Selection](images/preview-select.png)
 
 ### Logging and stats
 
-![L13 Diff Stats](images/preview-stats.png)
+![Diff Folders Stats](images/preview-stats.png)
 
-### Supports [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+### Supports [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
-![L13 Projects](images/preview-l13-projects.png)
+![Projects](images/preview-l13-projects.png)
 
 ## Available Commands
 
-* `L13 Diff` - Open the diff panel.
-* `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
-* `L13 Diff: Clear History` - Clear the history of recently used files, folders and previous comparisons.
-* `L13 Diff: Delete All Favorites` - Delete all favorites.
+* `Diff Folders` - Open the diff panel.
+* `Open in Diff Folders` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
+* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
+* `Diff Folders: Delete All Favorites` - Delete all favorites.
 
 ## Available Settings
 

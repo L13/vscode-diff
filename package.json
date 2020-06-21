@@ -1,8 +1,8 @@
 {
 	"name": "l13-diff",
-	"displayName": "L13 Diff",
+	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.25.0",
+	"version": "0.26.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -52,7 +52,7 @@
 			"activitybar": [
 				{
 					"id": "l13Diff",
-					"title": "L13 Diff",
+					"title": "Diff Folders",
 					"icon": "images/favorites.svg"
 				}
 			]
@@ -72,12 +72,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
 				"when": "isMac"
 			},
 			{
@@ -88,7 +88,7 @@
 		"commands": [
 			{
 				"command": "l13Diff.show",
-				"title": "L13 Diff",
+				"title": "Diff Folders",
 				"icon": {
 					"light": "images/open-diff-light.svg",
 					"dark": "images/open-diff-dark.svg"
@@ -96,11 +96,11 @@
 			},
 			{
 				"command": "l13Diff.open",
-				"title": "Open in L13 Diff"
+				"title": "Open in Diff Folders"
 			},
 			{
 				"command": "l13Diff.clearHistory",
-				"title": "L13 Diff: Clear History",
+				"title": "Diff Folders: Clear History",
 				"icon": {
 					"light": "images/history-clear-light.svg",
 					"dark": "images/history-clear-dark.svg"
@@ -144,7 +144,7 @@
 			},
 			{
 				"command": "l13Diff.clearFavorites",
-				"title": "L13 Diff: Delete All Favorites"
+				"title": "Diff Folders: Delete All Favorites"
 			},
 			{
 				"command": "l13Diff.openComparison",
@@ -172,7 +172,7 @@
 			},
 			{
 				"command": "l13Diff.showOutput",
-				"title": "L13 Diff: Show Output Channel"
+				"title": "Diff Folders: Show Output Channel"
 			},
 			{
 				"command": "l13Diff.compareProjectWithWorkspace",
@@ -180,7 +180,7 @@
 			},
 			{
 				"command": "l13Diff.openProject",
-				"title": "Open in L13 Diff"
+				"title": "Open in Diff Folders"
 			},
 			{
 				"command": "l13Diff.ignoreWhitespace",
@@ -447,7 +447,7 @@
 		},
 		"configuration": {
 			"type": "object",
-			"title": "L13 Diff",
+			"title": "Diff Folders",
 			"properties": {
 				"l13Diff.maxRecentlyUsed": {
 					"type": "number",
