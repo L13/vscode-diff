@@ -159,6 +159,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		});
 		
 		let dragSrcElement:HTMLElement = null;
+		let dragHoverElement:HTMLElement = null;
 		
 		this.content.addEventListener('dragstart', (event) => {
 			
@@ -182,6 +183,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			event.preventDefault();
 			
+			const element:HTMLElement = (<HTMLElement>event.target);
+			let draggable:HTMLElement = null;
+			
+			if (element) draggable = element.closest('l13-diff-list-file');
+			
+			if (draggable) {
+				if (dragHoverElement && dragHoverElement !== draggable) {
+					dragHoverElement.classList.remove('-draghover');
+				}
+				
+				if (draggable !== dragHoverElement && draggable !== dragSrcElement?.parentElement) {
+					dragHoverElement = draggable;
+					dragHoverElement.classList.add('-draghover');
+				}
+			}
+			
 		});
 		
 		this.content.addEventListener('dragexit', (event) => {
@@ -191,6 +208,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			dragSrcElement.style.opacity = '1';
 			dragSrcElement = null;
 			
+			if (dragHoverElement) {
+				dragHoverElement.classList.remove('-draghover');
+				dragHoverElement = null;
+			}
+			
 		});
 		
 		this.content.addEventListener('dragend', (event) => {
@@ -199,6 +221,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			dragSrcElement.style.opacity = '1';
 			dragSrcElement = null;
+			
+			if (dragHoverElement) {
+				dragHoverElement.classList.remove('-draghover');
+				dragHoverElement = null;
+			}
+			
+		});
+		
+		this.content.addEventListener('dragleave', (event) => {
+			
+			event.preventDefault();
+			
+			if (dragHoverElement) {
+				dragHoverElement.classList.remove('-draghover');
+				dragHoverElement = null;
+			}
 			
 		});
 		
@@ -689,7 +727,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-file', file.path);
 		
-		const path = document.createElement('SPAN');
+		const path = document.createElement('DIV');
 		path.draggable = true;
 		column.appendChild(path);
 		

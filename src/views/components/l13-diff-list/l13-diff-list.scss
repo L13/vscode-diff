@@ -149,6 +149,11 @@ l13-diff-list-file {
 		}
 	}
 	
+	&.-draghover {
+		background: var(--vscode-list-focusBackground);
+		color: var(--vscode-list-focusForeground);
+	}
+	
 	&.-file::before,
 	&.-folder::before,
 	&.-symlink::before {
