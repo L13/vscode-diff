@@ -21,7 +21,7 @@ export type Favorite = {
 
 export type FavoriteGroup = {
 	label:string;
-	groupId:number;
+	id:number;
 	collapsed:boolean;
 };
 

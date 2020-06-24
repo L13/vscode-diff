@@ -85,7 +85,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		if (!this.favorites.length && !this.favoriteGroups.length) return Promise.resolve(list);
 		
 		if (element) {
-			const groupId = (<FavoriteGroupTreeItem>element).favoriteGroup.groupId;
+			const groupId = (<FavoriteGroupTreeItem>element).favoriteGroup.id;
 			this.favorites.filter((favorite) => favorite.groupId === groupId).forEach((favorite) => list.push(new FavoriteTreeItem(favorite)));
 		} else {
 			this.favoriteGroups.forEach((favoriteGroup) => list.push(new FavoriteGroupTreeItem(favoriteGroup)));
@@ -183,7 +183,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
 		const groupId:number = getNextGroupId(favoriteGroups);
-		const favoriteGroup:FavoriteGroup = { label, groupId, collapsed: true };
+		const favoriteGroup:FavoriteGroup = { label, id: groupId, collapsed: false };
 		let index = -1;
 		
 		for (let i = 0; i < favoriteGroups.length; i++) {
@@ -204,7 +204,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 		const favorites = context.globalState.get(FAVORITES, []);
 		
-		return favorites.filter((favorite) => favorite.groupId === favoriteGroup.groupId);
+		return favorites.filter((favorite) => favorite.groupId === favoriteGroup.id);
 		
 	}
 	
@@ -218,7 +218,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 			favorites.some((fav) => {
 				
 				if (fav.label === favorite.label) {
-					fav.groupId = favoriteGroup.groupId;
+					fav.groupId = favoriteGroup.id;
 					return true;
 				}
 				
@@ -325,11 +325,11 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 					let favorites:Favorite[] = context.globalState.get(FAVORITES, []);
 					favoriteGroups.splice(i, 1);
 					if (value === BUTTON_DELETE_GROUP_AND_FAVORITES) {
-						favorites = favorites.filter((favorite) => favorite.groupId !== favoriteGroup.groupId);
+						favorites = favorites.filter((favorite) => favorite.groupId !== favoriteGroup.id);
 					} else {
 						favorites.forEach((favorite) => {
 						
-							if (favorite.groupId === favoriteGroup.groupId) delete favorite.groupId;
+							if (favorite.groupId === favoriteGroup.id) delete favorite.groupId;
 							
 						});
 					}
@@ -381,12 +381,12 @@ function getNextGroupId (favoriteGroups:FavoriteGroup[]) :number {
 	
 	if (!favoriteGroups.length) return 0;
 	
-	const groupIds = favoriteGroups.map((favoriteGroup) => favoriteGroup.groupId);
+	const groupIds = favoriteGroups.map((favoriteGroup) => favoriteGroup.id);
 	const maxGroupId = Math.max.apply(null, groupIds);
 	let i = 0;
 	
 	while (i <= maxGroupId) {
-		if (!favoriteGroups.some((favoriteGroup) => favoriteGroup.groupId === i)) return i;
+		if (!favoriteGroups.some((favoriteGroup) => favoriteGroup.id === i)) return i;
 		i++;
 	}
 	

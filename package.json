@@ -427,37 +427,37 @@
 				{
 					"command": "l13Diff.openFavoriteOnly",
 					"group": "navigation@1",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
 					"group": "navigation@2",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.addToFavoriteGroup",
 					"group": "navigation@3",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.openFavoriteInNewPanel",
 					"group": "inline",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.removeFromFavoriteGroup",
 					"group": "7_modification@1",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == subfavorite"
 				},
 				{
 					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@2",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.removeFavorite",
 					"group": "7_modification@3",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.openFavoriteGroup",

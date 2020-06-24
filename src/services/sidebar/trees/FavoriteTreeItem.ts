@@ -34,6 +34,8 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 		
 		super(favorite.label);
 		
+		if (favorite.groupId !== undefined) this.contextValue = `sub${this.contextValue}`;
+		
 	}
 	
 	public get tooltip () :string {
