@@ -58,7 +58,7 @@ export class DiffCompare {
 	
 	public initCompare (data:DiffInitMessage) :void {
 		
-		this._onInitCompare.fire();
+		this._onInitCompare.fire(undefined);
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);

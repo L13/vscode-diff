@@ -57,6 +57,9 @@ export class DiffPanel {
 	
 	private disposables:vscode.Disposable[] = [];
 	
+	private _onDidInit:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidInit:vscode.Event<undefined> = this._onDidInit.event;
+	
 	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		this.panel = panel;
@@ -295,6 +298,7 @@ export class DiffPanel {
 			});
 			
 			this.msg.removeMessageListener('init:view');
+			this._onDidInit.fire(undefined);
 			
 		});
 		
@@ -381,6 +385,18 @@ export class DiffPanel {
 				<meta http-equiv="Content-Security-Policy" content="${csp}">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Diff Folders</title>
+				<script nonce="${nonceToken}">
+					const timeoutId = setTimeout(() => {
+						
+						acquireVsCodeApi().postMessage({
+							command: 'error:init',
+							data: {
+								error: 'Failed to load resource!',
+							},
+						});
+						
+					}, 1000);
+				</script>
 				<link rel="stylesheet" nonce="${nonceToken}" href="${webview.asWebviewUri(styleUri)}">
 				<script nonce="${nonceToken}" src="${webview.asWebviewUri(scriptUri)}"></script>
 			</head>
@@ -389,7 +405,7 @@ export class DiffPanel {
 		
 	}
 	
-	public static create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
+	public static async create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
 		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff Folders', {
 			viewColumn: vscode.ViewColumn.Active,
@@ -410,6 +426,22 @@ export class DiffPanel {
 		
 		DiffPanel.currentPanel = diffPanel;
 		DiffPanel.currentPanels.push(diffPanel);
+		
+		return new Promise((resolve, reject) => {
+			
+			diffPanel.onDidInit(() => resolve(), null, diffPanel.disposables);
+			
+			diffPanel.msg.on('error:init', async ({ error }) => {
+				
+				const tryAgain = await vscode.window.showErrorMessage(error, 'Try Again');
+				
+				diffPanel.dispose();
+				
+				resolve(tryAgain ? DiffPanel.create(context, uris, compare) : undefined);
+				
+			});
+			
+		});
 		
 	}
 	

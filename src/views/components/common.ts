@@ -20,6 +20,8 @@ window.addEventListener('load', () => {
 	
 });
 
+if ((<any>window).timeoutId) clearTimeout((<any>window).timeoutId);
+
 //	Exports ____________________________________________________________________
 
 export const vscode = acquireVsCodeApi();

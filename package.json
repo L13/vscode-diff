@@ -143,6 +143,46 @@
 				"title": "Delete"
 			},
 			{
+				"command": "l13Diff.addFavoriteGroup",
+				"title": "New Group",
+				"icon": {
+					"light": "images/new-group-light.svg",
+					"dark": "images/new-group-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.addToFavoriteGroup",
+				"title": "Add to Group"
+			},
+			{
+				"command": "l13Diff.removeFromFavoriteGroup",
+				"title": "Remove"
+			},
+			{
+				"command": "l13Diff.openFavoriteGroup",
+				"title": "Open All",
+				"icon": {
+					"light": "images/open-group-light.svg",
+					"dark": "images/open-group-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.openFavoriteGroupOnly",
+				"title": "Open All"
+			},
+			{
+				"command": "l13Diff.openFavoriteGroupAndCompare",
+				"title": "Open All & Compare"
+			},
+			{
+				"command": "l13Diff.renameFavoriteGroup",
+				"title": "Rename"
+			},
+			{
+				"command": "l13Diff.removeFavoriteGroup",
+				"title": "Delete"
+			},
+			{
 				"command": "l13Diff.clearFavorites",
 				"title": "Diff Folders: Delete All Favorites"
 			},
@@ -281,6 +321,34 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.addToFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFromFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupOnly",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.renameFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFavoriteGroup",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.openComparison",
 					"when": "false"
 				},
@@ -345,6 +413,11 @@
 					"group": "navigation@1"
 				},
 				{
+					"command": "l13Diff.addFavoriteGroup",
+					"when": "view == l13DiffFavorites",
+					"group": "navigation@2"
+				},
+				{
 					"command": "l13Diff.clearHistory",
 					"when": "view == l13DiffHistory",
 					"group": "navigation@1"
@@ -362,19 +435,54 @@
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
+					"command": "l13Diff.addToFavoriteGroup",
+					"group": "navigation@3",
+					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
 					"command": "l13Diff.openFavoriteInNewPanel",
 					"group": "inline",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
-					"command": "l13Diff.renameFavorite",
+					"command": "l13Diff.removeFromFavoriteGroup",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
 				},
 				{
-					"command": "l13Diff.removeFavorite",
+					"command": "l13Diff.renameFavorite",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.removeFavorite",
+					"group": "7_modification@3",
+					"when": "view == l13DiffFavorites && viewItem == favorite"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroup",
+					"group": "inline",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupOnly",
+					"group": "navigation@1",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"group": "navigation@2",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.renameFavoriteGroup",
+					"group": "7_modification@1",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.removeFavoriteGroup",
+					"group": "7_modification@2",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
 					"command": "l13Diff.openComparisonOnly",
@@ -480,6 +588,21 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Should click on favorite start a compare?"
+				},
+				"l13Diff.initialFavoriteGroupState": {
+					"type": "string",
+					"default": "Remember",
+					"enum": [
+						"Remember",
+						"Collapsed",
+						"Expanded"
+					],
+					"description": "Indicates if a favorite group should be collapsed, expanded or remembered in its initial state.",
+					"enumDescriptions": [
+						"Remember the collpased and expanded state of each group.",
+						"Show all favorite groups collapsed at start.",
+						"Show all favorite groups expanded at start."
+					]
 				},
 				"l13Diff.ignoreEndOfLine": {
 					"type": "boolean",

@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
+import * as vscode from 'vscode';
 
+import { FavoriteGroup } from '../../../types';
 
 //	Variables __________________________________________________________________
 
@@ -12,20 +14,17 @@
 
 //	Exports ____________________________________________________________________
 
-export type Favorite = {
-	fileA:string;
-	fileB:string;
-	label:string;
-	groupId?:number;
-};
-
-export type FavoriteGroup = {
-	label:string;
-	groupId:number;
-	collapsed:boolean;
-};
-
-export type InitialState = 'Collapsed'|'Expanded'|'Remember';
+export class FavoriteGroupTreeItem extends vscode.TreeItem {
+	
+	public contextValue = 'favoriteGroup';
+	
+	public constructor (public readonly favoriteGroup:FavoriteGroup) {
+		
+		super(favoriteGroup.label, favoriteGroup.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded);
+		
+	}
+	
+}
 
 //	Functions __________________________________________________________________
 
