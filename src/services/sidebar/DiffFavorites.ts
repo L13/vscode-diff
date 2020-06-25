@@ -98,37 +98,35 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	
 	public static async addFavorite (context:vscode.ExtensionContext, fileA:string, fileB:string) {
 		
-		const label = await vscode.window.showInputBox({ value: `${fileA} ↔ ${fileB}` });
+		const label = await vscode.window.showInputBox({
+			placeHolder: 'Please enter a name for the diff.',
+			value: `${fileA} ↔ ${fileB}`,
+		});
 		
 		if (!label) return;
 		
 		const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
-		const favorite:Favorite = { label, fileA, fileB };
-		let index = -1;
 		
-		for (let i = 0; i < favorites.length; i++) {
-			if (favorites[i].label === label) {
-				index = i;
-				break;
+		for (const favorite of favorites) {
+			if (favorite.label === label) {
+				if (!await DiffDialog.confirm(`Overwrite favorite "${favorite.label}"?`, 'Ok')) return;
+				favorite.fileA = fileA;
+				favorite.fileB = fileB;
+				return saveFavorite(context, favorites);;
 			}
 		}
 		
-		if (index === -1) {
-			favorites.push(favorite);
-			saveFavorite(context, favorites);
-		} else {
-			const value = await DiffDialog.confirm(`Overwrite favorite "${favorite.label}"?`, 'Ok');
-			if (value) {
-				favorites[index] = favorite;
-				saveFavorite(context, favorites);
-			}
-		}
+		favorites.push({ label, fileA, fileB });
+		saveFavorite(context, favorites);
 		
 	}
 	
 	public static async renameFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
-		const value = await vscode.window.showInputBox({ value: favorite.label });
+		const value = await vscode.window.showInputBox({
+			placeHolder: 'Please enter a new name for the diff.',
+			value: favorite.label,
+		});
 		
 		if (favorite.label === value || value === undefined) return;
 		
@@ -177,26 +175,20 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	
 	public static async addFavoriteGroup (context:vscode.ExtensionContext) {
 		
-		const label = await vscode.window.showInputBox();
+		const label = await vscode.window.showInputBox({
+			placeHolder: 'Please enter a name for the group.',
+		});
 		
 		if (!label) return;
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
-		const groupId:number = getNextGroupId(favoriteGroups);
-		const favoriteGroup:FavoriteGroup = { label, id: groupId, collapsed: false };
-		let index = -1;
 		
-		for (let i = 0; i < favoriteGroups.length; i++) {
-			if (favoriteGroups[i].label === label) {
-				index = i;
-				break;
-			}
+		for (const favoriteGroup of favoriteGroups) {
+			if (favoriteGroup.label === label) return vscode.window.showErrorMessage(`Favorite group "${label}" exists!`);
 		}
 		
-		if (index === -1) {
-			favoriteGroups.push(favoriteGroup);
-			saveFavoriteGroup(context, favoriteGroups);
-		} else vscode.window.showErrorMessage(`Favorite group "${label}" exists!`);
+		favoriteGroups.push({ label, id: getNextGroupId(favoriteGroups), collapsed: false });
+		saveFavoriteGroup(context, favoriteGroups);
 		
 	}
 	
@@ -254,14 +246,9 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	public static collapseFavoriteGroup (context:vscode.ExtensionContext, item:FavoriteGroupTreeItem) {
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
+		const groupId = item.favoriteGroup.id;
 		
-		favoriteGroups.some((favoriteGroup) => {
-			
-			if (favoriteGroup.label === item.label) return favoriteGroup.collapsed = true;
-			
-			return false;
-			
-		});
+		favoriteGroups.some((favoriteGroup) => favoriteGroup.id === groupId ? favoriteGroup.collapsed = true : false);
 		
 		context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 		DiffFavorites.currentProvider?.refresh();
@@ -271,14 +258,9 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	public static expandFavoriteGroup (context:vscode.ExtensionContext, item:FavoriteGroupTreeItem) {
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
+		const groupId = item.favoriteGroup.id;
 		
-		favoriteGroups.some((favoriteGroup) => {
-			
-			if (favoriteGroup.label === item.label) return !(favoriteGroup.collapsed = false);
-			
-			return false;
-			
-		});
+		favoriteGroups.some((favoriteGroup) => favoriteGroup.id === groupId ? !(favoriteGroup.collapsed = false) : false);
 		
 		context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 		DiffFavorites.currentProvider?.refresh();
@@ -287,26 +269,22 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	
 	public static async renameFavoriteGroup (context:vscode.ExtensionContext, favoriteGroup:FavoriteGroup) {
 		
-		const value = await vscode.window.showInputBox({ value: favoriteGroup.label });
+		const value = await vscode.window.showInputBox({
+			placeHolder: 'Please enter a new name for the group.',
+			value: favoriteGroup.label,
+		});
 		
-		if (favoriteGroup.label === value || value === undefined) return;
-		
-		if (!value) {
-			vscode.window.showErrorMessage(`Favorite group with no name is not valid!`);
-			return;
-		}
+		if (!value || favoriteGroup.label === value) return;
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
+		const groupId = favoriteGroup.id;
 		
-		// tslint:disable-next-line: prefer-for-of
-		for (let i = 0; i < favoriteGroups.length; i++) {
-			if (favoriteGroups[i].label === favoriteGroup.label) {
-				if (!favoriteGroups.some(({ label }) => label === value)) {
-					favoriteGroups[i].label = value;
-					favoriteGroups.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-					context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
-					DiffFavorites.currentProvider?.refresh();
-				} else vscode.window.showErrorMessage(`Favorite group "${value}" exists!`);
+		for (const group of favoriteGroups) {
+			if (group.id === groupId) {
+				group.label = value;
+				favoriteGroups.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
+				DiffFavorites.currentProvider?.refresh();
 				break;
 			}
 		}
@@ -319,11 +297,12 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 		if (value) {
 			const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
+			const groupId = favoriteGroup.id;
 			
 			for (let i = 0; i < favoriteGroups.length; i++) {
-				if (favoriteGroups[i].label === favoriteGroup.label) {
-					let favorites:Favorite[] = context.globalState.get(FAVORITES, []);
+				if (favoriteGroups[i].id === groupId) {
 					favoriteGroups.splice(i, 1);
+					let favorites:Favorite[] = context.globalState.get(FAVORITES, []);
 					if (value === BUTTON_DELETE_GROUP_AND_FAVORITES) {
 						favorites = favorites.filter((favorite) => favorite.groupId !== favoriteGroup.id);
 					} else {
@@ -336,11 +315,9 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 					context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 					context.globalState.update(FAVORITES, favorites);
 					DiffFavorites.currentProvider?.refresh();
-					return;
+					break;
 				}
 			}
-			
-			vscode.window.showErrorMessage(`Favorite group "${favoriteGroup.label}" does not exist!`);
 		}
 		
 	}

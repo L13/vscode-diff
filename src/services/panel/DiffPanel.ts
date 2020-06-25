@@ -390,9 +390,7 @@ export class DiffPanel {
 						
 						acquireVsCodeApi().postMessage({
 							command: 'error:init',
-							data: {
-								error: 'Failed to load resource!',
-							},
+							data: { error: 'Failed to load resources!' },
 						});
 						
 					}, 1000);
