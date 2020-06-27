@@ -100,7 +100,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 		const favoriteGroups:FavoriteGroup[] = this.context.globalState.get(FAVORITE_GROUPS, []);
 		
-		FavoriteGroupTreeItem.stateVersion++;
+		FavoriteGroupTreeItem.updateStateVersion();
 		
 		favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = true);
 		

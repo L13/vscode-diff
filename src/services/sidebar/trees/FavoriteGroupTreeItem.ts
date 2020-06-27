@@ -16,7 +16,14 @@ import { FavoriteGroup } from '../../../types';
 
 export class FavoriteGroupTreeItem extends vscode.TreeItem {
 	
-	public static stateVersion:number = 0;
+	// triggers the tree view to recreate all items for collapse all
+	private static stateVersion:number = 0;
+	
+	public static updateStateVersion () {
+		
+		FavoriteGroupTreeItem.stateVersion = 1 - FavoriteGroupTreeItem.stateVersion;
+		
+	}
 	
 	public contextValue = 'favoriteGroup';
 	
