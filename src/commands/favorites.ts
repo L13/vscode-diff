@@ -25,9 +25,15 @@ export function activate (context:vscode.ExtensionContext) {
 		treeDataProvider: diffFavoritesProvider
 	});
 	
-	treeView.onDidCollapseElement(({ element }) => DiffFavorites.collapseFavoriteGroup(context, <FavoriteGroupTreeItem>element));
+	subscriptions.push(vscode.commands.registerCommand('l13Diff.collapseAll', () => {
+		
+		DiffFavorites.currentProvider?.collapseAll();
+		
+	}));
 	
-	treeView.onDidExpandElement(({ element }) => DiffFavorites.expandFavoriteGroup(context, <FavoriteGroupTreeItem>element));
+	treeView.onDidCollapseElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, true));
+	
+	treeView.onDidExpandElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, false));
 	
 	subscriptions.push(treeView);
 	

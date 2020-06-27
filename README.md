@@ -9,7 +9,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in Diff Folders 0.26.0
 
 - Changed display name for extension from `L13 Diff` to `Diff Folders`.
-- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Dragn Drop` t osee how it works.
+- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` t osee how it works.
 
 ## Features
 

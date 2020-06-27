@@ -151,6 +151,14 @@
 				}
 			},
 			{
+				"command": "l13Diff.collapseAll",
+				"title": "Collapse All",
+				"icon": {
+					"light": "images/collapse-group-light.svg",
+					"dark": "images/collapse-group-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.addToFavoriteGroup",
 				"title": "Add to Group"
 			},
@@ -333,6 +341,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.collapseAll",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.openFavoriteGroupOnly",
 					"when": "false"
 				},
@@ -416,6 +428,11 @@
 					"command": "l13Diff.addFavoriteGroup",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@2"
+				},
+				{
+					"command": "l13Diff.collapseAll",
+					"when": "view == l13DiffFavorites",
+					"group": "navigation@3"
 				},
 				{
 					"command": "l13Diff.clearHistory",

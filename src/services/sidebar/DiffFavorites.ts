@@ -96,6 +96,20 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 	}
 	
+	public collapseAll () {
+		
+		const favoriteGroups:FavoriteGroup[] = this.context.globalState.get(FAVORITE_GROUPS, []);
+		
+		FavoriteGroupTreeItem.stateVersion++;
+		
+		favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = true);
+		
+		this.context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
+		
+		this.refresh();
+		
+	}
+	
 	public static async addFavorite (context:vscode.ExtensionContext, fileA:string, fileB:string) {
 		
 		const label = await vscode.window.showInputBox({
@@ -243,24 +257,12 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 	}
 	
-	public static collapseFavoriteGroup (context:vscode.ExtensionContext, item:FavoriteGroupTreeItem) {
+	public static saveCollapseState (context:vscode.ExtensionContext, item:FavoriteGroupTreeItem, state:boolean) {
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
 		const groupId = item.favoriteGroup.id;
 		
-		favoriteGroups.some((favoriteGroup) => favoriteGroup.id === groupId ? favoriteGroup.collapsed = true : false);
-		
-		context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
-		DiffFavorites.currentProvider?.refresh();
-		
-	}
-	
-	public static expandFavoriteGroup (context:vscode.ExtensionContext, item:FavoriteGroupTreeItem) {
-		
-		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
-		const groupId = item.favoriteGroup.id;
-		
-		favoriteGroups.some((favoriteGroup) => favoriteGroup.id === groupId ? !(favoriteGroup.collapsed = false) : false);
+		favoriteGroups.some((favoriteGroup) => favoriteGroup.id === groupId ? (favoriteGroup.collapsed = state) || true : false);
 		
 		context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 		DiffFavorites.currentProvider?.refresh();

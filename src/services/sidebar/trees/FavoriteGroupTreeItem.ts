@@ -16,13 +16,15 @@ import { FavoriteGroup } from '../../../types';
 
 export class FavoriteGroupTreeItem extends vscode.TreeItem {
 	
+	public static stateVersion:number = 0;
+	
 	public contextValue = 'favoriteGroup';
 	
 	public constructor (public readonly favoriteGroup:FavoriteGroup) {
 		
 		super(favoriteGroup.label, favoriteGroup.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded);
 		
-		this.id = '' + favoriteGroup.id;
+		this.id = `${favoriteGroup.id}-${FavoriteGroupTreeItem.stateVersion}`;
 		
 	}
 	
