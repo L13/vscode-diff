@@ -4,12 +4,12 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/preview.png)
 
-> This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
-
 ## What's new in Diff Folders 0.26.0
 
 - Changed display name for extension from `L13 Diff` to `Diff Folders`.
-- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` t osee how it works.
+- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
+- Added groups to favorites to group your favorite diff and open all at once.
+- Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
 
 ## Features
 
@@ -87,6 +87,10 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.confirmCopy` - If true confirm dialog for copying files does not appear.
 * `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Projects.initialFavoriteGroupState` - Set the initial state of a group.
+	* `Remember` - (default) Remember the collpased and expanded state of each group.
+	* `Collapsed` - Show all groups collapsed at start.
+	* `Expanded` - Show all groups expanded at start.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
@@ -266,3 +270,5 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ### Navigator
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
+
+> This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
