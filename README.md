@@ -58,7 +58,7 @@ Compare two folders in Visual Studio Code.
 
 ### Supports [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
-![Projects](images/preview-l13-projects.png)
+![Projects](images/preview-projects.png)
 
 ## Available Commands
 
