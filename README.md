@@ -8,7 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Changed display name for extension from `L13 Diff` to `Diff Folders`.
 - Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
-- Added groups to favorites to group your favorite diff and open all at once.
+- Added groups for favorites to group your diffs and open all at once.
 - Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
 
 ## Features
@@ -36,25 +36,13 @@ Compare two folders in Visual Studio Code.
 * Open multiple panels by click on the icon in the favorites view.
 * Copy the same files from the same location to multiple folders at once.
 
-### Welcome
-
-![Diff Folders Welcome](images/preview-welcome.png)
-
 ### Basics
 
 ![Diff Folders Basics](images/preview-start.png)
 
-### Menu
-
-![Diff Folders Menu](images/preview-menu.png)
-
 ### Favorites
 
 ![Diff Folders Favorites](images/preview-favorites.png)
-
-### History
-
-![Diff Folders History](images/preview-history.png)
 
 ### Search, filter or select
 
