@@ -13,7 +13,7 @@ import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 //	Variables __________________________________________________________________
 
-const findBackslashEnd = /\\$/;
+
 
 //	Initialize _________________________________________________________________
 
@@ -130,7 +130,7 @@ function showFileInFinder (pathname:string) {
 
 function showFileInExplorer (pathname:string) {
 	
-	return spawn('explorer', ['/select,', pathname.replace(findBackslashEnd, '') || 'c:\\']);
+	return spawn('explorer', ['/select,', pathname || 'c:\\']);
 	
 }
 

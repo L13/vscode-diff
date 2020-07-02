@@ -330,7 +330,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-file');
+			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
 			
 			msg.send('reveal:file', pathname);
 			
@@ -725,9 +725,9 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
-		column.setAttribute('data-file', file.path);
+		column.setAttribute('data-fs-path', file.fsPath);
 		
-		const path = document.createElement('DIV');
+		const path = document.createElement('SPAN');
 		path.draggable = true;
 		column.appendChild(path);
 		

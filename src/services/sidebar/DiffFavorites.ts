@@ -217,8 +217,11 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	public static async addToFavoriteGroup (context:vscode.ExtensionContext, favorite:Favorite) {
 		
 		const favoriteGroups:FavoriteGroup[] = context.globalState.get(FAVORITE_GROUPS, []);
+		
+		if (!favoriteGroups.length) await DiffFavorites.addFavoriteGroup(context);
+		
+		const favoriteGroup = favoriteGroups.length > 1 ? await vscode.window.showQuickPick(favoriteGroups) : favoriteGroups[0];
 		const favorites:Favorite[] = context.globalState.get(FAVORITES, []);
-		const favoriteGroup = await vscode.window.showQuickPick(favoriteGroups);
 		
 		if (favoriteGroup) {
 			favorites.some((fav) => {
