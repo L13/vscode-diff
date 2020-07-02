@@ -270,12 +270,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (<HTMLElement>target === this.context) return;
 			
-			let element:HTMLElement = null;
+			let element:HTMLElement = <HTMLElement>target;
 			
-			if ((<HTMLElement>target).nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>target);
-			else if ((<HTMLElement>target).parentNode.nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>(<HTMLElement>target).parentNode);
+			while (element.nodeName !== 'L13-DIFF-LIST-FILE' && element !== this.content) element = element.parentElement;
 			
-			if (element) {
+			if (element.nodeName === 'L13-DIFF-LIST-FILE') {
 				if (element.childNodes.length) {
 					if (this.context.parentNode !== element) element.appendChild(this.context);
 				} else this.context.remove();
