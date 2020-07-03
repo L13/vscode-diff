@@ -159,7 +159,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		});
 		
 		let dragSrcElement:HTMLElement = null;
-		let dragHoverElement:HTMLElement = null;
 		
 		this.content.addEventListener('dragstart', (event) => {
 			
@@ -177,6 +176,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		let dropHoverElement:HTMLElement = null;
+		
 		this.content.addEventListener('dragover', (event) => {
 			
 			if (this.disabled) return;
@@ -184,18 +185,17 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			event.preventDefault();
 			
 			const element:HTMLElement = (<HTMLElement>event.target);
-			let draggable:HTMLElement = null;
 			
-			if (element) draggable = element.closest('l13-diff-list-file');
-			
-			if (draggable) {
-				if (dragHoverElement && dragHoverElement !== draggable) {
-					dragHoverElement.classList.remove('-draghover');
-				}
-				
-				if (draggable !== dragHoverElement && draggable !== dragSrcElement?.parentElement) {
-					dragHoverElement = draggable;
-					dragHoverElement.classList.add('-draghover');
+			if (element) {
+				const dropable:HTMLElement = element.closest('l13-diff-list-file');
+				if (dropable) {
+					if (dropHoverElement && dropHoverElement !== dropable) {
+						dropHoverElement.classList.remove('-draghover');
+					}
+					if (dropable !== dropHoverElement && dropable !== dragSrcElement?.parentElement && dropable.firstElementChild) {
+						dropHoverElement = dropable;
+						dropHoverElement.classList.add('-draghover');
+					}
 				}
 			}
 			
@@ -208,9 +208,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			dragSrcElement.style.opacity = '1';
 			dragSrcElement = null;
 			
-			if (dragHoverElement) {
-				dragHoverElement.classList.remove('-draghover');
-				dragHoverElement = null;
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
 			}
 			
 		});
@@ -222,9 +222,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			dragSrcElement.style.opacity = '1';
 			dragSrcElement = null;
 			
-			if (dragHoverElement) {
-				dragHoverElement.classList.remove('-draghover');
-				dragHoverElement = null;
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
 			}
 			
 		});
@@ -233,9 +233,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			event.preventDefault();
 			
-			if (dragHoverElement) {
-				dragHoverElement.classList.remove('-draghover');
-				dragHoverElement = null;
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
 			}
 			
 		});
@@ -270,11 +270,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (<HTMLElement>target === this.context) return;
 			
-			let element:HTMLElement = <HTMLElement>target;
+			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
 			
-			while (element.nodeName !== 'L13-DIFF-LIST-FILE' && element !== this.content) element = element.parentElement;
-			
-			if (element.nodeName === 'L13-DIFF-LIST-FILE') {
+			if (element) {
 				if (element.childNodes.length) {
 					if (this.context.parentNode !== element) element.appendChild(this.context);
 				} else this.context.remove();
