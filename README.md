@@ -11,6 +11,15 @@ Compare two folders in Visual Studio Code.
 - Added groups for favorites to group your diffs and open all at once.
 - Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
 
+## Index
+
+1. [Features](#features)
+1. [Available Commands](#available-commands)
+1. [Available Settings](#available-settings)
+1. [Predefined Variables](#predefined-variables)
+1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
+1. [Recommended Extensions](#recommended-extensions)
+
 ## Features
 
 * Supports extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
@@ -73,8 +82,8 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.confirmCopy` - If true confirm dialog for copying files does not appear.
-* `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
+* `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
 * `l13Projects.initialFavoriteGroupState` - Set the initial state of a group.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
@@ -259,4 +268,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
 
-> This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
+## Recommended Extensions
+
+- [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- [Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack)
