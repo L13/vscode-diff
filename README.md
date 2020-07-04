@@ -65,7 +65,7 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders Stats](images/preview-stats.png)
 
-### Supports [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+### Supports the extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ![Projects](images/preview-projects.png)
 
