@@ -13,7 +13,7 @@ import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 //	Variables __________________________________________________________________
 
-const findBackslashEnd = /\\$/;
+
 
 //	Initialize _________________________________________________________________
 
@@ -26,9 +26,9 @@ export class DiffOpen {
 	private static async openFile (file:DiffFile, openToSide:boolean) {
 		
 		try {
-			const stat = await lstat(file.path);
+			const stat = await lstat(file.fsPath);
 			if (stat.isFile()) {
-				const pathname = vscode.Uri.file(file.path);
+				const pathname = vscode.Uri.file(file.fsPath);
 				vscode.commands.executeCommand('vscode.open', pathname, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
@@ -36,7 +36,7 @@ export class DiffOpen {
 			} else if (stat.isDirectory()) {
 				//
 			} else if (stat.isSymbolicLink()) {
-				const pathname = SymlinkContentProvider.parse(file.path);
+				const pathname = SymlinkContentProvider.parse(file.fsPath);
 				vscode.commands.executeCommand('vscode.open', pathname, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
@@ -53,27 +53,27 @@ export class DiffOpen {
 		try {
 			const fileA:DiffFile = diff.fileA;
 			const fileB:DiffFile = diff.fileB;
-			const statA = await lstat(fileA.path);
-			const statB = await lstat(fileB.path);
+			const statA = await lstat(fileA.fsPath);
+			const statB = await lstat(fileB.fsPath);
 			
 			if (statA.isFile() && statB.isFile()) {
-				const left = vscode.Uri.file(fileA.path);
-				const right = vscode.Uri.file(fileB.path);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.folder} ↔ ${fileB.folder})`, {
+				const left = vscode.Uri.file(fileA.fsPath);
+				const right = vscode.Uri.file(fileB.fsPath);
+				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
 			} else if (statA.isDirectory() && statB.isDirectory()) {
 				// const value = await DiffDialog.confirm(`Compare folder "${fileA.path}" with folder "${fileB.path}"`, 'Compare');
 				// if (value) {
-				// 	const left = vscode.Uri.file(fileA.path);
-				// 	const right = vscode.Uri.file(fileB.path);
+				// 	const left = vscode.Uri.file(fileA.fsPath);
+				// 	const right = vscode.Uri.file(fileB.fsPath);
 				// 	vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
 				// }
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
-				const left = SymlinkContentProvider.parse(fileA.path);
-				const right = SymlinkContentProvider.parse(fileB.path);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.folder} ↔ ${fileB.folder})`, {
+				const left = SymlinkContentProvider.parse(fileA.fsPath);
+				const right = SymlinkContentProvider.parse(fileB.fsPath);
+				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
@@ -130,7 +130,7 @@ function showFileInFinder (pathname:string) {
 
 function showFileInExplorer (pathname:string) {
 	
-	return spawn('explorer', ['/select,', pathname.replace(findBackslashEnd, '') || 'c:\\']);
+	return spawn('explorer', ['/select,', pathname || 'c:\\']);
 	
 }
 

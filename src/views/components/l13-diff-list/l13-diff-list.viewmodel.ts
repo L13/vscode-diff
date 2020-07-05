@@ -313,11 +313,11 @@ function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :bo
 	const fileFrom = `file${from}`;
 	const file:DiffFile = (<any>diff)[fileFrom];
 	
-	if (file && (<any>copiedDiff)[fileFrom].path.startsWith(file.path)) {
+	if (file && (<DiffFile>(<any>copiedDiff)[fileFrom]).path.startsWith(file.path)) {
 		const clone:DiffFile = parse(stringify(file));
 		const fileTo = `file${to}`;
-		clone.folder = (<any>copiedDiff)[fileTo].folder;
-		clone.path = clone.folder + clone.path.slice(file.folder.length);
+		clone.root = (<any>copiedDiff)[fileTo].root;
+		clone.path = clone.root + clone.path.slice(file.root.length);
 		(<any>diff)[fileTo] = clone;
 		diff.status = 'unchanged';
 		return true;

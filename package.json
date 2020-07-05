@@ -1,8 +1,8 @@
 {
 	"name": "l13-diff",
-	"displayName": "L13 Diff",
+	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.25.0",
+	"version": "0.26.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -52,7 +52,7 @@
 			"activitybar": [
 				{
 					"id": "l13Diff",
-					"title": "L13 Diff",
+					"title": "Diff Folders",
 					"icon": "images/favorites.svg"
 				}
 			]
@@ -72,12 +72,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[L13 Diff](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
 				"when": "isMac"
 			},
 			{
@@ -88,7 +88,7 @@
 		"commands": [
 			{
 				"command": "l13Diff.show",
-				"title": "L13 Diff",
+				"title": "Diff Folders",
 				"icon": {
 					"light": "images/open-diff-light.svg",
 					"dark": "images/open-diff-dark.svg"
@@ -96,11 +96,11 @@
 			},
 			{
 				"command": "l13Diff.open",
-				"title": "Open in L13 Diff"
+				"title": "Open in Diff Folders"
 			},
 			{
 				"command": "l13Diff.clearHistory",
-				"title": "L13 Diff: Clear History",
+				"title": "Diff Folders: Clear History",
 				"icon": {
 					"light": "images/history-clear-light.svg",
 					"dark": "images/history-clear-dark.svg"
@@ -143,8 +143,56 @@
 				"title": "Delete"
 			},
 			{
+				"command": "l13Diff.addFavoriteGroup",
+				"title": "New Group",
+				"icon": {
+					"light": "images/new-group-light.svg",
+					"dark": "images/new-group-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.collapseAll",
+				"title": "Collapse All",
+				"icon": {
+					"light": "images/collapse-group-light.svg",
+					"dark": "images/collapse-group-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.addToFavoriteGroup",
+				"title": "Add to Group"
+			},
+			{
+				"command": "l13Diff.removeFromFavoriteGroup",
+				"title": "Remove"
+			},
+			{
+				"command": "l13Diff.openFavoriteGroup",
+				"title": "Open All",
+				"icon": {
+					"light": "images/open-group-light.svg",
+					"dark": "images/open-group-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.openFavoriteGroupOnly",
+				"title": "Open All"
+			},
+			{
+				"command": "l13Diff.openFavoriteGroupAndCompare",
+				"title": "Open All & Compare"
+			},
+			{
+				"command": "l13Diff.renameFavoriteGroup",
+				"title": "Rename"
+			},
+			{
+				"command": "l13Diff.removeFavoriteGroup",
+				"title": "Delete"
+			},
+			{
 				"command": "l13Diff.clearFavorites",
-				"title": "L13 Diff: Delete All Favorites"
+				"title": "Diff Folders: Delete All Favorites"
 			},
 			{
 				"command": "l13Diff.openComparison",
@@ -172,7 +220,7 @@
 			},
 			{
 				"command": "l13Diff.showOutput",
-				"title": "L13 Diff: Show Output Channel"
+				"title": "Diff Folders: Show Output Channel"
 			},
 			{
 				"command": "l13Diff.compareProjectWithWorkspace",
@@ -180,7 +228,7 @@
 			},
 			{
 				"command": "l13Diff.openProject",
-				"title": "Open in L13 Diff"
+				"title": "Open in Diff Folders"
 			},
 			{
 				"command": "l13Diff.ignoreWhitespace",
@@ -281,6 +329,38 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.addToFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFromFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.collapseAll",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupOnly",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.renameFavoriteGroup",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.removeFavoriteGroup",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.openComparison",
 					"when": "false"
 				},
@@ -345,6 +425,16 @@
 					"group": "navigation@1"
 				},
 				{
+					"command": "l13Diff.addFavoriteGroup",
+					"when": "view == l13DiffFavorites",
+					"group": "navigation@2"
+				},
+				{
+					"command": "l13Diff.collapseAll",
+					"when": "view == l13DiffFavorites",
+					"group": "navigation@3"
+				},
+				{
 					"command": "l13Diff.clearHistory",
 					"when": "view == l13DiffHistory",
 					"group": "navigation@1"
@@ -354,27 +444,62 @@
 				{
 					"command": "l13Diff.openFavoriteOnly",
 					"group": "navigation@1",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.openFavoriteAndCompare",
 					"group": "navigation@2",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.addToFavoriteGroup",
+					"group": "navigation@3",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.openFavoriteInNewPanel",
 					"group": "inline",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.removeFromFavoriteGroup",
+					"group": "7_modification@1",
+					"when": "view == l13DiffFavorites && viewItem == subfavorite"
 				},
 				{
 					"command": "l13Diff.renameFavorite",
-					"group": "7_modification@1",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"group": "7_modification@2",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.removeFavorite",
+					"group": "7_modification@3",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroup",
+					"group": "inline",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupOnly",
+					"group": "navigation@1",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"group": "navigation@2",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.renameFavoriteGroup",
+					"group": "7_modification@1",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.removeFavoriteGroup",
 					"group": "7_modification@2",
-					"when": "view == l13DiffFavorites && viewItem == favorite"
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
 					"command": "l13Diff.openComparisonOnly",
@@ -447,7 +572,7 @@
 		},
 		"configuration": {
 			"type": "object",
-			"title": "L13 Diff",
+			"title": "Diff Folders",
 			"properties": {
 				"l13Diff.maxRecentlyUsed": {
 					"type": "number",
@@ -480,6 +605,21 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Should click on favorite start a compare?"
+				},
+				"l13Diff.initialFavoriteGroupState": {
+					"type": "string",
+					"default": "Remember",
+					"enum": [
+						"Remember",
+						"Collapsed",
+						"Expanded"
+					],
+					"description": "Indicates if a favorite group should be collapsed, expanded or remembered in its initial state.",
+					"enumDescriptions": [
+						"Remember the collpased and expanded state of each group.",
+						"Show all favorite groups collapsed at start.",
+						"Show all favorite groups expanded at start."
+					]
 				},
 				"l13Diff.ignoreEndOfLine": {
 					"type": "boolean",
@@ -527,14 +667,12 @@
 		"@types/node": "^12.12.35",
 		"@types/vscode": "^1.43.0",
 		"del": "^5.1.0",
+		"glob": "^7.1.3",
 		"gulp": "^4.0.2",
-		"gulp-concat": "^2.6.1",
-		"gulp-eol": "^0.2.0",
 		"gulp-sass": "^4.0.2",
-		"gulp-typescript": "^5.0.1",
+		"mocha": "^7.1.1",
 		"rollup": "^1.32.1",
 		"rollup-plugin-typescript": "^1.0.1",
-		"mocha": "^7.1.1",
 		"tslint": "^6.1.0",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.0.2"

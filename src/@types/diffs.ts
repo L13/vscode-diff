@@ -23,10 +23,11 @@ export type Diff = {
 };
 
 export type DiffFile = {
-	folder:string,
-	path:string,
+	root:string,
 	relative:string,
+	fsPath:string,
 	stat?:fs.Stats,
+	path:string,
 	name:string,
 	basename:string,
 	dirname:string,

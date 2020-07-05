@@ -193,8 +193,9 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				
 				if (stat.isDirectory()) {
 					job.result[pathname] = {
-						folder: cwd,
+						root: cwd,
 						relative: currentRelative,
+						fsPath: pathname,
 						stat,
 						
 						path: pathname + sep,
@@ -211,8 +212,9 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				
 				if (stat.isFile()) {
 					job.result[pathname] = {
-						folder: cwd,
+						root: cwd,
 						relative: currentRelative,
+						fsPath: pathname,
 						stat,
 						
 						path: pathname,
@@ -224,8 +226,9 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 					};
 				} else if (stat.isSymbolicLink()) {
 					job.result[pathname] = {
-						folder: cwd,
+						root: cwd,
 						relative: currentRelative,
+						fsPath: pathname,
 						stat,
 						
 						path: pathname,

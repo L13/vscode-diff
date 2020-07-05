@@ -1,28 +1,32 @@
-# L13 Diff
+# Diff Folders (L13 Diff)
 
 Compare two folders in Visual Studio Code.
 
-![L13 Diff](images/preview.png)
+![Diff Folders](images/preview.png)
 
-This extension is part of the [L13 Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack).
+## What's new in Diff Folders 0.26.0
 
-## What's new in L13 Diff 0.25.0
+- Changed display name for extension from `L13 Diff` to `Diff Folders`.
+- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
+- Added groups for favorites to group your diffs and open all at once.
+- Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
 
-- Added multi panel support. Open multiple panels by click on the new icon in the favorites view.
-- Added multi compare support. Press `Alt + Click` on the button or `Alt + Cmd + C` on macOS or `Alt + Ctrl + C` on Windows/Linux to start a comparison in all panels immediately.
-- Added multi copy support. Please read the description `Copy files to the left/right folder` for `Alt + Click` to see how it works.
-- Added button to the top right at the panel to toggle `l13Diff.ignoreEndOfLine`.
-- Added button to the top right at the panel to toggle `l13Diff.ignoreTrimWhitespace`. If value is `default` the property `diffEditor.ignoreTrimWhitespace` will be changed, otherwise the value will be `on` or `off`.
-- Added to see the content of symbolic links in a readonly editor or diff editor.
-- Added `Select for Compare`, `Compare with Selected` and `Compare Selected` to explorer list context menu.
+## Index
+
+1. [Features](#features)
+1. [Available Commands](#available-commands)
+1. [Available Settings](#available-settings)
+1. [Predefined Variables](#predefined-variables)
+1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
+1. [Recommended Extensions](#recommended-extensions)
 
 ## Features
 
-* Supports extension [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+* Supports extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 * Supports a history for recently used files, folders and previous comparisons.
 * Auto detects current workspaces.
 * Select folders with the context menu in the VS Code Explorer or the open dialog.
-* Drag'n Drop files and folders from the Finder/Explorer into the input fields.
+* Drag'n drop files and folders from the Finder/Explorer into the input fields.
 * Copy files and folders from left to right or vi­ce ver­sa. Symbolic links on Windows can only be copied if Visual Studio Code runs in administrator mode otherwise an error occurs.
 * Select all files, folders and symlinks by status.
 * Toggle the visiblity of list items by status.
@@ -41,48 +45,36 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * Open multiple panels by click on the icon in the favorites view.
 * Copy the same files from the same location to multiple folders at once.
 
-### Welcome
-
-![L13 Diff Welcome](images/preview-welcome.png)
-
 ### Basics
 
-![L13 Diff Basics](images/preview-start.png)
-
-### Menu
-
-![L13 Diff Menu](images/preview-menu.png)
+![Diff Folders Basics](images/preview-start.png)
 
 ### Favorites
 
-![L13 Diff Favorites](images/preview-favorites.png)
-
-### History
-
-![L13 Diff History](images/preview-history.png)
+![Diff Folders Favorites](images/preview-favorites.png)
 
 ### Search, filter or select
 
-![L13 Diff Search](images/preview-search.png)
+![Diff Folders Search](images/preview-search.png)
 
 ### List and navigator
 
-![L13 Diff Selection](images/preview-select.png)
+![Diff Folders Selection](images/preview-select.png)
 
 ### Logging and stats
 
-![L13 Diff Stats](images/preview-stats.png)
+![Diff Folders Stats](images/preview-stats.png)
 
-### Supports [L13 Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+### Supports the extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
-![L13 Projects](images/preview-l13-projects.png)
+![Projects](images/preview-projects.png)
 
 ## Available Commands
 
-* `L13 Diff` - Open the diff panel.
-* `Open in L13 Diff` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
-* `L13 Diff: Clear History` - Clear the history of recently used files, folders and previous comparisons.
-* `L13 Diff: Delete All Favorites` - Delete all favorites.
+* `Diff Folders` - Open the diff panel.
+* `Open in Diff Folders` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
+* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
+* `Diff Folders: Delete All Favorites` - Delete all favorites.
 
 ## Available Settings
 
@@ -90,8 +82,12 @@ This extension is part of the [L13 Extension Pack](https://marketplace.visualstu
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
-* `l13Diff.confirmCopy` - If true confirm dialog for copying files does not appear.
-* `l13Diff.confirmDelete` - If true confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
+* `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Projects.initialFavoriteGroupState` - Set the initial state of a group.
+	* `Remember` - (default) Remember the collpased and expanded state of each group.
+	* `Collapsed` - Show all groups collapsed at start.
+	* `Expanded` - Show all groups expanded at start.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
@@ -231,6 +227,10 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Open Containing Folder` - Shows the current file in the file manager.
 
+### List Drag'n Drop
+
+- `Drag'n Drop` - Drag a path in the list view to another path of the same type (file or symbolic link) and let it drop to open a diff with these two files. Paths can also be dropped into the input fields and the search widget.
+
 ### Search Widget
 
 #### All platforms
@@ -267,3 +267,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ### Navigator
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
+
+## Recommended Extensions
+
+- [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- [Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack)

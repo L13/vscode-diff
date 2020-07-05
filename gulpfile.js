@@ -278,7 +278,7 @@ gulp.task('watch', () => {
 	], gulp.parallel('script:services'));
 	
 	gulp.watch([
-		'src/index.ts',
+		'src/test/index.ts',
 		'src/**/*.test.ts',
 	], gulp.series('script:tests', 'test'));
 	

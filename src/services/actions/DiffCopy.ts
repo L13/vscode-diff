@@ -37,7 +37,7 @@ export class DiffCopy {
 	
 	private async copy (file:DiffFile, dest:string) :Promise<any> {
 		
-		const stat = lstatSync(file.path);
+		const stat = lstatSync(file.fsPath);
 		
 		if (stat) {
 			const statDest = lstatSync(dest);
@@ -57,7 +57,7 @@ export class DiffCopy {
 				if (!statDest || statDest.isFile()) {
 					return new Promise((resolve, reject) => {
 						
-						copyFile(file.path, dest, (error:Error) => {
+						copyFile(file.fsPath, dest, (error:Error) => {
 						
 							if (error) reject(error);
 							else resolve();
@@ -72,7 +72,7 @@ export class DiffCopy {
 					if (statDest) fs.unlinkSync(dest);
 					return new Promise((resolve, reject) => {
 						
-						fs.symlink(fs.readlinkSync(file.path), dest, (error:Error) => {
+						fs.symlink(fs.readlinkSync(file.fsPath), dest, (error:Error) => {
 						
 							if (error) reject(error);
 							else resolve();
@@ -141,7 +141,7 @@ export class DiffCopy {
 		diffs.forEach(async (diff:Diff) => {
 			
 			const fileFrom:DiffFile = (<any>diff)['file' + from];
-			const stat = lstatSync(fileFrom.path);
+			const stat = lstatSync(fileFrom.fsPath);
 			
 			if (stat) {
 				const dest = path.join(folderTo, fileFrom.relative);
@@ -153,11 +153,12 @@ export class DiffCopy {
 				
 					if (!fileTo) {
 						fileTo = {
-							folder: folderTo,
+							root: folderTo,
 							relative: fileFrom.relative,
+							fsPath: dest,
 							stat: null,
 							
-							path: dest,
+							path: dest + (fileFrom.type === 'folder' ? path.sep : ''),
 							name: fileFrom.name,
 							basename: fileFrom.basename,
 							dirname: fileFrom.dirname,

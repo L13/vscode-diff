@@ -58,7 +58,7 @@ export class DiffCompare {
 	
 	public initCompare (data:DiffInitMessage) :void {
 		
-		this._onInitCompare.fire();
+		this._onInitCompare.fire(undefined);
 		
 		let pathA = parsePredefinedVariables(data.pathA);
 		let pathB = parsePredefinedVariables(data.pathB);
@@ -93,8 +93,8 @@ export class DiffCompare {
 		
 		data.diffs.forEach((diff:Diff) => {
 			
-			diff.fileA.stat = lstatSync(diff.fileA.path);
-			diff.fileB.stat = lstatSync(diff.fileB.path);
+			diff.fileA.stat = lstatSync(diff.fileA.fsPath);
+			diff.fileB.stat = lstatSync(diff.fileB.fsPath);
 			
 			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace);
 			
@@ -249,8 +249,8 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 			(textfiles.extensions.includes(fileA.extname) ||
 			textfiles.filenames.includes(fileA.basename) ||
 			textfiles.glob && textfiles.glob.test(fileA.basename))) {
-			let bufferA = fs.readFileSync(fileA.path);
-			let bufferB = fs.readFileSync(fileB.path);
+			let bufferA = fs.readFileSync(fileA.fsPath);
+			let bufferB = fs.readFileSync(fileB.fsPath);
 		//	If files are equal normalizing is not necessary
 			if (statA.size === statB.size && bufferA.equals(bufferB)) return;
 			if (ignoreTrimWhitespace) {
@@ -268,14 +268,14 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 			if (statA.size !== statB.size) {
 				diff.status = 'modified';
 			} else {
-				const bufferA = fs.readFileSync(fileA.path);
-				const bufferB = fs.readFileSync(fileB.path);
+				const bufferA = fs.readFileSync(fileA.fsPath);
+				const bufferB = fs.readFileSync(fileB.fsPath);
 				if (!bufferA.equals(bufferB)) diff.status = 'modified';
 			}
 		}
 	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
-		const linkA = fs.readlinkSync(fileA.path);
-		const linkB = fs.readlinkSync(fileB.path);
+		const linkA = fs.readlinkSync(fileA.fsPath);
+		const linkB = fs.readlinkSync(fileB.fsPath);
 		if (linkA !== linkB) diff.status = 'modified';
 	}
 	
