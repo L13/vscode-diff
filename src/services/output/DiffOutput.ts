@@ -27,7 +27,7 @@ export class DiffOutput {
 	public constructor () {
 		
 		if (!DiffOutput.output) {
-			DiffOutput.output = vscode.window.createOutputChannel('L13 Diff');
+			DiffOutput.output = vscode.window.createOutputChannel('Diff Folders');
 		}
 		
 		DiffOutput.currentOutput = this;

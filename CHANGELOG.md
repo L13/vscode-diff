@@ -1,5 +1,15 @@
 # Change Log
-All notable changes to the "L13 Diff" extension will be documented in this file.
+All notable changes to the "Diff Folders" extension will be documented in this file.
+
+## [0.26.0] - 2020-07-05
+
+### Added
+- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
+- Added groups for favorites to group your diffs and open all at once.
+- Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
+
+### Changed
+- Changed display name for extension from `L13 Diff` to `Diff Folders`.
 
 ## [0.25.0] - 2020-06-21
 

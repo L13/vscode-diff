@@ -158,14 +158,119 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		let dragSrcElement:HTMLElement = null;
+		
+		this.content.addEventListener('dragstart', (event) => {
+			
+			if (this.disabled) return;
+			
+			dragSrcElement = (<HTMLElement>event.target);
+			
+			const columnNode = (<HTMLElement>dragSrcElement.closest('l13-diff-list-file'));
+			const rowNode = (<HTMLElement>columnNode.closest('l13-diff-list-row'));
+			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
+			const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
+			
+			dragSrcElement.style.opacity = '0.4';
+			event.dataTransfer.setData('data-diff-file', JSON.stringify(file));
+			
+		});
+		
+		let dropHoverElement:HTMLElement = null;
+		
+		this.content.addEventListener('dragover', (event) => {
+			
+			if (this.disabled) return;
+			
+			event.preventDefault();
+			
+			const element:HTMLElement = (<HTMLElement>event.target);
+			
+			if (element) {
+				const dropable:HTMLElement = element.closest('l13-diff-list-file');
+				if (dropable) {
+					if (dropHoverElement && dropHoverElement !== dropable) {
+						dropHoverElement.classList.remove('-draghover');
+					}
+					if (dropable !== dropHoverElement && dropable !== dragSrcElement?.parentElement && dropable.firstElementChild) {
+						dropHoverElement = dropable;
+						dropHoverElement.classList.add('-draghover');
+					}
+				}
+			}
+			
+		});
+		
+		this.content.addEventListener('dragexit', (event) => {
+			
+			event.preventDefault();
+			
+			dragSrcElement.style.opacity = '1';
+			dragSrcElement = null;
+			
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
+			}
+			
+		});
+		
+		this.content.addEventListener('dragend', (event) => {
+			
+			event.preventDefault();
+			
+			dragSrcElement.style.opacity = '1';
+			dragSrcElement = null;
+			
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
+			}
+			
+		});
+		
+		this.content.addEventListener('dragleave', (event) => {
+			
+			event.preventDefault();
+			
+			if (dropHoverElement) {
+				dropHoverElement.classList.remove('-draghover');
+				dropHoverElement = null;
+			}
+			
+		});
+		
+		this.content.addEventListener('drop', (event) => {
+			
+			if (this.disabled) return;
+			
+			event.preventDefault()
+			
+			const target = (<HTMLElement>(<HTMLElement>event.target).closest('l13-diff-list-file'));
+			const rowNode = (<HTMLElement>target.closest('l13-diff-list-row'));
+			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
+			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
+			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+			
+			if (fileA.fsPath === fileB.fsPath) return;
+			
+			msg.send('open:diff', {
+				id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
+				status: 'modified',
+				type: fileA.type === fileB.type ? fileA.type : 'mixed',
+				ignoredWhitespace: false,
+				ignoredEOL: false,
+				fileA,
+				fileB,
+			});
+			
+		});
+		
 		this.content.addEventListener('mouseover', ({ target }) => {
 			
 			if (<HTMLElement>target === this.context) return;
 			
-			let element:HTMLElement = null;
-			
-			if ((<HTMLElement>target).nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>target);
-			else if ((<HTMLElement>target).parentNode.nodeName === 'L13-DIFF-LIST-FILE') element = (<HTMLElement>(<HTMLElement>target).parentNode);
+			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
 			
 			if (element) {
 				if (element.childNodes.length) {
@@ -222,7 +327,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-file');
+			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
 			
 			msg.send('reveal:file', pathname);
 			
@@ -617,7 +722,11 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
-		column.setAttribute('data-file', file.path);
+		column.setAttribute('data-fs-path', file.fsPath);
+		
+		const path = document.createElement('SPAN');
+		path.draggable = true;
+		column.appendChild(path);
 		
 		if (file.dirname) {
 			const dirname = document.createDocumentFragment();
@@ -636,13 +745,13 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 				dirname.appendChild(dirnameMissing);
 			}
 			
-			column.appendChild(dirname);
+			path.appendChild(dirname);
 		}
 		
 		const basename = document.createElement('SPAN');
 		basename.textContent = file.basename;
 		basename.classList.add(`-basename`);
-		column.appendChild(basename);
+		path.appendChild(basename);
 		
 		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');

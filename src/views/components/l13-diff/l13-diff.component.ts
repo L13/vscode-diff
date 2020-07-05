@@ -189,13 +189,13 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	//	views view
 		
-		viewsVM.on('update', () => this.savePanelState());
+		//	Please see msg.on('init:view', (data) => { ... });
 		
 	//	search view
 		
 		searchVM.disable();
 		
-		searchVM.on('update', () => this.savePanelState());
+		//	Please see msg.on('init:view', (data) => { ... });
 		
 		search.addEventListener('close', () => {
 			
@@ -337,6 +337,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 			if (data.panel?.views) viewsVM.setState(data.panel.views);
 			if (data.panel?.search) searchVM.setState(data.panel.search);
+			
+			viewsVM.on('update', () => this.savePanelState());
+			searchVM.on('update', () => this.savePanelState());
 			
 			if (data.uris.length) {
 				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';

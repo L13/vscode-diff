@@ -29,7 +29,7 @@ export class DiffStatus {
 		if (!DiffStatus.statusBarItem) {
 			DiffStatus.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 			DiffStatus.statusBarItem.command = 'l13Diff.showOutput';
-			DiffStatus.statusBarItem.tooltip = 'L13 Diff Output';
+			DiffStatus.statusBarItem.tooltip = 'Diff Folders Output';
 			DiffStatus.statusBarItem.show();
 			context.subscriptions.push(DiffStatus.statusBarItem);
 		}
@@ -52,7 +52,7 @@ export class DiffStatus {
 	
 	public update (text:string = '') :void {
 		
-		this.currentText = '$(file-submodule) ' + (text || 'L13 Diff');
+		this.currentText = '$(file-submodule) ' + (text || 'Diff Folders');
 		
 		if (DiffStatus.currentStatus === this) DiffStatus.statusBarItem.text = this.currentText;
 		
