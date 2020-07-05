@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.26.0",
+	"version": "0.27.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -148,14 +148,6 @@
 				"icon": {
 					"light": "images/new-group-light.svg",
 					"dark": "images/new-group-dark.svg"
-				}
-			},
-			{
-				"command": "l13Diff.collapseAll",
-				"title": "Collapse All",
-				"icon": {
-					"light": "images/collapse-group-light.svg",
-					"dark": "images/collapse-group-dark.svg"
 				}
 			},
 			{
@@ -341,10 +333,6 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.collapseAll",
-					"when": "false"
-				},
-				{
 					"command": "l13Diff.openFavoriteGroupOnly",
 					"when": "false"
 				},
@@ -428,11 +416,6 @@
 					"command": "l13Diff.addFavoriteGroup",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@2"
-				},
-				{
-					"command": "l13Diff.collapseAll",
-					"when": "view == l13DiffFavorites",
-					"group": "navigation@3"
 				},
 				{
 					"command": "l13Diff.clearHistory",

@@ -22,14 +22,9 @@ export function activate (context:vscode.ExtensionContext) {
 	const subscriptions = context.subscriptions;
 	const diffFavoritesProvider = DiffFavorites.createProvider(context);
 	const treeView = vscode.window.createTreeView('l13DiffFavorites', {
-		treeDataProvider: diffFavoritesProvider
+		treeDataProvider: diffFavoritesProvider,
+		showCollapseAll: true,
 	});
-	
-	subscriptions.push(vscode.commands.registerCommand('l13Diff.collapseAll', () => {
-		
-		DiffFavorites.currentProvider?.collapseAll();
-		
-	}));
 	
 	treeView.onDidCollapseElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, true));
 	

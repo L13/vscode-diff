@@ -96,20 +96,6 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 	}
 	
-	public collapseAll () {
-		
-		const favoriteGroups:FavoriteGroup[] = this.context.globalState.get(FAVORITE_GROUPS, []);
-		
-		FavoriteGroupTreeItem.updateStateVersion();
-		
-		favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = true);
-		
-		this.context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
-		
-		this.refresh();
-		
-	}
-	
 	public static async addFavorite (context:vscode.ExtensionContext, fileA:string, fileB:string) {
 		
 		const label = await vscode.window.showInputBox({
