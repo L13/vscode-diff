@@ -8,7 +8,7 @@ import { copyFile, lstatSync, mkdirsSync } from '../@l13/nodes/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
-import { confirm } from '../../common/dialogs';
+import * as dialogs from '../../common/dialogs';
 import * as settings from '../../common/settings';
 
 //	Variables __________________________________________________________________
@@ -98,7 +98,7 @@ export class DiffCopy {
 		
 		if (confirmCopy && !data.multi) {
 			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffs[0].id}"`} to "${(<any>data)['path' + to]}"?`;
-			const value = await confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
+			const value = await dialogs.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
 			if (value) {
 				if (value === BUTTON_COPY_DONT_ASK_AGAIN) settings.update('confirmCopy', false);
@@ -117,7 +117,7 @@ export class DiffCopy {
 		
 		const folderFrom = from === 'left' ? data.pathA : data.pathB;
 		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" across all diff panels?`;
-		const value = await confirm(text, 'Copy');
+		const value = await dialogs.confirm(text, 'Copy');
 		
 		if (value) this._onInitMultiCopy.fire({ data, from });
 		else this._onDidCancel.fire(undefined);

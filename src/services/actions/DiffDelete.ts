@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { Dialog, Diff, DiffFile } from '../../types';
 
-import { confirm } from '../../common/dialogs';
+import * as dialogs from '../../common/dialogs';
 import * as settings from '../../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
@@ -69,7 +69,7 @@ export class DiffDelete {
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
-			const value = await confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
+			const value = await dialogs.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
 			if (value) {
 				if (value === dialog.buttonOk) settings.update('confirmDelete', false);
 				this.deleteFiles(data, side, useTrash);
@@ -111,7 +111,7 @@ export class DiffDelete {
 			}
 			
 			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-			const value = await confirm(text, dialog.buttonAll, ...args);
+			const value = await dialogs.confirm(text, dialog.buttonAll, ...args);
 				
 			if (value) {
 				if (value === dialog.buttonOk) settings.update('confirmDelete', false, true);
