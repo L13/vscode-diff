@@ -389,7 +389,7 @@ export class DiffPanel {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Diff Folders</title>
 				<script nonce="${nonceToken}">
-					const timeoutId = setTimeout(() => {
+					window.l13TimeoutId = setTimeout(() => {
 						
 						acquireVsCodeApi().postMessage({
 							command: 'error:init',

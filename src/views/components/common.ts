@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
 	
 });
 
-if ((<any>window).timeoutId) clearTimeout((<any>window).timeoutId);
+clearTimeout((<any>window).l13TimeoutId);
 
 //	Exports ____________________________________________________________________
 
