@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { remove } from '../../../@l13/natvies/arrays';
+import { remove } from '../../../@l13/arrays';
 import { Diff, DiffFile } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 

@@ -5,8 +5,9 @@ import * as vscode from 'vscode';
 import { Comparison } from '../../types';
 import { formatNameAndDesc } from '../@l13/utils/formats';
 
-import { DiffDialog } from '../common/DiffDialog';
-import { DiffSettings } from '../common/DiffSettings';
+import { confirm } from '../../common/dialogs';
+import * as settings from '../../common/settings';
+
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 //	Variables __________________________________________________________________
@@ -44,7 +45,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 		
 		this.comparisons = this.context.globalState.get(COMPARISONS_HISTORY) || [];
 		
-		this._onDidChangeTreeData.fire();
+		this._onDidChangeTreeData.fire(undefined);
 		
 	}
 	
@@ -66,7 +67,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
 	public static saveComparison (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
 		
-		const maxHistoryEntriesLength:number = <number>DiffSettings.get('maxHistoryEntries', 10);
+		const maxHistoryEntriesLength:number = <number>settings.get('maxHistoryEntries', 10);
 		const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 		let comparison:Comparison = null;
 		let i = 0;
@@ -94,7 +95,7 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	public static async removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
 		const text = `Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`;
-		const value = await DiffDialog.confirm(text, 'Delete');
+		const value = await confirm(text, 'Delete');
 		
 		if (value) {
 			const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];

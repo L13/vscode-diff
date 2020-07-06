@@ -2,14 +2,11 @@
 
 Compare two folders in Visual Studio Code.
 
-![Diff Folders](images/preview.png)
+![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.26.0
+## What's new in Diff Folders 0.27.0
 
-- Changed display name for extension from `L13 Diff` to `Diff Folders`.
-- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
-- Added groups for favorites to group your diffs and open all at once.
-- Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
+- Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ## Index
 
@@ -47,27 +44,27 @@ Compare two folders in Visual Studio Code.
 
 ### Basics
 
-![Diff Folders Basics](images/preview-start.png)
+![Diff Folders Basics](images/previews/preview-start.png)
 
 ### Favorites
 
-![Diff Folders Favorites](images/preview-favorites.png)
+![Diff Folders Favorites](images/previews/preview-favorites.png)
 
 ### Search, filter or select
 
-![Diff Folders Search](images/preview-search.png)
+![Diff Folders Search](images/previews/preview-search.png)
 
 ### List and navigator
 
-![Diff Folders Selection](images/preview-select.png)
+![Diff Folders Selection](images/previews/preview-select.png)
 
 ### Logging and stats
 
-![Diff Folders Stats](images/preview-stats.png)
+![Diff Folders Stats](images/previews/preview-stats.png)
 
 ### Supports the extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
-![Projects](images/preview-projects.png)
+![Projects](images/previews/preview-projects.png)
 
 ## Available Commands
 
@@ -257,6 +254,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Add to Group` - Add a favorite diff to a group.
+* `Remove` - Remove a favorite diff from a group.
 * `Rename` - Change the name of the favorite.
 * `Delete` - Delete the favorite diff.
 
@@ -267,6 +266,23 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ### Navigator
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
+
+### Visual Studio Code Explorer
+
+#### Context Menu
+
+* `Select for Compare` - Select a folder for a comparison.
+* `Compare with Selected` - Compare the folder selected one.
+* `Compare Selected` - Compare the two selected folders.
+
+### [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+#### Context Menu
+
+* `Select for Compare` - Select a folder, repository or project for a comparison.
+* `Compare with Selected` - Compare the folder, repository or project with the selected one.
+* `Compare with Workspace` - Compare the folder, repository or project with the current workspace.
+* `Open in Diff Folders` - Open the folder, repository or project in Diff Folders.
 
 ## Recommended Extensions
 

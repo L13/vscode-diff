@@ -7,7 +7,7 @@ import { Comparison } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-
+const basePath = join(__filename, '..', '..', 'images', 'history');
 
 //	Initialize _________________________________________________________________
 
@@ -24,8 +24,8 @@ export class HistoryTreeItem extends vscode.TreeItem {
 	};
 	
 	public iconPath = {
-		light: join(__filename, '..', '..', 'images', 'history-item-light.svg'),
-		dark: join(__filename, '..', '..', 'images', 'history-item-dark.svg'),
+		light: join(basePath, 'history-item-light.svg'),
+		dark: join(basePath, 'history-item-dark.svg'),
 	};
 	
 	public contextValue = 'history';

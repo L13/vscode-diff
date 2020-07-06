@@ -28,8 +28,11 @@ export * from './services/@types/settings';
 export * from './services/@types/tests';
 
 export * from './views/@types/events';
+export * from './views/@types/intro';
 export * from './views/@types/keyboards';
+export * from './views/@types/search';
 export * from './views/@types/states';
+export * from './views/@types/views';
 
 //	Functions __________________________________________________________________
 

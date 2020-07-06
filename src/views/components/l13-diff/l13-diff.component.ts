@@ -46,7 +46,7 @@ const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
 
-const round = Math.round;
+const { round } = Math;
 
 //	Initialize _________________________________________________________________
 

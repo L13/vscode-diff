@@ -8,8 +8,8 @@ import { copyFile, lstatSync, mkdirsSync } from '../@l13/nodes/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
-import { DiffDialog } from '../common/DiffDialog';
-import { DiffSettings } from '../common/DiffSettings';
+import { confirm } from '../../common/dialogs';
+import * as settings from '../../common/settings';
 
 //	Variables __________________________________________________________________
 
@@ -91,19 +91,19 @@ export class DiffCopy {
 	
 	public async showCopyFromToDialog (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
-		const confirmCopy = DiffSettings.get('confirmCopy', true);
+		const confirmCopy = settings.get('confirmCopy', true);
 		const length = data.diffs.length;
 		
 		if (!length) return;
 		
 		if (confirmCopy && !data.multi) {
 			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffs[0].id}"`} to "${(<any>data)['path' + to]}"?`;
-			const value = await DiffDialog.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
+			const value = await confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
 				
 			if (value) {
-				if (value === BUTTON_COPY_DONT_ASK_AGAIN) DiffSettings.update('confirmCopy', false);
+				if (value === BUTTON_COPY_DONT_ASK_AGAIN) settings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
-			} else this._onDidCancel.fire();
+			} else this._onDidCancel.fire(undefined);
 		} else this.copyFromTo(data, from, to);;
 		
 	}
@@ -117,10 +117,10 @@ export class DiffCopy {
 		
 		const folderFrom = from === 'left' ? data.pathA : data.pathB;
 		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" across all diff panels?`;
-		const value = await DiffDialog.confirm(text, 'Copy');
+		const value = await confirm(text, 'Copy');
 		
 		if (value) this._onInitMultiCopy.fire({ data, from });
-		else this._onDidCancel.fire();
+		else this._onDidCancel.fire(undefined);
 		
 	}
 	

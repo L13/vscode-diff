@@ -1,13 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Diff, DiffFile } from '../../types';
 
 import { lstat } from '../@l13/nodes/fse';
-import { isMacOs, isWindows } from '../@l13/nodes/platforms';
 
 import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
@@ -101,41 +98,7 @@ export class DiffOpen {
 		
 	}
 	
-	public static reveal (pathname:string) :void {
-		
-		let process:ChildProcessWithoutNullStreams = null;
-		
-		if (isMacOs) process = showFileInFinder(pathname);
-		else if (isWindows) process = showFileInExplorer(pathname);
-		else process = showFileInFolder(pathname);
-		
-		process.on('error', (error:Error) => {
-			
-			process.kill();
-			vscode.window.showErrorMessage(error.message);
-			
-		});
-		
-	}
-	
 }
 
 //	Functions __________________________________________________________________
 
-function showFileInFinder (pathname:string) {
-	
-	return spawn('open', ['-R', pathname || '/']);
-	
-}
-
-function showFileInExplorer (pathname:string) {
-	
-	return spawn('explorer', ['/select,', pathname || 'c:\\']);
-	
-}
-
-function showFileInFolder (pathname:string) {
-	
-	return spawn('xdg-open', [path.dirname(pathname) || '/']);
-	
-}

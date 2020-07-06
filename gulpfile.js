@@ -266,15 +266,20 @@ gulp.task('watch', () => {
 	], gulp.parallel('icons:fix'));
 	
 	gulp.watch([
-		'src/views/**/!(*.test).ts',
+		'src/@l13/**/!(*.test).ts',
+		'src/@types/**/*.ts',
 		'src/types.ts',
+		'src/views/**/!(*.test).ts',
 	], gulp.parallel('script:view'));
 	
 	gulp.watch([
+		'src/@l13/**/!(*.test).ts',
+		'src/@types/**/*.ts',
 		'src/extension.ts',
 		'src/types.ts',
-		'src/services/**/!(*.test).ts',
 		'src/commands/**/!(*.test).ts',
+		'src/common/**/!(*.test).ts',
+		'src/services/**/!(*.test).ts',
 	], gulp.parallel('script:services'));
 	
 	gulp.watch([

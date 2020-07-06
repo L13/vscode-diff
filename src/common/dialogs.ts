@@ -12,25 +12,21 @@ import * as vscode from 'vscode';
 
 //	Exports ____________________________________________________________________
 
-export class DiffDialog {
+export async function open () {
 	
-	public static async open () {
-		
-		const uris = await vscode.window.showOpenDialog({
-			canSelectFiles: true,
-			canSelectFolders: true,
-			canSelectMany: false,
-		});
-		
-		return uris ? uris[0].fsPath : null;
-		
-	}
+	const uris = await vscode.window.showOpenDialog({
+		canSelectFiles: true,
+		canSelectFolders: true,
+		canSelectMany: true,
+	});
 	
-	public static async confirm (text:string, ...buttons:string[]) {
-		
-		return await vscode.window.showInformationMessage(text, { modal: true }, ...buttons);
-		
-	}
+	return uris || null;
+	
+}
+	
+export async function confirm (text:string, ...buttons:string[]) {
+	
+	return await vscode.window.showInformationMessage(text, { modal: true }, ...buttons);
 	
 }
 

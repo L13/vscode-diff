@@ -1,10 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as vscode from 'vscode';
-
-import { DiffOutput } from '../services/output/DiffOutput';
-
-import { register } from '../common/commands';
+import { Diff } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -16,13 +12,18 @@ import { register } from '../common/commands';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
-	
-	register(context, {
-		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
-	});
-	
-}
+export type SearchCache = {
+	searchterm:string,
+	useRegExp:boolean,
+	useCaseSensitive:boolean,
+	useFiles:boolean,
+	useFolders:boolean,
+	useSymlinks:boolean,
+	useConflicts:boolean,
+	regexp:RegExp,
+	items:Diff[],
+	filteredItems:Diff[],
+};
 
 //	Functions __________________________________________________________________
 

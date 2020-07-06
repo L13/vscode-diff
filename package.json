@@ -39,6 +39,8 @@
 		"onCommand:l13Diff.showOutput",
 		"onCommand:l13Diff.compareProjectWithWorkspace",
 		"onCommand:l13Diff.openProject",
+		"onCommand:l13Diff.selectProjectForCompare",
+		"onCommand:l13Diff.compareProjectWithSelected",
 		"onCommand:l13Diff.selectForCompare",
 		"onCommand:l13Diff.compareWithSelected",
 		"onCommand:l13Diff.compareSelected",
@@ -90,8 +92,8 @@
 				"command": "l13Diff.show",
 				"title": "Diff Folders",
 				"icon": {
-					"light": "images/open-diff-light.svg",
-					"dark": "images/open-diff-dark.svg"
+					"light": "images/favorites/open-diff-light.svg",
+					"dark": "images/favorites/open-diff-dark.svg"
 				}
 			},
 			{
@@ -102,16 +104,16 @@
 				"command": "l13Diff.clearHistory",
 				"title": "Diff Folders: Clear History",
 				"icon": {
-					"light": "images/history-clear-light.svg",
-					"dark": "images/history-clear-dark.svg"
+					"light": "images/history/history-clear-light.svg",
+					"dark": "images/history/history-clear-dark.svg"
 				}
 			},
 			{
 				"command": "l13Diff.addToFavorites",
 				"title": "Add to Favorites",
 				"icon": {
-					"light": "images/favorite-add-light.svg",
-					"dark": "images/favorite-add-dark.svg"
+					"light": "images/favorites/favorite-add-light.svg",
+					"dark": "images/favorites/favorite-add-dark.svg"
 				}
 			},
 			{
@@ -130,8 +132,8 @@
 				"command": "l13Diff.openFavoriteInNewPanel",
 				"title": "Open in New Panel",
 				"icon": {
-					"light": "images/open-diff-light.svg",
-					"dark": "images/open-diff-dark.svg"
+					"light": "images/favorites/open-diff-light.svg",
+					"dark": "images/favorites/open-diff-dark.svg"
 				}
 			},
 			{
@@ -146,8 +148,8 @@
 				"command": "l13Diff.addFavoriteGroup",
 				"title": "New Group",
 				"icon": {
-					"light": "images/new-group-light.svg",
-					"dark": "images/new-group-dark.svg"
+					"light": "images/favorites/new-group-light.svg",
+					"dark": "images/favorites/new-group-dark.svg"
 				}
 			},
 			{
@@ -162,8 +164,8 @@
 				"command": "l13Diff.openFavoriteGroup",
 				"title": "Open All",
 				"icon": {
-					"light": "images/open-group-light.svg",
-					"dark": "images/open-group-dark.svg"
+					"light": "images/favorites/open-group-light.svg",
+					"dark": "images/favorites/open-group-dark.svg"
 				}
 			},
 			{
@@ -202,8 +204,8 @@
 				"command": "l13Diff.openComparisonInNewPanel",
 				"title": "Open in New Panel",
 				"icon": {
-					"light": "images/open-diff-light.svg",
-					"dark": "images/open-diff-dark.svg"
+					"light": "images/favorites/open-diff-light.svg",
+					"dark": "images/favorites/open-diff-dark.svg"
 				}
 			},
 			{
@@ -223,35 +225,43 @@
 				"title": "Open in Diff Folders"
 			},
 			{
+				"command": "l13Diff.selectProjectForCompare",
+				"title": "Select for Compare"
+			},
+			{
+				"command": "l13Diff.compareProjectWithSelected",
+				"title": "Compare with Selected"
+			},
+			{
 				"command": "l13Diff.ignoreWhitespace",
 				"title": "Ignore Leading/Trailing Whitespace",
 				"icon": {
-					"light": "images/toggle-whitespace-light.svg",
-					"dark": "images/toggle-whitespace-dark.svg"
+					"light": "images/panels/toggle-whitespace-light.svg",
+					"dark": "images/panels/toggle-whitespace-dark.svg"
 				}
 			},
 			{
 				"command": "l13Diff.compareWhitespace",
 				"title": "Compare Leading/Trailing Whitespace",
 				"icon": {
-					"light": "images/toggle-whitespace-disabled-light.svg",
-					"dark": "images/toggle-whitespace-disabled-dark.svg"
+					"light": "images/panels/toggle-whitespace-disabled-light.svg",
+					"dark": "images/panels/toggle-whitespace-disabled-dark.svg"
 				}
 			},
 			{
 				"command": "l13Diff.ignoreEndOfLine",
 				"title": "Ignore End of Line",
 				"icon": {
-					"light": "images/toggle-eol-light.svg",
-					"dark": "images/toggle-eol-dark.svg"
+					"light": "images/panels/toggle-eol-light.svg",
+					"dark": "images/panels/toggle-eol-dark.svg"
 				}
 			},
 			{
 				"command": "l13Diff.compareEndOfLine",
 				"title": "Compare End of Line",
 				"icon": {
-					"light": "images/toggle-eol-disabled-light.svg",
-					"dark": "images/toggle-eol-disabled-dark.svg"
+					"light": "images/panels/toggle-eol-disabled-light.svg",
+					"dark": "images/panels/toggle-eol-disabled-dark.svg"
 				}
 			},
 			{
@@ -374,6 +384,14 @@
 				},
 				{
 					"command": "l13Diff.openProject",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.selectProjectForCompare",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.compareProjectWithSelected",
 					"when": "false"
 				},
 				{
@@ -505,13 +523,23 @@
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.compareProjectWithWorkspace",
+					"command": "l13Diff.compareProjectWithSelected",
 					"group": "3_compare@1",
+					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+				},
+				{
+					"command": "l13Diff.selectProjectForCompare",
+					"group": "3_compare@2",
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+				},
+				{
+					"command": "l13Diff.compareProjectWithWorkspace",
+					"group": "3_compare@3",
 					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.openProject",
-					"group": "3_compare@1",
+					"group": "3_compare@4",
 					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				}
 			],

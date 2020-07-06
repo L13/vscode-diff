@@ -2,10 +2,6 @@
 
 import * as vscode from 'vscode';
 
-import { DiffOutput } from '../services/output/DiffOutput';
-
-import { register } from '../common/commands';
-
 //	Variables __________________________________________________________________
 
 
@@ -16,11 +12,11 @@ import { register } from '../common/commands';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
-	
-	register(context, {
-		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
-	});
+export function register (context:vscode.ExtensionContext, commands:{ [command:string]: (...args:any) => void }) {
+
+	for (const [command, callback] of Object.entries(commands)) {
+		context.subscriptions.push(vscode.commands.registerCommand(command, callback));
+	}
 	
 }
 

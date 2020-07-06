@@ -1,10 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as vscode from 'vscode';
 
-import { DiffOutput } from '../services/output/DiffOutput';
-
-import { register } from '../common/commands';
 
 //	Variables __________________________________________________________________
 
@@ -16,13 +12,12 @@ import { register } from '../common/commands';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
-	
-	register(context, {
-		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
-	});
-	
-}
+export type DisplayShortcut = {
+	description:string,
+	key:string,
+	mac?:string,
+	win?:string,
+};
 
 //	Functions __________________________________________________________________
 

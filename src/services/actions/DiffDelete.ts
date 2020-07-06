@@ -4,8 +4,9 @@ import * as vscode from 'vscode';
 
 import { Dialog, Diff, DiffFile } from '../../types';
 
-import { DiffDialog } from '../common/DiffDialog';
-import { DiffSettings } from '../common/DiffSettings';
+import { confirm } from '../../common/dialogs';
+import * as settings from '../../common/settings';
+
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
@@ -63,16 +64,16 @@ export class DiffDelete {
 		
 		if (!diffs.length) return;
 		
-		const useTrash:boolean = DiffSettings.enableTrash();
-		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
+		const useTrash:boolean = settings.enableTrash();
+		const confirmDelete:boolean = settings.get('confirmDelete', true);
 		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
-			const value = await DiffDialog.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
+			const value = await confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
 			if (value) {
-				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false);
+				if (value === dialog.buttonOk) settings.update('confirmDelete', false);
 				this.deleteFiles(data, side, useTrash);
-			} else this._onDidCancel.fire();
+			} else this._onDidCancel.fire(undefined);
 		} else this.deleteFiles(data, side, useTrash);
 		
 	}
@@ -93,8 +94,8 @@ export class DiffDelete {
 			if (sides > 2) break;
 		}
 		
-		const useTrash:boolean = DiffSettings.enableTrash();
-		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
+		const useTrash:boolean = settings.enableTrash();
+		const confirmDelete:boolean = settings.get('confirmDelete', true);
 		
 		if (confirmDelete || sides > 2) {
 			let dialog:Dialog = null;
@@ -110,12 +111,12 @@ export class DiffDelete {
 			}
 			
 			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-			const value = await DiffDialog.confirm(text, dialog.buttonAll, ...args);
+			const value = await confirm(text, dialog.buttonAll, ...args);
 				
 			if (value) {
-				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false, true);
+				if (value === dialog.buttonOk) settings.update('confirmDelete', false, true);
 				this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-			} else this._onDidCancel.fire();
+			} else this._onDidCancel.fire(undefined);
 		} else this.deleteFiles(data, 'all', useTrash);
 		
 	}

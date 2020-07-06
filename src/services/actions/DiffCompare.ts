@@ -7,10 +7,12 @@ import * as vscode from 'vscode';
 import { normalizeLineEnding, trimWhitespace } from '../@l13/nodes/buffers';
 import { lstatSync, walkTree } from '../@l13/nodes/fse';
 
-import { sortCaseInsensitive } from '../../@l13/natvies/arrays';
+import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
-import { DiffSettings, textfiles } from '../common/DiffSettings';
+import { textfiles } from '../../common/extensions';
+import * as settings from '../../common/settings';
+
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
@@ -88,8 +90,8 @@ export class DiffCompare {
 	
 	public updateDiffs (data:DiffResult) :void {
 		
-		const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
-		const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
+		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+		const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 		
 		data.diffs.forEach((diff:Diff) => {
 			
@@ -110,7 +112,7 @@ export class DiffCompare {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
-		const openToSide = DiffSettings.get('openToSide', false);
+		const openToSide = settings.get('openToSide', false);
 		
 		this._onStartCompareFiles.fire({ data, pathA, pathB });
 		
@@ -166,7 +168,7 @@ export class DiffCompare {
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
-		const ignore = DiffSettings.getIgnore(dirnameA, dirnameB);
+		const ignore = settings.getIgnore(dirnameA, dirnameB);
 		const resultA:StatsMap = await this.scanFolder(dirnameA, ignore);
 		const resultB:StatsMap = await this.scanFolder(dirnameB, ignore);
 		const diffs:Dictionary<Diff> = {};
@@ -209,8 +211,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
-	const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
-	const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
+	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 	
 	Object.keys(result).forEach((pathname) => {
 		

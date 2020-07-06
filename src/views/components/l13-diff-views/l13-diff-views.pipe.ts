@@ -5,18 +5,11 @@ import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 import { L13DiffViewsViewModelService } from './l13-diff-views.service';
 import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
-import { Diff } from '../../../types';
+import { Diff, ViewsCache } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-type Cache = {
-	unchangedChecked:boolean,
-	deletedChecked:boolean,
-	modifiedChecked:boolean,
-	untrackedChecked:boolean,
-	items:Diff[],
-	filteredItems:Diff[],
-};
+
 
 //	Initialize _________________________________________________________________
 
@@ -28,7 +21,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 	
 	public vm:L13DiffViewsViewModel = null;
 	
-	private cache:Cache = {
+	private cache:ViewsCache = {
 		unchangedChecked: false,
 		deletedChecked: true,
 		modifiedChecked: true,
