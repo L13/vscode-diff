@@ -86,14 +86,16 @@ export class DiffOpen {
 		
 		switch (diff.status) {
 			case 'deleted':
-				DiffOpen.openFile(diff.fileA, openToSide);
+			case 'untracked':
+				DiffOpen.openFile(diff.fileA || diff.fileB, openToSide);
 				break;
 			case 'modified':
 			case 'unchanged':
 				DiffOpen.openDiff(diff, openToSide);
 				break;
-			case 'untracked':
-				DiffOpen.openFile(diff.fileB, openToSide);
+			case 'ignored':
+				if (diff.fileA && diff.fileB) DiffOpen.openDiff(diff, openToSide);
+				else DiffOpen.openFile(diff.fileA || diff.fileB, openToSide);
 				break;
 		}
 		

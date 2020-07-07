@@ -159,14 +159,14 @@ export class DiffPanel {
 		this.compare.onDidCompareFolders((data:DiffResult) => {
 			
 			const diffStats = new DiffStats(data);
-			const total = diffStats.all.total;
-			const text = `Compared ${total} entr${total === 1 ? 'y' : 'ies'}`;
+			const entries = diffStats.all.entries;
+			const text = `Compared ${entries} entr${entries === 1 ? 'y' : 'ies'}`;
 			
 			this.status.update(text);
-			this.output.log(`${text}\n\n`);
+			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!total) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!entries) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', data);
 			
