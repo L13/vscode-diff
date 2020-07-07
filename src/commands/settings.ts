@@ -2,9 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import * as settings from '../common/settings';
-
 import { register } from '../common/commands';
+import { buildWhitelistForTextFiles } from '../common/extensions';
+import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
 
@@ -17,6 +17,10 @@ import { register } from '../common/commands';
 //	Exports ____________________________________________________________________
 
 export function activate (context:vscode.ExtensionContext) {
+	
+	buildWhitelistForTextFiles();
+
+	context.subscriptions.push(vscode.extensions.onDidChange(() => buildWhitelistForTextFiles()));
 	
 	register(context, {
 		

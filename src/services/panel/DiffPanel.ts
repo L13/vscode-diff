@@ -8,7 +8,7 @@ import { isMacOs, isWindows } from '../../@l13/platforms';
 import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
 import { formatNameAndDesc } from '../@l13/utils/formats';
 
-import { open } from '../../common/dialogs';
+import * as dialogs from '../../common/dialogs';
 import * as files from '../../common/files';
 import * as settings from '../../common/settings';
 
@@ -263,7 +263,7 @@ export class DiffPanel {
 		
 		this.msg.on('open:dialog', async () => {
 			
-			const fsPath = await open();
+			const fsPath = await dialogs.open();
 			
 			this.msg.send('open:dialog', { fsPath });
 			

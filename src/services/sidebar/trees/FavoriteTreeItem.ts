@@ -1,13 +1,17 @@
 //	Imports ____________________________________________________________________
 
-import { join } from 'path';
+import { join, resolve } from 'path';
 import * as vscode from 'vscode';
 
 import { Favorite } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-const basePath = join(__filename, '..', '..', 'images', 'favorites');
+const basePath = resolve(__dirname, '..', 'images', 'favorites');
+const iconPath = {
+	light: join(basePath, 'favorite-item-light.svg'),
+	dark: join(basePath, 'favorite-item-dark.svg'),
+};
 
 //	Initialize _________________________________________________________________
 
@@ -23,10 +27,7 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 		title: 'Open Favorite',
 	};
 	
-	public iconPath = {
-		light: join(basePath, 'favorite-item-light.svg'),
-		dark: join(basePath, 'favorite-item-dark.svg'),
-	};
+	public iconPath = iconPath;;
 	
 	public contextValue = 'favorite';
 	

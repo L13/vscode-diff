@@ -2,13 +2,12 @@
 
 import * as vscode from 'vscode';
 
+import { register } from '../common/commands';
 import * as dialogs from '../common/dialogs';
 
 import { DiffMenu } from '../services/panel/DiffMenu';
 import { DiffPanel } from '../services/panel/DiffPanel';
 import { DiffHistory } from '../services/sidebar/DiffHistory';
-
-import { register } from '../common/commands';
 
 //	Variables __________________________________________________________________
 

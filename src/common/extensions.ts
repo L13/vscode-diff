@@ -18,17 +18,11 @@ export const textfiles:TextFiles = {
 
 //	Initialize _________________________________________________________________
 
-buildWhitelistForTextFiles();
 
-vscode.extensions.onDidChange(() => buildWhitelistForTextFiles());
 
 //	Exports ____________________________________________________________________
 
-
-
-//	Functions __________________________________________________________________
-
-function buildWhitelistForTextFiles () {
+export function buildWhitelistForTextFiles () {
 	
 	const config = vscode.workspace.getConfiguration();
 	
@@ -58,3 +52,6 @@ function buildWhitelistForTextFiles () {
 	textfiles.filenames.sort();
 	
 }
+
+//	Functions __________________________________________________________________
+

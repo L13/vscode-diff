@@ -2,9 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import { DiffOutput } from '../services/output/DiffOutput';
-
 import { register } from '../common/commands';
+
+import { DiffOutput } from '../services/output/DiffOutput';
 
 //	Variables __________________________________________________________________
 

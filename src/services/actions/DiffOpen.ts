@@ -56,13 +56,13 @@ export class DiffOpen {
 			if (statA.isFile() && statB.isFile()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
+				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+				vscode.commands.executeCommand('vscode.diff', left, right, title, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
 			} else if (statA.isDirectory() && statB.isDirectory()) {
-				// const value = await DiffDialog.confirm(`Compare folder "${fileA.path}" with folder "${fileB.path}"`, 'Compare');
-				// if (value) {
+				// if (await dialogs.confirm(`Compare folder "${fileA.fsPath}" with folder "${fileB.fsPath}"`, 'Compare')) {
 				// 	const left = vscode.Uri.file(fileA.fsPath);
 				// 	const right = vscode.Uri.file(fileB.fsPath);
 				// 	vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
@@ -70,7 +70,8 @@ export class DiffOpen {
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
+				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+				vscode.commands.executeCommand('vscode.diff', left, right, title, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});

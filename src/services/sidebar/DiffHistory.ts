@@ -95,9 +95,8 @@ export class DiffHistory implements vscode.TreeDataProvider<HistoryTreeItem> {
 	public static async removeComparison (context:vscode.ExtensionContext, comparison:Comparison) {
 		
 		const text = `Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`;
-		const value = await dialogs.confirm(text, 'Delete');
 		
-		if (value) {
+		if (await dialogs.confirm(text, 'Delete')) {
 			const comparisons:Comparison[] = context.globalState.get(COMPARISONS_HISTORY) || [];
 			
 			for (let i = 0; i < comparisons.length; i++) {

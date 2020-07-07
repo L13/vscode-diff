@@ -2,9 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import { DiffPanel } from '../services/panel/DiffPanel';
-
 import { register } from '../common/commands';
+
+import { DiffPanel } from '../services/panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 

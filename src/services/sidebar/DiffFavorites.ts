@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { Favorite, FavoriteGroup, InitialState } from '../../types';
+import { Favorite, FavoriteGroup, FavoriteTreeItems, InitialState } from '../../types';
 
 import * as dialogs from '../../common/dialogs';
 import * as settings from '../../common/settings';
@@ -17,8 +17,6 @@ const FAVORITES = 'favorites';
 const FAVORITE_GROUPS = 'favoriteGroups';
 
 const BUTTON_DELETE_GROUP_AND_FAVORITES = 'Delete Group and Favorites';
-
-type FavoriteTreeItems = FavoriteTreeItem|FavoriteGroupTreeItem;
 
 //	Initialize _________________________________________________________________
 
@@ -155,9 +153,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	
 	public static async removeFavorite (context:vscode.ExtensionContext, favorite:Favorite) {
 		
-		const value = await dialogs.confirm(`Delete favorite "${favorite.label}"?`, 'Delete');
-		
-		if (value) {
+		if (await dialogs.confirm(`Delete favorite "${favorite.label}"?`, 'Delete')) {
 			const favorites:Favorite[] = context.globalState.get(FAVORITES) || [];
 			
 			for (let i = 0; i < favorites.length; i++) {
@@ -316,9 +312,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 	
 	public static async clearFavorites (context:vscode.ExtensionContext) {
 		
-		const value = await dialogs.confirm(`Delete all favorites and groups?'`, 'Delete');
-		
-		if (value) {
+		if (await dialogs.confirm(`Delete all favorites and groups?'`, 'Delete')) {
 			context.globalState.update(FAVORITES, []);
 			context.globalState.update(FAVORITE_GROUPS, []);
 			DiffFavorites.currentProvider?.refresh();

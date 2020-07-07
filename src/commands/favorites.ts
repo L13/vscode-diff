@@ -2,13 +2,12 @@
 
 import * as vscode from 'vscode';
 
+import { register } from '../common/commands';
 import * as settings from '../common/settings';
 
 import { DiffPanel } from '../services/panel/DiffPanel';
 import { DiffFavorites } from '../services/sidebar/DiffFavorites';
 import { FavoriteGroupTreeItem } from '../services/sidebar/trees/FavoriteGroupTreeItem';
-
-import { register } from '../common/commands';
 
 //	Variables __________________________________________________________________
 
@@ -29,10 +28,8 @@ export function activate (context:vscode.ExtensionContext) {
 		showCollapseAll: true,
 	});
 	
-	treeView.onDidCollapseElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, true));
-	
-	treeView.onDidExpandElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, false));
-	
+	subscriptions.push(treeView.onDidCollapseElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, true)));
+	subscriptions.push(treeView.onDidExpandElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, false)));
 	subscriptions.push(treeView);
 	
 	register(context, {

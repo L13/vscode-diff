@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
-
+import { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
+import { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
 
 //	Variables __________________________________________________________________
 
@@ -11,6 +12,8 @@
 
 
 //	Exports ____________________________________________________________________
+
+export type FavoriteTreeItems = FavoriteTreeItem|FavoriteGroupTreeItem;
 
 export type Favorite = {
 	fileA:string;
