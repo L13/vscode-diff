@@ -148,7 +148,7 @@ export class DiffCopy {
 				
 				try {
 					await this.copy(fileFrom, dest);
-					diff.status = 'unchanged';
+					if (diff.status !== 'ignored') diff.status = 'unchanged';
 					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
 				
 					if (!fileTo) {
@@ -164,6 +164,7 @@ export class DiffCopy {
 							dirname: fileFrom.dirname,
 							extname: fileFrom.extname,
 							type: fileFrom.type,
+							ignore: fileFrom.ignore,
 						};
 						if (to === 'A') diff.fileA = fileTo;
 						else diff.fileB = fileTo;

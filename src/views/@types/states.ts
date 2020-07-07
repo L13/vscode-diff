@@ -27,6 +27,7 @@ export type ViewsState = {
 	deletedChecked:boolean,
 	modifiedChecked:boolean,
 	untrackedChecked:boolean,
+	ignoredChecked:boolean,
 };
 
 //	Functions __________________________________________________________________

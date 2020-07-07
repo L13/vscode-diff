@@ -26,6 +26,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		deletedChecked: true,
 		modifiedChecked: true,
 		untrackedChecked: true,
+		ignoredChecked: false,
 		items: [],
 		filteredItems: [],
 	};
@@ -46,6 +47,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 			&& vm.deletedChecked === cache.deletedChecked
 			&& vm.modifiedChecked === cache.modifiedChecked
 			&& vm.untrackedChecked === cache.untrackedChecked
+			&& vm.ignoredChecked === cache.ignoredChecked
 			) {
 			return cache.filteredItems;
 		}
@@ -55,13 +57,15 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		cache.deletedChecked = vm.deletedChecked;
 		cache.modifiedChecked = vm.modifiedChecked;
 		cache.untrackedChecked = vm.untrackedChecked;
+		cache.ignoredChecked = vm.ignoredChecked;
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
 			return vm.unchangedChecked && diff.status === 'unchanged'
 				|| vm.deletedChecked && diff.status === 'deleted'
 				|| vm.modifiedChecked && (diff.status === 'modified' || diff.status === 'conflicting')
-				|| vm.untrackedChecked && diff.status === 'untracked';
+				|| vm.untrackedChecked && diff.status === 'untracked'
+				|| vm.ignoredChecked && diff.status === 'ignored';
 			
 		});
 		

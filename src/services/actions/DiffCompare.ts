@@ -197,7 +197,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 		
 		diffs[id] = {
 			id,
-			status: 'deleted',
+			status: file.ignore ? 'ignored' : 'deleted',
 			type: file.type,
 			ignoredEOL: false,
 			ignoredWhitespace: false,
@@ -223,7 +223,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 		if (!diff) {
 			diffs[id] = {
 				id,
-				status: 'untracked',
+				status: file.ignore ? 'ignored' : 'untracked',
 				type: file.type,
 				ignoredEOL: false,
 				ignoredWhitespace: false,
@@ -238,10 +238,15 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
 	
-	diff.status = 'unchanged';
-	
 	const statA = <fs.Stats>fileA.stat;
 	const statB = <fs.Stats>fileB.stat;
+	
+	if (diff.status === 'ignored') {
+		if (fileA.type !== fileB.type) diff.type = 'mixed';
+		return;
+	}
+	
+	diff.status = 'unchanged';
 	
 	if (fileA.type !== fileB.type) {
 		diff.status = 'conflicting';

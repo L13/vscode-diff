@@ -724,6 +724,11 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-fs-path', file.fsPath);
 		
+		if (file.ignore) {
+			 if (!diff.fileA) column.classList.add('-untracked');
+			 if (!diff.fileB) column.classList.add('-deleted');
+		}
+		
 		const path = document.createElement('SPAN');
 		path.draggable = true;
 		column.appendChild(path);

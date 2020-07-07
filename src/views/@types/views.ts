@@ -17,6 +17,7 @@ export type ViewsCache = {
 	deletedChecked:boolean,
 	modifiedChecked:boolean,
 	untrackedChecked:boolean,
+	ignoredChecked:boolean,
 	items:Diff[],
 	filteredItems:Diff[],
 };

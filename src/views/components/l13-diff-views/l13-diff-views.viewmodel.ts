@@ -40,6 +40,8 @@ export class L13DiffViewsViewModel extends ViewModel {
 	
 	public untrackedChecked:boolean = true;
 	
+	public ignoredChecked:boolean = false;
+	
 	public getState () :ViewsState {
 		
 		return {
@@ -47,6 +49,7 @@ export class L13DiffViewsViewModel extends ViewModel {
 			deletedChecked: this.deletedChecked,
 			modifiedChecked: this.modifiedChecked,
 			untrackedChecked: this.untrackedChecked,
+			ignoredChecked: this.ignoredChecked,
 		};
 		
 	}
@@ -57,6 +60,7 @@ export class L13DiffViewsViewModel extends ViewModel {
 		this.deletedChecked = state.deletedChecked;
 		this.modifiedChecked = state.modifiedChecked;
 		this.untrackedChecked = state.untrackedChecked;
+		this.ignoredChecked = state.ignoredChecked;
 		
 		this.requestUpdate();
 		
