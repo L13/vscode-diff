@@ -151,7 +151,12 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	public focus () {
 		
-		this.inputSearchterm.focus();
+		const input = this.inputSearchterm;
+		
+		input.focus();
+		
+		if (input.value) input.select();
+		
 		
 	}
 	
