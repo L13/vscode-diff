@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
+import * as commands from '../common/commands';
 import * as settings from '../common/settings';
 
 import { DiffPanel } from '../services/panel/DiffPanel';
@@ -19,7 +19,7 @@ import { DiffPanel } from '../services/panel/DiffPanel';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	register(context, {
+	commands.register(context, {
 		
 		'l13Diff.compareProjectWithWorkspace': async ({ project }) => {
 			

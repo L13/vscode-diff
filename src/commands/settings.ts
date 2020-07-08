@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
-import { buildWhitelistForTextFiles } from '../common/extensions';
+import * as commands from '../common/commands';
+import * as extensions from '../common/extensions';
 import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
@@ -18,11 +18,11 @@ import * as settings from '../common/settings';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	buildWhitelistForTextFiles();
+	extensions.buildWhitelistForTextFiles();
 
-	context.subscriptions.push(vscode.extensions.onDidChange(() => buildWhitelistForTextFiles()));
+	context.subscriptions.push(vscode.extensions.onDidChange(() => extensions.buildWhitelistForTextFiles()));
 	
-	register(context, {
+	commands.register(context, {
 		
 		'l13Diff.compareWhitespace': () => {
 			

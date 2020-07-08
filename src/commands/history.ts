@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
+import * as commands from '../common/commands';
 import * as dialogs from '../common/dialogs';
 
 import { DiffMenu } from '../services/panel/DiffMenu';
@@ -25,7 +25,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	vscode.window.registerTreeDataProvider('l13DiffHistory', diffHistoryProvider);
 	
-	register(context, {
+	commands.register(context, {
 		
 		'l13Diff.openComparison': ({ comparison }) => {
 			

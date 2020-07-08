@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
+import * as commands from '../common/commands';
 
 import { DiffOutput } from '../services/output/DiffOutput';
 
@@ -18,7 +18,7 @@ import { DiffOutput } from '../services/output/DiffOutput';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	register(context, {
+	commands.register(context, {
 		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
 	});
 	

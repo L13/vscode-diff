@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
+import * as commands from '../common/commands';
 
 //	Variables __________________________________________________________________
 
@@ -18,7 +18,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	let folderUri:vscode.Uri = null;
 	
-	register(context, {
+	commands.register(context, {
 		
 		'l13Diff.selectForCompare': (uri:vscode.Uri) => {
 			

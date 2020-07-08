@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { register } from '../common/commands';
+import * as commands from '../common/commands';
 import * as settings from '../common/settings';
 
 import { DiffPanel } from '../services/panel/DiffPanel';
@@ -32,7 +32,7 @@ export function activate (context:vscode.ExtensionContext) {
 	subscriptions.push(treeView.onDidExpandElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, false)));
 	subscriptions.push(treeView);
 	
-	register(context, {
+	commands.register(context, {
 	
 		'l13Diff.openFavorite': ({ favorite }) => {
 			
