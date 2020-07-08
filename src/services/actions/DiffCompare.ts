@@ -4,8 +4,8 @@ import * as fs from 'fs';
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
-import { normalizeLineEnding, trimWhitespace } from '../@l13/nodes/buffers';
-import { lstatSync, walkTree } from '../@l13/nodes/fse';
+import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
+import { lstatSync, walkTree } from '../@l13/fse';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';

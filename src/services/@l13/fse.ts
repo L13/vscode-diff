@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Callback, Options, WalkTreeJob } from '../../../types';
+import { Callback, WalkTreeJob, WalkTreeOptions } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -33,11 +33,11 @@ export function copyFile (sourcePath:string, destPath:string, options?:any, call
 	
 }
 
-export function walkTree (cwd:string, options:Callback|Options, callback?:Callback) {
+export function walkTree (cwd:string, options:Callback|WalkTreeOptions, callback?:Callback) {
 	
 	callback = typeof options === 'function' ? options : callback;
 	
-	const findIgnore = Array.isArray((<Options>options).ignore) ? createFindGlob((<string[]>(<Options>options).ignore)) : null;
+	const findIgnore = Array.isArray((<WalkTreeOptions>options).ignore) ? createFindGlob((<string[]>(<WalkTreeOptions>options).ignore)) : null;
 	
 	const job:WalkTreeJob = {
 		error: null,

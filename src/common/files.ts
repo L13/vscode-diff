@@ -4,7 +4,7 @@ import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { isMacOs, isWindows } from '../@l13/platforms';
+import { isMacOs, isWindows } from '../services/@l13/platforms';
 
 //	Variables __________________________________________________________________
 

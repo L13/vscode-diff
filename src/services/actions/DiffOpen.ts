@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { Diff, DiffFile } from '../../types';
 
-import { lstat } from '../@l13/nodes/fse';
+import { lstat } from '../@l13/fse';
 
 import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 

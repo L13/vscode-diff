@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Dialog, Diff, DiffFile } from '../../types';
+import { DeleteDialog, Diff, DiffFile } from '../../types';
 
 import * as dialogs from '../../common/dialogs';
 import * as settings from '../../common/settings';
@@ -11,7 +11,7 @@ import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
-const selectableTrashDialog:Dialog = {
+const selectableTrashDialog:DeleteDialog = {
 	text: 'Which files should be moved to the trash?',
 	textSingle: 'Which file should be moved to the trash?',
 	buttonAll: 'Move All to Trash',
@@ -19,7 +19,7 @@ const selectableTrashDialog:Dialog = {
 	buttonRight: 'Move Right to Trash',
 };
 
-const selectableDeleteDialog:Dialog = {
+const selectableDeleteDialog:DeleteDialog = {
 	text: 'Which files should be permanently deleted?',
 	textSingle: 'Which file should be permanently deleted?',
 	buttonAll: 'Delete All',
@@ -27,14 +27,14 @@ const selectableDeleteDialog:Dialog = {
 	buttonRight: 'Delete Right',
 };
 
-const simpleTrashDialog:Dialog = {
+const simpleTrashDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
 	buttonOk: 'Move, don\'t ask again',
 };
 
-const simpleDeleteDialog:Dialog = {
+const simpleDeleteDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
@@ -66,7 +66,7 @@ export class DiffDelete {
 		
 		const useTrash:boolean = settings.enableTrash();
 		const confirmDelete:boolean = settings.get('confirmDelete', true);
-		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		const dialog:DeleteDialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
 			const value = await dialogs.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
@@ -98,7 +98,7 @@ export class DiffDelete {
 		const confirmDelete:boolean = settings.get('confirmDelete', true);
 		
 		if (confirmDelete || sides > 2) {
-			let dialog:Dialog = null;
+			let dialog:DeleteDialog = null;
 			const args = [];
 			
 			if (sides > 2) {

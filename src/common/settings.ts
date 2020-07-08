@@ -4,8 +4,8 @@ import * as fs from 'fs';
 import { join } from 'path';
 import * as vscode from 'vscode';
 
-import { parse } from '../services/@l13/natives/jsons';
-import { lstatSync, walkUp } from '../services/@l13/nodes/fse';
+import { lstatSync, walkUp } from '../services/@l13/fse';
+import { parse } from '../services/@l13/jsons';
 
 //	Variables __________________________________________________________________
 

@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { Comparison } from '../../types';
-import { formatNameAndDesc } from '../@l13/utils/formats';
+import { formatNameAndDesc } from '../@l13/formats';
 
 import * as dialogs from '../../common/dialogs';
 import * as settings from '../../common/settings';

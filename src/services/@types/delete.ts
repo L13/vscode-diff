@@ -12,7 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
-export type Dialog = {
+export type DeleteDialog = {
 	text:string,
 	textSingle?:string,
 	buttonAll:string,

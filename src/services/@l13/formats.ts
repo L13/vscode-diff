@@ -2,7 +2,7 @@
 
 import { normalize, sep } from 'path';
 
-import { Plural } from '../../../types';
+import { Plural } from '../../types';
 
 const { floor, log, pow } = Math;
 

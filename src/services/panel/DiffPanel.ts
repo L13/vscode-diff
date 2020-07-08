@@ -3,10 +3,11 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { remove } from '../../@l13/arrays';
-import { isMacOs, isWindows } from '../../@l13/platforms';
 import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
-import { formatNameAndDesc } from '../@l13/utils/formats';
+
+import { remove } from '../../@l13/arrays';
+import { formatNameAndDesc } from '../@l13/formats';
+import { isMacOs, isWindows } from '../@l13/platforms';
 
 import * as dialogs from '../../common/dialogs';
 import * as files from '../../common/files';

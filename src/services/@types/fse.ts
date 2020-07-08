@@ -14,7 +14,7 @@ import { DiffFile } from '../../@types/diffs';
 
 export type Callback = (error?:null|Error, result?:StatsMap) => void;
 
-export type Options = {
+export type WalkTreeOptions = {
 	ignore?:string[],
 };
 

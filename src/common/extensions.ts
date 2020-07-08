@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { createFindGlob } from '../services/@l13/nodes/fse';
+import { createFindGlob } from '../services/@l13/fse';
 
 import { TextFiles } from '../types';
 
