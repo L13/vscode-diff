@@ -56,8 +56,8 @@ export class DiffStats {
 		result.diffs.forEach((diff:Diff) => {
 			
 			if (diff.status !== 'ignored') {
-				if (diff.fileA) countBasicStats(this.pathA, diff.fileA);
-				if (diff.fileB) countBasicStats(this.pathB, diff.fileB);
+				if (diff.fileA) countFileStates(this.pathA, diff.fileA);
+				if (diff.fileB) countFileStates(this.pathB, diff.fileB);
 				countAllStats(this.all, this.pathA, this.pathB);
 			}
 			
@@ -76,11 +76,11 @@ export class DiffStats {
 		
 		return `INFO
 
-Compared:    ${formatBasicStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}`, this.all)}
+Compared:    ${formatFileStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}`, this.all)}
 
-Left Path:   ${formatBasicStats(this.pathA.pathname, this.pathA)}
+Left Path:   ${formatFileStats(this.pathA.pathname, this.pathA)}
 
-Right Path:  ${formatBasicStats(this.pathB.pathname, this.pathB)}
+Right Path:  ${formatFileStats(this.pathB.pathname, this.pathB)}
 
 
 
@@ -93,7 +93,7 @@ Created:     ${formatDetail(this.untracked)}
 Deleted:     ${formatDetail(this.deleted)}
 Modified:    ${formatDetail(this.modified)}
 Unchanged:   ${formatDetail(this.unchanged)}
-Ignored:     ${formatDetail(this.ignored)}
+Ignored:     ${formatEntries(this.ignored)}
 
 
 
@@ -106,7 +106,7 @@ UPDATES
 
 //	Functions __________________________________________________________________
 
-function countBasicStats (stats:FolderStats, file:DiffFile) {
+function countFileStates (stats:DetailStats|FolderStats, file:DiffFile) {
 	
 	stats.entries++;
 	stats.size += file.stat.size;
@@ -127,17 +127,6 @@ function countAllStats (stats:DetailStats, pathA:FolderStats, pathB:FolderStats)
 	
 }
 
-function countFileStates (stats:DetailStats, file:DiffFile) {
-	
-	stats.entries++;
-	stats.size += file.stat.size;
-	
-	if (file.type === 'file') stats.files++;
-	else if (file.type === 'folder') stats.folders++;
-	else if (file.type === 'symlink') stats.symlinks++;
-	
-}
-
 function countDetailStats (stats:DetailStats, diff:Diff) {
 	
 	stats.total++;
@@ -151,15 +140,15 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 	
 }
 
-function formatBasicStats (name:string, stats:DetailStats|FolderStats) {
+function formatFileStats (name:string, stats:DetailStats|FolderStats) {
 	
 	return `"${name}"
-Entries:     ${formatDetail(stats)}
+Entries:     ${formatEntries(stats)}
 Size:        ${formatFileSize(stats.size)}`;
 	
 }
 
-function formatDetail (stats:DetailStats|FolderStats) {
+function formatDetail (stats:DetailStats) {
 	
 	const ignored:string[] = [];
 	
@@ -167,9 +156,21 @@ function formatDetail (stats:DetailStats|FolderStats) {
 	if ((<DetailStats>stats).ignoredWhitespace) ignored.push('whitespace');
 	
 	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
+	const totals:string[] = [];
+	
+	if (stats.files) totals.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.folders) totals.push(`${formatAmount(stats.folders, pluralFolders)}`);
+	if (stats.symlinks) totals.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
+	
+	return totals.length ? `${stats.total} (${totals.join(', ')})` : '0';
+	
+}
+
+function formatEntries (stats:DetailStats|FolderStats) {
+	
 	const entries:string[] = [];
 	
-	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}`);
 	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
 	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
 	
