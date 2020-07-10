@@ -53,14 +53,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		
-		const focusListView = () => this.focus();
-		
-		window.addEventListener('focus', () => {
-			
-			if (this.cacheSelectionHistory.length) setTimeout(focusListView, 0);
-			
-		});
-		
 		this.addEventListener('focus', () => this.content.classList.add('-focus'));
 		this.addEventListener('blur', () => this.content.classList.remove('-focus'));
 		

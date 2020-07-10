@@ -5,7 +5,7 @@ import { join } from 'path';
 import * as vscode from 'vscode';
 
 import { lstatSync, walkUp } from '../services/@l13/fse';
-import { parse } from '../services/@l13/jsons';
+import { parse } from '../services/@l13/jsonc';
 
 //	Variables __________________________________________________________________
 

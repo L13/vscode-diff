@@ -2,7 +2,7 @@
 
 import * as assert from 'assert';
 
-import { parse } from './jsons';
+import { parse } from './jsonc';
 
 import { Test } from '../../types';
 
@@ -12,7 +12,7 @@ import { Test } from '../../types';
 
 //	Initialize _________________________________________________________________
 
-describe('jsons', () => {
+describe('jsonc', () => {
 	
 	describe('.parse()', () => {
 		

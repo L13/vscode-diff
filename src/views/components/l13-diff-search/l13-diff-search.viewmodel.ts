@@ -9,8 +9,6 @@ import { SearchState } from '../../../types';
 const SEARCHTERM = Symbol.for('searchterm');
 const ERROR = Symbol.for('error');
 
-
-
 //	Initialize _________________________________________________________________
 
 

@@ -278,6 +278,20 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
+		const focusListView = () => {
+			
+			if (!this.left.focused && !this.right.focused) this.list.focus();
+			
+		};
+		
+		window.addEventListener('focus', () => {
+			
+			if (this.list.content.firstElementChild && !this.left.focused && !this.right.focused) {
+				setTimeout(focusListView, 0);
+			}
+			
+		});
+		
 	//	navigator view
 		
 		this.navigator.addEventListener('scroll', () => {
