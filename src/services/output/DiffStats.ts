@@ -89,10 +89,10 @@ RESULT
 Comparisons: ${this.result.diffs.length - this.ignored.total}
 Diffs:       ${this.result.diffs.length - this.ignored.total - this.unchanged.total}
 Conflicts:   ${this.conflicting.total}
-Created:     ${formatDetail(this.untracked)}
-Deleted:     ${formatDetail(this.deleted)}
-Modified:    ${formatDetail(this.modified)}
-Unchanged:   ${formatDetail(this.unchanged)}
+Created:     ${formatTotal(this.untracked)}
+Deleted:     ${formatTotal(this.deleted)}
+Modified:    ${formatTotal(this.modified)}
+Unchanged:   ${formatTotal(this.unchanged)}
 Ignored:     ${formatEntries(this.ignored)}
 
 
@@ -148,7 +148,7 @@ Size:        ${formatFileSize(stats.size)}`;
 	
 }
 
-function formatDetail (stats:DetailStats) {
+function formatTotal (stats:DetailStats) {
 	
 	const ignored:string[] = [];
 	
@@ -156,13 +156,13 @@ function formatDetail (stats:DetailStats) {
 	if ((<DetailStats>stats).ignoredWhitespace) ignored.push('whitespace');
 	
 	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
-	const totals:string[] = [];
+	const entries:string[] = [];
 	
-	if (stats.files) totals.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
-	if (stats.folders) totals.push(`${formatAmount(stats.folders, pluralFolders)}`);
-	if (stats.symlinks) totals.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
+	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
+	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
 	
-	return totals.length ? `${stats.total} (${totals.join(', ')})` : '0';
+	return entries.length ? `${stats.total} (${entries.join(', ')})` : '0';
 	
 }
 
