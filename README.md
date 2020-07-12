@@ -6,6 +6,9 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 0.27.0
 
+- Added ignored files to list view.
+- Added new icon to toggle view for ignored files.
+- Added ignored files to stats.
 - Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ## Index
@@ -86,7 +89,7 @@ Compare two folders in Visual Studio Code.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
-* `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
+* `l13Diff.ignoreTrimWhitespace` [1] - Ignores leading and trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
@@ -246,9 +249,15 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Alt + C` - Toggle match case.
 * `Alt + R` - Toggle use regular expression.
 
-### Favorites Explorer
+### Favorites
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
+
+#### Context Icons
+
+* `Diff Folders` - Open a new panel.
+* `New Group` - Add a new group.
+* `Collapse All` - Collapse all groups.
 
 #### Context Menu
 
@@ -256,8 +265,22 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Add to Group` - Add a favorite diff to a group.
 * `Remove` - Remove a favorite diff from a group.
-* `Rename` - Change the name of the favorite.
-* `Delete` - Delete the favorite diff.
+* `Rename` - Change the name of a favorite or a group.
+* `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
+
+### History
+
+* `Click` - Open the previous comparison and start a comparison immediately.
+
+#### Context Icons
+
+* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
+
+#### Context Menu
+
+* `Open` - Open the previous comparison without starting a comparison immediately.
+* `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar
 

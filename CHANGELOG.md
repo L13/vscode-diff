@@ -4,7 +4,13 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ## [0.27.0] - 2020-07-19
 
 ### Added
+- Added ignored files to list view.
+- Added new icon to toggle view for ignored files.
+- Added ignored files to stats.
 - Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+### Fixed
+- Fixed focus bug click into input fields.
 
 ## [0.26.0] - 2020-07-05
 
