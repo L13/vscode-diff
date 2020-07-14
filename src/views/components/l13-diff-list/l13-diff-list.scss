@@ -137,6 +137,16 @@ l13-diff-list-row {
 					opacity: .5;
 				}
 			}
+			
+			&.-folder {
+				
+				span {
+					
+					&.-missing {
+						padding-right: 5px;
+					}
+				}
+			}
 		}
 	}
 	
@@ -251,7 +261,7 @@ l13-diff-list-file {
 			color: var(--vscode-foreground);
 			font-size: 11px;
 			opacity: 0.5;
-			padding: 0 0 0 5px;
+			padding-right: 5px;
 		}
 	}
 }

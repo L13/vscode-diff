@@ -31,14 +31,14 @@ const simpleTrashDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
-	buttonOk: 'Move, don\'t ask again',
+	buttonOk: 'Move, don\'t show again',
 };
 
 const simpleDeleteDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
-	buttonOk: 'Delete, don\'t ask again',
+	buttonOk: 'Delete, don\'t show again',
 };
 
 //	Initialize _________________________________________________________________

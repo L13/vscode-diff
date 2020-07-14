@@ -10,7 +10,23 @@
 		},
 		"CVS": null,
 		".DS_Store": [""],
-		"file-a [-].txt": ["a"]
+		"file-a [-].txt": ["a"],
+		"folder-a [-].txt": {
+			"folder-b [-].txt": {
+				"node_modules": {
+					"test": {
+						"index.js": ["console.log('Hello world!');"]
+					}
+				}
+			},
+			"folder-bb [-].txt": {
+				"file-bb [-].txt": ["bb"]
+			},
+			"folder-bbb [-].txt": {
+				"file-ccc [-].txt": ["ccc"]
+			},
+			"file-b [-].txt": ["b"]
+		}
 	},
 	"folder-b": null
 }

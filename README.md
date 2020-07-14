@@ -84,7 +84,7 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
-* `l13Projects.initialFavoriteGroupState` - Set the initial state of a group.
+* `l13Diff.initialFavoriteGroupState` - Set the initial state of a group.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.

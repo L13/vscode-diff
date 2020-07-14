@@ -17,10 +17,10 @@ export async function open () {
 	const uris = await vscode.window.showOpenDialog({
 		canSelectFiles: true,
 		canSelectFolders: true,
-		canSelectMany: true,
+		canSelectMany: false,
 	});
 	
-	return uris || null;
+	return uris ? uris[0].fsPath : null;
 	
 }
 	

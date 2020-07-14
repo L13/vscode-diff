@@ -13,7 +13,7 @@ import * as settings from '../../common/settings';
 
 //	Variables __________________________________________________________________
 
-const BUTTON_COPY_DONT_ASK_AGAIN = 'Copy, don\'t ask again';
+const BUTTON_COPY_DONT_SHOW_AGAIN = 'Copy, don\'t show again';
 
 //	Initialize _________________________________________________________________
 
@@ -98,10 +98,10 @@ export class DiffCopy {
 		
 		if (confirmCopy && !data.multi) {
 			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffs[0].id}"`} to "${(<any>data)['path' + to]}"?`;
-			const value = await dialogs.confirm(text, 'Copy', BUTTON_COPY_DONT_ASK_AGAIN);
+			const value = await dialogs.confirm(text, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
 				
 			if (value) {
-				if (value === BUTTON_COPY_DONT_ASK_AGAIN) settings.update('confirmCopy', false);
+				if (value === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
 			} else this._onDidCancel.fire(undefined);
 		} else this.copyFromTo(data, from, to);;
