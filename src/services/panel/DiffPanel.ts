@@ -6,8 +6,9 @@ import * as vscode from 'vscode';
 import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
-import { formatNameAndDesc } from '../@l13/formats';
+import { formatAmount, formatNameAndDesc } from '../@l13/formats';
 import { isMacOs, isWindows } from '../@l13/platforms';
+import { pluralEntries } from '../@l13/units/files';
 
 import * as dialogs from '../../common/dialogs';
 import * as files from '../../common/files';
@@ -153,21 +154,25 @@ export class DiffPanel {
 			
 			const total = Object.entries(result).length;
 			
-			this.output.log(`Found ${total} entr${total === 1 ? 'y' : 'ies'}`);
+			this.output.log(`Found ${formatAmount(total, pluralEntries)}`);
 			
 		}, null, this.disposables);
 		
 		this.compare.onDidCompareFolders((data:DiffResult) => {
 			
 			const diffStats = new DiffStats(data);
-			const entries = diffStats.all.entries;
-			const text = `Compared ${entries} entr${entries === 1 ? 'y' : 'ies'}`;
+			const allEntries = diffStats.all.entries;
+			const ignoredEntries = diffStats.ignored.entries;
+			let text = `Compared ${formatAmount(allEntries, pluralEntries)}`;
 			
 			this.status.update(text);
+			
+			if (ignoredEntries) text += `, ignored ${formatAmount(ignoredEntries, pluralEntries)}`;
+			
 			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!entries) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!allEntries) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', data);
 			

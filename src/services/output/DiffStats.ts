@@ -1,8 +1,9 @@
 //	Imports ____________________________________________________________________
 
 import { formatAmount, formatFileSize } from '../@l13/formats';
+import { pluralFiles, pluralFolders, pluralSymlinks } from '../@l13/units/files';
 
-import { Diff, DiffFile, Plural } from '../../types';
+import { Diff, DiffFile } from '../../types';
 import { DiffResult } from './DiffResult';
 
 import { DetailStats } from './stats/DetailStats';
@@ -10,9 +11,7 @@ import { FolderStats } from './stats/FolderStats';
 
 //	Variables __________________________________________________________________
 
-const pluralFiles:Plural = { size: 'files', 1: 'file' };
-const pluralFolders:Plural = { size: 'folders', 1: 'folder' };
-const pluralSymlinks:Plural = { size: 'symlinks', 1: 'symlink' };
+
 
 //	Initialize _________________________________________________________________
 

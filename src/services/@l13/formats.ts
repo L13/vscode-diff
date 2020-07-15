@@ -2,13 +2,12 @@
 
 import { normalize, sep } from 'path';
 
-import { Plural } from '../../types';
+import { Plural } from '../@types/formats';
+import { pluralBytes } from './units/files';
 
 const { floor, log, pow } = Math;
 
 //	Variables __________________________________________________________________
-
-const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
 
 const byteUnits = [pluralBytes.size, 'KB', 'MB', 'GB', 'TB', 'PB'];
 const KB:number = 1024;
