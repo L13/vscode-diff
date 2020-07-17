@@ -10,6 +10,7 @@ Compare two folders in Visual Studio Code.
 - Added new icon to toggle view for ignored files.
 - Added ignored files to stats.
 - Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Removed `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}`. Please use `${workspaceFolder:NAME}` instead.
 
 ## Index
 
@@ -99,8 +100,7 @@ Compare two folders in Visual Studio Code.
 ## Predefined Variables
 
 * `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
-* `${workspaceFolder:INDEX}` - Use a specific workspace folder by index for the diff e.g. '${workspaceFolder:1}/path/to/folder'
-* `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name-{1\\}}'.
+* `${workspaceFolder:NAME}` - - Use a specific workspace folder by name for the diff e.g. '${workspaceFolder:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolder:name-{1\\}}'.
 
 ## Mouse and Keyboard Shortcuts
 

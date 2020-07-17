@@ -12,6 +12,12 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Fixed
 - Fixed focus bug click into input fields.
 
+### Changed
+- Changed `${workspaceFolder:INDEX}` to `${workspaceFolder:NAME}`.
+
+### Removed
+- Removed `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}`. Please use `${workspaceFolder:NAME}` instead.
+
 ## [0.26.0] - 2020-07-05
 
 ### Added

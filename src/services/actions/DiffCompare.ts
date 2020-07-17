@@ -17,7 +17,7 @@ import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /^\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
+const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
 //	Initialize _________________________________________________________________
@@ -62,8 +62,8 @@ export class DiffCompare {
 		
 		this._onInitCompare.fire(undefined);
 		
-		let pathA = parsePredefinedVariables(data.pathA);
-		let pathB = parsePredefinedVariables(data.pathB);
+		let pathA = parsePredefinedVariable(data.pathA);
+		let pathB = parsePredefinedVariable(data.pathB);
 		
 		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
 		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
@@ -288,39 +288,27 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 	
 }
 
-function parsePredefinedVariables (pathname:string) {
+function parsePredefinedVariable (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholder, function (match, placeholder, value) {
+	return pathname.replace(findPlaceholder, function (match, name) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		
-		switch (placeholder) {
-			case 'workspaceFolder':
-				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace folder available!');
-					return match;
-				}
-				value = parseInt(value, 10);
-				if (value && !(value < workspaceFolders.length)) {
-					vscode.window.showErrorMessage(`No workspace folder with index ${value} available!`);
-					return match;
-				}
-				value = value || 0;
-				return workspaceFolders.filter(({ index }) => index === value)[0].uri.fsPath;
-			case 'workspaceFolderBasename':
-				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace folder available!');
-					return match;
-				}
-				value = value.replace(findEscapedEndingBrace, '}');
-				const folder = workspaceFolders.filter(({ name }) => name === value)[0];
-				if (!folder) {
-					vscode.window.showErrorMessage(`No workspace folder with name '${value}' available!`);
-					return match;
-				}
-				return folder.uri.fsPath;
+		if (!workspaceFolders) {
+			vscode.window.showErrorMessage('No workspace folder available!');
+			return match;
 		}
+		
+		if (!name) return workspaceFolders[0].uri.fsPath;
+		
+		name = name.replace(findEscapedEndingBrace, '}');
+		
+		for (const workspaceFolder of workspaceFolders) {
+			if (workspaceFolder.name === name) return workspaceFolder.uri.fsPath;
+		}
+		
+		vscode.window.showErrorMessage(`No workspace folder with name "${name}" available!`);
 		
 		return match;
 		

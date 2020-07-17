@@ -192,7 +192,7 @@ export class DiffPanel {
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
-			this.output.log(`Compared "${diff.id}" again. Status is now '${diff.status}'.`);
+			this.output.log(`Compared "${diff.id}" again. Status is now "${diff.status}"`);
 			
 		}, null, this.disposables);
 		
@@ -214,7 +214,7 @@ export class DiffPanel {
 		
 		this.copy.onDidCopyFile(({ from, to }) => {
 			
-			this.output.log(`Copied ${from.type} "${from.name}" from "${from.root}" to "${to.root}".`);
+			this.output.log(`Copied ${from.type} "${from.name}" from "${from.root}" to "${to.root}"`);
 			
 		}, null, this.disposables);
 		
@@ -246,7 +246,7 @@ export class DiffPanel {
 		
 		this.delete.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
-		this.delete.onDidDeleteFile((file:DiffFile) => this.output.log(`Deleted ${file.type} "${file.path}".`), null, this.disposables);
+		this.delete.onDidDeleteFile((file:DiffFile) => this.output.log(`Deleted ${file.type} "${file.path}"`), null, this.disposables);
 		
 		this.delete.onDidDeleteFiles((data:DiffResult) => {
 			
