@@ -130,6 +130,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in the menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
+* `Escape` - Hide the menu if visible.
 
 ### Swap Button
 
