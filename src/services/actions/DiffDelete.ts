@@ -2,15 +2,16 @@
 
 import * as vscode from 'vscode';
 
-import { Dialog, Diff, DiffFile } from '../../types';
+import { DeleteDialog, Diff, DiffFile } from '../../types';
 
-import { DiffDialog } from '../common/DiffDialog';
-import { DiffSettings } from '../common/DiffSettings';
+import * as dialogs from '../../common/dialogs';
+import * as settings from '../../common/settings';
+
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
-const selectableTrashDialog:Dialog = {
+const selectableTrashDialog:DeleteDialog = {
 	text: 'Which files should be moved to the trash?',
 	textSingle: 'Which file should be moved to the trash?',
 	buttonAll: 'Move All to Trash',
@@ -18,7 +19,7 @@ const selectableTrashDialog:Dialog = {
 	buttonRight: 'Move Right to Trash',
 };
 
-const selectableDeleteDialog:Dialog = {
+const selectableDeleteDialog:DeleteDialog = {
 	text: 'Which files should be permanently deleted?',
 	textSingle: 'Which file should be permanently deleted?',
 	buttonAll: 'Delete All',
@@ -26,18 +27,18 @@ const selectableDeleteDialog:Dialog = {
 	buttonRight: 'Delete Right',
 };
 
-const simpleTrashDialog:Dialog = {
+const simpleTrashDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Move to Trash',
-	buttonOk: 'Move, don\'t ask again',
+	buttonOk: 'Move, don\'t show again',
 };
 
-const simpleDeleteDialog:Dialog = {
+const simpleDeleteDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete selected file?',
 	buttonAll: 'Delete',
-	buttonOk: 'Delete, don\'t ask again',
+	buttonOk: 'Delete, don\'t show again',
 };
 
 //	Initialize _________________________________________________________________
@@ -63,16 +64,16 @@ export class DiffDelete {
 		
 		if (!diffs.length) return;
 		
-		const useTrash:boolean = DiffSettings.enableTrash();
-		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
-		const dialog:Dialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		const useTrash:boolean = settings.enableTrash();
+		const confirmDelete:boolean = settings.get('confirmDelete', true);
+		const dialog:DeleteDialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
-			const value = await DiffDialog.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
+			const value = await dialogs.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
 			if (value) {
-				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false);
+				if (value === dialog.buttonOk) settings.update('confirmDelete', false);
 				this.deleteFiles(data, side, useTrash);
-			} else this._onDidCancel.fire();
+			} else this._onDidCancel.fire(undefined);
 		} else this.deleteFiles(data, side, useTrash);
 		
 	}
@@ -93,11 +94,11 @@ export class DiffDelete {
 			if (sides > 2) break;
 		}
 		
-		const useTrash:boolean = DiffSettings.enableTrash();
-		const confirmDelete:boolean = DiffSettings.get('confirmDelete', true);
+		const useTrash:boolean = settings.enableTrash();
+		const confirmDelete:boolean = settings.get('confirmDelete', true);
 		
 		if (confirmDelete || sides > 2) {
-			let dialog:Dialog = null;
+			let dialog:DeleteDialog = null;
 			const args = [];
 			
 			if (sides > 2) {
@@ -110,12 +111,12 @@ export class DiffDelete {
 			}
 			
 			const text = diffs.length > 2 ? dialog.text : dialog.textSingle;
-			const value = await DiffDialog.confirm(text, dialog.buttonAll, ...args);
+			const value = await dialogs.confirm(text, dialog.buttonAll, ...args);
 				
 			if (value) {
-				if (value === dialog.buttonOk) DiffSettings.update('confirmDelete', false, true);
+				if (value === dialog.buttonOk) settings.update('confirmDelete', false, true);
 				this.deleteFiles(data, value === dialog.buttonLeft ? 'left' : value === dialog.buttonRight ? 'right' : 'all', useTrash);
-			} else this._onDidCancel.fire();
+			} else this._onDidCancel.fire(undefined);
 		} else this.deleteFiles(data, 'all', useTrash);
 		
 	}

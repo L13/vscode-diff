@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import * as commands from '../common/commands';
+
 //	Variables __________________________________________________________________
 
 
@@ -16,25 +18,43 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	let folderUri:vscode.Uri = null;
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.selectForCompare', (uri:vscode.Uri) => {
+	commands.register(context, {
 		
-		if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
+		'l13Diff.selectForCompare': (uri:vscode.Uri) => {
+			
+			if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
+			
+			folderUri = uri;
+			
+		},
 		
-		folderUri = uri;
+		'l13Diff.compareWithSelected': (uri:vscode.Uri) => {
+			
+			vscode.commands.executeCommand('l13Diff.openAndCompare', folderUri, uri);
+			
+		},
 		
-	}));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareWithSelected', (uri:vscode.Uri) => {
+		'l13Diff.compareSelected': (uri:vscode.Uri, uris:vscode.Uri[]) => {
+			
+			vscode.commands.executeCommand('l13Diff.openAndCompare', uris[0], uris[1]);
+			
+		},
 		
-		vscode.commands.executeCommand('l13Diff.openAndCompare', folderUri, uri);
+		'l13Diff.selectProjectForCompare': ({ project }) => {
+			
+			if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
+			
+			folderUri = vscode.Uri.file(project.path);
+			
+		},
 		
-	}));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareSelected', (uri:vscode.Uri, uris:vscode.Uri[]) => {
+		'l13Diff.compareProjectWithSelected': ({ project }) => {
+			
+			vscode.commands.executeCommand('l13Diff.openAndCompare', folderUri, vscode.Uri.file(project.path));
+			
+		},
 		
-		vscode.commands.executeCommand('l13Diff.openAndCompare', uris[0], uris[1]);
-		
-	}));
+	});
 	
 }
 

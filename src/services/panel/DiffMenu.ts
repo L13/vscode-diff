@@ -2,9 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import { remove } from '../../@l13/natvies/arrays';
+import { remove } from '../../@l13/arrays';
 
-import { DiffSettings } from '../common/DiffSettings';
+import * as settings from '../../common/settings';
 
 //	Variables __________________________________________________________________
 
@@ -26,7 +26,7 @@ export class DiffMenu {
 	
 	public static saveRecentlyUsed (context:vscode.ExtensionContext, pathA:string, pathB:string) :void {
 		
-		const maxRecentlyUsedLength:number = <number>DiffSettings.get('maxRecentlyUsed', 10);
+		const maxRecentlyUsedLength:number = <number>settings.get('maxRecentlyUsed', 10);
 		const history:string[] = context.globalState.get(MENU_HISTORY) || [];
 		
 		addToRecentlyUsed(history, pathB);

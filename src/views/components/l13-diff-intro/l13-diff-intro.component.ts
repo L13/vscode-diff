@@ -5,20 +5,15 @@ import { detectKeybinding, getKeyLabel, L13Component, L13Element, L13Query } fro
 import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
 import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
+import { DisplayShortcut } from '../../../types';
+
 import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
-type Shortcut = {
-	description:string,
-	key:string,
-	mac?:string,
-	win?:string,
-};
-
-const keyboardShortcuts:Shortcut[] = [
+const keyboardShortcuts:DisplayShortcut[] = [
 	{
 		description: 'Filter Diff Result',
 		key: 'Ctrl+F',
@@ -60,7 +55,7 @@ export class L13DiffIntroComponent extends L13Element<L13DiffIntroViewModel> {
 
 //	Functions __________________________________________________________________
 
-function createShortcutViews (shortcuts:Shortcut[]) {
+function createShortcutViews (shortcuts:DisplayShortcut[]) {
 	
 	const fragment = document.createDocumentFragment();
 	
@@ -70,7 +65,7 @@ function createShortcutViews (shortcuts:Shortcut[]) {
 	
 }
 
-function createShortcutView ({ description, key, mac, win }:Shortcut) {
+function createShortcutView ({ description, key, mac, win }:DisplayShortcut) {
 	
 	key = detectKeybinding({ key, mac, win });
 	

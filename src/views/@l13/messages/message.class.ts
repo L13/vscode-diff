@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { remove } from '../../../@l13/natvies/arrays';
+import { remove } from '../../../@l13/arrays';
 import { MessageListener } from '../../../types';
 
 //	Variables __________________________________________________________________

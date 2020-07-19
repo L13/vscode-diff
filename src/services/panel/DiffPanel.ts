@@ -3,17 +3,21 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { remove } from '../../@l13/natvies/arrays';
 import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
-import { isMacOs, isWindows } from '../@l13/nodes/platforms';
-import { formatNameAndDesc } from '../@l13/utils/formats';
+
+import { remove } from '../../@l13/arrays';
+import { formatAmount, formatNameAndDesc } from '../@l13/formats';
+import { isMacOs, isWindows } from '../@l13/platforms';
+import { pluralEntries } from '../@l13/units/files';
+
+import * as dialogs from '../../common/dialogs';
+import * as files from '../../common/files';
+import * as settings from '../../common/settings';
 
 import { DiffCompare } from '../actions/DiffCompare';
 import { DiffCopy } from '../actions/DiffCopy';
 import { DiffDelete } from '../actions/DiffDelete';
 import { DiffOpen } from '../actions/DiffOpen';
-import { DiffDialog } from '../common/DiffDialog';
-import { DiffSettings } from '../common/DiffSettings';
 import { DiffOutput } from '../output/DiffOutput';
 import { DiffResult } from '../output/DiffResult';
 import { DiffStats } from '../output/DiffStats';
@@ -150,21 +154,25 @@ export class DiffPanel {
 			
 			const total = Object.entries(result).length;
 			
-			this.output.log(`Found ${total} entr${total === 1 ? 'y' : 'ies'}`);
+			this.output.log(`Found ${formatAmount(total, pluralEntries)}`);
 			
 		}, null, this.disposables);
 		
 		this.compare.onDidCompareFolders((data:DiffResult) => {
 			
 			const diffStats = new DiffStats(data);
-			const total = diffStats.all.total;
-			const text = `Compared ${total} entr${total === 1 ? 'y' : 'ies'}`;
+			const allEntries = diffStats.all.entries;
+			const ignoredEntries = diffStats.ignored.entries;
+			let text = `Compared ${formatAmount(allEntries, pluralEntries)}`;
 			
 			this.status.update(text);
-			this.output.log(`${text}\n\n`);
+			
+			if (ignoredEntries) text += `, ignored ${formatAmount(ignoredEntries, pluralEntries)}`;
+			
+			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!total) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!allEntries) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', data);
 			
@@ -184,7 +192,7 @@ export class DiffPanel {
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
-			this.output.log(`Compared "${diff.id}" again. Status is now '${diff.status}'.`);
+			this.output.log(`Compared "${diff.id}" again. Status is now "${diff.status}"`);
 			
 		}, null, this.disposables);
 		
@@ -206,7 +214,7 @@ export class DiffPanel {
 		
 		this.copy.onDidCopyFile(({ from, to }) => {
 			
-			this.output.log(`Copied ${from.type} "${from.name}" from "${from.root}" to "${to.root}".`);
+			this.output.log(`Copied ${from.type} "${from.name}" from "${from.root}" to "${to.root}"`);
 			
 		}, null, this.disposables);
 		
@@ -238,7 +246,7 @@ export class DiffPanel {
 		
 		this.delete.onDidCancel(() => this.msg.send('cancel'), null, this.disposables);
 		
-		this.delete.onDidDeleteFile((file:DiffFile) => this.output.log(`Deleted ${file.type} "${file.path}".`), null, this.disposables);
+		this.delete.onDidDeleteFile((file:DiffFile) => this.output.log(`Deleted ${file.type} "${file.path}"`), null, this.disposables);
 		
 		this.delete.onDidDeleteFiles((data:DiffResult) => {
 			
@@ -255,13 +263,13 @@ export class DiffPanel {
 	//	open
 		
 		this.msg.on('open:diffToSide', (diff:Diff) => DiffOpen.open(diff, true));
-		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, DiffSettings.get('openToSide', false)));
+		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, settings.get('openToSide', false)));
 		
-		this.msg.on('reveal:file', (pathname:string) => DiffOpen.reveal(pathname));
+		this.msg.on('reveal:file', (pathname:string) => files.reveal(pathname));
 		
 		this.msg.on('open:dialog', async () => {
 			
-			const fsPath = await DiffDialog.open();
+			const fsPath = await dialogs.open();
 			
 			this.msg.send('open:dialog', { fsPath });
 			
@@ -372,8 +380,9 @@ export class DiffPanel {
 	
 	private getHTMLforDiff (webview:vscode.Webview) {
 		
-		const scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'main.js'));
-		const styleUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'style.css'));
+		const mediaPath = path.join(this.context.extensionPath, 'media');
+		const scriptUri = vscode.Uri.file(path.join(mediaPath, 'main.js'));
+		const styleUri = vscode.Uri.file(path.join(mediaPath, 'style.css'));
 		
 		const nonceToken = nonce();
 		const csp = `default-src 'none'; img-src ${webview.cspSource} data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonceToken}';`;
@@ -386,7 +395,7 @@ export class DiffPanel {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Diff Folders</title>
 				<script nonce="${nonceToken}">
-					const timeoutId = setTimeout(() => {
+					window.l13TimeoutId = setTimeout(() => {
 						
 						acquireVsCodeApi().postMessage({
 							command: 'error:init',
@@ -405,19 +414,21 @@ export class DiffPanel {
 	
 	public static async create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		
+		const mediaPath = path.join(context.extensionPath, 'media');
+		const iconsPath = path.join(mediaPath, 'icons');
 		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff Folders', {
 			viewColumn: vscode.ViewColumn.Active,
 		}, {
 			enableScripts: true,
 			localResourceRoots: [
-				vscode.Uri.file(path.join(context.extensionPath, 'media')),
+				vscode.Uri.file(mediaPath),
 			],
 			retainContextWhenHidden: true,
 		});
 		
 		panel.iconPath = {
-			dark: vscode.Uri.file(path.join(context.extensionPath, 'media', 'icons', 'icon-dark.svg')),
-			light: vscode.Uri.file(path.join(context.extensionPath, 'media', 'icons', 'icon-light.svg')),
+			dark: vscode.Uri.file(path.join(iconsPath, 'icon-dark.svg')),
+			light: vscode.Uri.file(path.join(iconsPath, 'icon-light.svg')),
 		};
 		
 		const diffPanel = new DiffPanel(panel, context, uris, compare);;

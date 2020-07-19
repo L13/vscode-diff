@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { Diff } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -12,16 +12,15 @@
 
 //	Exports ____________________________________________________________________
 
-export class DetailStats {
-	public total:number = 0;
-	public entries:number = 0;
-	public files:number = 0;
-	public folders:number = 0;
-	public symlinks:number = 0;
-	public size:number = 0;
-	public ignoredEOL:number = 0;
-	public ignoredWhitespace:number = 0;
-}
+export type ViewsCache = {
+	unchangedChecked:boolean,
+	deletedChecked:boolean,
+	modifiedChecked:boolean,
+	untrackedChecked:boolean,
+	ignoredChecked:boolean,
+	items:Diff[],
+	filteredItems:Diff[],
+};
 
 //	Functions __________________________________________________________________
 

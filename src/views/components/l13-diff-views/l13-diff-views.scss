@@ -35,10 +35,6 @@
 		
 		&:hover {
 			cursor: pointer;
-			
-			// &::before {
-			// 	background: var(--vscode-button-hoverBackground);
-			// }
 		}
 		
 		&:not([disabled]).-active {
@@ -48,13 +44,6 @@
 		&[disabled] {
 			opacity: 0.3;
 			cursor: default;
-			
-			// &:hover {
-				
-			// 	&::before {
-			// 		background: var(--l13-icon-background) !important;
-			// 	}
-			// }
 		}
 		
 		&:checked::after {
@@ -79,13 +68,6 @@
 				-webkit-mask-image: url('show-unchanged.svg');
 				mask-image: url('show-unchanged.svg');
 			}
-			
-			// &:hover {
-				
-			// 	&::before {
-			// 		background: var(--vscode-button-hoverBackground);
-			// 	}
-			// }
 		}
 		
 		&#l13_show_deleted {
@@ -94,13 +76,6 @@
 				-webkit-mask-image: url('show-deleted.svg');
 				mask-image: url('show-deleted.svg');
 			}
-			
-			// &:hover {
-				
-			// 	&::before {
-			// 		background: var(--vscode-gitDecoration-deletedResourceForeground);
-			// 	}
-			// }
 		}
 		
 		&#l13_show_modified {
@@ -109,13 +84,6 @@
 				-webkit-mask-image: url('show-modified.svg');
 				mask-image: url('show-modified.svg');
 			}
-			
-			// &:hover {
-				
-			// 	&::before {
-			// 		background: var(--vscode-gitDecoration-modifiedResourceForeground);
-			// 	}
-			// }
 		}
 		
 		&#l13_show_untracked {
@@ -124,49 +92,14 @@
 				-webkit-mask-image: url('show-untracked.svg');
 				mask-image: url('show-untracked.svg');
 			}
+		}
+		
+		&#l13_show_ignored {
 			
-			// &:hover {
-				
-			// 	&::before {
-			// 		background: var(--vscode-gitDecoration-untrackedResourceForeground);
-			// 	}
-			// }
+			&::before {
+				-webkit-mask-image: url('show-ignored.svg');
+				mask-image: url('show-ignored.svg');
+			}
 		}
 	}
 }
-
-/*input[type=checkbox] {
-	-webkit-appearance: none;
-	appearance: none;
-	background: var(--vscode-settings-checkboxBackground);
-	border: solid 1px var(--vscode-settings-checkboxBorder, transparent);
-	border-radius: 3px;
-	cursor: pointer;
-	display: inline-block;
-	margin: 0 3px -5px 0;
-	padding: 8px;
-	position: relative;
-	
-	&:focus {
-		outline-color: var(--vscode-focusBorder, transparent);
-	}
-	
-	&:checked::after {
-		background: 50% 50% no-repeat;
-		background-size: 100% 100%;
-		content: '';
-		height: 100%;
-		left: 0;
-		position: absolute;
-		top: 0;
-		width: 100%;
-		
-		@at-root .vscode-dark & {
-			background-image: url('./icons/checked-dark.svg');
-		}
-		
-		@at-root .vscode-light & {
-			background-image: url('./icons/checked-light.svg');
-		}
-	}
-}*/

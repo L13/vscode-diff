@@ -14,7 +14,7 @@ import * as fs from 'fs';
 
 export type Diff = {
 	id:string,
-	status:'conflicting'|'deleted'|'modified'|'unchanged'|'untracked',
+	status:'conflicting'|'deleted'|'ignored'|'modified'|'unchanged'|'untracked',
 	type:'file'|'folder'|'symlink'|'mixed',
 	ignoredWhitespace:boolean,
 	ignoredEOL:boolean,
@@ -32,6 +32,7 @@ export type DiffFile = {
 	basename:string,
 	dirname:string,
 	extname:string,
+	ignore:boolean,
 	type?:'file'|'folder'|'symlink',
 };
 

@@ -4,18 +4,20 @@ import * as fs from 'fs';
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
-import { normalizeLineEnding, trimWhitespace } from '../@l13/nodes/buffers';
-import { lstatSync, walkTree } from '../@l13/nodes/fse';
+import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
+import { lstatSync, walkTree } from '../@l13/fse';
 
-import { sortCaseInsensitive } from '../../@l13/natvies/arrays';
+import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
-import { DiffSettings, textfiles } from '../common/DiffSettings';
+import { textfiles } from '../../common/extensions';
+import * as settings from '../../common/settings';
+
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
-const findPlaceholder = /^\$\{([a-zA-Z]+)(?:\:((?:\\\}|[^\}])*))?\}/;
+const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
 //	Initialize _________________________________________________________________
@@ -60,8 +62,8 @@ export class DiffCompare {
 		
 		this._onInitCompare.fire(undefined);
 		
-		let pathA = parsePredefinedVariables(data.pathA);
-		let pathB = parsePredefinedVariables(data.pathB);
+		let pathA = parsePredefinedVariable(data.pathA);
+		let pathB = parsePredefinedVariable(data.pathB);
 		
 		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
 		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
@@ -88,8 +90,8 @@ export class DiffCompare {
 	
 	public updateDiffs (data:DiffResult) :void {
 		
-		const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
-		const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
+		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+		const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 		
 		data.diffs.forEach((diff:Diff) => {
 			
@@ -110,7 +112,7 @@ export class DiffCompare {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
-		const openToSide = DiffSettings.get('openToSide', false);
+		const openToSide = settings.get('openToSide', false);
 		
 		this._onStartCompareFiles.fire({ data, pathA, pathB });
 		
@@ -166,7 +168,7 @@ export class DiffCompare {
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
-		const ignore = DiffSettings.getIgnore(dirnameA, dirnameB);
+		const ignore = settings.getIgnore(dirnameA, dirnameB);
 		const resultA:StatsMap = await this.scanFolder(dirnameA, ignore);
 		const resultB:StatsMap = await this.scanFolder(dirnameB, ignore);
 		const diffs:Dictionary<Diff> = {};
@@ -195,7 +197,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 		
 		diffs[id] = {
 			id,
-			status: 'deleted',
+			status: file.ignore ? 'ignored' : 'deleted',
 			type: file.type,
 			ignoredEOL: false,
 			ignoredWhitespace: false,
@@ -209,8 +211,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	
-	const ignoreEndOfLine = DiffSettings.get('ignoreEndOfLine', false);
-	const ignoreTrimWhitespace = DiffSettings.ignoreTrimWhitespace();
+	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 	
 	Object.keys(result).forEach((pathname) => {
 		
@@ -221,7 +223,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 		if (!diff) {
 			diffs[id] = {
 				id,
-				status: 'untracked',
+				status: file.ignore ? 'ignored' : 'untracked',
 				type: file.type,
 				ignoredEOL: false,
 				ignoredWhitespace: false,
@@ -236,10 +238,15 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 
 function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
 	
-	diff.status = 'unchanged';
-	
 	const statA = <fs.Stats>fileA.stat;
 	const statB = <fs.Stats>fileB.stat;
+	
+	if (diff.status === 'ignored') {
+		if (fileA.type !== fileB.type) diff.type = 'mixed';
+		return;
+	}
+	
+	diff.status = 'unchanged';
 	
 	if (fileA.type !== fileB.type) {
 		diff.status = 'conflicting';
@@ -281,39 +288,27 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 	
 }
 
-function parsePredefinedVariables (pathname:string) {
+function parsePredefinedVariable (pathname:string) {
 	
 	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholder, function (match, placeholder, value) {
+	return pathname.replace(findPlaceholder, function (match, name) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		
-		switch (placeholder) {
-			case 'workspaceFolder':
-				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace folder available!');
-					return match;
-				}
-				value = parseInt(value, 10);
-				if (value && !(value < workspaceFolders.length)) {
-					vscode.window.showErrorMessage(`No workspace folder with index ${value} available!`);
-					return match;
-				}
-				value = value || 0;
-				return workspaceFolders.filter(({ index }) => index === value)[0].uri.fsPath;
-			case 'workspaceFolderBasename':
-				if (!workspaceFolders) {
-					vscode.window.showErrorMessage('No workspace folder available!');
-					return match;
-				}
-				value = value.replace(findEscapedEndingBrace, '}');
-				const folder = workspaceFolders.filter(({ name }) => name === value)[0];
-				if (!folder) {
-					vscode.window.showErrorMessage(`No workspace folder with name '${value}' available!`);
-					return match;
-				}
-				return folder.uri.fsPath;
+		if (!workspaceFolders) {
+			vscode.window.showErrorMessage('No workspace folder available!');
+			return match;
 		}
+		
+		if (!name) return workspaceFolders[0].uri.fsPath;
+		
+		name = name.replace(findEscapedEndingBrace, '}');
+		
+		for (const workspaceFolder of workspaceFolders) {
+			if (workspaceFolder.name === name) return workspaceFolder.uri.fsPath;
+		}
+		
+		vscode.window.showErrorMessage(`No workspace folder with name "${name}" available!`);
 		
 		return match;
 		

@@ -14,7 +14,7 @@
 
 export class FolderStats {
 	public pathname:string = '';
-	public total:number = 0;
+	public entries:number = 0;
 	public files:number = 0;
 	public folders:number = 0;
 	public symlinks:number = 0;

@@ -2,14 +2,15 @@
 
 Compare two folders in Visual Studio Code.
 
-![Diff Folders](images/preview.png)
+![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.26.0
+## What's new in Diff Folders 0.27.0
 
-- Changed display name for extension from `L13 Diff` to `Diff Folders`.
-- Added drag'n drop support for path names in the list view which makes cross diffs possible. Please read the description `List Drag'n Drop` to see how it works.
-- Added groups for favorites to group your diffs and open all at once.
-- Added `l13Diff.initialFavoriteGroupState` to set the initial state of the groups.
+- Added ignored files to list view.
+- Added new icon to toggle view for ignored files.
+- Added ignored files to stats.
+- Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Removed `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}`. Please use `${workspaceFolder:NAME}` instead.
 
 ## Index
 
@@ -47,27 +48,27 @@ Compare two folders in Visual Studio Code.
 
 ### Basics
 
-![Diff Folders Basics](images/preview-start.png)
+![Diff Folders Basics](images/previews/preview-start.png)
 
 ### Favorites
 
-![Diff Folders Favorites](images/preview-favorites.png)
+![Diff Folders Favorites](images/previews/preview-favorites.png)
 
 ### Search, filter or select
 
-![Diff Folders Search](images/preview-search.png)
+![Diff Folders Search](images/previews/preview-search.png)
 
 ### List and navigator
 
-![Diff Folders Selection](images/preview-select.png)
+![Diff Folders Selection](images/previews/preview-select.png)
 
 ### Logging and stats
 
-![Diff Folders Stats](images/preview-stats.png)
+![Diff Folders Stats](images/previews/preview-stats.png)
 
 ### Supports the extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
-![Projects](images/preview-projects.png)
+![Projects](images/previews/preview-projects.png)
 
 ## Available Commands
 
@@ -84,12 +85,12 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
-* `l13Projects.initialFavoriteGroupState` - Set the initial state of a group.
+* `l13Diff.initialFavoriteGroupState` - Set the initial state of a group.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
-* `l13Diff.ignoreTrimWhitespace` [1] - Ignores trailing whitespace in text files.
+* `l13Diff.ignoreTrimWhitespace` [1] - Ignores leading and trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
@@ -99,8 +100,7 @@ Compare two folders in Visual Studio Code.
 ## Predefined Variables
 
 * `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
-* `${workspaceFolder:INDEX}` - Use a specific workspace folder by index for the diff e.g. '${workspaceFolder:1}/path/to/folder'
-* `${workspaceFolderBasename:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolderBasename:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolderBasename:name-{1\\}}'.
+* `${workspaceFolder:NAME}` - - Use a specific workspace folder by name for the diff e.g. '${workspaceFolder:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolder:name-{1\\}}'.
 
 ## Mouse and Keyboard Shortcuts
 
@@ -130,6 +130,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in the menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
+* `Escape` - Hide the menu if visible.
 
 ### Swap Button
 
@@ -249,16 +250,38 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Alt + C` - Toggle match case.
 * `Alt + R` - Toggle use regular expression.
 
-### Favorites Explorer
+### Favorites
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
+
+#### Context Icons
+
+* `Diff Folders` - Open a new panel.
+* `New Group` - Add a new group.
+* `Collapse All` - Collapse all groups.
 
 #### Context Menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Rename` - Change the name of the favorite.
-* `Delete` - Delete the favorite diff.
+* `Add to Group` - Add a favorite diff to a group.
+* `Remove` - Remove a favorite diff from a group.
+* `Rename` - Change the name of a favorite or a group.
+* `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
+
+### History
+
+* `Click` - Open the previous comparison and start a comparison immediately.
+
+#### Context Icons
+
+* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
+
+#### Context Menu
+
+* `Open` - Open the previous comparison without starting a comparison immediately.
+* `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar
 
@@ -267,6 +290,23 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ### Navigator
 
 * `Click` - Drag'n drop the scrollbar thumb of the navigator to scroll the list or click elsewhere in the navigator and jump to this part of the list.
+
+### Visual Studio Code Explorer
+
+#### Context Menu
+
+* `Select for Compare` - Select a folder for a comparison.
+* `Compare with Selected` - Compare the folder selected one.
+* `Compare Selected` - Compare the two selected folders.
+
+### [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+#### Context Menu
+
+* `Select for Compare` - Select a folder, repository or project for a comparison.
+* `Compare with Selected` - Compare the folder, repository or project with the selected one.
+* `Compare with Workspace` - Compare the folder, repository or project with the current workspace.
+* `Open in Diff Folders` - Open the folder, repository or project in Diff Folders.
 
 ## Recommended Extensions
 

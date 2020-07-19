@@ -108,9 +108,47 @@ l13-diff-list-row {
 		}
 	}
 	
-	// &.-ignored {
-		// color: var(--vscode-gitDecoration-ignoredResourceForeground);
-	// }
+	&.-ignored {
+		
+		l13-diff-list-file {
+			
+			&::before {
+				opacity: .3;
+			}
+			
+			&.-deleted {
+				
+				span.-missing {
+					color: var(--vscode-gitDecoration-deletedResourceForeground);
+				}
+			}
+			
+			&.-untracked {
+				
+				span.-missing {
+					color: var(--vscode-gitDecoration-untrackedResourceForeground);
+				}
+			}
+			
+			span {
+				
+				&.-basename {
+					color: var(--vscode-gitDecoration-ignoredResourceForeground);
+					opacity: .5;
+				}
+			}
+			
+			&.-folder {
+				
+				span {
+					
+					&.-missing {
+						padding-right: 5px;
+					}
+				}
+			}
+		}
+	}
 	
 	&.-conflicting {
 		color: var(--vscode-gitDecoration-conflictingResourceForeground);
@@ -223,7 +261,7 @@ l13-diff-list-file {
 			color: var(--vscode-foreground);
 			font-size: 11px;
 			opacity: 0.5;
-			padding: 0 0 0 5px;
+			padding-right: 5px;
 		}
 	}
 }

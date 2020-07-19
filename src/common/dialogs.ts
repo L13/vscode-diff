@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import * as vscode from 'vscode';
 
 //	Variables __________________________________________________________________
 
@@ -12,15 +12,22 @@
 
 //	Exports ____________________________________________________________________
 
-export class DetailStats {
-	public total:number = 0;
-	public entries:number = 0;
-	public files:number = 0;
-	public folders:number = 0;
-	public symlinks:number = 0;
-	public size:number = 0;
-	public ignoredEOL:number = 0;
-	public ignoredWhitespace:number = 0;
+export async function open () {
+	
+	const uris = await vscode.window.showOpenDialog({
+		canSelectFiles: true,
+		canSelectFolders: true,
+		canSelectMany: false,
+	});
+	
+	return uris ? uris[0].fsPath : null;
+	
+}
+	
+export async function confirm (text:string, ...buttons:string[]) {
+	
+	return await vscode.window.showInformationMessage(text, { modal: true }, ...buttons);
+	
 }
 
 //	Functions __________________________________________________________________

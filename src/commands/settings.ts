@@ -2,7 +2,9 @@
 
 import * as vscode from 'vscode';
 
-import { DiffSettings } from '../services/common/DiffSettings';
+import * as commands from '../common/commands';
+import * as extensions from '../common/extensions';
+import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
 
@@ -16,35 +18,34 @@ import { DiffSettings } from '../services/common/DiffSettings';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareWhitespace', () => {
-		
-		const useDefault = DiffSettings.get('ignoreTrimWhitespace', 'default');
-		
-		if (useDefault === 'default') vscode.workspace.getConfiguration('diffEditor').update('ignoreTrimWhitespace', false, true);
-		else DiffSettings.update('ignoreTrimWhitespace', 'off');
-		
-	}));
+	extensions.buildWhitelistForTextFiles();
+
+	context.subscriptions.push(vscode.extensions.onDidChange(() => extensions.buildWhitelistForTextFiles()));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.ignoreWhitespace', () => {
+	commands.register(context, {
 		
-		const useDefault = DiffSettings.get('ignoreTrimWhitespace', 'default');
+		'l13Diff.compareWhitespace': () => {
+			
+			const useDefault = settings.get('ignoreTrimWhitespace', 'default');
+			
+			if (useDefault === 'default') vscode.workspace.getConfiguration('diffEditor').update('ignoreTrimWhitespace', false, true);
+			else settings.update('ignoreTrimWhitespace', 'off');
+			
+		},
 		
-		if (useDefault === 'default') vscode.workspace.getConfiguration('diffEditor').update('ignoreTrimWhitespace', true, true);
-		else DiffSettings.update('ignoreTrimWhitespace', 'on');
+		'l13Diff.ignoreWhitespace': () => {
+			
+			const useDefault = settings.get('ignoreTrimWhitespace', 'default');
+			
+			if (useDefault === 'default') vscode.workspace.getConfiguration('diffEditor').update('ignoreTrimWhitespace', true, true);
+			else settings.update('ignoreTrimWhitespace', 'on');
+			
+		},
 		
-	}));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.compareEndOfLine', () => {
+		'l13Diff.compareEndOfLine': () => settings.update('ignoreEndOfLine', false),
+		'l13Diff.ignoreEndOfLine': () => settings.update('ignoreEndOfLine', true),
 		
-		DiffSettings.update('ignoreEndOfLine', false);
-		
-	}));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.ignoreEndOfLine', () => {
-		
-		DiffSettings.update('ignoreEndOfLine', true);
-		
-	}));
+	});
 	
 }
 

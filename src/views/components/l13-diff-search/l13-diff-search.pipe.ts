@@ -5,22 +5,11 @@ import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
-import { Diff } from '../../../types';
+import { Diff, SearchCache } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-type Cache = {
-	searchterm:string,
-	useRegExp:boolean,
-	useCaseSensitive:boolean,
-	useFiles:boolean,
-	useFolders:boolean,
-	useSymlinks:boolean,
-	useConflicts:boolean,
-	regexp:RegExp,
-	items:Diff[],
-	filteredItems:Diff[],
-};
+
 
 const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
@@ -34,7 +23,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 	
 	public vm:L13DiffSearchViewModel = null;
 	
-	private cache:Cache = {
+	private cache:SearchCache = {
 		searchterm: '',
 		useRegExp: false,
 		useCaseSensitive: false,

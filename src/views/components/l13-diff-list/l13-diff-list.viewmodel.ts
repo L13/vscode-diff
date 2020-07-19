@@ -134,8 +134,10 @@ export class L13DiffListViewModel extends ViewModel {
 			if (diff.fileA || diff.fileB) {
 				items.splice(items.indexOf(originalDiff), 1, diff);
 				map[diff.id] = diff;
-				if (!diff.fileA) diff.status = 'untracked';
-				if (!diff.fileB) diff.status = 'deleted';
+				if (diff.status !== 'ignored') {
+					if (!diff.fileA) diff.status = 'untracked';
+					if (!diff.fileB) diff.status = 'deleted';
+				}
 			} else {
 				items.splice(items.indexOf(originalDiff), 1);
 				delete map[diff.id];
@@ -335,7 +337,7 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 			
 			copiedDiffs.some((copiedDiff:Diff) => {
 				
-				if (diff.id !== copiedDiff.id && copiedDiff.status === 'unchanged') {
+				if (diff.id !== copiedDiff.id && (copiedDiff.status === 'unchanged' || copiedDiff.status === 'ignored')) {
 					if (copyDiffFile(diff, copiedDiff, 'A', 'B')) return true;
 					if (copyDiffFile(diff, copiedDiff, 'B', 'A')) return true;
 				}
@@ -360,8 +362,10 @@ function updateDeletedSubfiles (diffs:Diff[], deletedDiffs:Diff[]) {
 				if (!deletedDiff.fileA) diff.fileA = null;
 				if (!deletedDiff.fileB) diff.fileB = null;
 				if (!diff.fileA && !diff.fileB) diffs.splice(diffs.indexOf(diff), 1);
-				else if (!diff.fileA) diff.status = 'untracked';
-				else if (!diff.fileB) diff.status = 'deleted';
+				else if (diff.status !== 'ignored') {
+					if (!diff.fileA) diff.status = 'untracked';
+					else if (!diff.fileB) diff.status = 'deleted';
+				}
 				break loop;
 			}
 		}

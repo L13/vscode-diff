@@ -41,7 +41,7 @@ function normalizeAscii (buffer:Buffer) {
 	while (i < length) {
 		const value = buffer[i++];
 		if (value === 13) {
-			if (buffer[i] !== 10) cache[cache.length] = 10;
+			if (buffer[i] !== 10) cache.push(10);
 		} else cache.push(value);
 	}
 	

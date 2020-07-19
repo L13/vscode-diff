@@ -19,7 +19,7 @@ export type Keybinding = {
 	win?:string,
 };
 
-export type Shortcut = {
+export type KeyboardShortcut = {
 	key:string,
 	altKey:boolean,
 	ctrlKey:boolean,

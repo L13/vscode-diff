@@ -60,13 +60,6 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		// &:hover {
-			
-			// &::before {
-			// 	background: var(--vscode-button-hoverBackground);
-			// }
-		// }
-		
 		&:not([disabled]).-active {
 			transform: scale(1.2, 1.2);
 		}
