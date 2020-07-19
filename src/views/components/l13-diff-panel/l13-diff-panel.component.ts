@@ -10,7 +10,7 @@ import templates from '../templates';
 
 //	Variables __________________________________________________________________
 
-// const DISABLED = Symbol.for('disabled');
+
 
 //	Initialize _________________________________________________________________
 
@@ -26,19 +26,7 @@ import templates from '../templates';
 })
 export class L13DiffPanelComponent extends L13Element<L13DiffPanelViewModel> {
 	
-	// private [DISABLED]:boolean = false;
 	
-	// public get disabled () :boolean {
-		
-	// 	return this[DISABLED];
-		
-	// }
-	
-	// public set disabled (value:boolean) {
-		
-	// 	this[DISABLED] = value;
-		
-	// }
 	
 }
 

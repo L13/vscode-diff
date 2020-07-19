@@ -3,7 +3,7 @@
 import { isMacOs, isWindows } from '../os/platforms';
 import keycodes from './keyboard.us';
 
-import { Keybinding, Shortcut, SimpleMap } from '../../../types';
+import { Keybinding, KeyboardShortcut, SimpleMap } from '../../../types';
 
 const { fromCharCode } = String;
 
@@ -74,7 +74,7 @@ function formatKeybinding (key:string) {
 	
 }
 
-function registerKeybinding (element:HTMLElement|Window, shortcut:Shortcut, listener:(event?:Event) => void) {
+function registerKeybinding (element:HTMLElement|Window, shortcut:KeyboardShortcut, listener:(event?:Event) => void) {
 	
 	element.addEventListener('keydown', (event:KeyboardEvent|Event) => {
 		
@@ -92,7 +92,7 @@ function registerKeybinding (element:HTMLElement|Window, shortcut:Shortcut, list
 
 function parseKeybinding (value:string) {
 	
-	const shortcut:Shortcut = {
+	const shortcut:KeyboardShortcut = {
 		key: '',
 		altKey: false,
 		ctrlKey: false,

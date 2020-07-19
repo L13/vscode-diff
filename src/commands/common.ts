@@ -2,9 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import * as commands from '../common/commands';
-
-import { DiffOutput } from '../services/output/DiffOutput';
+import { DiffFavorites } from '../services/sidebar/DiffFavorites';
+import { DiffHistory } from '../services/sidebar/DiffHistory';
 
 //	Variables __________________________________________________________________
 
@@ -18,9 +17,14 @@ import { DiffOutput } from '../services/output/DiffOutput';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	commands.register(context, {
-		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
-	});
+	context.subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
+		
+		if (focused) { // Update data if changes in another workspace have been done
+			DiffFavorites.currentProvider?.refresh();
+			DiffHistory.currentProvider?.refresh();
+		}
+		
+	}));
 	
 }
 

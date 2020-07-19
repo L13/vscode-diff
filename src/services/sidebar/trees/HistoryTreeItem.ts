@@ -1,13 +1,17 @@
 //	Imports ____________________________________________________________________
 
-import { join } from 'path';
+import { join, resolve } from 'path';
 import * as vscode from 'vscode';
 
 import { Comparison } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-
+const basePath = resolve(__dirname, '..', 'images', 'history');
+const iconPath = {
+	light: join(basePath, 'history-item-light.svg'),
+	dark: join(basePath, 'history-item-dark.svg'),
+};
 
 //	Initialize _________________________________________________________________
 
@@ -23,10 +27,7 @@ export class HistoryTreeItem extends vscode.TreeItem {
 		title: 'Open Comparison',
 	};
 	
-	public iconPath = {
-		light: join(__filename, '..', '..', 'images', 'history-item-light.svg'),
-		dark: join(__filename, '..', '..', 'images', 'history-item-dark.svg'),
-	};
+	public iconPath = iconPath;
 	
 	public contextValue = 'history';
 	

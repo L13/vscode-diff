@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFile } from '../../@types/diffs';
+
 
 //	Variables __________________________________________________________________
 
@@ -12,22 +12,11 @@ import { DiffFile } from '../../@types/diffs';
 
 //	Exports ____________________________________________________________________
 
-export type Callback = (error?:null|Error, result?:StatsMap) => void;
-
-export type Options = {
-	ignore?:string[],
-};
-
-export type StatsMap = {
-	[pathname:string]:DiffFile,
-};
-
-export type WalkTreeJob = {
-	error:null|Error,
-	ignore:null|RegExp,
-	tasks:number,
-	result:StatsMap,
-	done:(error?:Error) => void,
+export type DisplayShortcut = {
+	description:string,
+	key:string,
+	mac?:string,
+	win?:string,
 };
 
 //	Functions __________________________________________________________________

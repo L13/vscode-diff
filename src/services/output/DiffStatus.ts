@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { remove } from '../../@l13/natvies/arrays';
+import { remove } from '../../@l13/arrays';
 
 //	Variables __________________________________________________________________
 

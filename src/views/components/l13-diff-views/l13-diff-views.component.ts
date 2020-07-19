@@ -39,6 +39,9 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 	@L13Query('#l13_show_untracked')
 	public untracked:HTMLInputElement;
 	
+	@L13Query('#l13_show_ignored')
+	public ignored:HTMLInputElement;
+	
 	public constructor () {
 		
 		super();
@@ -47,11 +50,13 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 		setLabel(this.deleted, 'Show all deleted files');
 		setLabel(this.modified, 'Show all modfied files');
 		setLabel(this.untracked, 'Show all created files');
+		setLabel(this.ignored, 'Show all ignored files');
 		
 		addButtonActiveStyleEvents(this.unchanged);
 		addButtonActiveStyleEvents(this.deleted);
 		addButtonActiveStyleEvents(this.modified);
 		addButtonActiveStyleEvents(this.untracked);
+		addButtonActiveStyleEvents(this.ignored);
 		
 	}
 	

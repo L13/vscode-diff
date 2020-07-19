@@ -4,7 +4,7 @@ import * as assert from 'assert';
 
 import { formatAmount, formatFileSize } from './formats';
 
-import { Plural, Test } from '../../../types';
+import { Plural, Test } from '../../types';
 
 //	Variables __________________________________________________________________
 

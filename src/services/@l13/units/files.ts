@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { Plural } from '../../@types/formats';
 
 //	Variables __________________________________________________________________
 
@@ -12,16 +12,13 @@
 
 //	Exports ____________________________________________________________________
 
-export class DetailStats {
-	public total:number = 0;
-	public entries:number = 0;
-	public files:number = 0;
-	public folders:number = 0;
-	public symlinks:number = 0;
-	public size:number = 0;
-	public ignoredEOL:number = 0;
-	public ignoredWhitespace:number = 0;
-}
+export const pluralFiles:Plural = { size: 'files', 1: 'file' };
+export const pluralFolders:Plural = { size: 'folders', 1: 'folder' };
+export const pluralSymlinks:Plural = { size: 'symlinks', 1: 'symlink' };
+
+export const pluralEntries:Plural = { size: 'entries', 1: 'entry' };
+
+export const pluralBytes:Plural = { size: 'Bytes', 1: 'Byte' };
 
 //	Functions __________________________________________________________________
 

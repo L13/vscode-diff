@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import * as commands from '../common/commands';
+
 import { DiffPanel } from '../services/panel/DiffPanel';
 
 //	Variables __________________________________________________________________
@@ -17,28 +19,31 @@ let timeoutId:NodeJS.Timeout = null;
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.show', () => DiffPanel.create(context)));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.openAndCompare', (left, right, openToSide) => {
+	commands.register(context, {
 		
-		if (openToSide) DiffPanel.create(context, [left, right], true);
-		else DiffPanel.createOrShow(context, [left, right], true);
+		'l13Diff.show': () => DiffPanel.create(context),
 		
-	}));
-	
-	context.subscriptions.push(vscode.commands.registerCommand('l13Diff.open', async (...uris:any[]) => {
-		
-		if (!uris.length) {
-			const dialogUris = await vscode.window.showOpenDialog({
-				canSelectFiles: true,
-				canSelectFolders: true,
-				canSelectMany: true,
-			});
+		'l13Diff.openAndCompare': (left, right, openToSide) => {
 			
-			if (dialogUris) DiffPanel.create(context, dialogUris.slice(0, 2));
-		} else DiffPanel.create(context, uris[1].slice(0, 2));
+			if (openToSide) DiffPanel.create(context, [left, right], true);
+			else DiffPanel.createOrShow(context, [left, right], true);
+			
+		},
 		
-	}));
+		'l13Diff.open': async (...uris:any[]) => {
+			
+			if (!uris.length) {
+				const dialogUris = await vscode.window.showOpenDialog({
+					canSelectFiles: true,
+					canSelectFolders: true,
+					canSelectMany: true,
+				});
+				
+				if (dialogUris) DiffPanel.create(context, dialogUris.slice(0, 2));
+			} else DiffPanel.create(context, uris[1].slice(0, 2));
+			
+		},
+	});
 	
 	if (vscode.window.registerWebviewPanelSerializer) {
 		
@@ -53,7 +58,7 @@ export function activate (context:vscode.ExtensionContext) {
 		});
 	}
 	
-	vscode.workspace.onDidSaveTextDocument(({ fileName }) => {
+	context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(({ fileName }) => {
 		
 		if (fileName && DiffPanel.currentPanel) {
 			if (timeoutId !== null) clearTimeout(timeoutId);
@@ -61,7 +66,7 @@ export function activate (context:vscode.ExtensionContext) {
 			timeoutId = setTimeout(sendUpdateFiles, 200);
 		}
 		
-	});
+	}));
 	
 }
 

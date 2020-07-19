@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Callback, Options, WalkTreeJob } from '../../../types';
+import { Callback, WalkTreeJob, WalkTreeOptions } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -33,11 +33,11 @@ export function copyFile (sourcePath:string, destPath:string, options?:any, call
 	
 }
 
-export function walkTree (cwd:string, options:Callback|Options, callback?:Callback) {
+export function walkTree (cwd:string, options:Callback|WalkTreeOptions, callback?:Callback) {
 	
 	callback = typeof options === 'function' ? options : callback;
 	
-	const findIgnore = Array.isArray((<Options>options).ignore) ? createFindGlob((<string[]>(<Options>options).ignore)) : null;
+	const findIgnore = Array.isArray((<WalkTreeOptions>options).ignore) ? createFindGlob((<string[]>(<WalkTreeOptions>options).ignore)) : null;
 	
 	const job:WalkTreeJob = {
 		error: null,
@@ -167,10 +167,6 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 		
 		job.tasks--; // directory read
 		
-		const ignore = job.ignore;
-		
-		if (ignore) names = names.filter((name) => !ignore.test(name));
-		
 		job.tasks += names.length;
 		
 		if (!job.tasks) return job.done();
@@ -186,6 +182,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				if (job.error) return; // If error no further actions
 				if (statError) return job.done(statError);
 				
+				const ignoreFile = job.ignore?.test(name);
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
 				
@@ -204,8 +201,9 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						dirname: currentDirname,
 						extname: '',
 						type: 'folder',
+						ignore: ignoreFile,
 					};
-					return _walktree(job, cwd, currentRelative);
+					if (!ignoreFile) return _walktree(job, cwd, currentRelative);
 				}
 				
 				job.tasks--;
@@ -223,6 +221,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						dirname: currentDirname,
 						extname: path.extname(currentRelative),
 						type: 'file',
+						ignore: ignoreFile,
 					};
 				} else if (stat.isSymbolicLink()) {
 					job.result[pathname] = {
@@ -237,6 +236,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 						dirname: currentDirname,
 						extname: '',
 						type: 'symlink',
+						ignore: ignoreFile,
 					};
 				}
 				

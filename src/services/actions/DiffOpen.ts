@@ -1,13 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Diff, DiffFile } from '../../types';
 
-import { lstat } from '../@l13/nodes/fse';
-import { isMacOs, isWindows } from '../@l13/nodes/platforms';
+import { lstat } from '../@l13/fse';
 
 import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
@@ -59,13 +56,13 @@ export class DiffOpen {
 			if (statA.isFile() && statB.isFile()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
+				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+				vscode.commands.executeCommand('vscode.diff', left, right, title, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
 			} else if (statA.isDirectory() && statB.isDirectory()) {
-				// const value = await DiffDialog.confirm(`Compare folder "${fileA.path}" with folder "${fileB.path}"`, 'Compare');
-				// if (value) {
+				// if (await dialogs.confirm(`Compare folder "${fileA.fsPath}" with folder "${fileB.fsPath}"`, 'Compare')) {
 				// 	const left = vscode.Uri.file(fileA.fsPath);
 				// 	const right = vscode.Uri.file(fileB.fsPath);
 				// 	vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
@@ -73,7 +70,8 @@ export class DiffOpen {
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);
-				vscode.commands.executeCommand('vscode.diff', left, right, `${fileA.name} (${fileA.root} ↔ ${fileB.root})`, {
+				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+				vscode.commands.executeCommand('vscode.diff', left, right, title, {
 					preview: false,
 					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 				});
@@ -88,33 +86,18 @@ export class DiffOpen {
 		
 		switch (diff.status) {
 			case 'deleted':
-				DiffOpen.openFile(diff.fileA, openToSide);
+			case 'untracked':
+				DiffOpen.openFile(diff.fileA || diff.fileB, openToSide);
 				break;
 			case 'modified':
 			case 'unchanged':
 				DiffOpen.openDiff(diff, openToSide);
 				break;
-			case 'untracked':
-				DiffOpen.openFile(diff.fileB, openToSide);
+			case 'ignored':
+				if (diff.fileA && diff.fileB) DiffOpen.openDiff(diff, openToSide);
+				else DiffOpen.openFile(diff.fileA || diff.fileB, openToSide);
 				break;
 		}
-		
-	}
-	
-	public static reveal (pathname:string) :void {
-		
-		let process:ChildProcessWithoutNullStreams = null;
-		
-		if (isMacOs) process = showFileInFinder(pathname);
-		else if (isWindows) process = showFileInExplorer(pathname);
-		else process = showFileInFolder(pathname);
-		
-		process.on('error', (error:Error) => {
-			
-			process.kill();
-			vscode.window.showErrorMessage(error.message);
-			
-		});
 		
 	}
 	
@@ -122,20 +105,3 @@ export class DiffOpen {
 
 //	Functions __________________________________________________________________
 
-function showFileInFinder (pathname:string) {
-	
-	return spawn('open', ['-R', pathname || '/']);
-	
-}
-
-function showFileInExplorer (pathname:string) {
-	
-	return spawn('explorer', ['/select,', pathname || 'c:\\']);
-	
-}
-
-function showFileInFolder (pathname:string) {
-	
-	return spawn('xdg-open', [path.dirname(pathname) || '/']);
-	
-}

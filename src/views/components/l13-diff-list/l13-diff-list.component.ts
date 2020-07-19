@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { remove } from '../../../@l13/natvies/arrays';
+import { remove } from '../../../@l13/arrays';
 import { Diff, DiffFile } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
@@ -52,14 +52,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		super();
 		
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
-		
-		const focusListView = () => this.focus();
-		
-		window.addEventListener('focus', () => {
-			
-			if (this.cacheSelectionHistory.length) setTimeout(focusListView, 0);
-			
-		});
 		
 		this.addEventListener('focus', () => this.content.classList.add('-focus'));
 		this.addEventListener('blur', () => this.content.classList.remove('-focus'));
@@ -723,6 +715,11 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	if (file) {
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-fs-path', file.fsPath);
+		
+		if (file.ignore) {
+			 if (!diff.fileA) column.classList.add('-untracked');
+			 if (!diff.fileB) column.classList.add('-deleted');
+		}
 		
 		const path = document.createElement('SPAN');
 		path.draggable = true;

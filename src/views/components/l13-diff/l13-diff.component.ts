@@ -46,7 +46,7 @@ const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
 
-const round = Math.round;
+const { round } = Math;
 
 //	Initialize _________________________________________________________________
 
@@ -275,6 +275,20 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			if (this.list.disabled) return;
 			
 			if (target === document.body || target === document.documentElement) this.list.unselect();
+			
+		});
+		
+		const focusListView = () => {
+			
+			if (!this.left.focused && !this.right.focused) this.list.focus();
+			
+		};
+		
+		window.addEventListener('focus', () => {
+			
+			if (this.list.content.firstElementChild && !this.left.focused && !this.right.focused) {
+				setTimeout(focusListView, 0);
+			}
 			
 		});
 		

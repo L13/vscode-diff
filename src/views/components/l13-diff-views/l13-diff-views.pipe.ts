@@ -5,18 +5,11 @@ import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 import { L13DiffViewsViewModelService } from './l13-diff-views.service';
 import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
-import { Diff } from '../../../types';
+import { Diff, ViewsCache } from '../../../types';
 
 //	Variables __________________________________________________________________
 
-type Cache = {
-	unchangedChecked:boolean,
-	deletedChecked:boolean,
-	modifiedChecked:boolean,
-	untrackedChecked:boolean,
-	items:Diff[],
-	filteredItems:Diff[],
-};
+
 
 //	Initialize _________________________________________________________________
 
@@ -28,11 +21,12 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 	
 	public vm:L13DiffViewsViewModel = null;
 	
-	private cache:Cache = {
+	private cache:ViewsCache = {
 		unchangedChecked: false,
 		deletedChecked: true,
 		modifiedChecked: true,
 		untrackedChecked: true,
+		ignoredChecked: false,
 		items: [],
 		filteredItems: [],
 	};
@@ -53,6 +47,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 			&& vm.deletedChecked === cache.deletedChecked
 			&& vm.modifiedChecked === cache.modifiedChecked
 			&& vm.untrackedChecked === cache.untrackedChecked
+			&& vm.ignoredChecked === cache.ignoredChecked
 			) {
 			return cache.filteredItems;
 		}
@@ -62,13 +57,15 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		cache.deletedChecked = vm.deletedChecked;
 		cache.modifiedChecked = vm.modifiedChecked;
 		cache.untrackedChecked = vm.untrackedChecked;
+		cache.ignoredChecked = vm.ignoredChecked;
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
 			return vm.unchangedChecked && diff.status === 'unchanged'
 				|| vm.deletedChecked && diff.status === 'deleted'
 				|| vm.modifiedChecked && (diff.status === 'modified' || diff.status === 'conflicting')
-				|| vm.untrackedChecked && diff.status === 'untracked';
+				|| vm.untrackedChecked && diff.status === 'untracked'
+				|| vm.ignoredChecked && diff.status === 'ignored';
 			
 		});
 		
