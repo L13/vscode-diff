@@ -9,7 +9,7 @@ const sass = require('gulp-sass');
 const rollup = require('rollup');
 
 const file2json = require('./plugins/gulp-file2json');
-const typescript = require('rollup-plugin-typescript');
+const typescript = require('@rollup/plugin-typescript');
 
 //	Variables __________________________________________________________________
 
@@ -124,16 +124,12 @@ gulp.task('script:view', () => {
 		input: 'src/views/main.ts',
 		plugins: [
 			typescript({
-				target: 'es6',
-				lib: [
-					'es6',
-					'dom',
+				include: [
+					'src/@l13/**/!(.test).ts',
+					'src/@types/**/!(.test).ts',
+					'src/views/**/!(.test).ts',
+					'src/types.ts',
 				],
-				strict: true,
-				removeComments: true,
-				emitDecoratorMetadata: true,
-				experimentalDecorators: true,
-				
 			}),
 		]
 	}).then(bundle => {
@@ -141,7 +137,6 @@ gulp.task('script:view', () => {
 		return bundle.write({
 			file: 'media/main.js',
 			format: 'iife',
-			name: 'l13diffview',
 		});
 		
 	});
@@ -160,13 +155,15 @@ gulp.task('script:services', () => {
 		],
 		plugins: [
 			typescript({
-				target: 'es6',
-				lib: [
-					'es6',
-					'dom',
+				include: [
+					'src/@l13/**/!(.test).ts',
+					'src/@types/**/!(.test).ts',
+					'src/commands/**/!(.test).ts',
+					'src/common/**/!(.test).ts',
+					'src/services/**/!(.test).ts',
+					'src/extension.ts',
+					'src/types.ts',
 				],
-				strict: true,
-				removeComments: true,
 			}),
 		]
 	}).then(bundle => {
@@ -174,7 +171,6 @@ gulp.task('script:services', () => {
 		return bundle.write({
 			file: 'out/extension.js',
 			format: 'cjs',
-			name: 'l13diffservices',
 			globals: {
 				child_process: 'child_process',
 				fs: 'fs',
@@ -206,12 +202,10 @@ gulp.task('script:tests', () => {
 			],
 			plugins: [
 				typescript({
-					target: 'es6',
-					lib: [
-						'es6',
+					include: [
+						'src/services/@l13/**/*.ts',
+						'src/test/index.ts',
 					],
-					strict: true,
-					removeComments: true,
 				}),
 			]
 		}).then(bundle => {
@@ -219,7 +213,6 @@ gulp.task('script:tests', () => {
 			return bundle.write({
 				file: file.out,
 				format: 'cjs',
-				name: 'l13difftests',
 				globals: {
 					assert: 'assert',
 					glob: 'glob',

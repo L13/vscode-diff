@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.27.0",
+	"version": "0.28.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -670,9 +670,11 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"test-files": "node ./diff/index.js --shared --create-all"
+		"test-files": "node ./diff/index.js --shared --create-all",
+		"update": "rm -rf node_modules && rm package-lock.json && npm install"
 	},
 	"devDependencies": {
+		"@rollup/plugin-typescript": "^5.0.2",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^12.12.35",
@@ -683,7 +685,6 @@
 		"gulp-sass": "^4.0.2",
 		"mocha": "^7.1.1",
 		"rollup": "^1.32.1",
-		"rollup-plugin-typescript": "^1.0.1",
 		"tslint": "^6.1.0",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.0.2"
