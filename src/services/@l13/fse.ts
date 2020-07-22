@@ -110,14 +110,9 @@ export function lstatSync (pathname:string) {
 
 export function lstat (pathname:string) :Promise<fs.Stats> {
 	
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		
-		fs.lstat(pathname, (error, stat) => {
-			
-			if (error) reject(null);
-			else resolve(stat);
-			
-		});
+		fs.lstat(pathname, (error, stat) => resolve(error ? null : stat));
 		
 	});
 	

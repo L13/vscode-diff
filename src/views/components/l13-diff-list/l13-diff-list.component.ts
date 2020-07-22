@@ -756,7 +756,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 			if (diff.ignoredEOL) values.push('eol');
 			if (diff.ignoredWhitespace) values.push('whitespace');
 			ignored.textContent = `(ignored ${values.join(' and ')})`;
-			ignored.classList.add('-ignored');
+			ignored.classList.add('-info');
 			column.appendChild(ignored);
 		}
 	}
