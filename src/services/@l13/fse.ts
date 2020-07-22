@@ -8,7 +8,7 @@ import { StatsMap } from '../@types/fse';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /\/\.\/|\*\*\/|\/\*\*|[\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+const findRegExpChars:RegExp = /\.\/|\*\*\/|\/\*\*|[\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 const findGlobStart = /^(\.\/|\*\*\/)/;
 
 //	Initialize _________________________________________________________________
@@ -62,21 +62,11 @@ export function copySymbolicLink (sourcePath:string, destPath:string) {
 
 export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap> {
 	
-	let ignore:RegExp = null;
-	
-	if (Array.isArray(options.excludes)) {
-		ignore = createFindGlob(options.excludes.map((pattern) => {
-			
-			return !findGlobStart.test(pattern) ? `**/${pattern}` : pattern;
-			
-		}));
-	}
-	
 	return new Promise((resolve, reject) => {
 		
 		const job:WalkTreeJob = {
 			error: null,
-			ignore,
+			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes) : null,
 			result: {},
 			tasks: 1,
 			done: (error?:Error) => {
@@ -135,7 +125,11 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 
 export function createFindGlob (ignore:string[]) {
 	
-	return new RegExp(`^(${ignore.map((value) => escapeGlobForRegExp(value)).join('|')})$`);
+	return new RegExp(`^(${ignore.map((pattern) => {
+		
+		return escapeGlobForRegExp(!findGlobStart.test(pattern) ? `**/${pattern}` : pattern);
+		
+	}).join('|')})$`);
 	
 }
 
@@ -149,8 +143,8 @@ function escapeGlobForRegExp (text:any) :string {
 		if (match === '/') return '[/\\\\]';
 		if (match === '*') return '[^/\\\\]+';
 		if (match === '?') return '?';
-		if (match === '**/') return '(.*[/\\\\])*';
-		if (match === '/**') return '([/\\\\].+)*';
+		if (match === '**/') return '([^/\\\\]*[/\\\\])*';
+		if (match === '/**') return '([/\\\\][^/\\\\]+)*';
 		
 		return '\\' + match;
 		
