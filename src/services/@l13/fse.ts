@@ -3,12 +3,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Callback, WalkTreeJob, WalkTreeOptions } from '../../types';
+import { WalkTreeJob, WalkTreeOptions } from '../../types';
+import { StatsMap } from '../@types/fse';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
-const sep = path.sep;
+const findRegExpChars:RegExp = /\/\.\/|\*\*\/|\/\*\*|[\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+const findGlobStart = /^(\.\/|\*\*\/)/;
 
 //	Initialize _________________________________________________________________
 
@@ -16,45 +17,81 @@ const sep = path.sep;
 
 //	Exports ____________________________________________________________________
 
-export function copyFile (sourcePath:string, destPath:string, options?:any, callback?:any) {
-	
-	if (typeof options === 'function') {
-		callback = options;
-		options = {};
-	}
+export function copyFile (sourcePath:string, destPath:string) {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
 	const dirname = path.dirname(destPath);
 	
-	if (!fs.existsSync(dirname)) mkdirsSync(dirname);
+	if (!fs.existsSync(dirname)) fs.mkdirSync(dirname, { recursive: true });
 	
-	_copyFile(sourcePath, destPath, callback);
+	return new Promise((resolve, reject) => {
+		
+		const source = fs.createReadStream(sourcePath);
+		const dest = fs.createWriteStream(destPath);
+		
+		source.pipe(dest);
+		
+		source.on('error', (error:Error) => reject(error));
+		source.on('end', () => resolve());
+		
+	});
 	
 }
 
-export function walkTree (cwd:string, options:Callback|WalkTreeOptions, callback?:Callback) {
+export function copySymbolicLink (sourcePath:string, destPath:string) {
 	
-	callback = typeof options === 'function' ? options : callback;
+	destPath = path.resolve(sourcePath, destPath);
 	
-	const findIgnore = Array.isArray((<WalkTreeOptions>options).ignore) ? createFindGlob((<string[]>(<WalkTreeOptions>options).ignore)) : null;
+	const dirname = path.dirname(destPath);
 	
-	const job:WalkTreeJob = {
-		error: null,
-		ignore: findIgnore,
-		result: {},
-		tasks: 1,
-		done: (error?:Error) => {
+	if (!fs.existsSync(dirname)) fs.mkdirSync(dirname, { recursive: true });
+	
+	return new Promise((resolve, reject) => {
+		
+		fs.symlink(fs.readlinkSync(sourcePath), destPath, (error:Error) => {
+						
+			if (error) reject(error);
+			else resolve();
 			
-			if (error) {
-				job.error = error;
-				(<Callback>callback)(error);
-			} else (<Callback>callback)(null, job.result);
-			
-		},
-	};
+		});
+		
+	});
 	
-	_walktree(job, cwd);
+}
+
+export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap> {
+	
+	let ignore:RegExp = null;
+	
+	if (Array.isArray(options.excludes)) {
+		ignore = createFindGlob(options.excludes.map((pattern) => {
+			
+			return !findGlobStart.test(pattern) ? `**/${pattern}` : pattern;
+			
+		}));
+	}
+	
+	return new Promise((resolve, reject) => {
+		
+		const job:WalkTreeJob = {
+			error: null,
+			ignore,
+			result: {},
+			tasks: 1,
+			done: (error?:Error) => {
+				
+				if (error) {
+					job.error = error;
+					reject(error);
+				} else resolve(job.result);
+				
+			},
+		};
+		
+		_walktree(job, cwd);
+		
+	});
 	
 }
 
@@ -70,26 +107,6 @@ export function walkUp (dirname:string, filename:string) :string {
 	}) ? path.join(dirname, filename) : null;
 	
 }
-
-// export function unlinkSync (pathname:string) :number {
-	
-// 	const stat = lstatSync(pathname);
-// 	let total = 0;
-	
-// 	if (stat) {
-// 		if (stat.isDirectory()) {
-// 			fs.readdirSync(pathname).forEach((name) => total += unlinkSync(path.join(pathname, name)));
-// 			fs.rmdirSync(pathname);
-// 			total++;
-// 		} else if (stat.isFile() || stat.isSymbolicLink()) {
-// 			fs.unlinkSync(pathname);
-// 			total++;
-// 		}
-// 	}
-	
-// 	return total;
-	
-// }
 
 export function lstatSync (pathname:string) {
 	
@@ -107,7 +124,7 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 		
 		fs.lstat(pathname, (error, stat) => {
 			
-			if (error) reject(error);
+			if (error) reject(null);
 			else resolve(stat);
 			
 		});
@@ -118,18 +135,22 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 
 export function createFindGlob (ignore:string[]) {
 	
-	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
+	return new RegExp(`^(${ignore.map((value) => escapeGlobForRegExp(value)).join('|')})$`);
 	
 }
 
 //	Functions __________________________________________________________________
 
-function escapeForRegExp (text:any) :string {
+function escapeGlobForRegExp (text:any) :string {
 	
 	return ('' + text).replace(findRegExpChars, (match) => {
 		
-		if (match === '*') return '.+';
+		if (match === './') return '';
+		if (match === '/') return '[/\\\\]';
+		if (match === '*') return '[^/\\\\]+';
 		if (match === '?') return '?';
+		if (match === '**/') return '(.*[/\\\\])*';
+		if (match === '/**') return '([/\\\\].+)*';
 		
 		return '\\' + match;
 		
@@ -137,20 +158,24 @@ function escapeForRegExp (text:any) :string {
 	
 }
 
-function _copyFile (sourcePath:string, destPath:string, options?:any, callback?:any) {
+function addFile (result:any, type:string, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean) {
 	
-	if (typeof options === 'function') {
-		callback = options;
-		options = {};
-	}
+	const sep = type === 'folder' ? path.sep : '';
 	
-	const source = fs.createReadStream(sourcePath);
-	const dest = fs.createWriteStream(destPath);
-	
-	source.pipe(dest);
-	
-	source.on('error', (streamError:Error) => callback(streamError));
-	source.on('end', () => callback());
+	result[fsPath] = {
+		root,
+		relative,
+		fsPath,
+		stat,
+		
+		path: fsPath + sep,
+		name: relative + sep,
+		basename: path.basename(relative) + sep,
+		dirname,
+		extname: (type === 'file' ? path.extname(relative) : ''),
+		type,
+		ignore,
+	};
 	
 }
 
@@ -166,7 +191,6 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 		if (dirError) return job.done(dirError);
 		
 		job.tasks--; // directory read
-		
 		job.tasks += names.length;
 		
 		if (!job.tasks) return job.done();
@@ -175,70 +199,26 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 			
 			const pathname = path.join(dirname, name);
 			
-			if (job.result[pathname]) return job.tasks--;
-			
 			fs.lstat(pathname, (statError, stat) => {
 				
 				if (job.error) return; // If error no further actions
 				if (statError) return job.done(statError);
 				
-				const ignoreFile = job.ignore?.test(name);
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
+				const ignore = job.ignore?.test(currentRelative);
 				
-				currentDirname = currentDirname === '.' ? '' : currentDirname + sep;
+				currentDirname = currentDirname === '.' ? '' : currentDirname + path.sep;
 				
 				if (stat.isDirectory()) {
-					job.result[pathname] = {
-						root: cwd,
-						relative: currentRelative,
-						fsPath: pathname,
-						stat,
-						
-						path: pathname + sep,
-						name: currentRelative + sep,
-						basename: path.basename(currentRelative) + sep,
-						dirname: currentDirname,
-						extname: '',
-						type: 'folder',
-						ignore: ignoreFile,
-					};
-					if (!ignoreFile) return _walktree(job, cwd, currentRelative);
+					addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					if (!ignore) return _walktree(job, cwd, currentRelative);
 				}
 				
 				job.tasks--;
 				
-				if (stat.isFile()) {
-					job.result[pathname] = {
-						root: cwd,
-						relative: currentRelative,
-						fsPath: pathname,
-						stat,
-						
-						path: pathname,
-						name: currentRelative,
-						basename: path.basename(currentRelative),
-						dirname: currentDirname,
-						extname: path.extname(currentRelative),
-						type: 'file',
-						ignore: ignoreFile,
-					};
-				} else if (stat.isSymbolicLink()) {
-					job.result[pathname] = {
-						root: cwd,
-						relative: currentRelative,
-						fsPath: pathname,
-						stat,
-						
-						path: pathname,
-						name: currentRelative,
-						basename: path.basename(currentRelative),
-						dirname: currentDirname,
-						extname: '',
-						type: 'symlink',
-						ignore: ignoreFile,
-					};
-				}
+				if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+				else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 				
 				if (!job.tasks) job.done();
 				
@@ -247,27 +227,5 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 		});
 		
 	});
-	
-}
-
-export function mkdirsSync (dirname:string) {
-	
-	const dirnames = dirname.split(sep);
-	const base = dirnames.shift() || sep;
-	
-	return dirnames.reduce((parent, child) => {
-		
-		const current = path.join(parent, child);
-		
-		try {
-			fs.mkdirSync(current);
-		} catch (error) {
-			if (error.code === 'EEXIST') return current;
-			throw error.code === 'ENOENT' ? new Error(`Permission denied '${current}'`) : error;
-		}
-		
-		return current;
-		
-	}, base);
 	
 }

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, lstatSync, mkdirsSync } from '../@l13/fse';
+import { copyFile, copySymbolicLink, lstat } from '../@l13/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
@@ -37,14 +37,14 @@ export class DiffCopy {
 	
 	private async copy (file:DiffFile, dest:string) :Promise<any> {
 		
-		const stat = lstatSync(file.fsPath);
+		const stat = await lstat(file.fsPath);
 		
 		if (stat) {
-			const statDest = lstatSync(dest);
+			const statDest = await lstat(dest);
 			if (stat.isDirectory()) {
 				if (!statDest) {
 					try {
-						mkdirsSync(dest);
+						fs.mkdirSync(dest, { recursive: true });
 						return Promise.resolve();
 					} catch (error) {
 						return Promise.reject(error);
@@ -54,32 +54,12 @@ export class DiffCopy {
 					return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 				}
 			} else if (stat.isFile()) {
-				if (!statDest || statDest.isFile()) {
-					return new Promise((resolve, reject) => {
-						
-						copyFile(file.fsPath, dest, (error:Error) => {
-						
-							if (error) reject(error);
-							else resolve();
-							
-						});
-						
-					});
-				}
+				if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
 				return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
 			} else if (stat.isSymbolicLink()) {
 				if (!statDest || statDest.isSymbolicLink()) {
-					if (statDest) fs.unlinkSync(dest);
-					return new Promise((resolve, reject) => {
-						
-						fs.symlink(fs.readlinkSync(file.fsPath), dest, (error:Error) => {
-						
-							if (error) reject(error);
-							else resolve();
-							
-						});
-						
-					});
+					if (statDest) fs.unlinkSync(dest); // Delete existing symlink otherwise an error occurs
+					return await copySymbolicLink(file.fsPath, dest);
 				}
 				return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
 			}
@@ -131,17 +111,13 @@ export class DiffCopy {
 		const job:CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
-			done: () => {
-				
-				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to });
-				
-			},
+			done: () => this._onDidCopyFiles.fire({ data, from ,to }),
 		};
 		
 		diffs.forEach(async (diff:Diff) => {
 			
-			const fileFrom:DiffFile = (<any>diff)['file' + from];
-			const stat = lstatSync(fileFrom.fsPath);
+			const fileFrom:DiffFile = from === 'A' ? diff.fileA : diff.fileB;
+			const stat = await lstat(fileFrom.fsPath);
 			
 			if (stat) {
 				const dest = path.join(folderTo, fileFrom.relative);
@@ -152,25 +128,12 @@ export class DiffCopy {
 					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
 				
 					if (!fileTo) {
-						fileTo = {
-							root: folderTo,
-							relative: fileFrom.relative,
-							fsPath: dest,
-							stat: null,
-							
-							path: dest + (fileFrom.type === 'folder' ? path.sep : ''),
-							name: fileFrom.name,
-							basename: fileFrom.basename,
-							dirname: fileFrom.dirname,
-							extname: fileFrom.extname,
-							type: fileFrom.type,
-							ignore: fileFrom.ignore,
-						};
+						fileTo = copyDiffFile(fileFrom, folderTo, dest);
 						if (to === 'A') diff.fileA = fileTo;
 						else diff.fileB = fileTo;
 					}
 					
-					fileTo.stat = lstatSync(dest);
+					fileTo.stat = await lstat(dest);
 					this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
 					
 				} catch (error) {
@@ -189,3 +152,21 @@ export class DiffCopy {
 
 //	Functions __________________________________________________________________
 
+function copyDiffFile (fileFrom:DiffFile, root:string, dest:string) :DiffFile {
+	
+	return {
+		root,
+		relative: fileFrom.relative,
+		fsPath: dest,
+		stat: null,
+		
+		path: dest + (fileFrom.type === 'folder' ? path.sep : ''),
+		name: fileFrom.name,
+		basename: fileFrom.basename,
+		dirname: fileFrom.dirname,
+		extname: fileFrom.extname,
+		type: fileFrom.type,
+		ignore: fileFrom.ignore,
+	}
+	
+}

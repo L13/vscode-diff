@@ -16,10 +16,10 @@
 		".svn",
 		".vscode",
 		"CVS",
-		"diff",
-		"media",
+		"./diff",
+		"./media",
 		"node_modules",
-		"out",
-		"package-lock.json"
+		"./out",
+		"./package-lock.json"
 	]
 }

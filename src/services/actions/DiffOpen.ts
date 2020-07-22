@@ -24,21 +24,10 @@ export class DiffOpen {
 		
 		try {
 			const stat = await lstat(file.fsPath);
-			if (stat.isFile()) {
-				const pathname = vscode.Uri.file(file.fsPath);
-				vscode.commands.executeCommand('vscode.open', pathname, {
-					preview: false,
-					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
-				});
-			} else if (stat.isDirectory()) {
-				//
-			} else if (stat.isSymbolicLink()) {
-				const pathname = SymlinkContentProvider.parse(file.fsPath);
-				vscode.commands.executeCommand('vscode.open', pathname, {
-					preview: false,
-					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
-				});
-			} else vscode.window.showErrorMessage(`File can't be opened! '${file.path}' is not a file!`);
+			if (stat.isFile()) openFile(vscode.Uri.file(file.fsPath), openToSide);
+			else if (stat.isDirectory()) void 0;
+			else if (stat.isSymbolicLink()) openFile(SymlinkContentProvider.parse(file.fsPath), openToSide);
+			else vscode.window.showErrorMessage(`File can't be opened. "${file.path}" is not a file.`);
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
 		}
@@ -56,26 +45,16 @@ export class DiffOpen {
 			if (statA.isFile() && statB.isFile()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
-				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
-				vscode.commands.executeCommand('vscode.diff', left, right, title, {
-					preview: false,
-					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
-				});
+				openDiff(fileA, fileB, left, right, openToSide);
 			} else if (statA.isDirectory() && statB.isDirectory()) {
-				// if (await dialogs.confirm(`Compare folder "${fileA.fsPath}" with folder "${fileB.fsPath}"`, 'Compare')) {
-				// 	const left = vscode.Uri.file(fileA.fsPath);
-				// 	const right = vscode.Uri.file(fileB.fsPath);
-				// 	vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, openToSide);
-				// }
+				const left = vscode.Uri.file(fileA.fsPath);
+				const right = vscode.Uri.file(fileB.fsPath);
+				vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, true, openToSide);
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);
-				const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
-				vscode.commands.executeCommand('vscode.diff', left, right, title, {
-					preview: false,
-					viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
-				});
-			} else vscode.window.showErrorMessage(`Files can't be compared!`)
+				openDiff(fileA, fileB, left, right, openToSide);
+			} else vscode.window.showErrorMessage(`Files can't be compared. Type of files are not equal.`)
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
 		}
@@ -105,3 +84,22 @@ export class DiffOpen {
 
 //	Functions __________________________________________________________________
 
+function openFile (pathname:vscode.Uri, openToSide:boolean) {
+	
+	vscode.commands.executeCommand('vscode.open', pathname, {
+		preview: false,
+		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+	});
+	
+}
+
+function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode.Uri, openToSide:boolean) {
+	
+	const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+	
+	vscode.commands.executeCommand('vscode.diff', left, right, title, {
+		preview: false,
+		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+	});
+	
+}

@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.28.0] - 2020-08-02
+
+### Added
+- Added `l13Diff.exclude` .
+- Added glob patterns `**/` and `./`.
+
+### Removed
+- Removed `l13Diff.ignore`.
+
 ## [0.27.0] - 2020-07-19
 
 ### Added

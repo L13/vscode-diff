@@ -146,31 +146,29 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, ignore:string[]) :Promise<StatsMap> {
+	public async scanFolder (dirname:string, excludes:string[]) {
 		
-		return new Promise((resolve, reject) => {
-			
-			this._onStartScanFolder.fire(dirname);
-			
-			walkTree(dirname, { ignore }, (error, result) => {
-				
-				if (error) return reject(error);
-				
-				this._onEndScanFolder.fire(result);
-				
-				resolve(result);
-				
-			});
-			
-		});
+		this._onStartScanFolder.fire(dirname);
+		
+		let result:StatsMap = {};
+		
+		try {
+			result = await walkTree(dirname, { excludes });
+		} catch (error) {
+			vscode.window.showErrorMessage(error.message);
+		}
+		
+		this._onEndScanFolder.fire(result);
+		
+		return result;
 		
 	}
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
-		const ignore = settings.getIgnore(dirnameA, dirnameB);
-		const resultA:StatsMap = await this.scanFolder(dirnameA, ignore);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, ignore);
+		const exludes = settings.getExcludes(dirnameA, dirnameB);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes);
 		const diffs:Dictionary<Diff> = {};
 		
 		createListA(diffs, resultA);

@@ -600,7 +600,7 @@
 					"default": false,
 					"description": "Should diff or file open to side?"
 				},
-				"l13Diff.ignore": {
+				"l13Diff.exclude": {
 					"type": "array",
 					"default": [
 						".DS_Store",
@@ -684,7 +684,7 @@
 		"gulp": "^4.0.2",
 		"gulp-sass": "^4.0.2",
 		"mocha": "^7.1.1",
-		"rollup": "^1.32.1",
+		"rollup": "^2.22.2",
 		"tslint": "^6.1.0",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.0.2"

@@ -122,6 +122,7 @@ gulp.task('script:view', () => {
 	
 	return rollup.rollup({
 		input: 'src/views/main.ts',
+		onwarn: (warning) => console.warn(warning.toString()),
 		plugins: [
 			typescript({
 				include: [
@@ -147,6 +148,7 @@ gulp.task('script:services', () => {
 	
 	return rollup.rollup({
 		input: 'src/extension.ts',
+		onwarn: (warning) => console.warn(warning.toString()),
 		external: [
 			'child_process',
 			'fs',
@@ -193,6 +195,7 @@ gulp.task('script:tests', () => {
 		
 		promises.push(rollup.rollup({
 			input: file.in,
+			onwarn: (warning) => console.warn(warning.toString()),
 			external: [
 				'assert',
 				'glob',

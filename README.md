@@ -4,13 +4,13 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.27.0
+## What's new in Diff Folders 0.28.0
 
-- Added ignored files to list view.
-- Added new icon to toggle view for ignored files.
-- Added ignored files to stats.
-- Added `Select for Compare` and `Compare with Selected` for extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- Removed `${workspaceFolder:INDEX}` and `${workspaceFolderBasename:NAME}`. Please use `${workspaceFolder:NAME}` instead.
+> IMPORTANT: `l13Diff.ignore` is depricated. Please use `l13Diff.exclude` instead.
+
+- Added glob patterns `**/` and `./`.
+
+
 
 ## Index
 
@@ -81,7 +81,12 @@ Compare two folders in Visual Studio Code.
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
-* `l13Diff.ignore` - A list of files and folders which should be ignored. Supports * for names. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
+* `l13Diff.exclude` - A list of files and folders which should be ignored.  If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
+	Supports the following glob patterns:
+	* `./` to match only at the top level of your workspace otherwise it will match every folder and file in the workspace
+	* `*` to match one or more characters in a path segment
+	* `?` to match on one character in a path segment
+	* `**` to match any number of path segments, including none
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
@@ -100,7 +105,7 @@ Compare two folders in Visual Studio Code.
 ## Predefined Variables
 
 * `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
-* `${workspaceFolder:NAME}` - - Use a specific workspace folder by name for the diff e.g. '${workspaceFolder:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolder:name-{1\\}}'.
+* `${workspaceFolder:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolder:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolder:name-{1\\}}'.
 
 ## Mouse and Keyboard Shortcuts
 

@@ -29,13 +29,17 @@ export function update (key:string, value:any, global:boolean = true) {
 	
 }
 
-export function getIgnore (pathA:string, pathB:string) :string[] {
+export function getExcludes (pathA:string, pathB:string) :string[] {
 	
-	const ignores = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore', []);
-	const ignoresA:string[] = useWorkspaceSettings(pathA) ? ignores : loadSettingsIgnore(pathA) || ignores;
-	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
+	const ignore = get('ignore');
 	
-	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
+	if (ignore) showDepricated();
+	
+	const excludes = get('exclude', []) || ignore;
+	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
+	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
+	
+	return [].concat(excludesA, excludesB).filter((value, index, values) => values.indexOf(value) === index);
 	
 }
 
@@ -55,7 +59,7 @@ export function enableTrash () {
 
 //	Functions __________________________________________________________________
 
-function loadSettingsIgnore (pathname:string) :string[] {
+function loadSettingsExclude (pathname:string) :string[] {
 	
 	const codePath = walkUp(pathname, '.vscode');
 	
@@ -70,16 +74,26 @@ function loadSettingsIgnore (pathname:string) :string[] {
 		try {
 			json = parse(content);
 		} catch {
-			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
+			vscode.window.showErrorMessage(`Syntax error in settings file "${codeSettingsPath}"!`);
 		}
 	}
 	
-	return json['l13Diff.ignore'] || null;
+	const ignore = json['l13Diff.ignore'];
+	
+	if (ignore) showDepricated();
+	
+	return json['l13Diff.exclude'] || ignore || null;
 	
 }
 
 function useWorkspaceSettings (pathname:string) :boolean {
 	
 	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.startsWith(folder.uri.fsPath));
+	
+}
+
+function showDepricated () {
+	
+	vscode.window.showWarningMessage('"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" instead.');
 	
 }
