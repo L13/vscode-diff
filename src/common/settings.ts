@@ -31,9 +31,9 @@ export function update (key:string, value:any, global:boolean = true) {
 
 export function getExcludes (pathA:string, pathB:string) :string[] {
 	
-	const ignore = get('ignore');
+	let ignore = get('ignore');
 	
-	if (ignore) showDepricated();
+	if (ignore) ignore = showDepricated(ignore, 'Settings');
 	
 	const excludes = get('exclude', []) || ignore;
 	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
@@ -78,9 +78,9 @@ function loadSettingsExclude (pathname:string) :string[] {
 		}
 	}
 	
-	const ignore = json['l13Diff.ignore'];
+	let ignore:string[] = json['l13Diff.ignore'];
 	
-	if (ignore) showDepricated();
+	if (ignore) ignore = showDepricated(ignore, pathname);
 	
 	return json['l13Diff.exclude'] || ignore || null;
 	
@@ -92,8 +92,10 @@ function useWorkspaceSettings (pathname:string) :boolean {
 	
 }
 
-function showDepricated () {
+function showDepricated (ignore:string[], pathname?:string) {
 	
-	vscode.window.showWarningMessage('"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" instead.');
+	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" instead.`);
+	
+	return ignore.map((pattern) => `**/${pattern}`);
 	
 }

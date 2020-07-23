@@ -8,18 +8,18 @@
 	},
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
 	"typescript.tsc.autoDetect": "off",
-	"l13Diff.ignore": [
+	"l13Diff.exclude": [
 		".cache",
-		".DS_Store",
-		".git",
-		".hg",
-		".svn",
-		".vscode",
-		"CVS",
-		"./diff",
-		"./media",
-		"node_modules",
-		"./out",
-		"./package-lock.json"
+		"**/.DS_Store",
+		"**/.git",
+		"**/.hg",
+		"**/.svn",
+		"**/.vscode",
+		"**/CVS",
+		"diff",
+		"media",
+		"**/node_modules",
+		"out",
+		"package-lock.json"
 	]
 }

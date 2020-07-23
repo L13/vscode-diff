@@ -409,14 +409,14 @@
 			],
 			"explorer/context": [
 				{
-					"command": "l13Diff.selectForCompare",
-					"group": "3_compare@1",
-					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
-				},
-				{
 					"command": "l13Diff.compareWithSelected",
 					"group": "3_compare@1",
 					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection && l13DiffSelectedFolder"
+				},
+				{
+					"command": "l13Diff.selectForCompare",
+					"group": "3_compare@2",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
 				},
 				{
 					"command": "l13Diff.compareSelected",
@@ -603,12 +603,12 @@
 				"l13Diff.exclude": {
 					"type": "array",
 					"default": [
-						".DS_Store",
-						".git",
-						".hg",
-						".svn",
-						"CVS",
-						"node_modules"
+						"**/.DS_Store",
+						"**/.git",
+						"**/.hg",
+						"**/.svn",
+						"**/CVS",
+						"**/node_modules"
 					],
 					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},

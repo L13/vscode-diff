@@ -3,7 +3,7 @@
 		".vscode": {
 			"settings.json": [{
 				"l13Diff.ignore": [
-					".vscode"
+					"**/.vscode"
 				]
 			}]
 		},

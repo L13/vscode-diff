@@ -4,8 +4,9 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ## [0.28.0] - 2020-08-02
 
 ### Added
-- Added `l13Diff.exclude` .
-- Added glob patterns `**/` and `./`.
+- Added `l13Diff.exclude`  which replaces `l13Diff.ignore` (depricated).
+- Added glob patterns path segments `**` to `l13Diff.exclude`.
+- Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
 
 ### Removed
 - Removed `l13Diff.ignore`.

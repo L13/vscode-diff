@@ -6,11 +6,9 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 0.28.0
 
-> IMPORTANT: `l13Diff.ignore` is depricated. Please use `l13Diff.exclude` instead.
-
-- Added glob patterns `**/` and `./`.
-
-
+- Added `l13Diff.exclude`  which replaces `l13Diff.ignore` (depricated).
+- Added glob patterns path segments `**` to `l13Diff.exclude`.
+- Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
 
 ## Index
 
@@ -81,12 +79,10 @@ Compare two folders in Visual Studio Code.
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
-* `l13Diff.exclude` - A list of files and folders which should be ignored.  If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the property will be used for the comparison, too. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings.
-	Supports the following glob patterns:
-	* `./` to match only at the top level of your workspace otherwise it will match every folder and file in the workspace
-	* `*` to match one or more characters in a path segment
-	* `?` to match on one character in a path segment
-	* `**` to match any number of path segments, including none
+* `l13Diff.exclude` - A list of files and folders which should be ignored. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the values of the property will also be used for the comparison. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings. Supports the following glob patterns:
+	* `*` matches zero or more characters in a path segment e.g. `*.txt`.
+	* `?` matches on one character in a path segment.
+	* `**` matches any number of path segments including none e.g. `**/node_modules`.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
@@ -301,7 +297,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### Context Menu
 
 * `Select for Compare` - Select a folder for a comparison.
-* `Compare with Selected` - Compare the folder selected one.
+* `Compare with Selected` - Compare the folder with the selected one.
 * `Compare Selected` - Compare the two selected folders.
 
 ### [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)

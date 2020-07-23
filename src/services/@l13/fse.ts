@@ -9,7 +9,6 @@ import { StatsMap } from '../@types/fse';
 //	Variables __________________________________________________________________
 
 const findRegExpChars:RegExp = /\.\/|\*\*\/|\/\*\*|[\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
-const findGlobStart = /^(\.\/|\*\*\/)/;
 
 //	Initialize _________________________________________________________________
 
@@ -120,11 +119,7 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 
 export function createFindGlob (ignore:string[]) {
 	
-	return new RegExp(`^(${ignore.map((pattern) => {
-		
-		return escapeGlobForRegExp(!findGlobStart.test(pattern) ? `**/${pattern}` : pattern);
-		
-	}).join('|')})$`);
+	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`);
 	
 }
 
@@ -134,9 +129,8 @@ function escapeGlobForRegExp (text:any) :string {
 	
 	return ('' + text).replace(findRegExpChars, (match) => {
 		
-		if (match === './') return '';
 		if (match === '/') return '[/\\\\]';
-		if (match === '*') return '[^/\\\\]+';
+		if (match === '*') return '[^/\\\\]*';
 		if (match === '?') return '?';
 		if (match === '**/') return '([^/\\\\]*[/\\\\])*';
 		if (match === '/**') return '([/\\\\][^/\\\\]+)*';
