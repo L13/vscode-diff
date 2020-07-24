@@ -8,7 +8,7 @@ import { StatsMap } from '../@types/fse';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /\.\/|\*\*\/|\/\*\*|[\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+const findRegExpChars:RegExp = /\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
 //	Initialize _________________________________________________________________
 
@@ -132,8 +132,8 @@ function escapeGlobForRegExp (text:any) :string {
 		if (match === '/') return '[/\\\\]';
 		if (match === '*') return '[^/\\\\]*';
 		if (match === '?') return '?';
-		if (match === '**/') return '([^/\\\\]*[/\\\\])*';
-		if (match === '/**') return '([/\\\\][^/\\\\]+)*';
+		if (match === '**/') return '(?:[^/\\\\]+[/\\\\])*';
+		if (match === '/**') return '(?:[/\\\\][^/\\\\]+)*';
 		
 		return '\\' + match;
 		

@@ -19,7 +19,7 @@ describe('fse', () => {
 		function runPositiveTests (tests:Test[]) {
 			
 			for (const test of tests) {
-				it(`"${test.expect}" matches "${test.toBe}"`, () => assert.ok(createFindGlob(test.expect).test(test.toBe)));
+				it(`"${test.expect}" matches "${test.toBe}" (${test.desc})`, () => assert.ok(createFindGlob(test.expect).test(test.toBe)));
 			}
 			
 		}
@@ -27,7 +27,7 @@ describe('fse', () => {
 		function runNegativeTests (tests:Test[]) {
 			
 			for (const test of tests) {
-				it(`"${test.expect}" doesn't match "${test.toBe}"`, () => assert.ok(!createFindGlob(test.expect).test(test.toBe)));
+				it(`"${test.expect}" doesn't match "${test.toBe}" (${test.desc})`, () => assert.ok(!createFindGlob(test.expect).test(test.toBe)));
 			}
 			
 		}
@@ -36,12 +36,12 @@ describe('fse', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: [],
 					toBe: '',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: [''],
 					toBe: '',
 				},
@@ -49,12 +49,12 @@ describe('fse', () => {
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: [],
 					toBe: 'a',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: [''],
 					toBe: 'a',
 				},
@@ -66,32 +66,32 @@ describe('fse', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['*'],
 					toBe: 'a',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['*.txt'],
 					toBe: '.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['*.txt'],
 					toBe: 'a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a*.txt'],
 					toBe: 'a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a*.txt'],
 					toBe: 'ab.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a*.txt'],
 					toBe: 'abc.txt',
 				},
@@ -99,12 +99,12 @@ describe('fse', () => {
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['*.txt'],
 					toBe: 'a.tst',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a*.txt'],
 					toBe: 'b.txt',
 				},
@@ -116,17 +116,17 @@ describe('fse', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a?.txt'],
 					toBe: 'a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['ab?.txt'],
 					toBe: 'a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['ab?.txt'],
 					toBe: 'ab.txt',
 				},
@@ -134,12 +134,12 @@ describe('fse', () => {
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['ab?.txt'],
 					toBe: 'aa.txt',
 				},
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['ab?.txt'],
 					toBe: 'ac.txt',
 				},
@@ -147,126 +147,303 @@ describe('fse', () => {
 			
 		});
 		
-		describe('**/ start', () => {
+		describe('**/', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['**/a.txt'],
 					toBe: 'a.txt',
 				},
 				{
-					desc: '',
+					desc: 'posix',
 					expect: ['**/b.txt'],
 					toBe: 'a/b.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['**/b.txt'],
+					toBe: 'a\\b.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['**/c.txt'],
 					toBe: 'a/b/c.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/c.txt'],
+					toBe: 'a\\b\\c.txt',
 				},
 			]);
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['**/a.txt'],
 					toBe: 'ba.txt',
 				},
 				{
-					desc: '',
+					desc: 'posix',
 					expect: ['**/a.txt'],
 					toBe: 'c/ba.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['**/a.txt'],
+					toBe: 'c\\ba.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['**/a.txt'],
 					toBe: 'd/c/ba.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a.txt'],
+					toBe: 'd\\c\\ba.txt',
 				},
 			]);
 			
 		});
 		
-		describe('**/ between', () => {
+		describe('/**/', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'posix',
+					expect: ['a/**/a.txt'],
+					toBe: 'a/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'a\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'a/b/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'a\\b\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'a/b/c/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'a\\b\\c\\a.txt',
 				},
 			]);
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'b/a/c/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'b\\a\\c\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'b/c/a/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'b\\c\\a\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'c/b/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'c\\b\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**/a.txt'],
 					toBe: 'd/b/c/a.txt',
-				}
+				},
+				{
+					desc: 'win',
+					expect: ['a/**/a.txt'],
+					toBe: 'd\\b\\c\\a.txt',
+				},
 			]);
 			
 		});
 		
-		describe('**/ end', () => {
+		describe('/**', () => {
 			
 			runPositiveTests([
 				{
-					desc: '',
+					desc: 'win and posix',
 					expect: ['a/**'],
 					toBe: 'a',
 				},
 				{
-					desc: '',
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'a/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**'],
+					toBe: 'a\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'a/b/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**'],
+					toBe: 'a\\b\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'a/b/c/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['a/**'],
+					toBe: 'a\\b\\c\\a.txt',
 				},
 			]);
 			
 			runNegativeTests([
 				{
-					desc: '',
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'b/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**'],
+					toBe: 'b\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'b/a/a.txt',
 				},
 				{
-					desc: '',
+					desc: 'win',
+					expect: ['a/**'],
+					toBe: 'b\\a\\a.txt',
+				},
+				{
+					desc: 'posix',
 					expect: ['a/**'],
 					toBe: 'c/b/a/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['a\\**'],
+					toBe: 'c\\b\\a\\a.txt',
+				},
+			]);
+			
+		});
+		
+		describe('** and *', () => {
+			
+			runPositiveTests([
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'a/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'a\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'b/a/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'b\\a\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'a/b/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'a\\b\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'c/a/b/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'c\\a\\b\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'c/a/b/d/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'c\\a\\b\\d\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e/c/a/b/d/a.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e\\c\\a\\b\\d\\a.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e/c/a/b/d/ab.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e\\c\\a\\b\\d\\ab.txt',
+				},
+				{
+					desc: 'posix',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e/c/a/b/d/abc.txt',
+				},
+				{
+					desc: 'win',
+					expect: ['**/a/**/*.txt'],
+					toBe: 'e\\c\\a\\b\\d\\abc.txt',
 				},
 			]);
 			
