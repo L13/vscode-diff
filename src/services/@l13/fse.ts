@@ -16,13 +16,13 @@ const findRegExpChars:RegExp = /\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\
 
 //	Exports ____________________________________________________________________
 
-export function copyFile (sourcePath:string, destPath:string) {
+export async function copyFile (sourcePath:string, destPath:string) {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
 	const dirname = path.dirname(destPath);
 	
-	if (!fs.existsSync(dirname)) fs.mkdirSync(dirname, { recursive: true });
+	if (!fs.existsSync(dirname)) await createDirectory(dirname);
 	
 	return new Promise((resolve, reject) => {
 		
@@ -38,13 +38,28 @@ export function copyFile (sourcePath:string, destPath:string) {
 	
 }
 
-export function copySymbolicLink (sourcePath:string, destPath:string) {
+export async function createDirectory (pathname:string) {
+	
+	return new Promise((resolve, reject) => {
+		
+		fs.mkdir(pathname, { recursive: true }, (error) => {
+			
+			if (error) reject(error);
+			else resolve();
+			
+		});
+		
+	});
+	
+}
+
+export async function copySymbolicLink (sourcePath:string, destPath:string) {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
 	const dirname = path.dirname(destPath);
 	
-	if (!fs.existsSync(dirname)) fs.mkdirSync(dirname, { recursive: true });
+	if (!fs.existsSync(dirname)) await createDirectory(dirname);
 	
 	return new Promise((resolve, reject) => {
 		

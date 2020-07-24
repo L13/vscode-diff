@@ -27,7 +27,7 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 		title: 'Open Favorite',
 	};
 	
-	public iconPath = iconPath;;
+	public iconPath = iconPath;
 	
 	public contextValue = 'favorite';
 	

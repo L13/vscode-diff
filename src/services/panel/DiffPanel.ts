@@ -431,7 +431,7 @@ export class DiffPanel {
 			light: vscode.Uri.file(path.join(iconsPath, 'icon-light.svg')),
 		};
 		
-		const diffPanel = new DiffPanel(panel, context, uris, compare);;
+		const diffPanel = new DiffPanel(panel, context, uris, compare);
 		
 		DiffPanel.currentPanel = diffPanel;
 		DiffPanel.currentPanels.push(diffPanel);

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, copySymbolicLink, lstat } from '../@l13/fse';
+import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
@@ -39,33 +39,25 @@ export class DiffCopy {
 		
 		const stat = await lstat(file.fsPath);
 		
-		if (stat) {
-			const statDest = await lstat(dest);
-			if (stat.isDirectory()) {
-				if (!statDest) {
-					try {
-						fs.mkdirSync(dest, { recursive: true });
-						return Promise.resolve();
-					} catch (error) {
-						return Promise.reject(error);
-					}
-				} else {
-					if (statDest.isDirectory()) return Promise.resolve();
-					return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
-				}
-			} else if (stat.isFile()) {
-				if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
-				return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
-			} else if (stat.isSymbolicLink()) {
-				if (!statDest || statDest.isSymbolicLink()) {
-					if (statDest) fs.unlinkSync(dest); // Delete existing symlink otherwise an error occurs
-					return await copySymbolicLink(file.fsPath, dest);
-				}
-				return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
-			}
-		}
+		if (!stat) return Promise.reject(new Error(`'${file.fsPath}' doesn't exist!`));
 		
-		return Promise.reject(new Error(`'${dest}' doesn't exist!`));
+		const statDest = await lstat(dest);
+		
+		if (stat.isDirectory()) {
+			if (statDest) {
+				if (statDest.isDirectory()) return Promise.resolve();
+				return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
+			} else return createDirectory(dest);
+		} else if (stat.isFile()) {
+			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
+			return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
+		} else if (stat.isSymbolicLink()) {
+			if (!statDest || statDest.isSymbolicLink()) {
+				if (statDest) fs.unlinkSync(dest); // Delete existing symlink otherwise an error occurs
+				return await copySymbolicLink(file.fsPath, dest);
+			}
+			return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
+		}
 		
 	}
 	
@@ -84,7 +76,7 @@ export class DiffCopy {
 				if (value === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
 			} else this._onDidCancel.fire(undefined);
-		} else this.copyFromTo(data, from, to);;
+		} else this.copyFromTo(data, from, to);
 		
 	}
 	
