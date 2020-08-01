@@ -44,10 +44,11 @@ export class DiffCopy {
 		const statDest = await lstat(dest);
 		
 		if (stat.isDirectory()) {
-			if (statDest) {
-				if (statDest.isDirectory()) return Promise.resolve();
-				return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
-			} else return createDirectory(dest);
+			if (!statDest || statDest.isDirectory()) {
+				if (!statDest) createDirectory(dest);
+				return Promise.resolve();
+			}
+			return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 		} else if (stat.isFile()) {
 			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
 			return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));

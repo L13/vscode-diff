@@ -8,7 +8,7 @@ import { StatsMap } from '../@types/fse';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+const findRegExpChars:RegExp = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
 //	Initialize _________________________________________________________________
 
@@ -16,13 +16,19 @@ const findRegExpChars:RegExp = /\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\
 
 //	Exports ____________________________________________________________________
 
-export async function copyFile (sourcePath:string, destPath:string) {
+export function createDirectory (pathname:string) {
+	
+	fs.mkdirSync(pathname, { recursive: true });
+	
+}
+
+export function copyFile (sourcePath:string, destPath:string) {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
 	const dirname = path.dirname(destPath);
 	
-	if (!fs.existsSync(dirname)) await createDirectory(dirname);
+	if (!fs.existsSync(dirname)) createDirectory(dirname);
 	
 	return new Promise((resolve, reject) => {
 		
@@ -38,28 +44,13 @@ export async function copyFile (sourcePath:string, destPath:string) {
 	
 }
 
-export async function createDirectory (pathname:string) {
-	
-	return new Promise((resolve, reject) => {
-		
-		fs.mkdir(pathname, { recursive: true }, (error) => {
-			
-			if (error) reject(error);
-			else resolve();
-			
-		});
-		
-	});
-	
-}
-
-export async function copySymbolicLink (sourcePath:string, destPath:string) {
+export function copySymbolicLink (sourcePath:string, destPath:string) {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
 	const dirname = path.dirname(destPath);
 	
-	if (!fs.existsSync(dirname)) await createDirectory(dirname);
+	if (!fs.existsSync(dirname)) createDirectory(dirname);
 	
 	return new Promise((resolve, reject) => {
 		
@@ -126,7 +117,7 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 	
 	return new Promise((resolve) => {
 		
-		fs.lstat(pathname, (error, stat) => resolve(error ? null : stat));
+		fs.lstat(pathname, (error, stat) => resolve(stat || null));
 		
 	});
 	
@@ -144,9 +135,11 @@ function escapeGlobForRegExp (text:any) :string {
 	
 	return ('' + text).replace(findRegExpChars, (match) => {
 		
+		if (match === '\\*' || match === '\\?') return match;
+		
 		if (match === '/') return '[/\\\\]';
 		if (match === '*') return '[^/\\\\]*';
-		if (match === '?') return '?';
+		if (match === '?') return '.';
 		if (match === '**/') return '(?:[^/\\\\]+[/\\\\])*';
 		if (match === '/**') return '(?:[/\\\\][^/\\\\]+)*';
 		

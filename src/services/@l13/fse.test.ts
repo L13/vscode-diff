@@ -117,31 +117,31 @@ describe('fse', () => {
 			runPositiveTests([
 				{
 					desc: 'win and posix',
+					expect: ['?.txt'],
+					toBe: 'a.txt',
+				},
+				{
+					desc: 'win and posix',
 					expect: ['a?.txt'],
-					toBe: 'a.txt',
-				},
-				{
-					desc: 'win and posix',
-					expect: ['ab?.txt'],
-					toBe: 'a.txt',
-				},
-				{
-					desc: 'win and posix',
-					expect: ['ab?.txt'],
 					toBe: 'ab.txt',
+				},
+				{
+					desc: 'win and posix',
+					expect: ['a??.txt'],
+					toBe: 'abc.txt',
 				},
 			]);
 			
 			runNegativeTests([
 				{
 					desc: 'win and posix',
-					expect: ['ab?.txt'],
-					toBe: 'aa.txt',
+					expect: ['a?.txt'],
+					toBe: 'a.txt',
 				},
 				{
 					desc: 'win and posix',
-					expect: ['ab?.txt'],
-					toBe: 'ac.txt',
+					expect: ['aa?.txt'],
+					toBe: 'aa.txt',
 				},
 			]);
 			

@@ -122,7 +122,7 @@ gulp.task('script:view', () => {
 	
 	return rollup.rollup({
 		input: 'src/views/main.ts',
-		onwarn: (warning) => console.warn(warning.toString()),
+		onwarn,
 		plugins: [
 			typescript({
 				include: [
@@ -140,7 +140,7 @@ gulp.task('script:view', () => {
 			format: 'iife',
 		});
 		
-	});
+	}, onerror);
 	
 });
 
@@ -148,7 +148,7 @@ gulp.task('script:services', () => {
 	
 	return rollup.rollup({
 		input: 'src/extension.ts',
-		onwarn: (warning) => console.warn(warning.toString()),
+		onwarn,
 		external: [
 			'child_process',
 			'fs',
@@ -181,7 +181,7 @@ gulp.task('script:services', () => {
 			},
 		});
 		
-	});
+	}, onerror);
 	
 });
 
@@ -195,7 +195,7 @@ gulp.task('script:tests', () => {
 		
 		promises.push(rollup.rollup({
 			input: file.in,
-			onwarn: (warning) => console.warn(warning.toString()),
+			onwarn,
 			external: [
 				'assert',
 				'glob',
@@ -225,7 +225,7 @@ gulp.task('script:tests', () => {
 				},
 			});
 			
-		}));
+		}, onerror));
 		
 	});
 	
@@ -297,5 +297,19 @@ function createInOut (pattern) {
 		};
 		
 	});
+	
+}
+
+function onwarn (warning) {
+	
+	console.warn(warning.toString());
+	
+}
+
+function onerror (error) {
+	
+	console.error(`Error:${error.pluginCode ? ' ' + error.pluginCode : ''} ${error.message} ${error.loc.file}:${error.loc.line}:${error.loc.column}`);
+	
+	throw error;
 	
 }

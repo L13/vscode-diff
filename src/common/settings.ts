@@ -94,7 +94,7 @@ function useWorkspaceSettings (pathname:string) :boolean {
 
 function showDepricated (ignore:string[], pathname?:string) {
 	
-	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" instead.`);
+	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`);
 	
 	return ignore.map((pattern) => `**/${pattern}`);
 	
