@@ -45,6 +45,9 @@ export function activate (context:vscode.ExtensionContext) {
 		'l13Diff.compareEndOfLine': () => settings.update('ignoreEndOfLine', false),
 		'l13Diff.ignoreEndOfLine': () => settings.update('ignoreEndOfLine', true),
 		
+		'l13Diff.useCaseSensitive': () => settings.update('useCaseSensitiveFileName', true),
+		'l13Diff.ignoreCaseSensitive': () => settings.update('useCaseSensitiveFileName', false),
+		
 	});
 	
 }

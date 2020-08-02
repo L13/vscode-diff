@@ -265,6 +265,22 @@
 				}
 			},
 			{
+				"command": "l13Diff.ignoreCaseSensitive",
+				"title": "Ignore Case Sensitive",
+				"icon": {
+					"light": "images/panels/toggle-case-sensitive-light.svg",
+					"dark": "images/panels/toggle-case-sensitive-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.useCaseSensitive",
+				"title": "Use Case Sensitive",
+				"icon": {
+					"light": "images/panels/toggle-case-sensitive-disabled-light.svg",
+					"dark": "images/panels/toggle-case-sensitive-disabled-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.selectForCompare",
 				"title": "Select for Compare"
 			},
@@ -550,34 +566,44 @@
 					"group": "navigation@1"
 				},
 				{
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName",
+					"command": "l13Diff.ignoreCaseSensitive",
+					"group": "navigation@2"
+				},
+				{
+					"when": "l13DiffFocus && !config.l13Diff.useCaseSensitiveFileName",
+					"command": "l13Diff.useCaseSensitive",
+					"group": "navigation@2"
+				},
+				{
 					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
 					"command": "l13Diff.ignoreEndOfLine",
-					"group": "navigation@2"
+					"group": "navigation@3"
 				},
 				{
 					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
 					"command": "l13Diff.compareEndOfLine",
-					"group": "navigation@2"
+					"group": "navigation@3"
 				},
 				{
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
 					"command": "l13Diff.ignoreWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
 					"command": "l13Diff.ignoreWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
 					"command": "l13Diff.compareWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"command": "l13Diff.compareWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				}
 			]
 		},
@@ -637,6 +663,11 @@
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				},
+				"l13Diff.useCaseSensitiveFileName": {
+					"type": "boolean",
+					"default": true,
+					"description": "Should the comparison for filenames be case sensitive?"
+				},
 				"l13Diff.ignoreTrimWhitespace": {
 					"type": "string",
 					"default": "default",
@@ -661,11 +692,6 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Controls weather the diff should ask for confirmation when deleting files."
-				},
-				"l13Diff.useCaseSensitiveFileName": {
-					"type": "boolean",
-					"default": true,
-					"description": "Should the comparison for filenames be case sensitive?"
 				}
 			}
 		}
