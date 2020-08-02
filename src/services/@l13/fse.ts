@@ -71,7 +71,7 @@ export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap
 		
 		const job:WalkTreeJob = {
 			error: null,
-			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes) : null,
+			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes, options.useCaseSensitive) : null,
 			result: {},
 			tasks: 1,
 			done: (error?:Error) => {
@@ -123,9 +123,9 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 	
 }
 
-export function createFindGlob (ignore:string[]) {
+export function createFindGlob (ignore:string[], useCaseSensitive:boolean) {
 	
-	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`);
+	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`, useCaseSensitive ? '' : 'i');
 	
 }
 

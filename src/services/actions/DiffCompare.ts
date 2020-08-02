@@ -146,14 +146,14 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, excludes:string[]) {
+	public async scanFolder (dirname:string, excludes:string[], useCaseSensitive:boolean) {
 		
 		this._onStartScanFolder.fire(dirname);
 		
 		let result:StatsMap = {};
 		
 		try {
-			result = await walkTree(dirname, { excludes });
+			result = await walkTree(dirname, { excludes, useCaseSensitive });
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
 		}
@@ -167,12 +167,13 @@ export class DiffCompare {
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
-		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes);
+		const useCaseSensitive = settings.get('useCaseSensitiveFileName', true);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes, useCaseSensitive);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes, useCaseSensitive);
 		const diffs:Dictionary<Diff> = {};
 		
-		createListA(diffs, resultA);
-		compareWithListB(diffs, resultB);
+		createListA(diffs, resultA, useCaseSensitive);
+		compareWithListB(diffs, resultB, useCaseSensitive);
 		
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		
@@ -186,12 +187,12 @@ export class DiffCompare {
 
 //	Functions __________________________________________________________________
 
-function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
+function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = file.relative;
+		const id = useCaseSensitive ? file.relative : file.relative.toLowerCase();
 		
 		diffs[id] = {
 			id,
@@ -207,7 +208,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
 	
 }
 
-function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
+function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
 	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
@@ -215,7 +216,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = file.relative;
+		const id = useCaseSensitive ? file.relative : file.relative.toLowerCase();
 		const diff = diffs[id];
 		
 		if (!diff) {

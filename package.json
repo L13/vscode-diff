@@ -661,6 +661,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Controls weather the diff should ask for confirmation when deleting files."
+				},
+				"l13Diff.useCaseSensitiveFileName": {
+					"type": "boolean",
+					"default": true,
+					"description": "Should the comparison for filenames be case sensitive?"
 				}
 			}
 		}

@@ -14,6 +14,7 @@ import { DiffFile } from '../../@types/diffs';
 
 export type WalkTreeOptions = {
 	excludes?:string[],
+	useCaseSensitive?:boolean,
 };
 
 export type StatsMap = {
