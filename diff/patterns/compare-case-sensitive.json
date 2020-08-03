@@ -1,0 +1,10 @@
+{
+	"folder-a": {
+		"licence.md": ["a"],
+		"readme.md": ["a"]
+	},
+	"folder-b": {
+		"LICENCE.MD": ["a"],
+		"README.MD": ["b"]
+	}
+}

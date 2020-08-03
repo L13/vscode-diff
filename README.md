@@ -80,7 +80,7 @@ Compare two folders in Visual Studio Code.
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
-* `l13Diff.useCaseSensitiveFileName` - If true filenames and glob patterns for `l13Diff.exclude` are case sensitive.
+* `l13Diff.useCaseSensitiveFileName` - If true filenames and glob patterns for `l13Diff.exclude` are case sensitive otherwise they are case insensitive.
 * `l13Diff.exclude` - A list of files and folders which should be ignored. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the values of the property will also be used for the comparison. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings. Supports the following glob patterns:
 	* `*` matches zero or more characters in a path segment e.g. `*.txt`.
 	* `?` matches on one character in a path segment.

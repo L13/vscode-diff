@@ -4,19 +4,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "watch",
-			"problemMatcher": "$tsc-watch",
-			"isBackground": true,
-			"presentation": {
-				"reveal": "never"
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
 			"type": "gulp",
 			"task": "watch",
 			"problemMatcher": []
@@ -64,6 +51,11 @@
 		{
 			"type": "gulp",
 			"task": "icons:fix",
+			"problemMatcher": []
+		},
+		{
+			"type": "gulp",
+			"task": "watch",
 			"problemMatcher": []
 		}
 	]

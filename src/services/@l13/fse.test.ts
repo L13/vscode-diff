@@ -4,12 +4,20 @@ import * as assert from 'assert';
 
 import { createFindGlob } from './fse';
 
-import { Test } from '../../types';
-
 //	Variables __________________________________________________________________
 
-interface GlobTest extends Test {
-	useCaseSensitive:boolean;
+type PositiveTest = {
+	platform:string,
+	useCaseSensitive?:boolean,
+	glob:any,
+	matches:any,
+};
+
+type NegativeTest = {
+	platform:string,
+	useCaseSensitive?:boolean,
+	glob:any,
+	doesNotMatch:any,
 };
 
 //	Initialize _________________________________________________________________
@@ -18,51 +26,163 @@ describe('fse', () => {
 	
 	describe('.createFindGlob()', () => {
 		
-		function runPositiveTests (tests:GlobTest[]) {
+		function runPositiveCaseTests (tests:PositiveTest[]) {
 			
 			for (const test of tests) {
-				it(`"${test.expect}" matches "${test.toBe}" (${test.desc})`, () => assert.ok(createFindGlob(test.expect, test.useCaseSensitive).test(test.toBe)));
+				it(`"${test.glob}" matches "${test.matches}" (${test.platform}, case sensitive and insensitive)`, () => {
+					
+					assert.ok(createFindGlob(test.glob, true).test(test.matches));
+					assert.ok(createFindGlob(test.glob, false).test(test.matches));
+					
+				});
 			}
 			
 		}
 		
-		function runNegativeTests (tests:GlobTest[]) {
+		function runNegativeCaseTests (tests:NegativeTest[]) {
 			
 			for (const test of tests) {
-				it(`"${test.expect}" doesn't match "${test.toBe}" (${test.desc})`, () => assert.ok(!createFindGlob(test.expect, test.useCaseSensitive).test(test.toBe)));
+				it(`"${test.glob}" doesn't match "${test.doesNotMatch}" (${test.platform}, case sensitive and insensitive))`, () => {
+					
+					assert.ok(!createFindGlob(test.glob, true).test(test.doesNotMatch));
+					assert.ok(!createFindGlob(test.glob, false).test(test.doesNotMatch));
+					
+				});
+			}
+			
+		}
+		
+		function runPositiveTests (tests:PositiveTest[]) {
+			
+			for (const test of tests) {
+				it(`"${test.glob}" matches "${test.matches}" (${test.platform}, case ${test.useCaseSensitive ? 'sensitive' : 'insensitive'})`, () => {
+					
+					assert.ok(createFindGlob(test.glob, test.useCaseSensitive).test(test.matches));
+					
+				});
+			}
+			
+		}
+		
+		function runNegativeTests (tests:NegativeTest[]) {
+			
+			for (const test of tests) {
+				it(`"${test.glob}" doesn't match "${test.doesNotMatch}" (${test.platform}, case ${test.useCaseSensitive ? 'sensitive' : 'insensitive'})`, () => {
+					
+					assert.ok(!createFindGlob(test.glob, test.useCaseSensitive).test(test.doesNotMatch));
+					
+				});
 			}
 			
 		}
 		
 		describe('empty', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: [],
-					toBe: '',
+					platform: 'win and posix',
+					glob: [],
+					matches: '',
 				},
 				{
-					desc: 'win and posix',
+					platform: 'win and posix',
+					glob: [''],
+					matches: '',
+				},
+			]);
+			
+			runNegativeCaseTests([
+				{
+					platform: 'win and posix',
+					glob: [],
+					doesNotMatch: 'a',
+				},
+				{
+					platform: 'win and posix',
+					glob: [''],
+					doesNotMatch: 'a',
+				},
+			]);
+			
+		});
+		
+		describe('names', () => {
+			
+			runPositiveTests([
+				{
+					platform: 'win and posix',
 					useCaseSensitive: true,
-					expect: [''],
-					toBe: '',
+					glob: ['a'],
+					matches: 'a',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: true,
+					glob: ['A'],
+					matches: 'A',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: true,
+					glob: ['a.txt'],
+					matches: 'a.txt',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: true,
+					glob: ['A.txt'],
+					matches: 'A.txt',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['a'],
+					matches: 'a',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['a.txt'],
+					matches: 'a.txt',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['A'],
+					matches: 'a',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['a'],
+					matches: 'A',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['A.TXT'],
+					matches: 'a.txt',
+				},
+				{
+					platform: 'win and posix',
+					useCaseSensitive: false,
+					glob: ['a.txt'],
+					matches: 'A.txt',
 				},
 			]);
 			
 			runNegativeTests([
 				{
-					desc: 'win and posix',
+					platform: 'win and posix',
 					useCaseSensitive: true,
-					expect: [],
-					toBe: 'a',
+					glob: ['a.txt'],
+					doesNotMatch: 'A.TXT',
 				},
 				{
-					desc: 'win and posix',
+					platform: 'win and posix',
 					useCaseSensitive: true,
-					expect: [''],
-					toBe: 'a',
+					glob: ['A.TXT'],
+					doesNotMatch: 'a.txt',
 				},
 			]);
 			
@@ -70,57 +190,49 @@ describe('fse', () => {
 		
 		describe('*', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['*'],
-					toBe: 'a',
+					platform: 'win and posix',
+					glob: ['*'],
+					matches: 'a',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['*.txt'],
-					toBe: '.txt',
+					platform: 'win and posix',
+					glob: ['*.txt'],
+					matches: '.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['*.txt'],
-					toBe: 'a.txt',
+					platform: 'win and posix',
+					glob: ['*.txt'],
+					matches: 'a.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a*.txt'],
-					toBe: 'a.txt',
+					platform: 'win and posix',
+					glob: ['a*.txt'],
+					matches: 'a.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a*.txt'],
-					toBe: 'ab.txt',
+					platform: 'win and posix',
+					glob: ['a*.txt'],
+					matches: 'ab.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a*.txt'],
-					toBe: 'abc.txt',
+					platform: 'win and posix',
+					glob: ['a*.txt'],
+					matches: 'abc.txt',
 				},
 			]);
 			
-			runNegativeTests([
+			runNegativeCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['*.txt'],
-					toBe: 'a.tst',
+					platform: 'win and posix',
+					glob: ['*.txt'],
+					doesNotMatch: 'a.tst',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a*.txt'],
-					toBe: 'b.txt',
+					platform: 'win and posix',
+					glob: ['a*.txt'],
+					doesNotMatch: 'b.txt',
 				},
 			]);
 			
@@ -128,39 +240,34 @@ describe('fse', () => {
 		
 		describe('?', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['?.txt'],
-					toBe: 'a.txt',
+					platform: 'win and posix',
+					glob: ['?.txt'],
+					matches: 'a.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a?.txt'],
-					toBe: 'ab.txt',
+					platform: 'win and posix',
+					glob: ['a?.txt'],
+					matches: 'ab.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a??.txt'],
-					toBe: 'abc.txt',
+					platform: 'win and posix',
+					glob: ['a??.txt'],
+					matches: 'abc.txt',
 				},
 			]);
 			
-			runNegativeTests([
+			runNegativeCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a?.txt'],
-					toBe: 'a.txt',
+					platform: 'win and posix',
+					glob: ['a?.txt'],
+					doesNotMatch: 'a.txt',
 				},
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['aa?.txt'],
-					toBe: 'aa.txt',
+					platform: 'win and posix',
+					glob: ['aa?.txt'],
+					doesNotMatch: 'aa.txt',
 				},
 			]);
 			
@@ -168,69 +275,59 @@ describe('fse', () => {
 		
 		describe('**/', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'a.txt',
+					platform: 'win and posix',
+					glob: ['**/a.txt'],
+					matches: 'a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/b.txt'],
-					toBe: 'a/b.txt',
+					platform: 'posix',
+					glob: ['**/b.txt'],
+					matches: 'a/b.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/b.txt'],
-					toBe: 'a\\b.txt',
+					platform: 'win',
+					glob: ['**/b.txt'],
+					matches: 'a\\b.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/c.txt'],
-					toBe: 'a/b/c.txt',
+					platform: 'posix',
+					glob: ['**/c.txt'],
+					matches: 'a/b/c.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/c.txt'],
-					toBe: 'a\\b\\c.txt',
+					platform: 'win',
+					glob: ['**/c.txt'],
+					matches: 'a\\b\\c.txt',
 				},
 			]);
 			
-			runNegativeTests([
+			runNegativeCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'ba.txt',
+					platform: 'win and posix',
+					glob: ['**/a.txt'],
+					doesNotMatch: 'ba.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'c/ba.txt',
+					platform: 'posix',
+					glob: ['**/a.txt'],
+					doesNotMatch: 'c/ba.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'c\\ba.txt',
+					platform: 'win',
+					glob: ['**/a.txt'],
+					doesNotMatch: 'c\\ba.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'd/c/ba.txt',
+					platform: 'posix',
+					glob: ['**/a.txt'],
+					doesNotMatch: 'd/c/ba.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a.txt'],
-					toBe: 'd\\c\\ba.txt',
+					platform: 'win',
+					glob: ['**/a.txt'],
+					doesNotMatch: 'd\\c\\ba.txt',
 				},
 			]);
 			
@@ -238,93 +335,79 @@ describe('fse', () => {
 		
 		describe('/**/', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					matches: 'a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					matches: 'a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a/b/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					matches: 'a/b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a\\b\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					matches: 'a\\b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a/b/c/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					matches: 'a/b/c/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'a\\b\\c\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					matches: 'a\\b\\c\\a.txt',
 				},
 			]);
 			
-			runNegativeTests([
+			runNegativeCaseTests([
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'b/a/c/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'b/a/c/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'b\\a\\c\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'b\\a\\c\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'b/c/a/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'b/c/a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'b\\c\\a\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'b\\c\\a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'c/b/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'c/b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'c\\b\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'c\\b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'd/b/c/a.txt',
+					platform: 'posix',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'd/b/c/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**/a.txt'],
-					toBe: 'd\\b\\c\\a.txt',
+					platform: 'win',
+					glob: ['a/**/a.txt'],
+					doesNotMatch: 'd\\b\\c\\a.txt',
 				},
 			]);
 			
@@ -332,87 +415,74 @@ describe('fse', () => {
 		
 		describe('/**', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'win and posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a',
+					platform: 'win and posix',
+					glob: ['a/**'],
+					matches: 'a',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					matches: 'a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a\\a.txt',
+					platform: 'win',
+					glob: ['a/**'],
+					matches: 'a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a/b/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					matches: 'a/b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a\\b\\a.txt',
+					platform: 'win',
+					glob: ['a/**'],
+					matches: 'a\\b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a/b/c/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					matches: 'a/b/c/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'a\\b\\c\\a.txt',
+					platform: 'win',
+					glob: ['a/**'],
+					matches: 'a\\b\\c\\a.txt',
 				},
 			]);
 			
-			runNegativeTests([
+			runNegativeCaseTests([
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'b/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					doesNotMatch: 'b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'b\\a.txt',
+					platform: 'win',
+					glob: ['a/**'],
+					doesNotMatch: 'b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'b/a/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					doesNotMatch: 'b/a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'b\\a\\a.txt',
+					platform: 'win',
+					glob: ['a/**'],
+					doesNotMatch: 'b\\a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['a/**'],
-					toBe: 'c/b/a/a.txt',
+					platform: 'posix',
+					glob: ['a/**'],
+					doesNotMatch: 'c/b/a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['a\\**'],
-					toBe: 'c\\b\\a\\a.txt',
+					platform: 'win',
+					glob: ['a\\**'],
+					doesNotMatch: 'c\\b\\a\\a.txt',
 				},
 			]);
 			
@@ -420,102 +490,86 @@ describe('fse', () => {
 		
 		describe('** and *', () => {
 			
-			runPositiveTests([
+			runPositiveCaseTests([
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'a/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'a\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'b/a/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'b/a/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'b\\a\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'b\\a\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'a/b/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'a/b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'a\\b\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'a\\b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'c/a/b/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'c/a/b/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'c\\a\\b\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'c\\a\\b\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'c/a/b/d/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'c/a/b/d/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'c\\a\\b\\d\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'c\\a\\b\\d\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e/c/a/b/d/a.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e/c/a/b/d/a.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e\\c\\a\\b\\d\\a.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e\\c\\a\\b\\d\\a.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e/c/a/b/d/ab.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e/c/a/b/d/ab.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e\\c\\a\\b\\d\\ab.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e\\c\\a\\b\\d\\ab.txt',
 				},
 				{
-					desc: 'posix',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e/c/a/b/d/abc.txt',
+					platform: 'posix',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e/c/a/b/d/abc.txt',
 				},
 				{
-					desc: 'win',
-					useCaseSensitive: true,
-					expect: ['**/a/**/*.txt'],
-					toBe: 'e\\c\\a\\b\\d\\abc.txt',
+					platform: 'win',
+					glob: ['**/a/**/*.txt'],
+					matches: 'e\\c\\a\\b\\d\\abc.txt',
 				},
 			]);
 			
