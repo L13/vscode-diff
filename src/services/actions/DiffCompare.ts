@@ -167,7 +167,8 @@ export class DiffCompare {
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
-		const useCaseSensitive = settings.get('useCaseSensitiveFileName', true);
+		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
+		const useCaseSensitive = useCaseSensitiveFileName === 'default' ? settings.hasCaseSensitive : useCaseSensitiveFileName === 'on';
 		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes, useCaseSensitive);
 		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes, useCaseSensitive);
 		const diffs:Dictionary<Diff> = {};

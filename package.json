@@ -266,7 +266,7 @@
 			},
 			{
 				"command": "l13Diff.ignoreCaseSensitive",
-				"title": "Ignore Case Sensitive",
+				"title": "Disable Case Sensitive",
 				"icon": {
 					"light": "images/panels/toggle-case-sensitive-light.svg",
 					"dark": "images/panels/toggle-case-sensitive-dark.svg"
@@ -274,7 +274,7 @@
 			},
 			{
 				"command": "l13Diff.useCaseSensitive",
-				"title": "Use Case Sensitive",
+				"title": "Enable Case Sensitive",
 				"icon": {
 					"light": "images/panels/toggle-case-sensitive-disabled-light.svg",
 					"dark": "images/panels/toggle-case-sensitive-disabled-dark.svg"
@@ -566,12 +566,12 @@
 					"group": "navigation@1"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
 					"command": "l13Diff.ignoreCaseSensitive",
 					"group": "navigation@2"
 				},
 				{
-					"when": "l13DiffFocus && !config.l13Diff.useCaseSensitiveFileName",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
 					"command": "l13Diff.useCaseSensitive",
 					"group": "navigation@2"
 				},
@@ -664,9 +664,19 @@
 					"description": "Should CR/LF be ignored for text files?"
 				},
 				"l13Diff.useCaseSensitiveFileName": {
-					"type": "boolean",
-					"default": true,
-					"description": "Should the comparison for filenames be case sensitive?"
+					"type": "string",
+					"default": "detect",
+					"enum": [
+						"detect",
+						"on",
+						"off"
+					],
+					"description": "Should the comparison for filenames be case sensitive?",
+					"enumDescriptions": [
+						"Detect if the file system is case sensitive.",
+						"Enable case sensitive file names.",
+						"Disable case sensitive file names."
+					]
 				},
 				"l13Diff.ignoreTrimWhitespace": {
 					"type": "string",

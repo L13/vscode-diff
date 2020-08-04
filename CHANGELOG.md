@@ -5,8 +5,8 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Added
 - Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated).
-- Added `l13Diff.useCaseSensitiveFileName`.
-- Added path segments `**` to `l13Diff.exclude`.
+- Added path segments `**` to `l13Diff.exclude` which allows to exclude complate paths instead of filenames only.
+- Added `l13Diff.useCaseSensitiveFileName` which indicates how file names should be treated.
 - Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
 
 ## [0.27.0] - 2020-07-19

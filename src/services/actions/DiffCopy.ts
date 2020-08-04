@@ -113,13 +113,13 @@ export class DiffCopy {
 			const stat = await lstat(fileFrom.fsPath);
 			
 			if (stat) {
-				const dest = path.join(folderTo, fileFrom.relative);
+				let fileTo = to === 'A' ? diff.fileA : diff.fileB;
+				const dest = path.join(folderTo, fileTo?.relative || fileFrom.relative);
 				
 				try {
 					await this.copy(fileFrom, dest);
 					if (diff.status !== 'ignored') diff.status = 'unchanged';
-					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
-				
+					
 					if (!fileTo) {
 						fileTo = copyDiffFile(fileFrom, folderTo, dest);
 						if (to === 'A') diff.fileA = fileTo;
