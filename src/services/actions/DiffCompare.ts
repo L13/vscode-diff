@@ -10,6 +10,7 @@ import { lstatSync, walkTree } from '../@l13/fse';
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
+import * as dialogs from '../../common/dialogs';
 import { textfiles } from '../../common/extensions';
 import * as settings from '../../common/settings';
 
@@ -19,6 +20,8 @@ import { DiffResult } from '../output/DiffResult';
 
 const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
+
+const COMPARE_DONT_SHOW_AGAIN = 'Compare, don\'t show again';
 
 //	Initialize _________________________________________________________________
 
@@ -168,16 +171,24 @@ export class DiffCompare {
 		
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
-		const useCaseSensitive = useCaseSensitiveFileName === 'default' ? settings.hasCaseSensitive : useCaseSensitiveFileName === 'on';
+		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitive : useCaseSensitiveFileName === 'on';
+		
+		if (settings.hasCaseSensitive && !useCaseSensitive) {
+			if (settings.get('confirmCaseInsensitiveCompare', true)) {
+				const value = await dialogs.confirm(`The file system is case sensitive. Are you sure to compare case insensitive?`, 'Compare', COMPARE_DONT_SHOW_AGAIN);
+				if (value) {
+					if (value === COMPARE_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCompare', false);
+				} else useCaseSensitive = true;
+			}
+		}
+		
 		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes, useCaseSensitive);
 		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes, useCaseSensitive);
+		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
 		createListA(diffs, resultA, useCaseSensitive);
 		compareWithListB(diffs, resultB, useCaseSensitive);
-		
-		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
-		
 		diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
 		
 		return diffResult;
@@ -195,15 +206,17 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 		const file = result[pathname];
 		const id = useCaseSensitive ? file.relative : file.relative.toLowerCase();
 		
-		diffs[id] = {
-			id,
-			status: file.ignore ? 'ignored' : 'deleted',
-			type: file.type,
-			ignoredEOL: false,
-			ignoredWhitespace: false,
-			fileA: file,
-			fileB: null,
-		};
+		if (!diffs[id]) {
+			diffs[id] = {
+				id,
+				status: file.ignore ? 'ignored' : 'deleted',
+				type: file.type,
+				ignoredEOL: false,
+				ignoredWhitespace: false,
+				fileA: file,
+				fileB: null,
+			};
+		} else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
 		
 	});
 	
@@ -230,7 +243,10 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 				fileA: null,
 				fileB: file,
 			};
-		} else compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+		} else {
+			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+			else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
+		}
 		
 	});
 	

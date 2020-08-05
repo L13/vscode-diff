@@ -693,6 +693,11 @@
 						"Does not ignore leading and trailing whitespace for a comparison in a text file."
 					]
 				},
+				"l13Diff.confirmCaseInsensitiveCompare": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the comparsion for."
+				},
 				"l13Diff.confirmCopy": {
 					"type": "boolean",
 					"default": true,

@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 import { Diff, DiffFile } from '../../types';
 
+import { formatNameAndDesc } from '../@l13/formats';
 import { lstat } from '../@l13/fse';
 
 import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
@@ -25,6 +26,7 @@ export class DiffOpen {
 		try {
 			const stat = await lstat(file.fsPath);
 			if (stat.isFile()) openFile(vscode.Uri.file(file.fsPath), openToSide);
+			// tslint:disable-next-line: no-unused-expression
 			else if (stat.isDirectory()) void 0;
 			else if (stat.isSymbolicLink()) openFile(SymlinkContentProvider.parse(file.fsPath), openToSide);
 			else vscode.window.showErrorMessage(`File can't be opened. "${file.path}" is not a file.`);
@@ -95,7 +97,12 @@ function openFile (pathname:vscode.Uri, openToSide:boolean) {
 
 function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode.Uri, openToSide:boolean) {
 	
-	const title = fileA.name === fileB.name ? `${fileA.name} (${fileA.root} ↔ ${fileB.root})` : `${fileA.fsPath} ↔ ${fileB.fsPath}`;
+	let title = '';
+	
+	if (fileA.name !== fileB.name) {
+		const [label, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
+		title = `${label} (${root})`;
+	} else title = `${fileA.name} (${fileA.root} ↔ ${fileB.root})`;
 	
 	vscode.commands.executeCommand('vscode.diff', left, right, title, {
 		preview: false,
