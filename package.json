@@ -696,7 +696,12 @@
 				"l13Diff.confirmCaseInsensitiveCompare": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the comparsion for."
+					"description": "Controls weather the comparsion for file names should be case insensitive even if the file system is case sensitive."
+				},
+				"l13Diff.confirmCaseInsensitiveCopy": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when copying the content to existing files of a case sensitive comparison on a case insensitive file system."
 				},
 				"l13Diff.confirmCopy": {
 					"type": "boolean",

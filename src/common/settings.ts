@@ -9,7 +9,7 @@ import { parse } from '../services/@l13/jsonc';
 
 //	Variables __________________________________________________________________
 
-export const hasCaseSensitive:boolean = isCaseSensitive();
+export const hasCaseSensitiveFileSystem:boolean = !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
 
 //	Initialize _________________________________________________________________
 
@@ -97,11 +97,5 @@ function showDepricated (ignore:string[], pathname?:string) {
 	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`);
 	
 	return ignore.map((pattern) => `**/${pattern}`);
-	
-}
-
-function isCaseSensitive () {
-	
-	return !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
 	
 }

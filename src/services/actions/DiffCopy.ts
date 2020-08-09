@@ -110,31 +110,42 @@ export class DiffCopy {
 		diffs.forEach(async (diff:Diff) => {
 			
 			const fileFrom:DiffFile = from === 'A' ? diff.fileA : diff.fileB;
-			const stat = await lstat(fileFrom.fsPath);
 			
-			if (stat) {
-				let fileTo = to === 'A' ? diff.fileA : diff.fileB;
-				const dest = path.join(folderTo, fileTo?.relative || fileFrom.relative);
+			if (fileFrom) {
+				const fsPath = fileFrom.fsPath;
 				
-				try {
-					await this.copy(fileFrom, dest);
-					if (diff.status !== 'ignored') diff.status = 'unchanged';
+				if (fs.existsSync(fsPath)) {
+					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
+					const relative = fileTo?.relative || fileFrom.relative;
+					const dest = path.join(folderTo, relative);
+					let copy = null;
 					
-					if (!fileTo) {
-						fileTo = copyDiffFile(fileFrom, folderTo, dest);
-						if (to === 'A') diff.fileA = fileTo;
-						else diff.fileB = fileTo;
+					if (!fileTo) copy = await existsCaseInsensitiveFileAndCopy(fsPath, folderTo, relative, dest);
+					
+					if (copy === null || copy) {
+						try {
+							await this.copy(fileFrom, dest);
+							
+							if (copy === null) {
+								if (diff.status !== 'ignored') diff.status = 'unchanged';
+								if (!fileTo) {
+									fileTo = copyDiffFile(fileFrom, folderTo, dest);
+									if (to === 'A') diff.fileA = fileTo;
+									else diff.fileB = fileTo;
+								}
+								fileTo.stat = await lstat(dest);
+							}
+							
+							this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
+						} catch (error) {
+							vscode.window.showErrorMessage(error.message);
+						}
 					}
-					
-					fileTo.stat = await lstat(dest);
-					this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
-					
-				} catch (error) {
-					vscode.window.showErrorMessage(error.message);
 				}
 			}
 			
-			--job.tasks;
+			job.tasks--;
+			
 			if (!job.tasks) job.done();
 			
 		});
@@ -160,6 +171,45 @@ function copyDiffFile (fileFrom:DiffFile, root:string, dest:string) :DiffFile {
 		extname: fileFrom.extname,
 		type: fileFrom.type,
 		ignore: fileFrom.ignore,
+	};
+	
+}
+
+function getRealRelative (root:string, relative:string) {
+	
+	const names = relative.split(path.sep);
+	let cwd = root;
+	
+	return path.join.apply(path, names.map((name) => {
+		
+		const cwdNames = fs.readdirSync(cwd);
+		
+		name = name.toLowerCase();
+		
+		for (const cwdName of cwdNames) {
+			if (cwdName.toLowerCase() === name) {
+				cwd = path.join(cwd, cwdName);
+				return cwdName;
+			}
+		}
+		
+	}));
+	
+}
+
+async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string, relative:string, dest:string) :Promise<boolean> {
+	
+	if (!settings.hasCaseSensitiveFileSystem && fs.existsSync(dest)) {
+		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;
+		const realRelative = getRealRelative(folderTo, relative);
+		if (relative !== realRelative) {
+			// tslint:disable-next-line: max-line-length
+			const copy = await dialogs.confirm(`Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
+			if (copy === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCopy', false);
+			return !!copy;
+		}
 	}
+	
+	return null;
 	
 }

@@ -171,9 +171,9 @@ export class DiffCompare {
 		
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
-		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitive : useCaseSensitiveFileName === 'on';
+		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
 		
-		if (settings.hasCaseSensitive && !useCaseSensitive) {
+		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
 			if (settings.get('confirmCaseInsensitiveCompare', true)) {
 				const value = await dialogs.confirm(`The file system is case sensitive. Are you sure to compare case insensitive?`, 'Compare', COMPARE_DONT_SHOW_AGAIN);
 				if (value) {
