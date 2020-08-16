@@ -6,9 +6,12 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 0.28.0
 
-- Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated).
+- Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated). Pleae read the description for the new property.
 - Added path segments `**` to `l13Diff.exclude` which allows to exclude complate paths instead of filenames only.
 - Added `l13Diff.useCaseSensitiveFileName` which indicates how file names should be treated.
+- Added `Disable Case Sensitive` and `Enable Case Sensitive` to toggle `l13Diff.useCaseSensitiveFileName`.
+- Added `l13Diff.confirmCaseInsensitiveCompare` for case sensitive compare on a case insensitive file system.
+- Added `l13Diff.confirmCaseInsensitiveCopy` for case sensitive file copy on a case insensitive file system.
 - Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
 
 ## Index
@@ -81,7 +84,7 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.useCaseSensitiveFileName` - Indiciates if filenames should be treated as case sensitive for a comparsion. This also affects the property `l13Diff.exclude`.
-	* `detect` - (default) Detect if the file system is case sensitive.
+	* `detect` - (default) Detect the file system case sensitivity.
 	* `on` - Enable case sensitive file names.
 	* `off` - Disable case sensitive file names.
 * `l13Diff.exclude` - A list of files and folders which should be ignored. If the folder for a comparison or one of its parent folders contains the `.vscode/settings.json` file and is not the current workspace folder, the file will be automatically detected and the values of the property will also be used for the comparison. If the folder is part of the current workspace, the workspace settings will be used instead of the local settings. Supports the following glob patterns:
@@ -89,7 +92,9 @@ Compare two folders in Visual Studio Code.
 	* `?` matches on one character in a path segment.
 	* `**` matches any number of path segments including none e.g. `**/node_modules`.
 * `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
+* `l13Diff.confirmCaseInsensitiveCompare` - If false confirm dialog for comparing case sensitive on a case insensitive file system does not appear.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
+* `l13Diff.confirmCaseInsensitiveCopy` - If false confirm dialog for copying case sensitive on a case insensitive file system does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
 * `l13Diff.initialFavoriteGroupState` - Set the initial state of a group.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.

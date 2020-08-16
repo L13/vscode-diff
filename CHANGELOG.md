@@ -4,9 +4,12 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ## [0.28.0] - 2020-08-02
 
 ### Added
-- Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated).
+- Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated). Pleae read the description for the new property.
 - Added path segments `**` to `l13Diff.exclude` which allows to exclude complate paths instead of filenames only.
 - Added `l13Diff.useCaseSensitiveFileName` which indicates how file names should be treated.
+- Added `Disable Case Sensitive` and `Enable Case Sensitive` to toggle `l13Diff.useCaseSensitiveFileName`.
+- Added `l13Diff.confirmCaseInsensitiveCompare` for case sensitive compare on a case insensitive file system.
+- Added `l13Diff.confirmCaseInsensitiveCopy` for case sensitive file copy on a case insensitive file system.
 - Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
 
 ## [0.27.0] - 2020-07-19
