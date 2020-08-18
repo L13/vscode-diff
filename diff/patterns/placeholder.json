@@ -1,8 +1,0 @@
-{
-	"folder-a": {
-		"${workspaceFolder}.txt": ["a"]
-	},
-	"folder-b": {
-		"${workspaceFolder}.txt": ["b"]
-	}
-}

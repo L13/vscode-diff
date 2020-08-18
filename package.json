@@ -753,7 +753,6 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"test-files": "node ./diff/index.js --shared --create-all",
 		"update": "# rm -rf node_modules && rm package-lock.json && npm install"
 	},
 	"devDependencies": {
