@@ -323,6 +323,38 @@
 					"when": "l13DiffFocus"
 				},
 				{
+					"command": "l13Diff.ignoreCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'"
+				},
+				{
+					"command": "l13Diff.useCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'"
+				},
+				{
+					"command": "l13Diff.ignoreEndOfLine",
+					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine"
+				},
+				{
+					"command": "l13Diff.compareEndOfLine",
+					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine"
+				},
+				{
+					"command": "l13Diff.ignoreWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace"
+				},
+				{
+					"command": "l13Diff.ignoreWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'"
+				},
+				{
+					"command": "l13Diff.compareWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace"
+				},
+				{
+					"command": "l13Diff.compareWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'"
+				},
+				{
 					"command": "l13Diff.openFavorite",
 					"when": "false"
 				},
@@ -561,48 +593,48 @@
 			],
 			"editor/title": [
 				{
-					"when": "l13DiffFocus",
 					"command": "l13Diff.addToFavorites",
+					"when": "l13DiffFocus",
 					"group": "navigation@1"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
 					"command": "l13Diff.ignoreCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
 					"group": "navigation@2"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
 					"command": "l13Diff.useCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
 					"group": "navigation@2"
 				},
 				{
-					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
 					"command": "l13Diff.ignoreEndOfLine",
+					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
 					"group": "navigation@3"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
 					"command": "l13Diff.compareEndOfLine",
+					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
 					"group": "navigation@3"
 				},
 				{
+					"command": "l13Diff.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
-					"command": "l13Diff.ignoreWhitespace",
 					"group": "navigation@4"
 				},
 				{
+					"command": "l13Diff.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
-					"command": "l13Diff.ignoreWhitespace",
 					"group": "navigation@4"
 				},
 				{
+					"command": "l13Diff.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
-					"command": "l13Diff.compareWhitespace",
 					"group": "navigation@4"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"command": "l13Diff.compareWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"group": "navigation@4"
 				}
 			]
@@ -696,7 +728,7 @@
 				"l13Diff.confirmCaseInsensitiveCompare": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the comparsion for file names should be case insensitive even if the file system is case sensitive."
+					"description": "Controls weather the comparsion should ask for confirmation to be case insensitive even if the file system is case sensitive."
 				},
 				"l13Diff.confirmCaseInsensitiveCopy": {
 					"type": "boolean",

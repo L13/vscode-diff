@@ -204,7 +204,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = useCaseSensitive ? file.relative : file.relative.toLowerCase();
+		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		
 		if (!diffs[id]) {
 			diffs[id] = {
@@ -230,7 +230,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = useCaseSensitive ? file.relative : file.relative.toLowerCase();
+		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		const diff = diffs[id];
 		
 		if (!diff) {

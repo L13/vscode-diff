@@ -184,10 +184,10 @@ function getRealRelative (root:string, relative:string) {
 		
 		const cwdNames = fs.readdirSync(cwd);
 		
-		name = name.toLowerCase();
+		name = name.toUpperCase();
 		
 		for (const cwdName of cwdNames) {
-			if (cwdName.toLowerCase() === name) {
+			if (cwdName.toUpperCase() === name) {
 				cwd = path.join(cwd, cwdName);
 				return cwdName;
 			}

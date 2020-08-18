@@ -195,6 +195,7 @@ gulp.task('script:tests', () => {
 		
 		promises.push(rollup.rollup({
 			input: file.in,
+			treeshake: false,
 			onwarn,
 			external: [
 				'assert',
