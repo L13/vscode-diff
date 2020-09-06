@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.27.0",
+	"version": "0.28.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -265,6 +265,22 @@
 				}
 			},
 			{
+				"command": "l13Diff.ignoreCaseSensitive",
+				"title": "Disable Case Sensitive",
+				"icon": {
+					"light": "images/panels/toggle-case-sensitive-light.svg",
+					"dark": "images/panels/toggle-case-sensitive-dark.svg"
+				}
+			},
+			{
+				"command": "l13Diff.useCaseSensitive",
+				"title": "Enable Case Sensitive",
+				"icon": {
+					"light": "images/panels/toggle-case-sensitive-disabled-light.svg",
+					"dark": "images/panels/toggle-case-sensitive-disabled-dark.svg"
+				}
+			},
+			{
 				"command": "l13Diff.selectForCompare",
 				"title": "Select for Compare"
 			},
@@ -305,6 +321,38 @@
 				{
 					"command": "l13Diff.addToFavorites",
 					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.ignoreCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'"
+				},
+				{
+					"command": "l13Diff.useCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'"
+				},
+				{
+					"command": "l13Diff.ignoreEndOfLine",
+					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine"
+				},
+				{
+					"command": "l13Diff.compareEndOfLine",
+					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine"
+				},
+				{
+					"command": "l13Diff.ignoreWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace"
+				},
+				{
+					"command": "l13Diff.ignoreWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'"
+				},
+				{
+					"command": "l13Diff.compareWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace"
+				},
+				{
+					"command": "l13Diff.compareWhitespace",
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'"
 				},
 				{
 					"command": "l13Diff.openFavorite",
@@ -409,14 +457,14 @@
 			],
 			"explorer/context": [
 				{
-					"command": "l13Diff.selectForCompare",
-					"group": "3_compare@1",
-					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
-				},
-				{
 					"command": "l13Diff.compareWithSelected",
 					"group": "3_compare@1",
 					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection && l13DiffSelectedFolder"
+				},
+				{
+					"command": "l13Diff.selectForCompare",
+					"group": "3_compare@2",
+					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
 				},
 				{
 					"command": "l13Diff.compareSelected",
@@ -545,39 +593,49 @@
 			],
 			"editor/title": [
 				{
-					"when": "l13DiffFocus",
 					"command": "l13Diff.addToFavorites",
+					"when": "l13DiffFocus",
 					"group": "navigation@1"
 				},
 				{
-					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
+					"command": "l13Diff.ignoreCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
+					"group": "navigation@2"
+				},
+				{
+					"command": "l13Diff.useCaseSensitive",
+					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
+					"group": "navigation@2"
+				},
+				{
 					"command": "l13Diff.ignoreEndOfLine",
-					"group": "navigation@2"
+					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
+					"group": "navigation@3"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
 					"command": "l13Diff.compareEndOfLine",
-					"group": "navigation@2"
+					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
+					"group": "navigation@3"
 				},
 				{
+					"command": "l13Diff.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
-					"command": "l13Diff.ignoreWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
+					"command": "l13Diff.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
-					"command": "l13Diff.ignoreWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
+					"command": "l13Diff.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
-					"command": "l13Diff.compareWhitespace",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
-					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"command": "l13Diff.compareWhitespace",
-					"group": "navigation@3"
+					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
+					"group": "navigation@4"
 				}
 			]
 		},
@@ -600,16 +658,19 @@
 					"default": false,
 					"description": "Should diff or file open to side?"
 				},
-				"l13Diff.ignore": {
+				"l13Diff.exclude": {
 					"type": "array",
 					"default": [
-						".DS_Store",
-						".git",
-						".hg",
-						".svn",
-						"CVS",
-						"node_modules"
+						"**/.DS_Store",
+						"**/.git",
+						"**/.hg",
+						"**/.svn",
+						"**/CVS",
+						"**/node_modules"
 					],
+					"items": {
+						"type": "string"
+					},
 					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},
 				"l13Diff.openFavoriteAndCompare": {
@@ -637,6 +698,21 @@
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				},
+				"l13Diff.useCaseSensitiveFileName": {
+					"type": "string",
+					"default": "detect",
+					"enum": [
+						"detect",
+						"on",
+						"off"
+					],
+					"description": "Should the comparison for filenames be case sensitive?",
+					"enumDescriptions": [
+						"Detect if the file system is case sensitive.",
+						"Enable case sensitive file names.",
+						"Disable case sensitive file names."
+					]
+				},
 				"l13Diff.ignoreTrimWhitespace": {
 					"type": "string",
 					"default": "default",
@@ -651,6 +727,16 @@
 						"Ignores leading and trailing whitespace for a comparison in a text file.",
 						"Does not ignore leading and trailing whitespace for a comparison in a text file."
 					]
+				},
+				"l13Diff.confirmCaseInsensitiveCompare": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the comparsion should ask for confirmation to be case insensitive even if the file system is case sensitive."
+				},
+				"l13Diff.confirmCaseInsensitiveCopy": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls weather the diff should ask for confirmation when copying the content to existing files of a case sensitive comparison on a case insensitive file system."
 				},
 				"l13Diff.confirmCopy": {
 					"type": "boolean",
@@ -670,9 +756,10 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"test-files": "node ./diff/index.js --shared --create-all"
+		"update": "# rm -rf node_modules && rm package-lock.json && npm install"
 	},
 	"devDependencies": {
+		"@rollup/plugin-typescript": "^5.0.2",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^12.12.35",
@@ -682,8 +769,7 @@
 		"gulp": "^4.0.2",
 		"gulp-sass": "^4.0.2",
 		"mocha": "^7.1.1",
-		"rollup": "^1.32.1",
-		"rollup-plugin-typescript": "^1.0.1",
+		"rollup": "^2.22.2",
 		"tslint": "^6.1.0",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.0.2"

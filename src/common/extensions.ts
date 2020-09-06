@@ -2,13 +2,13 @@
 
 import * as vscode from 'vscode';
 
-import { createFindGlob } from '../services/@l13/fse';
-
 import { TextFiles } from '../types';
 
 const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
+
+const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 export const textfiles:TextFiles = {
 	extensions: [],
@@ -55,3 +55,21 @@ export function buildWhitelistForTextFiles () {
 
 //	Functions __________________________________________________________________
 
+function createFindGlob (ignore:string[]) {
+	
+	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
+	
+}
+
+function escapeForRegExp (text:string) {
+	
+	return ('' + text).replace(findRegExpChars, (match) => {
+		
+		if (match === '*') return '.+';
+		if (match === '?') return '?';
+		
+		return '\\' + match;
+		
+	});
+	
+}

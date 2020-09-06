@@ -9,7 +9,7 @@ const sass = require('gulp-sass');
 const rollup = require('rollup');
 
 const file2json = require('./plugins/gulp-file2json');
-const typescript = require('rollup-plugin-typescript');
+const typescript = require('@rollup/plugin-typescript');
 
 //	Variables __________________________________________________________________
 
@@ -122,18 +122,15 @@ gulp.task('script:view', () => {
 	
 	return rollup.rollup({
 		input: 'src/views/main.ts',
+		onwarn,
 		plugins: [
 			typescript({
-				target: 'es6',
-				lib: [
-					'es6',
-					'dom',
+				include: [
+					'src/@l13/**/!(.test).ts',
+					'src/@types/**/!(.test).ts',
+					'src/views/**/!(.test).ts',
+					'src/types.ts',
 				],
-				strict: true,
-				removeComments: true,
-				emitDecoratorMetadata: true,
-				experimentalDecorators: true,
-				
 			}),
 		]
 	}).then(bundle => {
@@ -141,10 +138,9 @@ gulp.task('script:view', () => {
 		return bundle.write({
 			file: 'media/main.js',
 			format: 'iife',
-			name: 'l13diffview',
 		});
 		
-	});
+	}, onerror);
 	
 });
 
@@ -152,6 +148,7 @@ gulp.task('script:services', () => {
 	
 	return rollup.rollup({
 		input: 'src/extension.ts',
+		onwarn,
 		external: [
 			'child_process',
 			'fs',
@@ -160,13 +157,15 @@ gulp.task('script:services', () => {
 		],
 		plugins: [
 			typescript({
-				target: 'es6',
-				lib: [
-					'es6',
-					'dom',
+				include: [
+					'src/@l13/**/!(.test).ts',
+					'src/@types/**/!(.test).ts',
+					'src/commands/**/!(.test).ts',
+					'src/common/**/!(.test).ts',
+					'src/services/**/!(.test).ts',
+					'src/extension.ts',
+					'src/types.ts',
 				],
-				strict: true,
-				removeComments: true,
 			}),
 		]
 	}).then(bundle => {
@@ -174,7 +173,6 @@ gulp.task('script:services', () => {
 		return bundle.write({
 			file: 'out/extension.js',
 			format: 'cjs',
-			name: 'l13diffservices',
 			globals: {
 				child_process: 'child_process',
 				fs: 'fs',
@@ -183,7 +181,7 @@ gulp.task('script:services', () => {
 			},
 		});
 		
-	});
+	}, onerror);
 	
 });
 
@@ -197,6 +195,8 @@ gulp.task('script:tests', () => {
 		
 		promises.push(rollup.rollup({
 			input: file.in,
+			treeshake: false,
+			onwarn,
 			external: [
 				'assert',
 				'glob',
@@ -206,12 +206,10 @@ gulp.task('script:tests', () => {
 			],
 			plugins: [
 				typescript({
-					target: 'es6',
-					lib: [
-						'es6',
+					include: [
+						'src/services/@l13/**/*.ts',
+						'src/test/index.ts',
 					],
-					strict: true,
-					removeComments: true,
 				}),
 			]
 		}).then(bundle => {
@@ -219,7 +217,6 @@ gulp.task('script:tests', () => {
 			return bundle.write({
 				file: file.out,
 				format: 'cjs',
-				name: 'l13difftests',
 				globals: {
 					assert: 'assert',
 					glob: 'glob',
@@ -229,7 +226,7 @@ gulp.task('script:tests', () => {
 				},
 			});
 			
-		}));
+		}, onerror));
 		
 	});
 	
@@ -301,5 +298,19 @@ function createInOut (pattern) {
 		};
 		
 	});
+	
+}
+
+function onwarn (warning) {
+	
+	console.warn(warning.toString());
+	
+}
+
+function onerror (error) {
+	
+	console.error(`Error:${error.pluginCode ? ' ' + error.pluginCode : ''} ${error.message} ${error.loc.file}:${error.loc.line}:${error.loc.column}`);
+	
+	throw error;
 	
 }

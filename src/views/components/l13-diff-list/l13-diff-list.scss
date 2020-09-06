@@ -257,11 +257,11 @@ l13-diff-list-file {
 			padding-right: 5px;
 		}
 		
-		&.-ignored {
+		&.-info {
 			color: var(--vscode-foreground);
 			font-size: 11px;
 			opacity: 0.5;
-			padding-right: 5px;
+			padding-left: 5px;
 		}
 	}
 }

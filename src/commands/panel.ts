@@ -23,9 +23,9 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		'l13Diff.show': () => DiffPanel.create(context),
 		
-		'l13Diff.openAndCompare': (left, right, openToSide) => {
+		'l13Diff.openAndCompare': (left, right, newPanel, openToSide) => {
 			
-			if (openToSide) DiffPanel.create(context, [left, right], true);
+			if (newPanel) DiffPanel.create(context, [left, right], true, openToSide);
 			else DiffPanel.createOrShow(context, [left, right], true);
 			
 		},
