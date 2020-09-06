@@ -412,12 +412,12 @@ export class DiffPanel {
 		
 	}
 	
-	public static async create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
+	public static async create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean, openToSide?:boolean) {
 		
 		const mediaPath = path.join(context.extensionPath, 'media');
 		const iconsPath = path.join(mediaPath, 'icons');
 		const panel = vscode.window.createWebviewPanel(DiffPanel.viewType, 'Diff Folders', {
-			viewColumn: vscode.ViewColumn.Active,
+			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 		}, {
 			enableScripts: true,
 			localResourceRoots: [
@@ -431,7 +431,7 @@ export class DiffPanel {
 			light: vscode.Uri.file(path.join(iconsPath, 'icon-light.svg')),
 		};
 		
-		const diffPanel = new DiffPanel(panel, context, uris, compare);;
+		const diffPanel = new DiffPanel(panel, context, uris, compare);
 		
 		DiffPanel.currentPanel = diffPanel;
 		DiffPanel.currentPanels.push(diffPanel);

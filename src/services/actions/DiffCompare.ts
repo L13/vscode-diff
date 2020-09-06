@@ -10,6 +10,7 @@ import { lstatSync, walkTree } from '../@l13/fse';
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
+import * as dialogs from '../../common/dialogs';
 import { textfiles } from '../../common/extensions';
 import * as settings from '../../common/settings';
 
@@ -19,6 +20,8 @@ import { DiffResult } from '../output/DiffResult';
 
 const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
+
+const COMPARE_DONT_SHOW_AGAIN = 'Compare, don\'t show again';
 
 //	Initialize _________________________________________________________________
 
@@ -146,38 +149,46 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, ignore:string[]) :Promise<StatsMap> {
+	public async scanFolder (dirname:string, excludes:string[], useCaseSensitive:boolean) {
 		
-		return new Promise((resolve, reject) => {
-			
-			this._onStartScanFolder.fire(dirname);
-			
-			walkTree(dirname, { ignore }, (error, result) => {
-				
-				if (error) return reject(error);
-				
-				this._onEndScanFolder.fire(result);
-				
-				resolve(result);
-				
-			});
-			
-		});
+		this._onStartScanFolder.fire(dirname);
+		
+		let result:StatsMap = {};
+		
+		try {
+			result = await walkTree(dirname, { excludes, useCaseSensitive });
+		} catch (error) {
+			vscode.window.showErrorMessage(error.message);
+		}
+		
+		this._onEndScanFolder.fire(result);
+		
+		return result;
 		
 	}
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
-		const ignore = settings.getIgnore(dirnameA, dirnameB);
-		const resultA:StatsMap = await this.scanFolder(dirnameA, ignore);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, ignore);
+		const exludes = settings.getExcludes(dirnameA, dirnameB);
+		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
+		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
+		
+		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
+			if (settings.get('confirmCaseInsensitiveCompare', true)) {
+				const value = await dialogs.confirm(`The file system is case sensitive. Are you sure to compare case insensitive?`, 'Compare', COMPARE_DONT_SHOW_AGAIN);
+				if (value) {
+					if (value === COMPARE_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCompare', false);
+				} else useCaseSensitive = true;
+			}
+		}
+		
+		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes, useCaseSensitive);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes, useCaseSensitive);
+		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
-		createListA(diffs, resultA);
-		compareWithListB(diffs, resultB);
-		
-		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
-		
+		createListA(diffs, resultA, useCaseSensitive);
+		compareWithListB(diffs, resultB, useCaseSensitive);
 		diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
 		
 		return diffResult;
@@ -188,28 +199,30 @@ export class DiffCompare {
 
 //	Functions __________________________________________________________________
 
-function createListA (diffs:Dictionary<Diff>, result:StatsMap) {
+function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = file.relative;
+		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		
-		diffs[id] = {
-			id,
-			status: file.ignore ? 'ignored' : 'deleted',
-			type: file.type,
-			ignoredEOL: false,
-			ignoredWhitespace: false,
-			fileA: file,
-			fileB: null,
-		};
+		if (!diffs[id]) {
+			diffs[id] = {
+				id,
+				status: file.ignore ? 'ignored' : 'deleted',
+				type: file.type,
+				ignoredEOL: false,
+				ignoredWhitespace: false,
+				fileA: file,
+				fileB: null,
+			};
+		} else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
 		
 	});
 	
 }
 
-function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
+function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
 	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
@@ -217,7 +230,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = file.relative;
+		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		const diff = diffs[id];
 		
 		if (!diff) {
@@ -230,7 +243,10 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap) {
 				fileA: null,
 				fileB: file,
 			};
-		} else compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+		} else {
+			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+			else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
+		}
 		
 	});
 	

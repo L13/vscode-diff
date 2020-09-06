@@ -30,7 +30,7 @@ export class SymlinkContentProvider implements vscode.TextDocumentContentProvide
 				
 			});
 			
-		});;
+		});
 		
 	}
 	

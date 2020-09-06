@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { copyFile, lstatSync, mkdirsSync } from '../@l13/fse';
+import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
@@ -37,55 +37,28 @@ export class DiffCopy {
 	
 	private async copy (file:DiffFile, dest:string) :Promise<any> {
 		
-		const stat = lstatSync(file.fsPath);
+		const stat = await lstat(file.fsPath);
 		
-		if (stat) {
-			const statDest = lstatSync(dest);
-			if (stat.isDirectory()) {
-				if (!statDest) {
-					try {
-						mkdirsSync(dest);
-						return Promise.resolve();
-					} catch (error) {
-						return Promise.reject(error);
-					}
-				} else {
-					if (statDest.isDirectory()) return Promise.resolve();
-					return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
-				}
-			} else if (stat.isFile()) {
-				if (!statDest || statDest.isFile()) {
-					return new Promise((resolve, reject) => {
-						
-						copyFile(file.fsPath, dest, (error:Error) => {
-						
-							if (error) reject(error);
-							else resolve();
-							
-						});
-						
-					});
-				}
-				return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
-			} else if (stat.isSymbolicLink()) {
-				if (!statDest || statDest.isSymbolicLink()) {
-					if (statDest) fs.unlinkSync(dest);
-					return new Promise((resolve, reject) => {
-						
-						fs.symlink(fs.readlinkSync(file.fsPath), dest, (error:Error) => {
-						
-							if (error) reject(error);
-							else resolve();
-							
-						});
-						
-					});
-				}
-				return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
+		if (!stat) return Promise.reject(new Error(`'${file.fsPath}' doesn't exist!`));
+		
+		const statDest = await lstat(dest);
+		
+		if (stat.isDirectory()) {
+			if (!statDest || statDest.isDirectory()) {
+				if (!statDest) createDirectory(dest);
+				return Promise.resolve();
 			}
+			return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
+		} else if (stat.isFile()) {
+			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
+			return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
+		} else if (stat.isSymbolicLink()) {
+			if (!statDest || statDest.isSymbolicLink()) {
+				if (statDest) fs.unlinkSync(dest); // Delete existing symlink otherwise an error occurs
+				return await copySymbolicLink(file.fsPath, dest);
+			}
+			return Promise.reject(new Error(`'${dest}' exists, but is not a symbolic link!`));
 		}
-		
-		return Promise.reject(new Error(`'${dest}' doesn't exist!`));
 		
 	}
 	
@@ -104,7 +77,7 @@ export class DiffCopy {
 				if (value === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
 			} else this._onDidCancel.fire(undefined);
-		} else this.copyFromTo(data, from, to);;
+		} else this.copyFromTo(data, from, to);
 		
 	}
 	
@@ -131,54 +104,48 @@ export class DiffCopy {
 		const job:CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
-			done: () => {
-				
-				if (!job.tasks) this._onDidCopyFiles.fire({ data, from ,to });
-				
-			},
+			done: () => this._onDidCopyFiles.fire({ data, from ,to }),
 		};
 		
 		diffs.forEach(async (diff:Diff) => {
 			
-			const fileFrom:DiffFile = (<any>diff)['file' + from];
-			const stat = lstatSync(fileFrom.fsPath);
+			const fileFrom:DiffFile = from === 'A' ? diff.fileA : diff.fileB;
 			
-			if (stat) {
-				const dest = path.join(folderTo, fileFrom.relative);
+			if (fileFrom) {
+				const fsPath = fileFrom.fsPath;
 				
-				try {
-					await this.copy(fileFrom, dest);
-					if (diff.status !== 'ignored') diff.status = 'unchanged';
+				if (fs.existsSync(fsPath)) {
 					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
-				
-					if (!fileTo) {
-						fileTo = {
-							root: folderTo,
-							relative: fileFrom.relative,
-							fsPath: dest,
-							stat: null,
+					const relative = fileTo?.relative || fileFrom.relative;
+					const dest = path.join(folderTo, relative);
+					let copy = null;
+					
+					if (!fileTo) copy = await existsCaseInsensitiveFileAndCopy(fsPath, folderTo, relative, dest);
+					
+					if (copy === null || copy) {
+						try {
+							await this.copy(fileFrom, dest);
 							
-							path: dest + (fileFrom.type === 'folder' ? path.sep : ''),
-							name: fileFrom.name,
-							basename: fileFrom.basename,
-							dirname: fileFrom.dirname,
-							extname: fileFrom.extname,
-							type: fileFrom.type,
-							ignore: fileFrom.ignore,
-						};
-						if (to === 'A') diff.fileA = fileTo;
-						else diff.fileB = fileTo;
+							if (copy === null) {
+								if (diff.status !== 'ignored') diff.status = 'unchanged';
+								if (!fileTo) {
+									fileTo = copyDiffFile(fileFrom, folderTo, dest);
+									if (to === 'A') diff.fileA = fileTo;
+									else diff.fileB = fileTo;
+								}
+								fileTo.stat = await lstat(dest);
+							}
+							
+							this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
+						} catch (error) {
+							vscode.window.showErrorMessage(error.message);
+						}
 					}
-					
-					fileTo.stat = lstatSync(dest);
-					this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
-					
-				} catch (error) {
-					vscode.window.showErrorMessage(error.message);
 				}
 			}
 			
-			--job.tasks;
+			job.tasks--;
+			
 			if (!job.tasks) job.done();
 			
 		});
@@ -189,3 +156,60 @@ export class DiffCopy {
 
 //	Functions __________________________________________________________________
 
+function copyDiffFile (fileFrom:DiffFile, root:string, dest:string) :DiffFile {
+	
+	return {
+		root,
+		relative: fileFrom.relative,
+		fsPath: dest,
+		stat: null,
+		
+		path: dest + (fileFrom.type === 'folder' ? path.sep : ''),
+		name: fileFrom.name,
+		basename: fileFrom.basename,
+		dirname: fileFrom.dirname,
+		extname: fileFrom.extname,
+		type: fileFrom.type,
+		ignore: fileFrom.ignore,
+	};
+	
+}
+
+function getRealRelative (root:string, relative:string) {
+	
+	const names = relative.split(path.sep);
+	let cwd = root;
+	
+	return path.join.apply(path, names.map((name) => {
+		
+		const cwdNames = fs.readdirSync(cwd);
+		
+		name = name.toUpperCase();
+		
+		for (const cwdName of cwdNames) {
+			if (cwdName.toUpperCase() === name) {
+				cwd = path.join(cwd, cwdName);
+				return cwdName;
+			}
+		}
+		
+	}));
+	
+}
+
+async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string, relative:string, dest:string) :Promise<boolean> {
+	
+	if (!settings.hasCaseSensitiveFileSystem && fs.existsSync(dest)) {
+		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;
+		const realRelative = getRealRelative(folderTo, relative);
+		if (relative !== realRelative) {
+			// tslint:disable-next-line: max-line-length
+			const copy = await dialogs.confirm(`Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
+			if (copy === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCopy', false);
+			return !!copy;
+		}
+	}
+	
+	return null;
+	
+}

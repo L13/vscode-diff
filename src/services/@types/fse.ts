@@ -12,10 +12,9 @@ import { DiffFile } from '../../@types/diffs';
 
 //	Exports ____________________________________________________________________
 
-export type Callback = (error?:null|Error, result?:StatsMap) => void;
-
 export type WalkTreeOptions = {
-	ignore?:string[],
+	excludes?:string[],
+	useCaseSensitive?:boolean,
 };
 
 export type StatsMap = {

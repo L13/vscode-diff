@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import * as fs from 'fs';
-import { join } from 'path';
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { lstatSync, walkUp } from '../services/@l13/fse';
@@ -9,7 +9,7 @@ import { parse } from '../services/@l13/jsonc';
 
 //	Variables __________________________________________________________________
 
-
+export const hasCaseSensitiveFileSystem:boolean = !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
 
 //	Initialize _________________________________________________________________
 
@@ -29,13 +29,17 @@ export function update (key:string, value:any, global:boolean = true) {
 	
 }
 
-export function getIgnore (pathA:string, pathB:string) :string[] {
+export function getExcludes (pathA:string, pathB:string) :string[] {
 	
-	const ignores = <string[]>vscode.workspace.getConfiguration('l13Diff').get('ignore', []);
-	const ignoresA:string[] = useWorkspaceSettings(pathA) ? ignores : loadSettingsIgnore(pathA) || ignores;
-	const ignoresB:string[] = useWorkspaceSettings(pathB) ? ignores : loadSettingsIgnore(pathB) || ignores;
+	let ignore = get('ignore');
 	
-	return [].concat(ignoresA, ignoresB).filter((value, index, values) => values.indexOf(value) === index);
+	if (ignore) ignore = showDepricated(ignore, 'Settings');
+	
+	const excludes = get('exclude', []) || ignore;
+	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
+	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
+	
+	return [].concat(excludesA, excludesB).filter((value, index, values) => values.indexOf(value) === index);
 	
 }
 
@@ -55,13 +59,13 @@ export function enableTrash () {
 
 //	Functions __________________________________________________________________
 
-function loadSettingsIgnore (pathname:string) :string[] {
+function loadSettingsExclude (pathname:string) :string[] {
 	
 	const codePath = walkUp(pathname, '.vscode');
 	
 	if (!codePath) return null;
 	
-	const codeSettingsPath = join(codePath, 'settings.json');
+	const codeSettingsPath = path.join(codePath, 'settings.json');
 	const stat = lstatSync(codeSettingsPath);
 	let json:any = {};
 	
@@ -70,16 +74,28 @@ function loadSettingsIgnore (pathname:string) :string[] {
 		try {
 			json = parse(content);
 		} catch {
-			vscode.window.showErrorMessage(`Syntax error in settings file '${codeSettingsPath}'!`);
+			vscode.window.showErrorMessage(`Syntax error in settings file "${codeSettingsPath}"!`);
 		}
 	}
 	
-	return json['l13Diff.ignore'] || null;
+	let ignore:string[] = json['l13Diff.ignore'];
+	
+	if (ignore) ignore = showDepricated(ignore, pathname);
+	
+	return json['l13Diff.exclude'] || ignore || null;
 	
 }
 
 function useWorkspaceSettings (pathname:string) :boolean {
 	
 	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.startsWith(folder.uri.fsPath));
+	
+}
+
+function showDepricated (ignore:string[], pathname?:string) {
+	
+	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`);
+	
+	return ignore.map((pattern) => `**/${pattern}`);
 	
 }

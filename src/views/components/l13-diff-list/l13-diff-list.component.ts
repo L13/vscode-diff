@@ -715,6 +715,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	if (file) {
 		column.classList.add(`-${file.type}`);
 		column.setAttribute('data-fs-path', file.fsPath);
+		column.title = file.fsPath;
 		
 		if (file.ignore) {
 			 if (!diff.fileA) column.classList.add('-untracked');
@@ -756,7 +757,7 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 			if (diff.ignoredEOL) values.push('eol');
 			if (diff.ignoredWhitespace) values.push('whitespace');
 			ignored.textContent = `(ignored ${values.join(' and ')})`;
-			ignored.classList.add('-ignored');
+			ignored.classList.add('-info');
 			column.appendChild(ignored);
 		}
 	}

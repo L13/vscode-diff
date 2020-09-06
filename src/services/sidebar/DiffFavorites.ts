@@ -111,7 +111,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 				if (!await dialogs.confirm(`Overwrite favorite "${favorite.label}"?`, 'Ok')) return;
 				favorite.fileA = fileA;
 				favorite.fileB = fileB;
-				return saveFavorite(context, favorites);;
+				return saveFavorite(context, favorites);
 			}
 		}
 		
