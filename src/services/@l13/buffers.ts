@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-const { push } = Array.prototype;
+
 
 //	Variables __________________________________________________________________
 
@@ -113,8 +113,10 @@ function trimAscii (buffer:Buffer) :Buffer {
 				break start;
 			}
 			if (k === j) {
-				if (cache.length === length - fixBOM) push.apply(newBuffer, cache); // Fixes VS Code single space and tab line bug
-				else if (value === 10 || value === 13) newBuffer.push(value);
+				if (cache.length === length - fixBOM) { // Fixes VS Code single space and tab line bug
+					const cacheLengthA = cache.length;
+					for (let l = 0; l < cacheLengthA; l++) newBuffer.push(cache[l]);
+				} else if (value === 10 || value === 13) newBuffer.push(value);
 				cache = [];
 				continue stream;
 			}
@@ -126,7 +128,9 @@ function trimAscii (buffer:Buffer) :Buffer {
 				}
 				break end;
 			}
-			push.apply(newBuffer, cache.slice(j, k));
+			cache = cache.slice(j, k);
+			const cacheLengthB = cache.length;
+			for (let m = 0; m < cacheLengthB; m++) newBuffer.push(cache[m]);
 			if (value === 10 || value === 13) newBuffer.push(value);
 			cache = [];
 		} else cache.push(value);
@@ -160,8 +164,10 @@ function trimUTF16BE (buffer:Buffer) :Buffer {
 				break start;
 			}
 			if (j === k) {
-				if (cache.length === length - 2) push.apply(newBuffer, cache); // Fixes VS Code single space and tab line bug
-				else if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
+				if (cache.length === length - 2) { // Fixes VS Code single space and tab line bug
+					const cacheLengthA = cache.length;
+					for (let l = 0; l < cacheLengthA; l++) newBuffer.push(cache[l]);
+				} else if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
 				cache = [];
 				continue stream;
 			}
@@ -174,7 +180,9 @@ function trimUTF16BE (buffer:Buffer) :Buffer {
 				}
 				break end;
 			}
-			push.apply(newBuffer, cache.slice(j, k));
+			cache = cache.slice(j, k);
+			const cacheLengthB = cache.length;
+			for (let m = 0; m < cacheLengthB; m++) newBuffer.push(cache[m]);
 			if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
 			cache = [];
 		} else cache.push(valueA, valueB);
@@ -208,8 +216,10 @@ function trimUTF16LE (buffer:Buffer) :Buffer {
 				break start;
 			}
 			if (j === k) {
-				if (cache.length === length - 2) push.apply(newBuffer, cache); // Fixes VS Code single space and tab line bug
-				else if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
+				if (cache.length === length - 2) { // Fixes VS Code single space and tab line bug
+					const cacheLengthA = cache.length;
+					for (let l = 0; l < cacheLengthA; l++) newBuffer.push(cache[l]);
+				} else if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
 				cache = [];
 				continue stream;
 			}
@@ -222,7 +232,9 @@ function trimUTF16LE (buffer:Buffer) :Buffer {
 				}
 				break end;
 			}
-			push.apply(newBuffer, cache.slice(j, k));
+			cache = cache.slice(j, k);
+			const cacheLengthB = cache.length;
+			for (let m = 0; m < cacheLengthB; m++) newBuffer.push(cache[m]);
 			if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
 			cache = [];
 		} else cache.push(valueA, valueB);

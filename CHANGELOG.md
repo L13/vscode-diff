@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.28.1] - 2020-09-09
+
+### Fixed
+- Fixed "trimWhitespace" for big text files. [Issue #49](https://github.com/L13/vscode-diff/issues/49)
+
 ## [0.28.0] - 2020-09-06
 
 ### Added
