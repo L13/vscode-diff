@@ -286,6 +286,8 @@ gulp.task('watch', () => {
 	
 });
 
+gulp.task('build & watch', gulp.series('build', 'watch'));
+
 //	Functions __________________________________________________________________
 
 function createInOut (pattern) {

@@ -3,7 +3,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
+import { Diff, DiffCopyMessage, DiffError, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
 import { formatAmount, formatNameAndDesc } from '../@l13/formats';
@@ -112,9 +112,13 @@ export class DiffPanel {
 			
 		}, null, this.disposables);
 		
-		this.compare.onDidNotCompare((data:DiffResult) => {
+		this.compare.onDidNotCompare(({ error, pathA, pathB}) => {
 			
-			this.msg.send('create:diffs', data);
+			this.output.log(`${error}`);
+			
+			if (error instanceof Error) this.output.msg(`${error.stack}`);
+			
+			this.msg.send('create:diffs', new DiffResult(pathA, pathB));
 			
 		}, null, this.disposables);
 		
@@ -159,6 +163,8 @@ export class DiffPanel {
 		}, null, this.disposables);
 		
 		this.compare.onDidCompareFolders((data:DiffResult) => {
+			
+			this.output.log('Creating stats for diff result.');
 			
 			const diffStats = new DiffStats(data);
 			const allEntries = diffStats.all.entries;
