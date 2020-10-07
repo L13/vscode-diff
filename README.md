@@ -4,15 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.28.0
+## What's new in Diff Folders 0.29.0
 
-- Added `l13Diff.exclude` which replaces `l13Diff.ignore` (depricated). Pleae read the description for the new property.
-- Added path segments `**` to `l13Diff.exclude` which allows to exclude complete paths instead of filenames only.
-- Added `l13Diff.useCaseSensitiveFileName` which indicates how file names should be treated.
-- Added `Disable Case Sensitive` and `Enable Case Sensitive` to toggle `l13Diff.useCaseSensitiveFileName`.
-- Added `l13Diff.confirmCaseInsensitiveCompare` for case insensitive compare on a case sensitive file system.
-- Added `l13Diff.confirmCaseInsensitiveCopy` for case sensitive file copy on a case insensitive file system.
-- Double click on folders in list view opens new Diff Folders panel. Works also with ignored files.
+- Added high contrast theme support.
 
 ## Index
 

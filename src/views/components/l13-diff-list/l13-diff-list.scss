@@ -19,7 +19,7 @@ l13-diff-list-content {
 				l13-diff-list-file {
 					
 					&::before {
-						background: var(--vscode-list-activeSelectionForeground);
+						background: var(--vscode-list-activeSelectionForeground, var(--l13-icon-background));
 					}
 					
 					span {
@@ -31,12 +31,12 @@ l13-diff-list-content {
 				}
 				
 				l13-diff-context {
-					background: var(--vscode-list-activeSelectionBackground) !important;
+					background: var(--l13-context-active-background) !important;
 					--l13-icon-background: var(--vscode-list-activeSelectionForeground);
 					--l13-icon-activeBackground: var(--vscode-list-activeSelectionForeground);
 					
 					&::before {
-						background: linear-gradient(90deg, transparent 0%, var(--vscode-list-activeSelectionBackground) 100%);
+						background: linear-gradient(90deg, transparent 0%, var(--l13-context-active-background) 100%);
 					}
 				}
 			}
@@ -47,16 +47,18 @@ l13-diff-list-content {
 l13-diff-list-row {
 	display: flex;
 	width: 100%;
+	outline-offset: -1px;
 	
 	&:hover {
 		background: var(--vscode-list-hoverBackground);
 		color: var(--vscode-list-hoverForeground);
+		outline: var(--l13-list-hover-outline, none);
 		
 		l13-diff-context {
-			background: var(--vscode-list-hoverBackground);
+			background: var(--l13-context-hover-background);
 			
 			&::before {
-				background: linear-gradient(90deg, transparent 0%, var(--vscode-list-hoverBackground) 100%);
+				background: linear-gradient(90deg, transparent 0%, var(--l13-context-hover-background) 100%);
 			}
 		}
 	}
@@ -64,6 +66,7 @@ l13-diff-list-row {
 	&.-selected {
 		background: var(--vscode-list-inactiveSelectionBackground);
 		color: var(--vscode-list-inactiveSelectionForeground);
+		outline: var(--l13-list-active-outline, none);
 			
 		l13-diff-list-file {
 			
@@ -83,10 +86,10 @@ l13-diff-list-row {
 		&:hover {
 			
 			l13-diff-context {
-				background: var(--vscode-list-inactiveSelectionBackground);
+				background: var(--l13-context-inactive-background);
 				
 				&::before {
-					background: linear-gradient(90deg, transparent 0%, var(--vscode-list-inactiveSelectionBackground) 100%);
+					background: linear-gradient(90deg, transparent 0%, var(--l13-context-inactive-background) 100%);
 				}
 			}
 		}
