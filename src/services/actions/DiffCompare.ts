@@ -8,7 +8,7 @@ import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, walkTree } from '../@l13/fse';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { Dictionary, Diff, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
+import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
 import * as dialogs from '../../common/dialogs';
 import { textfiles } from '../../common/extensions';
@@ -34,8 +34,8 @@ export class DiffCompare {
 	private _onInitCompare:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onInitCompare:vscode.Event<undefined> = this._onInitCompare.event;
 	
-	private _onDidNotCompare:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidNotCompare:vscode.Event<DiffResult> = this._onDidNotCompare.event;
+	private _onDidNotCompare:vscode.EventEmitter<DiffError> = new vscode.EventEmitter<DiffError>();
+	public readonly onDidNotCompare:vscode.Event<DiffError> = this._onDidNotCompare.event;
 	
 	private _onStartCompareFiles:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
 	public readonly onStartCompareFiles:vscode.Event<StartEvent> = this._onStartCompareFiles.event;
@@ -135,17 +135,17 @@ export class DiffCompare {
 		try {
 			this._onDidCompareFolders.fire(await this.createDiffs(pathA, pathB));
 		} catch (error) {
-			this.onError(error.message, pathA, pathB);
+			this.onError(error, pathA, pathB);
 		}
 		
 	}
 	
 	
-	private onError (text:string, pathA:string, pathB:string) {
+	private onError (error:string|Error, pathA:string, pathB:string) {
 		
-		vscode.window.showErrorMessage(text);
+		vscode.window.showErrorMessage(`${error}`);
 		
-		this._onDidNotCompare.fire(new DiffResult(pathA, pathB));
+		this._onDidNotCompare.fire({ error, pathA, pathB });
 		
 	}
 	
@@ -153,13 +153,7 @@ export class DiffCompare {
 		
 		this._onStartScanFolder.fire(dirname);
 		
-		let result:StatsMap = {};
-		
-		try {
-			result = await walkTree(dirname, { excludes, useCaseSensitive });
-		} catch (error) {
-			vscode.window.showErrorMessage(error.message);
-		}
+		const result = await walkTree(dirname, { excludes, useCaseSensitive });
 		
 		this._onEndScanFolder.fire(result);
 		
@@ -206,18 +200,9 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 		const file = result[pathname];
 		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		
-		if (!diffs[id]) {
-			diffs[id] = {
-				id,
-				status: file.ignore ? 'ignored' : 'deleted',
-				type: file.type,
-				ignoredEOL: false,
-				ignoredWhitespace: false,
-				fileA: file,
-				fileB: null,
-			};
-		} else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
-		
+		if (!diffs[id]) addFile(diffs, id, file, null);
+		else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
+
 	});
 	
 }
@@ -233,20 +218,10 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
 		const diff = diffs[id];
 		
-		if (!diff) {
-			diffs[id] = {
-				id,
-				status: file.ignore ? 'ignored' : 'untracked',
-				type: file.type,
-				ignoredEOL: false,
-				ignoredWhitespace: false,
-				fileA: null,
-				fileB: file,
-			};
-		} else {
+		if (diff) {
 			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
 			else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
-		}
+		} else addFile(diffs, id, null, file);
 		
 	});
 	
@@ -288,13 +263,11 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 			}
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
 		} else {
-			if (statA.size !== statB.size) {
-				diff.status = 'modified';
-			} else {
+			if (statA.size === statB.size) {
 				const bufferA = fs.readFileSync(fileA.fsPath);
 				const bufferB = fs.readFileSync(fileB.fsPath);
 				if (!bufferA.equals(bufferB)) diff.status = 'modified';
-			}
+			} else diff.status = 'modified';
 		}
 	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
 		const linkA = fs.readlinkSync(fileA.fsPath);
@@ -329,5 +302,21 @@ function parsePredefinedVariable (pathname:string) {
 		return match;
 		
 	});
+	
+}
+
+function addFile (diffs:Dictionary<Diff>, id:string, fileA:DiffFile, fileB:DiffFile) {
+	
+	const file = fileA || fileB;
+	
+	diffs[id] = {
+		id,
+		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
+		type: file.type,
+		ignoredEOL: false,
+		ignoredWhitespace: false,
+		fileA,
+		fileB,
+	};
 	
 }

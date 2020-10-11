@@ -16,5 +16,11 @@ export type Dictionary<T> = {
 	[token:string]:T,
 };
 
+export type DiffError = {
+	error:string|Error,
+	pathA:string,
+	pathB:string,
+};
+
 //	Functions __________________________________________________________________
 

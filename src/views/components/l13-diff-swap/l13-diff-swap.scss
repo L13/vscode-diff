@@ -33,6 +33,10 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
+		&:hover {
+			outline: var(--l13-list-hover-outline, none);
+		}
+		
 		&:not([disabled]).-active {
 			transform: scale(1.26, 1.26);
 		}
