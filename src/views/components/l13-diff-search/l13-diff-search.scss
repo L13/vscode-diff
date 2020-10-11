@@ -114,6 +114,10 @@ input[type=checkbox] {
 	&#l13_case_sensitive {
 		right: 27px;
 		
+		&:hover {
+			outline: var(--l13-list-hover-outline, none);
+		}
+		
 		&::after {
 			-webkit-mask-image: url('case-sensitive.svg');
 			mask-image: url('case-sensitive.svg');
@@ -122,6 +126,10 @@ input[type=checkbox] {
 	
 	&#l13_use_regexp {
 		right: 5px;
+		
+		&:hover {
+			outline: var(--l13-list-hover-outline, none);
+		}
 		
 		&::after {
 			-webkit-mask-image: url('regexp.svg');
@@ -229,6 +237,10 @@ button {
 	}
 	
 	&#l13_close {
+		
+		&:hover {
+			outline: var(--l13-list-hover-outline, none);
+		}
 		
 		&::before {
 			-webkit-mask-image: url('close.svg');

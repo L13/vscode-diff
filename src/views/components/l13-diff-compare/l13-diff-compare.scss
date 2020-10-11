@@ -12,6 +12,7 @@ button {
 	color: var(--vscode-button-foreground);
 	cursor: pointer;
 	font-size: 0.8125rem;
+	outline: var(--l13-button-outline, none);
 	padding: 2px 14px 3px 14px;
 	position: relative;
 	z-index: 1;

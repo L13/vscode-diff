@@ -19,25 +19,6 @@ body {
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	
-	&.vscode-dark {
-		// Fixes the missing selection color if default dark theme is selected
-		--l13-selection-background: #6689af;
-		--l13-searchWidget-borderColor: #454545;
-		--l13-searchButton-backgroundColor-hover: hsla(0, 0%, 100%, 0.1);
-		
-		--l13-intro-backgroundUrl: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzMCAxMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxLjQxNDIxOyI+CiAgICA8ZyBpZD0iTDEzIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjI0MDc0MSwwLDAsMC4yNDA3NDEsLTcuNzAzNyw3LjI1OTI3KSI+CiAgICAgICAgPGcgb3BhY2l0eT0iMC4zMDAwMDgiPgogICAgICAgICAgICA8cGF0aCBpZD0iXzMiIHNlcmlmOmlkPSIzIiBkPSJNMzYyLDQ0OEwzNjIsMzg4TDQ1MiwzODhMNDU1LjA5LDM4Ny45MTlDNDg2LjgyMywzODYuMjgxIDUxMiwzNjAuMDggNTEyLDMyOEM1MTIsMjk0Ljg4MyA0ODUuMTY5LDI2OC4wMzIgNDUyLDI2OEw0NTIsMjY4TDM5MiwyNjhMMzkyLDIwOEw0NTIsMjA4TDQ1NS4wOSwyMDcuOTE5QzQ4Ni44MjMsMjA2LjI4MSA1MTIsMTgwLjA4IDUxMiwxNDhDNTEyLDExNC44ODMgNDg1LjE2OSw4OC4wMzIgNDUyLDg4TDM2Miw4OEwzNjIsMjhMNDUyLDI4TDQ1OC4xNzUsMjguMTU2QzUyMS41ODYsMzEuMzc3IDU3Miw4My44MDEgNTcyLDE0OEM1NzIsMTgzLjg1MSA1NTYuMjc4LDIxNi4wMzEgNTMxLjMzLDIzOEM1NTYuMjc4LDI1OS45NjkgNTcyLDI5Mi4xNDkgNTcyLDMyOEM1NzIsMzk0LjI3NCA1MTguMjc0LDQ0OCA0NTIsNDQ4TDM2Miw0NDhaIi8+CiAgICAgICAgICAgIDxyZWN0IGlkPSJfMSIgc2VyaWY6aWQ9IjEiIHg9IjI3MiIgeT0iMjgiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MjAiLz4KICAgICAgICAgICAgPHBhdGggaWQ9IkwiIGQ9Ik0zMiwyOEw5MiwyOEw5MiwzODhMMjQyLDM4OEwyNDIsNDQ4TDkyLDQ0OEM1OC44NjMsNDQ4IDMyLDQyMS4xMzcgMzIsMzg4TDMyLDI4WiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
-		--l13-intro-color: hsla(0,0%,100%,.6);
-		--l13-intro-keyBackgroundColor: hsla(0, 0%, 50%, .17);
-		--l13-intro-keyBorderColor: rgba(51, 51, 51, .6);
-		--l13-intro-keyColor: #cccccc;
-		--l13-intro-shadow:rgba(68, 68, 68, .6);
-		
-		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
-		
-		--l13-icon-background: #c5c5c5;
-		--l13-icon-activeBackground: #ffffff;
-	}
-	
 	&.vscode-light {
 		// Fixes the missing selection color if default light theme is selected
 		--l13-selection-background: #b4d7fd;
@@ -55,5 +36,60 @@ body {
 		
 		--l13-icon-background: #414141;
 		--l13-icon-activeBackground: #414141;
+		
+		--l13-context-hover-background: var(--vscode-list-hoverBackground);
+		--l13-context-active-background: var(--vscode-list-activeSelectionBackground);
+		--l13-context-inactive-background: var(--vscode-list-inactiveSelectionBackground);
+	}
+	
+	&.vscode-dark {
+		// Fixes the missing selection color if default dark theme is selected
+		--l13-selection-background: #6689af;
+		--l13-searchWidget-borderColor: #454545;
+		--l13-searchButton-backgroundColor-hover: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-intro-backgroundUrl: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzMCAxMzAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxLjQxNDIxOyI+CiAgICA8ZyBpZD0iTDEzIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjI0MDc0MSwwLDAsMC4yNDA3NDEsLTcuNzAzNyw3LjI1OTI3KSI+CiAgICAgICAgPGcgb3BhY2l0eT0iMC4zMDAwMDgiPgogICAgICAgICAgICA8cGF0aCBpZD0iXzMiIHNlcmlmOmlkPSIzIiBkPSJNMzYyLDQ0OEwzNjIsMzg4TDQ1MiwzODhMNDU1LjA5LDM4Ny45MTlDNDg2LjgyMywzODYuMjgxIDUxMiwzNjAuMDggNTEyLDMyOEM1MTIsMjk0Ljg4MyA0ODUuMTY5LDI2OC4wMzIgNDUyLDI2OEw0NTIsMjY4TDM5MiwyNjhMMzkyLDIwOEw0NTIsMjA4TDQ1NS4wOSwyMDcuOTE5QzQ4Ni44MjMsMjA2LjI4MSA1MTIsMTgwLjA4IDUxMiwxNDhDNTEyLDExNC44ODMgNDg1LjE2OSw4OC4wMzIgNDUyLDg4TDM2Miw4OEwzNjIsMjhMNDUyLDI4TDQ1OC4xNzUsMjguMTU2QzUyMS41ODYsMzEuMzc3IDU3Miw4My44MDEgNTcyLDE0OEM1NzIsMTgzLjg1MSA1NTYuMjc4LDIxNi4wMzEgNTMxLjMzLDIzOEM1NTYuMjc4LDI1OS45NjkgNTcyLDI5Mi4xNDkgNTcyLDMyOEM1NzIsMzk0LjI3NCA1MTguMjc0LDQ0OCA0NTIsNDQ4TDM2Miw0NDhaIi8+CiAgICAgICAgICAgIDxyZWN0IGlkPSJfMSIgc2VyaWY6aWQ9IjEiIHg9IjI3MiIgeT0iMjgiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MjAiLz4KICAgICAgICAgICAgPHBhdGggaWQ9IkwiIGQ9Ik0zMiwyOEw5MiwyOEw5MiwzODhMMjQyLDM4OEwyNDIsNDQ4TDkyLDQ0OEM1OC44NjMsNDQ4IDMyLDQyMS4xMzcgMzIsMzg4TDMyLDI4WiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+");
+		--l13-intro-color: hsla(0,0%,100%,.6);
+		--l13-intro-keyBackgroundColor: hsla(0, 0%, 50%, .17);
+		--l13-intro-keyBorderColor: rgba(51, 51, 51, .6);
+		--l13-intro-keyColor: #cccccc;
+		--l13-intro-shadow:rgba(68, 68, 68, .6);
+		
+		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-icon-background: #c5c5c5;
+		--l13-icon-activeBackground: #ffffff;
+		
+		--l13-context-hover-background: var(--vscode-list-hoverBackground);
+		--l13-context-active-background: var(--vscode-list-activeSelectionBackground);
+		--l13-context-inactive-background: var(--vscode-list-inactiveSelectionBackground);
+	}
+	
+	&.vscode-high-contrast {
+		// Fixes the missing selection color if default dark theme is selected
+		--l13-selection-background: #6689af;
+		--l13-searchWidget-borderColor: #454545;
+		--l13-searchButton-backgroundColor-hover: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-intro-backgroundUrl: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxMzAgMTMwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zOnNlcmlmPSJodHRwOi8vd3d3LnNlcmlmLmNvbS8iIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MjsiPjxnIGlkPSJMMTMiIHRyYW5zZm9ybT0ibWF0cml4KDAuMjQwNzQxLDAsMCwwLjI0MDc0MSwtNy43MDM3LDcuMjU5MjcpIj48ZyBvcGFjaXR5PSIwLjEiPjxwYXRoIGlkPSJfMyIgc2VyaWY6aWQ9IjMiIGQ9Ik0zNjIsNDQ4TDM2MiwzODhMNDUyLDM4OEw0NTUuMDg4LDM4Ny45MjJDNDg2Ljc5MiwzODYuMzEyIDUxMiwzNjAuMSA1MTIsMzI4QzUxMiwyOTQuODYzIDQ4NS4xMzcsMjY4IDQ1MiwyNjhMNDUyLDI2OEwzOTIsMjY4TDM5MiwyMDhMNDUyLDIwOEw0NTUuMDg4LDIwNy45MjJDNDg2Ljc5MiwyMDYuMzEyIDUxMiwxODAuMSA1MTIsMTQ4QzUxMiwxMTQuODYzIDQ4NS4xMzcsODggNDUyLDg4TDM2Miw4OEwzNjIsMjhMNDUyLDI4TDQ1OC4xNzUsMjguMTU2QzUyMS41ODUsMzEuMzc2IDU3Miw4My44IDU3MiwxNDhDNTcyLDE4My44NTQgNTU2LjI3NSwyMTYuMDM2IDUzMS4zMywyMzhDNTU2LjI3NSwyNTkuOTY0IDU3MiwyOTIuMTQ2IDU3MiwzMjhDNTcyLDM5NC4yNzQgNTE4LjI3NCw0NDggNDUyLDQ0OEwzNjIsNDQ4WiIgc3R5bGU9ImZpbGw6d2hpdGU7Ii8+PHJlY3QgaWQ9Il8xIiBzZXJpZjppZD0iMSIgeD0iMjcyIiB5PSIyOCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQyMCIgc3R5bGU9ImZpbGw6d2hpdGU7Ii8+PHBhdGggaWQ9IkwiIGQ9Ik0zMiwyOEw5MiwyOEw5MiwzODhMMjQyLDM4OEwyNDIsNDQ4TDkyLDQ0OEM1OC44NjMsNDQ4IDMyLDQyMS4xMzcgMzIsMzg4TDMyLDI4WiIgc3R5bGU9ImZpbGw6d2hpdGU7Ii8+PC9nPjwvZz48L3N2Zz4=");
+		--l13-intro-color: #ffffff;
+		--l13-intro-keyBackgroundColor: hsla(0, 0%, 50%, .17);
+		--l13-intro-keyBorderColor: rgba(51, 51, 51, .6);
+		--l13-intro-keyColor: #ffffff;
+		--l13-intro-shadow:rgba(68, 68, 68, .6);
+		
+		--l13-scrollbar-background: hsla(0, 0%, 100%, 0.1);
+		
+		--l13-icon-background: #ffffff;
+		--l13-icon-activeBackground: #ffffff;
+		
+		--l13-context-hover-background: var(--vscode-editor-background);
+		--l13-context-active-background: var(--vscode-editor-background);
+		--l13-context-inactive-background: var(--vscode-editor-background);
+		
+		--l13-button-outline: solid 1px var(--vscode-contrastBorder);
+		
+		--l13-list-hover-outline: dashed 1px var(--vscode-contrastActiveBorder);
+		--l13-list-active-outline: solid 1px var(--vscode-contrastActiveBorder);
 	}
 }

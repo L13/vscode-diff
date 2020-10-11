@@ -33,6 +33,7 @@
 		
 		&:hover {
 			cursor: pointer;
+			outline: var(--l13-list-hover-outline, none);
 		}
 		
 		&:not([disabled]).-active {
