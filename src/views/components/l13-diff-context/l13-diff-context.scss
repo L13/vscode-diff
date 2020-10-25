@@ -22,6 +22,10 @@
 			}
 		}
 		
+		&:disabled {
+			opacity: .3;
+		}
+		
 		&:focus {
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
@@ -40,6 +44,14 @@
 			top: 0;
 			transition: background-color 0.1s;
 			width: 100%;
+		}
+		
+		&#open {
+			
+			&::before {
+				-webkit-mask-image: url('open-file.svg');
+				mask-image: url('open-file.svg');
+			}
 		}
 		
 		&#copy {

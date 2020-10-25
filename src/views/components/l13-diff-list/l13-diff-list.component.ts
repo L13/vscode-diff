@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
-import { Diff, DiffFile } from '../../../types';
-import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
+import { Diff, DiffFile, DiffStatus } from '../../../types';
+import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
@@ -12,10 +12,21 @@ import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } fro
 import styles from '../styles';
 import templates from '../templates';
 
+import { formatFileSize } from '../../../@l13/formats';
+
 //	Variables __________________________________________________________________
 
 enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
+
+const dateOptions = {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	hour: 'numeric',
+	minute: '2-digit',
+	second: '2-digit',
+};
 
 //	Initialize _________________________________________________________________
 
@@ -52,6 +63,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		super();
 		
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
+		this.context.vmId = 'context';
 		
 		this.addEventListener('focus', () => this.content.classList.add('-focus'));
 		this.addEventListener('blur', () => this.content.classList.remove('-focus'));
@@ -266,7 +278,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (element) {
 				if (element.childNodes.length) {
-					if (this.context.parentNode !== element) element.appendChild(this.context);
+					if (this.context.parentNode !== element) {
+						switch (element.getAttribute('data-type')) {
+							case 'file':
+							case 'symlink':
+								this.context.viewmodel.enableAll();
+								break;
+							case 'folder':
+								this.context.viewmodel.enableAll();
+								this.context.viewmodel.openDisabled = true;
+								break;
+							default:
+								this.context.viewmodel.disableAll();
+						}
+						element.appendChild(this.context);
+					}
 				} else this.context.remove();
 			}
 			
@@ -278,6 +304,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
+		
+		this.context.addEventListener('open', ({ target, detail }:any) => {
+			
+			if (this.disabled) return;
+			
+			const fsPath = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
+			
+			msg.send('open:file', { fsPath, openToSide: detail.altKey });
+			
+		});
 		
 		this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
@@ -547,29 +583,29 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public selectByStatus (type:string, addToSelection:boolean = false) {
+	public selectByStatus (typeOrTypes:DiffStatus|DiffStatus[], addToSelection:boolean = false) {
 		
 		if (!addToSelection) this.unselect();
 		
-		const elements = this.content.querySelectorAll(`l13-diff-list-row.-${type}`);
+		const types = typeof typeOrTypes === 'string' ? [typeOrTypes] : typeOrTypes;
+		let dispatchSelectedEvent = false;
 		
-		if (elements.length) {
-			elements.forEach((element) => element.classList.add('-selected'));
-			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
-			this.dispatchCustomEvent('selected');
+		for (const type of Object.values(types)) {
+			const elements = this.content.querySelectorAll(`l13-diff-list-row.-${type}`);
+			if (elements.length) {
+				elements.forEach((element) => element.classList.add('-selected'));
+				this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+				dispatchSelectedEvent = true;
+			}
 		}
+		
+		if (dispatchSelectedEvent) this.dispatchCustomEvent('selected');
 		
 	}
 	
 	public selectAll () {
 		
-		const elements = this.content.querySelectorAll(`l13-diff-list-row`);
-		
-		if (elements.length) {
-			elements.forEach((element) => element.classList.add('-selected'));
-			this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
-			this.dispatchCustomEvent('selected');
-		}
+		this.selectByStatus(['deleted', 'modified', 'untracked']);
 		
 	}
 	
@@ -649,7 +685,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			row.classList.add('-' + diff.status);
 			row.setAttribute('data-status', diff.status);
-			row.setAttribute('data-id', '' + diff.id);
+			row.setAttribute('data-id', diff.id);
 			
 			appendColumn(row, diff, fileA, detectExistingFolder(fileA, foldersB, foldersA));
 			appendColumn(row, diff, fileB, detectExistingFolder(fileB, foldersA, foldersB));
@@ -714,8 +750,16 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	
 	if (file) {
 		column.classList.add(`-${file.type}`);
+		column.setAttribute('data-type', file.type);
 		column.setAttribute('data-fs-path', file.fsPath);
 		column.title = file.fsPath;
+		
+		if (file.stat) {
+			column.title += `
+Size: ${formatFileSize(file.stat.size)}
+Created: ${new Date(file.stat.birthtime).toLocaleDateString(language, dateOptions)}
+Modified: ${new Date(file.stat.mtime).toLocaleDateString(language, dateOptions)}`;
+		}
 		
 		if (file.ignore) {
 			 if (!diff.fileA) column.classList.add('-untracked');

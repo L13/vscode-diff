@@ -127,7 +127,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => {
 			
-			if (!this.left.focused && !this.right.focused) {
+			if (!this.left.focused && !this.right.focused && !search.focused) {
 				event.stopPropagation();
 				event.preventDefault();
 				this.initCompare();
@@ -137,7 +137,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		addKeyListener(window, { key: 'Alt+Ctrl+C', mac: 'Alt+Cmd+C' }, () => {
 			
-			if (!this.left.focused && !this.right.focused) {
+			if (!this.left.focused && !this.right.focused && !search.focused) {
 				event.stopPropagation();
 				event.preventDefault();
 				msg.send('compare:multi');

@@ -28,6 +28,9 @@ import templates from '../templates';
 })
 export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel> {
 	
+	@L13Query('#open')
+	public buttonOpen:HTMLButtonElement;
+	
 	@L13Query('#copy')
 	public buttonCopy:HTMLButtonElement;
 	
@@ -41,14 +44,17 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 	
 		super();
 		
+		setLabel(this.buttonOpen, 'Open');
 		setLabel(this.buttonCopy, 'Copy');
 		setLabel(this.buttonDelete, 'Delete');
 		setLabel(this.buttonReveal, isMacOs ? 'Reveal in Finder' : isWindows ? 'Reveal in Explorer' : 'Open Containing Folder');
 		
+		addButtonActiveStyleEvents(this.buttonOpen);
 		addButtonActiveStyleEvents(this.buttonCopy);
 		addButtonActiveStyleEvents(this.buttonDelete);
 		addButtonActiveStyleEvents(this.buttonReveal);
 		
+		this.buttonOpen.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('open', { altKey }));
 		this.buttonCopy.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('copy', { altKey }));
 		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
 		this.buttonReveal.addEventListener('click', () => this.dispatchCustomEvent('reveal'));

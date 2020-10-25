@@ -93,8 +93,11 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			if (useFiles && diff.type === 'file'
 				|| useFolders && diff.type === 'folder'
 				|| useSymlinks && diff.type === 'symlink'
-				|| useConflicts && diff.type === 'mixed') {
-				return searchterm ? regexp.test(diff.id) : true;
+				|| useConflicts && (diff.type === 'error' || diff.type === 'mixed' || diff.type === 'unknown')) {
+				if (!searchterm) return true;
+				const fileA = diff.fileA;
+				const fileB = diff.fileB;
+				return fileA && regexp.test(fileA.relative) || fileB && regexp.test(fileB.relative);
 			}
 			
 			return false;

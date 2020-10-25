@@ -149,11 +149,11 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, excludes:string[], useCaseSensitive:boolean) {
+	public async scanFolder (dirname:string, abortOnError:boolean, excludes:string[], useCaseSensitive:boolean) {
 		
 		this._onStartScanFolder.fire(dirname);
 		
-		const result = await walkTree(dirname, { excludes, useCaseSensitive });
+		const result = await walkTree(dirname, { abortOnError, excludes, useCaseSensitive });
 		
 		this._onEndScanFolder.fire(result);
 		
@@ -163,6 +163,7 @@ export class DiffCompare {
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
+		const abortOnError = settings.get('abortOnError', true);
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
 		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
@@ -176,8 +177,8 @@ export class DiffCompare {
 			}
 		}
 		
-		const resultA:StatsMap = await this.scanFolder(dirnameA, exludes, useCaseSensitive);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, exludes, useCaseSensitive);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, abortOnError, exludes, useCaseSensitive);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, abortOnError, exludes, useCaseSensitive);
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		

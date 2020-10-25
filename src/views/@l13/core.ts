@@ -23,6 +23,7 @@ export * from './keybindings/keybindings';
 
 export * from './messages/message.class';
 
+export * from './os/languages';
 export * from './os/platforms';
 
 //	Functions __________________________________________________________________

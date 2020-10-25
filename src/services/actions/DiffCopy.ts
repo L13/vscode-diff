@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+import { formatAmount } from '../../@l13/formats';
+import { pluralFiles } from '../../@l13/units/files';
 import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse';
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
@@ -70,7 +72,7 @@ export class DiffCopy {
 		if (!length) return;
 		
 		if (confirmCopy && !data.multi) {
-			const text = `Copy ${length > 1 ? length + ' files' : `"${data.diffs[0].id}"`} to "${(<any>data)['path' + to]}"?`;
+			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)['path' + to]}"?`;
 			const value = await dialogs.confirm(text, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
 				
 			if (value) {
@@ -89,7 +91,7 @@ export class DiffCopy {
 		if (!length) return;
 		
 		const folderFrom = from === 'left' ? data.pathA : data.pathB;
-		const text = `Copy ${length > 1 ? length + ' files' : `"${ids[0]}"`} from "${folderFrom}" across all diff panels?`;
+		const text = `Copy ${formatAmount(length, pluralFiles)} from "${folderFrom}" across all diff panels?`;
 		const value = await dialogs.confirm(text, 'Copy');
 		
 		if (value) this._onInitMultiCopy.fire({ data, from });

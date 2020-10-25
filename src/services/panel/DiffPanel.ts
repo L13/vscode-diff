@@ -3,12 +3,13 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffCopyMessage, DiffError, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
-import { formatAmount, formatNameAndDesc } from '../@l13/formats';
+import { formatAmount } from '../../@l13/formats';
+import { pluralEntries } from '../../@l13/units/files';
+import { formatNameAndDesc } from '../@l13/formats';
 import { isMacOs, isWindows } from '../@l13/platforms';
-import { pluralEntries } from '../@l13/units/files';
 
 import * as dialogs from '../../common/dialogs';
 import * as files from '../../common/files';
@@ -21,7 +22,7 @@ import { DiffOpen } from '../actions/DiffOpen';
 import { DiffOutput } from '../output/DiffOutput';
 import { DiffResult } from '../output/DiffResult';
 import { DiffStats } from '../output/DiffStats';
-import { DiffStatus } from '../output/DiffStatus';
+import { DiffStatusbar } from '../output/DiffStatusbar';
 import { DiffFavorites } from '../sidebar/DiffFavorites';
 import { DiffHistory } from '../sidebar/DiffHistory';
 import { DiffMenu } from './DiffMenu';
@@ -31,7 +32,10 @@ const { floor, random } = Math;
 
 //	Variables __________________________________________________________________
 
+const findLanguage = /^[a-z]{2,3}(-[A-Z]{2,3})?$/;
+
 const platform = isMacOs ? 'mac' : isWindows ? 'win' : 'linux';
+const language = findLanguage.test(vscode.env.language) ? vscode.env.language : 'en';
 
 const PANEL_STATE = 'panelState';
 
@@ -51,7 +55,7 @@ export class DiffPanel {
 	private readonly panel:vscode.WebviewPanel;
 	private readonly context:vscode.ExtensionContext;
 	
-	private readonly status:DiffStatus;
+	private readonly status:DiffStatusbar;
 	private readonly output:DiffOutput;
 	
 	private readonly msg:DiffMessage;
@@ -71,7 +75,7 @@ export class DiffPanel {
 		
 		this.msg = new DiffMessage(panel, this.disposables);
 		
-		this.status = new DiffStatus(context);
+		this.status = new DiffStatusbar(context);
 		this.output = new DiffOutput();
 		
 		this.copy = new DiffCopy();
@@ -198,7 +202,7 @@ export class DiffPanel {
 		
 		this.compare.onDidUpdateDiff((diff:Diff) => {
 			
-			this.output.log(`Compared "${diff.id}" again. Status is now "${diff.status}"`);
+			this.output.log(`Compared "${formatPath(diff)}" again. Status is now "${diff.status}"`);
 			
 		}, null, this.disposables);
 		
@@ -271,13 +275,22 @@ export class DiffPanel {
 		this.msg.on('open:diffToSide', (diff:Diff) => DiffOpen.open(diff, true));
 		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, settings.get('openToSide', false)));
 		
-		this.msg.on('reveal:file', (pathname:string) => files.reveal(pathname));
+		this.msg.on('open:file', ({ fsPath, openToSide }) => DiffOpen.openFile(fsPath, openToSide));
+		this.msg.on('reveal:file', (fsPath:string) => files.reveal(fsPath));
 		
-		this.msg.on('open:dialog', async () => {
+		this.msg.on('dialog:file', async () => {
 			
-			const fsPath = await dialogs.open();
+			const fsPath = await dialogs.openFile();
 			
-			this.msg.send('open:dialog', { fsPath });
+			this.msg.send('dialog:file', { fsPath });
+			
+		});
+		
+		this.msg.on('dialog:folder', async () => {
+			
+			const fsPath = await dialogs.openFolder();
+			
+			this.msg.send('dialog:folder', { fsPath });
 			
 		});
 		
@@ -394,7 +407,7 @@ export class DiffPanel {
 		const csp = `default-src 'none'; img-src ${webview.cspSource} data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonceToken}';`;
 		
 		return `<!DOCTYPE html>
-		<html lang="en">
+		<html lang="${language}">
 			<head>
 				<meta charset="UTF-8">
 				<meta http-equiv="Content-Security-Policy" content="${csp}">
@@ -413,7 +426,7 @@ export class DiffPanel {
 				<link rel="stylesheet" nonce="${nonceToken}" href="${webview.asWebviewUri(styleUri)}">
 				<script nonce="${nonceToken}" src="${webview.asWebviewUri(scriptUri)}"></script>
 			</head>
-			<body class="platform-${platform}"></body>
+			<body class="platform-${platform} language-${language}"></body>
 		</html>`;
 		
 	}
@@ -531,5 +544,14 @@ function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
 	
 	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
+	
+}
+
+function formatPath (diff:Diff) {
+	
+	const relativeA = diff.fileA.relative;
+	const relativeB = diff.fileB.relative;
+	
+	return relativeA === relativeB ? relativeA : `${relativeA}" and "${relativeB}`;
 	
 }

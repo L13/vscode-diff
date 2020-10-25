@@ -13,6 +13,7 @@ import { DiffFile } from '../../@types/diffs';
 //	Exports ____________________________________________________________________
 
 export type WalkTreeOptions = {
+	abortOnError:boolean,
 	excludes?:string[],
 	useCaseSensitive?:boolean,
 };
@@ -23,6 +24,7 @@ export type StatsMap = {
 
 export type WalkTreeJob = {
 	error:null|Error,
+	abort:boolean,
 	ignore:null|RegExp,
 	tasks:number,
 	result:StatsMap,

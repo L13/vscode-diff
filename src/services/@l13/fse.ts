@@ -74,6 +74,7 @@ export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap
 			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes, options.useCaseSensitive) : null,
 			result: {},
 			tasks: 1,
+			abort: options.abortOnError ?? true,
 			done: (error?:Error) => {
 				
 				if (error) {
@@ -172,16 +173,21 @@ function addFile (result:any, type:string, stat:fs.Stats, fsPath:string, root:st
 
 function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 	
-	if (job.error) return; // If error no further actions
+	if (job.abort && job.error) return; // If error no further actions
 	
 	const dirname = path.join(cwd, relative);
 	
 	fs.readdir(dirname, (dirError, names) => {
 		
-		if (job.error) return; // If error no further actions
-		if (dirError) return job.done(dirError);
+		if (job.abort) {
+			if (job.error) return;
+			if (dirError) return job.done(dirError);
+		}
 		
 		job.tasks--; // directory read
+		
+		if (dirError) return !job.tasks ? job.done() : undefined;
+		
 		job.tasks += names.length;
 		
 		if (!job.tasks) return job.done();
@@ -192,8 +198,10 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 			
 			fs.lstat(pathname, (statError, stat) => {
 				
-				if (job.error) return; // If error no further actions
-				if (statError) return job.done(statError);
+				if (job.abort) {
+					if (job.error) return;
+					if (statError) return job.done(statError);
+				}
 				
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
@@ -201,15 +209,18 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				
 				currentDirname = currentDirname === '.' ? '' : currentDirname + path.sep;
 				
-				if (stat.isDirectory()) {
-					addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-					if (!ignore) return _walktree(job, cwd, currentRelative);
+				if (statError) {
+					addFile(job.result, 'error', null, pathname, cwd, currentRelative, currentDirname, true);
+				} else {
+					if (stat.isDirectory()) {
+						addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+						if (!ignore) return _walktree(job, cwd, currentRelative);
+					}else if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					else addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
 				}
 				
 				job.tasks--;
-				
-				if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-				else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 				
 				if (!job.tasks) job.done();
 				
