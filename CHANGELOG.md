@@ -1,18 +1,19 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [0.30.0] - 2020-10-25
+## [0.30.0] - 2020-11-01
 
 ### Added
 - Added property `l13Diff.abortOnError` to ignore errors during the scan process.
-- Added new file types `error` and `unknown` if an error or unknown type is found.
+- Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
 - Added `Alt + Click` for left and right input icon to pick a file by dialog.
-- Added `Open` to context menu. `Click` open file and `Alt + Click` open to side.
+- Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
 - Added file info for size, created and modified to tooltip in list view.
 
 ### Fixed
 - Fixed display path in copy dialogs and recompared updates.
 - Fixed `Cmd + C` for input field in search widget.
+- Fixed common path in panel title.
 
 ## [0.29.0] - 2020-10-11
 

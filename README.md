@@ -7,9 +7,9 @@ Compare two folders in Visual Studio Code.
 ## What's new in Diff Folders 0.30.0
 
 - Added property `l13Diff.abortOnError` to ignore errors during the scan process.
-- Added new file types `error` and `unknown` if an error or unknown type is found.
+- Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
 - Added `Alt + Click` for left and right input icon to pick a file by dialog.
-- Added `Open` to context menu. `Click` open file and `Alt + Click` open to side.
+- Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
 - Added file info for size, created and modified to tooltip in list view.
 
 ## Index

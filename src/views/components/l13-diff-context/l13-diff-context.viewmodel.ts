@@ -14,7 +14,7 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffContextViewModel extends ViewModel {
 	
-	private _openDisabled:boolean = false;
+	private _gotoDisabled:boolean = false;
 	
 	private _copyDisabled:boolean = false;
 	
@@ -22,15 +22,15 @@ export class L13DiffContextViewModel extends ViewModel {
 	
 	private _deleteDisabled:boolean = false;
 	
-	get openDisabled () :boolean {
+	get gotoDisabled () :boolean {
 		
-		return this._openDisabled;
+		return this._gotoDisabled;
 		
 	}
 	
-	set openDisabled (value:boolean) {
+	set gotoDisabled (value:boolean) {
 		
-		this._openDisabled = value;
+		this._gotoDisabled = value;
 		this.requestUpdate();
 		
 	}
@@ -76,7 +76,7 @@ export class L13DiffContextViewModel extends ViewModel {
 	
 	public enableAll () {
 		
-		this._openDisabled = false;
+		this._gotoDisabled = false;
 		this._copyDisabled = false;
 		this._revealDisabled = false;
 		this._deleteDisabled = false;
@@ -87,7 +87,7 @@ export class L13DiffContextViewModel extends ViewModel {
 	
 	public disableAll () {
 		
-		this._openDisabled = true;
+		this._gotoDisabled = true;
 		this._copyDisabled = true;
 		this._revealDisabled = true;
 		this._deleteDisabled = true;

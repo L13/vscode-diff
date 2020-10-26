@@ -23,6 +23,7 @@
 		}
 		
 		&:disabled {
+			cursor: default;
 			opacity: .3;
 		}
 		
@@ -46,19 +47,19 @@
 			width: 100%;
 		}
 		
-		&#open {
-			
-			&::before {
-				-webkit-mask-image: url('open-file.svg');
-				mask-image: url('open-file.svg');
-			}
-		}
-		
 		&#copy {
 			
 			&::before {
 				-webkit-mask-image: url('copy-file.svg');
 				mask-image: url('copy-file.svg');
+			}
+		}
+		
+		&#goto {
+			
+			&::before {
+				-webkit-mask-image: url('open-file.svg');
+				mask-image: url('open-file.svg');
 			}
 		}
 		

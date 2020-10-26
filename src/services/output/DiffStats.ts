@@ -54,11 +54,10 @@ export class DiffStats {
 		
 		result.diffs.forEach((diff:Diff) => {
 			
-			if (diff.status !== 'ignored') {
-				if (diff.fileA) countFileStates(this.pathA, diff.fileA);
-				if (diff.fileB) countFileStates(this.pathB, diff.fileB);
-				countAllStats(this.all, this.pathA, this.pathB);
-			}
+			if (diff.fileA) countFileStats(this.pathA, diff.fileA);
+			if (diff.fileB) countFileStats(this.pathB, diff.fileB);
+			
+			countAllStats(this.all, this.pathA, this.pathB);
 			
 			if (diff.status === 'conflicting') countDetailStats(this.conflicting, diff);
 			else if (diff.status === 'deleted') countDetailStats(this.deleted, diff);
@@ -105,7 +104,7 @@ UPDATES
 
 //	Functions __________________________________________________________________
 
-function countFileStates (stats:DetailStats|FolderStats, file:DiffFile) {
+function countFileStats (stats:DetailStats|FolderStats, file:DiffFile) {
 	
 	stats.entries++;
 	
@@ -138,8 +137,8 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 	if (diff.ignoredEOL) stats.ignoredEOL++;
 	if (diff.ignoredWhitespace) stats.ignoredWhitespace++;
 	
-	if (diff.fileA) countFileStates(stats, diff.fileA);
-	if (diff.fileB) countFileStates(stats, diff.fileB);
+	if (diff.fileA) countFileStats(stats, diff.fileA);
+	if (diff.fileB) countFileStats(stats, diff.fileB);
 	
 	
 }

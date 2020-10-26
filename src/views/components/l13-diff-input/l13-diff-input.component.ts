@@ -167,7 +167,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		this.button.addEventListener('click', (event:MouseEvent) => {
 			
 			if (!eventName) {
-				eventName = `open:${event.altKey ? 'file' : 'folder'}`;
+				eventName = `dialog:${event.altKey ? 'file' : 'folder'}`;
 				
 				msg.on(eventName, openListener);
 				msg.send(eventName);

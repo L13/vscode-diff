@@ -171,9 +171,9 @@ export class DiffPanel {
 			this.output.log('Creating stats for diff result.');
 			
 			const diffStats = new DiffStats(data);
-			const allEntries = diffStats.all.entries;
 			const ignoredEntries = diffStats.ignored.entries;
-			let text = `Compared ${formatAmount(allEntries, pluralEntries)}`;
+			const comparedEntries = diffStats.all.entries - ignoredEntries;
+			let text = `Compared ${formatAmount(comparedEntries, pluralEntries)}`;
 			
 			this.status.update(text);
 			
@@ -182,7 +182,7 @@ export class DiffPanel {
 			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!allEntries) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!comparedEntries) vscode.window.showInformationMessage('No files or folders to compare!');
 			
 			this.msg.send('create:diffs', data);
 			
@@ -369,7 +369,7 @@ export class DiffPanel {
 		
 		if (pathA && pathB) {
 			const [label, desc] = formatNameAndDesc(pathA, pathB);
-			title = `${label} (${desc})`;
+			title = desc ? `${label} (${desc})` : label;
 		}
 		
 		this.panel.title = title;
