@@ -270,6 +270,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		let contextTimeoutId:NodeJS.Timeout = null;
+		
 		this.content.addEventListener('mouseover', ({ target }) => {
 			
 			if (<HTMLElement>target === this.context) return;
@@ -277,28 +279,46 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
 			
 			if (element) {
+				const context = this.context;
+				const contextParentNode = context.parentNode;
 				if (element.childNodes.length) {
-					if (this.context.parentNode !== element) {
-						switch (element.getAttribute('data-type')) {
-							case 'file':
-							case 'symlink':
-								this.context.viewmodel.enableAll();
-								break;
-							case 'folder':
-								this.context.viewmodel.enableAll();
-								this.context.viewmodel.openDisabled = true;
-								break;
-							default:
-								this.context.viewmodel.disableAll();
-						}
-						element.appendChild(this.context);
+					if (contextParentNode !== element) {
+						if (contextTimeoutId) clearTimeout(contextTimeoutId);
+						if (contextParentNode) context.remove();
+						contextTimeoutId = setTimeout(() => {
+							
+							const viewmodel = context.viewmodel;
+							
+							switch (element.getAttribute('data-type')) {
+								case 'file':
+								case 'symlink':
+									viewmodel.enableAll();
+									break;
+								case 'folder':
+									viewmodel.enableAll();
+									viewmodel.gotoDisabled = true;
+									break;
+								default:
+									viewmodel.disableAll();
+							}
+							element.appendChild(context);
+							
+						}, 300);
 					}
-				} else this.context.remove();
+				} else {
+					if (contextTimeoutId) clearTimeout(contextTimeoutId);
+					if (contextParentNode) context.remove();
+				}
 			}
 			
 		});
 		
-		this.content.addEventListener('mouseleave', () => this.context.remove());
+		this.content.addEventListener('mouseleave', () => {
+			
+			if (contextTimeoutId) clearTimeout(contextTimeoutId);
+			if (this.context.parentNode) this.context.remove();
+			
+		});
 		
 	//	context menu
 		

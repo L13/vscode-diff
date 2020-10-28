@@ -31,6 +31,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		useFolders: true,
 		useSymlinks: true,
 		useConflicts: true,
+		useOthers: true,
 		regexp: null,
 		items: [],
 		filteredItems: [],
@@ -56,6 +57,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		const useFolders = vm.useFolders;
 		const useSymlinks = vm.useSymlinks;
 		const useConflicts = vm.useConflicts;
+		const useOthers = vm.useOthers;
 		
 		if (items === cache.items
 			&& cache.searchterm === searchterm
@@ -65,6 +67,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			&& cache.useFolders === useFolders
 			&& cache.useSymlinks === useSymlinks
 			&& cache.useConflicts === useConflicts
+			&& cache.useOthers === useOthers
 			) {
 			return cache.filteredItems;
 		}
@@ -87,13 +90,15 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		cache.useFolders = useFolders;
 		cache.useSymlinks = useSymlinks;
 		cache.useConflicts = useConflicts;
+		cache.useOthers = useOthers;
 		
 		return cache.filteredItems = items.filter((diff:Diff) => {
 			
 			if (useFiles && diff.type === 'file'
 				|| useFolders && diff.type === 'folder'
 				|| useSymlinks && diff.type === 'symlink'
-				|| useConflicts && (diff.type === 'error' || diff.type === 'mixed' || diff.type === 'unknown')) {
+				|| useConflicts && diff.type === 'mixed'
+				|| useOthers && (diff.type === 'error' || diff.type === 'unknown')) {
 				if (!searchterm) return true;
 				const fileA = diff.fileA;
 				const fileB = diff.fileB;

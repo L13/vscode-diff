@@ -8,6 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added property `l13Diff.abortOnError` to ignore errors during the scan process.
 - Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
+- Added `Show Errors and Others` button to search widget to filter new list types `error` and `unknown`.
 - Added `Alt + Click` for left and right input icon to pick a file by dialog.
 - Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
 - Added file info for size, created and modified to tooltip in list view.

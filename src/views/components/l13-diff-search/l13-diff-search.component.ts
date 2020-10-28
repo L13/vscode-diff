@@ -54,6 +54,9 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	@L13Query('#l13_use_conflicts')
 	private inputConflicts:HTMLInputElement;
 	
+	@L13Query('#l13_use_others')
+	private inputOthers:HTMLInputElement;
+	
 	@L13Query('button')
 	private button:HTMLButtonElement;
 		
@@ -73,6 +76,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		setLabel(this.inputFolders, 'Show Folders');
 		setLabel(this.inputSymlinks, 'Show Symbolic Links');
 		setLabel(this.inputConflicts, 'Show Conflicts');
+		setLabel(this.inputOthers, 'Show Errors and Others');
 		setLabel(this.button, 'Close', { key: 'Escape' });
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());

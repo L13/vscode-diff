@@ -6,6 +6,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Added
 - Added property `l13Diff.abortOnError` to ignore errors during the scan process.
 - Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
+- Added `Show Errors and Others` button to search widget to filter new list types `error` and `unknown`.
 - Added `Alt + Click` for left and right input icon to pick a file by dialog.
 - Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
 - Added file info for size, created and modified to tooltip in list view.
@@ -14,6 +15,12 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 - Fixed display path in copy dialogs and recompared updates.
 - Fixed `Cmd + C` for input field in search widget.
 - Fixed common path in panel title.
+- Fixed typo in views component. [Issue #59](https://github.com/L13/vscode-diff/issues/59)
+
+### Changed
+
+- Changed icon in search widget for conflicts.
+- Changed response time for context menu.
 
 ## [0.29.0] - 2020-10-11
 

@@ -168,7 +168,7 @@ export class DiffPanel {
 		
 		this.compare.onDidCompareFolders((data:DiffResult) => {
 			
-			this.output.log('Creating stats for diff result.');
+			this.output.log('Creating stats for diff result');
 			
 			const diffStats = new DiffStats(data);
 			const ignoredEntries = diffStats.ignored.entries;
