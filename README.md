@@ -4,9 +4,14 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.29.0
+## What's new in Diff Folders 0.30.0
 
-- Added high contrast theme support.
+- Added property `l13Diff.abortOnError` to ignore errors during the scan process.
+- Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
+- Added `Show Errors and Others` button to search widget to filter new list types `error` and `unknown`.
+- Added `Alt + Click` for left and right input icon to pick a file by dialog.
+- Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
+- Added file info for size, created and modified to tooltip in list view.
 
 ## Index
 
@@ -77,6 +82,7 @@ Compare two folders in Visual Studio Code.
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
+* `l13Diff.abortOnError` - If false scan process will not be canceled if an error occurs.
 * `l13Diff.useCaseSensitiveFileName` - Indiciates if filenames should be treated as case sensitive for a comparsion. This also affects the property `l13Diff.exclude`.
 	* `detect` - (default) Detect the file system case sensitivity.
 	* `on` - Enable case sensitive file names.
@@ -130,12 +136,17 @@ Compare two folders in Visual Studio Code.
 
 If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`.
 
-### Input/Menu
+### Input Menu
 
 * `Click` - Select a path in the menu.
 * `ArrowUp/ArrowDown` - Move the cursor to the previous/next list item in the menu.
 * `Enter` - If the menu is visible, the selected path will be filled in, otherwise a comparison starts.
 * `Escape` - Hide the menu if visible.
+
+### Input Icon
+
+* `Click` - Open dialog to pick a folder.
+* `Alt + Click` - Open dialog to pick a file.
 
 ### Swap Button
 

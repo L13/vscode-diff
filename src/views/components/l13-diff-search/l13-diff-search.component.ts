@@ -54,6 +54,9 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	@L13Query('#l13_use_conflicts')
 	private inputConflicts:HTMLInputElement;
 	
+	@L13Query('#l13_use_others')
+	private inputOthers:HTMLInputElement;
+	
 	@L13Query('button')
 	private button:HTMLButtonElement;
 		
@@ -61,22 +64,28 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	private resizerOffsetX:number = 0;
 	
+	public focused:boolean = false;
+	
 	public constructor () {
 		
 		super();
 		
-		setLabel(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+C' });
-		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Alt+Cmd+R' });
+		setLabel(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Cmd+Alt+C' });
+		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Cmd+Alt+R' });
 		setLabel(this.inputFiles, 'Show Files');
 		setLabel(this.inputFolders, 'Show Folders');
 		setLabel(this.inputSymlinks, 'Show Symbolic Links');
 		setLabel(this.inputConflicts, 'Show Conflicts');
+		setLabel(this.inputOthers, 'Show Errors and Others');
 		setLabel(this.button, 'Close', { key: 'Escape' });
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		
 		this.inputSearchterm.placeholder = 'Find';
+		
+		this.inputSearchterm.addEventListener('focus', () => this.focused = true);
+		this.inputSearchterm.addEventListener('blur', () => this.focused = false);
 		
 		this.inputSearchterm.addEventListener('dragover', (event) => event.preventDefault());
 		
@@ -105,6 +114,9 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 			
 			this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
 			this.viewmodel.requestUpdate();
+			
+			event.preventDefault();
+			event.stopPropagation();
 			
 		});
 		

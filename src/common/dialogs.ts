@@ -12,10 +12,22 @@ import * as vscode from 'vscode';
 
 //	Exports ____________________________________________________________________
 
-export async function open () {
+export async function openFile () {
 	
 	const uris = await vscode.window.showOpenDialog({
 		canSelectFiles: true,
+		canSelectFolders: false,
+		canSelectMany: false,
+	});
+	
+	return uris ? uris[0].fsPath : null;
+	
+}
+
+export async function openFolder () {
+	
+	const uris = await vscode.window.showOpenDialog({
+		canSelectFiles: false,
 		canSelectFolders: true,
 		canSelectMany: false,
 	});

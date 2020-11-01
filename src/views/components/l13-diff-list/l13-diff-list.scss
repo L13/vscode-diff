@@ -183,9 +183,11 @@ l13-diff-list-file {
 		padding-left: 31px;
 		width: calc(50% + 22px);
 		
+		&.-error::before,
 		&.-file::before,
 		&.-folder::before,
-		&.-symlink::before {
+		&.-symlink::before,
+		&.-unknown::before {
 			left: 10px;
 		}
 	}
@@ -195,9 +197,11 @@ l13-diff-list-file {
 		color: var(--vscode-list-focusForeground);
 	}
 	
+	&.-error::before,
 	&.-file::before,
 	&.-folder::before,
-	&.-symlink::before {
+	&.-symlink::before,
+	&.-unknown::before {
 		background: var(--l13-icon-background);
 		content: '';
 		display: block;
@@ -210,6 +214,14 @@ l13-diff-list-file {
 		position: absolute;
 		top: 2px;
 		width: 16px;
+	}
+	
+	&.-error {
+		
+		&::before {
+			-webkit-mask-image: url('list-error.svg');
+			mask-image: url('list-error.svg');
+		}
 	}
 	
 	&.-file {
@@ -244,6 +256,14 @@ l13-diff-list-file {
 		&::before {
 			-webkit-mask-image: url('list-symlink.svg');
 			mask-image: url('list-symlink.svg');
+		}
+	}
+	
+	&.-unknown {
+		
+		&::before {
+			-webkit-mask-image: url('list-unknown.svg');
+			mask-image: url('list-unknown.svg');
 		}
 	}
 	

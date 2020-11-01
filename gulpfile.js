@@ -207,6 +207,7 @@ gulp.task('script:tests', () => {
 			plugins: [
 				typescript({
 					include: [
+						'src/@l13/**/*.ts',
 						'src/services/@l13/**/*.ts',
 						'src/test/index.ts',
 					],

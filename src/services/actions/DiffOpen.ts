@@ -21,15 +21,16 @@ import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 export class DiffOpen {
 	
-	private static async openFile (file:DiffFile, openToSide:boolean) {
+	public static async openFile (fsPathOrFile:string|DiffFile, openToSide:boolean) {
 		
 		try {
-			const stat = await lstat(file.fsPath);
-			if (stat.isFile()) openFile(vscode.Uri.file(file.fsPath), openToSide);
+			const fsPath = typeof fsPathOrFile === 'string' ? fsPathOrFile : fsPathOrFile.fsPath;
+			const stat = await lstat(fsPath);
+			if (stat.isFile()) openFile(vscode.Uri.file(fsPath), openToSide);
 			// tslint:disable-next-line: no-unused-expression
 			else if (stat.isDirectory()) void 0;
-			else if (stat.isSymbolicLink()) openFile(SymlinkContentProvider.parse(file.fsPath), openToSide);
-			else vscode.window.showErrorMessage(`File can't be opened. "${file.path}" is not a file.`);
+			else if (stat.isSymbolicLink()) openFile(SymlinkContentProvider.parse(fsPath), openToSide);
+			else vscode.window.showErrorMessage(`File can't be opened. "${fsPath}" is not a file.`);
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
 		}
@@ -86,15 +87,6 @@ export class DiffOpen {
 
 //	Functions __________________________________________________________________
 
-function openFile (pathname:vscode.Uri, openToSide:boolean) {
-	
-	vscode.commands.executeCommand('vscode.open', pathname, {
-		preview: false,
-		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
-	});
-	
-}
-
 function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode.Uri, openToSide:boolean) {
 	
 	let title = '';
@@ -106,6 +98,17 @@ function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode
 	
 	vscode.commands.executeCommand('vscode.diff', left, right, title, {
 		preview: false,
+		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+	});
+	
+}
+
+
+
+export function openFile (uri:vscode.Uri, openToSide:boolean) {
+	
+	vscode.commands.executeCommand('vscode.open', uri, {
+		preview: true,
 		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 	});
 	

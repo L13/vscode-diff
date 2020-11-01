@@ -20,6 +20,7 @@ export type SearchCache = {
 	useFolders:boolean,
 	useSymlinks:boolean,
 	useConflicts:boolean,
+	useOthers:boolean,
 	regexp:RegExp,
 	items:Diff[],
 	filteredItems:Diff[],

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { detectPlatform, isMacOs, Message } from '../@l13/core';
+import { detectLanguage, detectPlatform, isMacOs, Message } from '../@l13/core';
 
 import icons from './icons';
 
@@ -14,6 +14,7 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 window.addEventListener('load', () => {
 	
 	detectPlatform();
+	detectLanguage();
 	initThemeChangeListener();
 	
 	document.body.appendChild(document.createElement('l13-diff'));

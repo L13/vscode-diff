@@ -20,6 +20,7 @@ export type SearchState = {
 	useFolders:boolean,
 	useSymlinks:boolean,
 	useConflicts:boolean,
+	useOthers:boolean,
 };
 
 export type ViewsState = {
