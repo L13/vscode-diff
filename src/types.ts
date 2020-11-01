@@ -22,7 +22,7 @@ export * from './services/@types/copy';
 export * from './services/@types/delete';
 export * from './services/@types/events';
 export * from './services/@types/favorites';
-export * from './services/@types/formats';
+export * from './@types/formats';
 export * from './services/@types/fse';
 export * from './services/@types/history';
 export * from './services/@types/panel';

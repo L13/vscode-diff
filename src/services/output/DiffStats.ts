@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { formatAmount, formatFileSize } from '../@l13/formats';
-import { pluralFiles, pluralFolders, pluralSymlinks } from '../@l13/units/files';
+import { formatAmount, formatFileSize } from '../../@l13/formats';
+import { pluralErrors, pluralFiles, pluralFolders, pluralOthers, pluralSymlinks } from '../../@l13/units/files';
 
 import { Diff, DiffFile } from '../../types';
 import { DiffResult } from './DiffResult';
@@ -54,11 +54,10 @@ export class DiffStats {
 		
 		result.diffs.forEach((diff:Diff) => {
 			
-			if (diff.status !== 'ignored') {
-				if (diff.fileA) countFileStates(this.pathA, diff.fileA);
-				if (diff.fileB) countFileStates(this.pathB, diff.fileB);
-				countAllStats(this.all, this.pathA, this.pathB);
-			}
+			if (diff.fileA) countFileStats(this.pathA, diff.fileA);
+			if (diff.fileB) countFileStats(this.pathB, diff.fileB);
+			
+			countAllStats(this.all, this.pathA, this.pathB);
 			
 			if (diff.status === 'conflicting') countDetailStats(this.conflicting, diff);
 			else if (diff.status === 'deleted') countDetailStats(this.deleted, diff);
@@ -105,14 +104,17 @@ UPDATES
 
 //	Functions __________________________________________________________________
 
-function countFileStates (stats:DetailStats|FolderStats, file:DiffFile) {
+function countFileStats (stats:DetailStats|FolderStats, file:DiffFile) {
 	
 	stats.entries++;
-	stats.size += file.stat.size;
+	
+	if (file.stat) stats.size += file.stat.size;
 	
 	if (file.type === 'file') stats.files++;
 	else if (file.type === 'folder') stats.folders++;
 	else if (file.type === 'symlink') stats.symlinks++;
+	else if (file.type === 'error') stats.errors++;
+	else if (file.type === 'unknown') stats.others++;
 	
 }
 
@@ -123,6 +125,8 @@ function countAllStats (stats:DetailStats, pathA:FolderStats, pathB:FolderStats)
 	stats.files = pathA.files + pathB.files;
 	stats.folders = pathA.folders + pathB.folders;
 	stats.symlinks = pathA.symlinks + pathB.symlinks;
+	stats.errors = pathA.errors + pathB.errors;
+	stats.others = pathA.others + pathB.others;
 	
 }
 
@@ -133,8 +137,8 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 	if (diff.ignoredEOL) stats.ignoredEOL++;
 	if (diff.ignoredWhitespace) stats.ignoredWhitespace++;
 	
-	if (diff.fileA) countFileStates(stats, diff.fileA);
-	if (diff.fileB) countFileStates(stats, diff.fileB);
+	if (diff.fileA) countFileStats(stats, diff.fileA);
+	if (diff.fileB) countFileStats(stats, diff.fileB);
 	
 	
 }
@@ -155,11 +159,7 @@ function formatTotal (stats:DetailStats) {
 	if ((<DetailStats>stats).ignoredWhitespace) ignored.push('whitespace');
 	
 	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
-	const entries:string[] = [];
-	
-	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
-	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
-	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
+	const entries:string[] = formatDetails(stats, info);
 	
 	return entries.length ? `${stats.total} (${entries.join(', ')})` : '0';
 	
@@ -167,12 +167,22 @@ function formatTotal (stats:DetailStats) {
 
 function formatEntries (stats:DetailStats|FolderStats) {
 	
-	const entries:string[] = [];
-	
-	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}`);
-	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
-	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
+	const entries:string[] = formatDetails(stats);
 	
 	return entries.length > 1 ? `${stats.entries} (${entries.join(', ')})` : entries[0] || '0';
+	
+}
+
+function formatDetails (stats:DetailStats|FolderStats, info:string = '') {
+	
+	const entries:string[] = [];
+	
+	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
+	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
+	if (stats.errors) entries.push(`${formatAmount(stats.errors, pluralErrors)}`);
+	if (stats.others) entries.push(`${formatAmount(stats.others, pluralOthers)}`);
+	
+	return entries;
 	
 }

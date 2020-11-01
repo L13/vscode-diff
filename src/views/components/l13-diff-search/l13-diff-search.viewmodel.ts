@@ -31,6 +31,8 @@ export class L13DiffSearchViewModel extends ViewModel {
 	
 	public useConflicts:boolean = true;
 	
+	public useOthers:boolean = true;
+	
 	private [SEARCHTERM]:string = '';
 	
 	public get searchterm () {
@@ -94,6 +96,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 			useFolders: this.useFolders,
 			useSymlinks: this.useSymlinks,
 			useConflicts: this.useConflicts,
+			useOthers: this.useOthers,
 		};
 		
 	}
@@ -107,6 +110,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		this.useFolders = state.useFolders;
 		this.useSymlinks = state.useSymlinks;
 		this.useConflicts = state.useConflicts;
+		this.useOthers = state.useOthers ?? this.useOthers; // Fix for extension update
 		
 		this.requestUpdate();
 		

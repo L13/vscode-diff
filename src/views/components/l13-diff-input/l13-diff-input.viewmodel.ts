@@ -49,19 +49,35 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	private openListener = (data:DiffOpenMessage) => {
+	private openFolderListener = (data:DiffOpenMessage) => {
 			
 		if (data.fsPath) this.value = data.fsPath;
 		
-		msg.removeMessageListener('open:dialog', this.openListener);
+		msg.removeMessageListener('dialog:folder', this.openFolderListener);
 		
 	}
 		
-	public openDialog () {
+	public openFolder () {
 		
-		msg.on('open:dialog', this.openListener);
+		msg.on('dialog:folder', this.openFolderListener);
 		
-		msg.send('open:dialog');
+		msg.send('dialog:folder');
+		
+	}
+	
+	private openFileListener = (data:DiffOpenMessage) => {
+			
+		if (data.fsPath) this.value = data.fsPath;
+		
+		msg.removeMessageListener('dialog:file', this.openFileListener);
+		
+	}
+		
+	public openFile () {
+		
+		msg.on('dialog:file', this.openFileListener);
+		
+		msg.send('dialog:file');
 		
 	}
 	

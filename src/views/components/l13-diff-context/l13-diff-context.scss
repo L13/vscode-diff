@@ -22,6 +22,11 @@
 			}
 		}
 		
+		&:disabled {
+			cursor: default;
+			opacity: .3;
+		}
+		
 		&:focus {
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
@@ -47,6 +52,14 @@
 			&::before {
 				-webkit-mask-image: url('copy-file.svg');
 				mask-image: url('copy-file.svg');
+			}
+		}
+		
+		&#goto {
+			
+			&::before {
+				-webkit-mask-image: url('open-file.svg');
+				mask-image: url('open-file.svg');
 			}
 		}
 		

@@ -31,27 +31,33 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 	@L13Query('#copy')
 	public buttonCopy:HTMLButtonElement;
 	
-	@L13Query('#delete')
-	public buttonDelete:HTMLButtonElement;
+	@L13Query('#goto')
+	public buttonGoto:HTMLButtonElement;
 	
 	@L13Query('#reveal')
 	public buttonReveal:HTMLButtonElement;
+	
+	@L13Query('#delete')
+	public buttonDelete:HTMLButtonElement;
 		
 	public constructor () {
 	
 		super();
 		
 		setLabel(this.buttonCopy, 'Copy');
-		setLabel(this.buttonDelete, 'Delete');
+		setLabel(this.buttonGoto, 'Go to File');
 		setLabel(this.buttonReveal, isMacOs ? 'Reveal in Finder' : isWindows ? 'Reveal in Explorer' : 'Open Containing Folder');
+		setLabel(this.buttonDelete, 'Delete');
 		
 		addButtonActiveStyleEvents(this.buttonCopy);
-		addButtonActiveStyleEvents(this.buttonDelete);
+		addButtonActiveStyleEvents(this.buttonGoto);
 		addButtonActiveStyleEvents(this.buttonReveal);
+		addButtonActiveStyleEvents(this.buttonDelete);
 		
 		this.buttonCopy.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('copy', { altKey }));
-		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
+		this.buttonGoto.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('open', { altKey }));
 		this.buttonReveal.addEventListener('click', () => this.dispatchCustomEvent('reveal'));
+		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
 		
 	}
 	

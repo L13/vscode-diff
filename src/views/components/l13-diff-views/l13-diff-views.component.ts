@@ -48,7 +48,7 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 		
 		setLabel(this.unchanged, 'Show all unchanged files');
 		setLabel(this.deleted, 'Show all deleted files');
-		setLabel(this.modified, 'Show all modfied files');
+		setLabel(this.modified, 'Show all modified files');
 		setLabel(this.untracked, 'Show all created files');
 		setLabel(this.ignored, 'Show all ignored files');
 		
