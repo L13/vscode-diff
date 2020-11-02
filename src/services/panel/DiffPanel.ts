@@ -3,7 +3,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffGoToMessage, DiffInitMessage, DiffMultiCopyMessage, DiffOpenMessage, StatsMap, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
 import { formatAmount } from '../../@l13/formats';
@@ -272,10 +272,22 @@ export class DiffPanel {
 		
 	//	open
 		
-		this.msg.on('open:diffToSide', (diff:Diff) => DiffOpen.open(diff, true));
-		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, settings.get('openToSide', false)));
+		this.msg.on('open:diff', ({ diffs, openToSide }:DiffOpenMessage) => {
+			
+			openToSide = openToSide ?? settings.get('openToSide', false);
+			
+			diffs.forEach((diff, index) => DiffOpen.open(diff, index === 0 && openToSide));
+			
+		});
 		
-		this.msg.on('open:file', ({ fsPath, openToSide }) => DiffOpen.openFile(fsPath, openToSide));
+		this.msg.on('goto:file', ({ files, openToSide }:DiffGoToMessage) => {
+			
+			openToSide = openToSide ?? settings.get('openToSide', false);
+			
+			files.forEach((file, index) => DiffOpen.openFile(file, index === 0 && openToSide));
+			
+		});
+		
 		this.msg.on('reveal:file', (fsPath:string) => files.reveal(fsPath));
 		
 		this.msg.on('dialog:file', async () => {

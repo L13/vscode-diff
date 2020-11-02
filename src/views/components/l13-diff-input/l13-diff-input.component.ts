@@ -8,7 +8,7 @@ import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
 import { DiffFile } from '../../../@types/diffs';
-import { DiffOpenMessage } from '../../../@types/messages';
+import { DiffDialogMessage } from '../../../@types/messages';
 
 import { addButtonActiveStyleEvents, msg, parseIcons } from '../common';
 import styles from '../styles';
@@ -154,11 +154,11 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		let eventName:string = null;
 		
-		const openListener = (data:DiffOpenMessage) => {
+		const dialogListener = (data:DiffDialogMessage) => {
 			
 			if (data.fsPath) this.viewmodel.value = data.fsPath;
 			
-			msg.removeMessageListener(eventName, openListener);
+			msg.removeMessageListener(eventName, dialogListener);
 			
 			eventName = null;
 			
@@ -169,7 +169,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			if (!eventName) {
 				eventName = `dialog:${event.altKey ? 'file' : 'folder'}`;
 				
-				msg.on(eventName, openListener);
+				msg.on(eventName, dialogListener);
 				msg.send(eventName);
 			}
 			

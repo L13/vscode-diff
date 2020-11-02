@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffResultMessage } from '../../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffGoToMessage, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { L13DiffListPipe } from './l13-diff-list.interface';
 
@@ -252,7 +252,24 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private getDiffsByIds (ids:string[]) {
+	public getGoToListByIds (ids:string[], side:'left'|'right') {
+		
+		const items = ids.map((id) => this.map[id]);
+		const files:DiffFile[] = [];
+		
+		items.forEach((diff:Diff) => {
+			
+			const file = side === 'left' && diff.fileA || side === 'right' && diff.fileB;
+			
+			if (file) files.push(file);
+			
+		});
+		
+		return files;
+		
+	}
+	
+	private getDiffsByIds (ids:string[]) :DiffResultMessage {
 		
 		const items = ids.map((id) => this.map[id]);
 		
@@ -264,7 +281,15 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public copy (from:'left'|'right', ids:string[]) :void {
+	public open (ids:string[], openToSide:boolean) :void {
+		
+		const diffResult = this.getDiffsByIds(ids);
+		
+		if (diffResult.diffs.length) msg.send('open:diff', { ...diffResult, openToSide });
+		
+	}
+	
+	public copy (ids:string[], from:'left'|'right') :void {
 		
 		const diffResult = this.getCopyListByIds(ids, from);
 		
@@ -272,7 +297,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public multiCopy (from:'left'|'right', ids:string[]) :void {
+	public multiCopy (ids:string[], from:'left'|'right') :void {
 		
 		if (this.diffResult.pathA && this.diffResult.pathB) {
 			msg.send(`multi-copy:${from}`, {
@@ -295,6 +320,14 @@ export class L13DiffListViewModel extends ViewModel {
 				msg.send(`copy:${from}`, diffCopy);
 			}
 		}
+		
+	}
+	
+	public goto (ids:string[], side:'left'|'right', openToSide:boolean) :void {
+		
+		const files = this.getGoToListByIds(ids, side);
+		
+		if (files.length) msg.send('goto:file', { files, openToSide });
 		
 	}
 	

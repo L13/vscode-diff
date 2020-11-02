@@ -215,7 +215,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 					if (stat.isDirectory()) {
 						addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 						if (!ignore) return _walktree(job, cwd, currentRelative);
-					}else if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					} else if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 					else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 					else addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
 				}

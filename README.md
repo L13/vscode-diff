@@ -230,6 +230,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### All platforms
 
 * `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied. This button supports copying files to multiple folders at once with `Alt + Click`, too. Please read the description for `Copy files to the left/right folder` to see how it works.
+* `Go to File` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be opened. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
 * `Delete` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be deleted. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
 
 #### macOS

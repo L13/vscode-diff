@@ -140,7 +140,6 @@ export class DiffCompare {
 		
 	}
 	
-	
 	private onError (error:string|Error, pathA:string, pathB:string) {
 		
 		vscode.window.showErrorMessage(`${error}`);

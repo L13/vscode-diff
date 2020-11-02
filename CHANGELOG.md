@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.30.1] - 2020-11-08
+
+### Fixed
+- Fixed `Go to File` for multiple files.
+- Fixed missing description in README for `Go to File`.
+- Fixed open to side for multiple files.
+
 ## [0.30.0] - 2020-11-01
 
 ### Added

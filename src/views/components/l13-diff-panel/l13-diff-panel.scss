@@ -18,7 +18,7 @@ l13-diff-loading {
 	z-index: 4;
 	
 	&::after {
-		animation: loading 2s linear infinite;
+		animation: loading 4s linear infinite;
 		background: linear-gradient(90deg, transparent 0%, var(--vscode-progressBar-background) 20%, var(--vscode-progressBar-background) 80%, transparent 100%) no-repeat;
 		bottom: 0;
 		content: '';
@@ -35,7 +35,7 @@ l13-diff-loading {
 		width: 3%;
 	}
 	50% {
-		width: 5%;
+		width: 8%;
 	}
 	100% {
 		left: 100%;

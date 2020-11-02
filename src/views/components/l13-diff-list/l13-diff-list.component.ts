@@ -84,11 +84,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.unselect();
 					break;
 				case 'Enter':
-					this.getIdsBySelection().forEach((id) => {
-						
-						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
-						
-					});
+					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
 					break;
 				case 'ArrowUp':
 					this.selectPreviousOrNext(PREVIOUS, event);
@@ -158,7 +154,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			msg.send(altKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
+			this.viewmodel.open([id], altKey);
 			
 		});
 		
@@ -325,16 +321,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
-		this.context.addEventListener('open', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fsPath = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
-			
-			msg.send('open:file', { fsPath, openToSide: detail.altKey });
-			
-		});
-		
 		this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
 			if (this.disabled) return;
@@ -349,8 +335,35 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			this.dispatchCustomEvent('copy');
 			
-			if (detail.altKey) this.viewmodel.multiCopy(fileNode.nextElementSibling ? 'left' : 'right', ids);
-			else this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+			else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+			
+		});
+		
+		this.context.addEventListener('goto', ({ target, detail }:any) => {
+			
+			if (this.disabled) return;
+			
+			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const isSelected = rowNode.classList.contains('-selected');
+			const selections = this.getIdsBySelection();
+			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
+			
+			if (!isSelected) this.cacheCurrentSelections = selections;
+			
+			// this.dispatchCustomEvent('open');
+			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
+			
+		});
+		
+		this.context.addEventListener('reveal', ({ target }) => {
+			
+			if (this.disabled) return;
+			
+			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
+			
+			msg.send('reveal:file', pathname);
 			
 		});
 		
@@ -368,16 +381,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			this.dispatchCustomEvent('delete');
 			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
-		this.context.addEventListener('reveal', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
-			
-			msg.send('reveal:file', pathname);
 			
 		});
 		
@@ -654,13 +657,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public copy (from:'left'|'right') :void {
 		
-		this.viewmodel.copy(from, this.getIdsBySelection());
+		this.viewmodel.copy(this.getIdsBySelection(), from);
 		
 	}
 	
 	public multiCopy (from:'left'|'right') :void {
 		
-		this.viewmodel.multiCopy(from, this.getIdsBySelection());
+		this.viewmodel.multiCopy(this.getIdsBySelection(), from);
 		
 	}
 	

@@ -108,7 +108,7 @@ function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode
 export function openFile (uri:vscode.Uri, openToSide:boolean) {
 	
 	vscode.commands.executeCommand('vscode.open', uri, {
-		preview: true,
+		preview: false,
 		viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 	});
 	

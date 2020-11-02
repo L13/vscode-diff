@@ -169,7 +169,6 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		if (input.value) input.select();
 		
-		
 	}
 	
 	public close () {
