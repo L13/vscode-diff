@@ -244,7 +244,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			event.preventDefault()
+			event.preventDefault();
 			
 			const target = (<HTMLElement>(<HTMLElement>event.target).closest('l13-diff-list-file'));
 			const rowNode = (<HTMLElement>target.closest('l13-diff-list-row'));
@@ -255,13 +255,20 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (fileA.fsPath === fileB.fsPath) return;
 			
 			msg.send('open:diff', {
-				id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
-				status: 'modified',
-				type: fileA.type === fileB.type ? fileA.type : 'mixed',
-				ignoredWhitespace: false,
-				ignoredEOL: false,
-				fileA,
-				fileB,
+				pathA: fileA.root,
+				pathB: fileB.root,
+				diffs: [
+					{
+						id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
+						status: 'modified',
+						type: fileA.type === fileB.type ? fileA.type : 'mixed',
+						ignoredWhitespace: false,
+						ignoredEOL: false,
+						fileA,
+						fileB,
+					}
+				],
+				openToSide: event.altKey,
 			});
 			
 		});
