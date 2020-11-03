@@ -272,19 +272,19 @@ export class DiffPanel {
 		
 	//	open
 		
-		this.msg.on('open:diff', ({ diffs, openToSide }:DiffOpenMessage) => {
+		this.msg.on('open:diff', async ({ diffs, openToSide }:DiffOpenMessage) => {
 			
 			openToSide = openToSide ?? settings.get('openToSide', false);
 			
-			diffs.forEach((diff, index) => DiffOpen.open(diff, index === 0 && openToSide));
+			for (let i = 0; i < diffs.length; i++) await DiffOpen.open(diffs[i], i === 0 && openToSide);
 			
 		});
 		
-		this.msg.on('goto:file', ({ files, openToSide }:DiffGoToMessage) => {
+		this.msg.on('goto:file', async ({ files, openToSide }:DiffGoToMessage) => {
 			
 			openToSide = openToSide ?? settings.get('openToSide', false);
 			
-			files.forEach((file, index) => DiffOpen.openFile(file, index === 0 && openToSide));
+			for (let i = 0; i < files.length; i++) await DiffOpen.openFile(files[i], i === 0 && openToSide);
 			
 		});
 		
