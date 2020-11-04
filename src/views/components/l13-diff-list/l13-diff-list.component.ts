@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
+import { formatFileSize } from '../../../@l13/formats';
+import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
 
@@ -11,8 +13,6 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
-
-import { formatFileSize } from '../../../@l13/formats';
 
 //	Variables __________________________________________________________________
 
@@ -255,7 +255,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
 			
-			msg.send('open:diff', {
+			msg.send<DiffOpenMessage>('open:diff', {
 				pathA: fileA.root,
 				pathB: fileB.root,
 				diffs: [
@@ -371,7 +371,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
 			
-			msg.send('reveal:file', pathname);
+			msg.send<string>('reveal:file', pathname);
 			
 		});
 		
