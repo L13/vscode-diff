@@ -182,7 +182,7 @@ export class DiffPanel {
 			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!comparedEntries) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!comparedEntries) vscode.window.showInformationMessage('No files or folders to compare.');
 			
 			this.msg.send('create:diffs', data);
 			

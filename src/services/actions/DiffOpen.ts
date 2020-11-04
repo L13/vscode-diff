@@ -57,7 +57,7 @@ export class DiffOpen {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);
 				await openDiff(fileA, fileB, left, right, openToSide);
-			} else vscode.window.showErrorMessage(`Files can't be compared. Type of files are not equal.`)
+			}
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
 		}

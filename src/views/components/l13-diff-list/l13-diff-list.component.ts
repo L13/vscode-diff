@@ -188,7 +188,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (element) {
 				const dropable:HTMLElement = element.closest('l13-diff-list-file');
-				if (dropable) {
+				if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
 					if (dropHoverElement && dropHoverElement !== dropable) {
 						dropHoverElement.classList.remove('-draghover');
 					}
@@ -251,17 +251,18 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
 			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
 			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+			const typeA = fileA.type;
 			
-			if (fileA.fsPath === fileB.fsPath) return;
+			if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
 			
 			msg.send('open:diff', {
 				pathA: fileA.root,
 				pathB: fileB.root,
 				diffs: [
 					{
-						id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
+						id: null,
 						status: 'modified',
-						type: fileA.type === fileB.type ? fileA.type : 'mixed',
+						type: typeA,
 						ignoredWhitespace: false,
 						ignoredEOL: false,
 						fileA,
@@ -779,16 +780,20 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	const column = document.createElement('l13-diff-list-file');
 	
 	if (file) {
-		column.classList.add(`-${file.type}`);
-		column.setAttribute('data-type', file.type);
-		column.setAttribute('data-fs-path', file.fsPath);
-		column.title = file.fsPath;
+		const type = file.type;
+		const fsPath = file.fsPath;
+		
+		column.classList.add(`-${type}`);
+		column.setAttribute('data-type', type);
+		column.setAttribute('data-fs-path', fsPath);
+		column.title = fsPath;
 		
 		if (file.stat) {
+			const stat = file.stat;
 			column.title += `
-Size: ${formatFileSize(file.stat.size)}
-Created: ${new Date(file.stat.birthtime).toLocaleDateString(language, dateOptions)}
-Modified: ${new Date(file.stat.mtime).toLocaleDateString(language, dateOptions)}`;
+Size: ${formatFileSize(stat.size)}
+Created: ${new Date(stat.birthtime).toLocaleDateString(language, dateOptions)}
+Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 		}
 		
 		if (file.ignore) {
@@ -797,7 +802,7 @@ Modified: ${new Date(file.stat.mtime).toLocaleDateString(language, dateOptions)}
 		}
 		
 		const path = document.createElement('SPAN');
-		path.draggable = true;
+		path.draggable = type === 'file' || type === 'folder' || type === 'symlink';
 		column.appendChild(path);
 		
 		if (file.dirname) {
