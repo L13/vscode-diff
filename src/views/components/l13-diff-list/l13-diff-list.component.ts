@@ -360,7 +360,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (!isSelected) this.cacheCurrentSelections = selections;
 			
-			// this.dispatchCustomEvent('open');
+			// this.dispatchCustomEvent('goto');
 			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
 			
 		});

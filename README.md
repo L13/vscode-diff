@@ -20,6 +20,7 @@ Compare two folders in Visual Studio Code.
 1. [Available Settings](#available-settings)
 1. [Predefined Variables](#predefined-variables)
 1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
+1. [Recommended Settings](#recommended-settings)
 1. [Recommended Extensions](#recommended-extensions)
 
 ## Features
@@ -77,13 +78,14 @@ Compare two folders in Visual Studio Code.
 * `Open in Diff Folders` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
 * `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `Diff Folders: Delete All Favorites` - Delete all favorites.
+* `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
 
 ## Available Settings
 
 * `l13Diff.maxRecentlyUsed` - Defines the max length of recently used entries in the menu.
 * `l13Diff.openToSide` - Set true if a diff or file should open to the side.
 * `l13Diff.abortOnError` - If false scan process will not be canceled if an error occurs.
-* `l13Diff.useCaseSensitiveFileName` - Indiciates if filenames should be treated as case sensitive for a comparsion. This also affects the property `l13Diff.exclude`.
+* `l13Diff.useCaseSensitiveFileName` - Indiciates if filenames should be treated as case sensitive for a comparison. This also affects the property `l13Diff.exclude`.
 	* `detect` - (default) Detect the file system case sensitivity.
 	* `on` - Enable case sensitive file names.
 	* `off` - Disable case sensitive file names.
@@ -230,7 +232,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### All platforms
 
 * `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied. This button supports copying files to multiple folders at once with `Alt + Click`, too. Please read the description for `Copy files to the left/right folder` to see how it works.
-* `Go to File` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be opened. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
+* `Go to File` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be opened. If the icon will be clicked and the list item isn't seleted only the current file will be opened.
 * `Delete` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be deleted. If the icon will be clicked and the list item isn't seleted only the current file will be deleted.
 
 #### macOS
@@ -247,7 +249,11 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### List Drag'n Drop
 
-- `Drag'n Drop` - Drag a path in the list view to another path of the same type (file or symbolic link) and let it drop to open a diff with these two files. Paths can also be dropped into the input fields and the search widget.
+* `Drag'n Drop` - Drag a path in the list view to another path of the same type (file, folder or symbolic link) and let it drop to open a diff with these two files. Paths can also be dropped into the input fields and the search widget.
+
+### List Tooltip
+
+* Shows the full path, the size, the creation and modification time and date of a file.
 
 ### Search Widget
 
@@ -325,7 +331,29 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Compare with Workspace` - Compare the folder, repository or project with the current workspace.
 * `Open in Diff Folders` - Open the folder, repository or project in Diff Folders.
 
+## Recommended Settings
+
+The two fastest ways to compare files are
+
+```json
+{
+	"l13Diff.ignoreEndOfLine": false,
+	"l13Diff.ignoreTrimWhitespace": "default",
+	"diffEditor.ignoreTrimWhitespace": false
+}
+```
+
+or
+
+```json
+{
+	"l13Diff.ignoreEndOfLine": false,
+	"l13Diff.ignoreTrimWhitespace": "off"
+}
+```
+
+
 ## Recommended Extensions
 
-- [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- [Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack)
+* [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+* [Extension Pack](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-extension-pack)

@@ -293,18 +293,19 @@ export class L13DiffListViewModel extends ViewModel {
 		const diffResult = this.getCopyListByIds(ids, from);
 		
 		if (diffResult.diffs.length) msg.send<DiffCopyMessage>(`copy:${from}`, diffResult);
+		else this.dispatchEvent('cancel');
 		
 	}
 	
 	public multiCopy (ids:string[], from:'left'|'right') :void {
 		
-		if (this.diffResult.pathA && this.diffResult.pathB) {
+		if (ids.length && this.diffResult.pathA && this.diffResult.pathB) {
 			msg.send<DiffMultiCopyMessage>(`multi-copy:${from}`, {
 				ids,
 				pathA: this.diffResult.pathA,
 				pathB: this.diffResult.pathB,
 			});
-		}
+		} else this.dispatchEvent('cancel');
 		
 	}
 	
@@ -335,6 +336,7 @@ export class L13DiffListViewModel extends ViewModel {
 		const diffResult = this.getDiffsByIds(ids);
 		
 		if (diffResult.diffs.length) msg.send<DiffResultMessage>(`delete:${side}`, diffResult);
+		else this.dispatchEvent('cancel');
 		
 	}
 	

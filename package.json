@@ -323,6 +323,10 @@
 					"when": "l13DiffFocus"
 				},
 				{
+					"command": "l13Diff.showOutput",
+					"when": "l13DiffFocus"
+				},
+				{
 					"command": "l13Diff.ignoreCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'"
 				},

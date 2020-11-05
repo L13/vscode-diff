@@ -235,6 +235,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	//	list view
 		
+		listVM.on('cancel', () => this.enable());
 		listVM.on('compared', () => this.enable());
 		listVM.on('copied', () => this.enable());
 		listVM.on('deleted', () => this.enable());
@@ -268,7 +269,14 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
 		this.list.addEventListener('filtered', () => this.updateNavigator());
 		
-		addKeyListener(window, { key: 'Delete', mac: 'Cmd+Backspace' }, () => this.list.delete());
+		addKeyListener(window, { key: 'Delete', mac: 'Cmd+Backspace' }, () => {
+			
+			if (this.list.disabled) return;
+			
+			disable();
+			this.list.delete();
+			
+		});
 		
 		document.addEventListener('mouseup', ({ target }) => {
 			
