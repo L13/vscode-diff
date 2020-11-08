@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.30.0",
+	"version": "0.30.1",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -320,6 +320,10 @@
 			"commandPalette": [
 				{
 					"command": "l13Diff.addToFavorites",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.showOutput",
 					"when": "l13DiffFocus"
 				},
 				{

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffResultMessage } from '../../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffGoToMessage, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { L13DiffListPipe } from './l13-diff-list.interface';
 
@@ -162,12 +162,11 @@ export class L13DiffListViewModel extends ViewModel {
 		});
 		
 		if (diffs.length) {
-			const data:DiffResultMessage = {
+			msg.send<DiffResultMessage>('update:diffs', {
 				pathA: this.diffResult.pathA,
 				pathB: this.diffResult.pathB,
 				diffs,
-			};
-			msg.send('update:diffs', data);
+			});
 		}
 		
 	}
@@ -252,7 +251,24 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private getDiffsByIds (ids:string[]) {
+	public getGoToListByIds (ids:string[], side:'left'|'right') {
+		
+		const items = ids.map((id) => this.map[id]);
+		const files:DiffFile[] = [];
+		
+		items.forEach((diff:Diff) => {
+			
+			const file = side === 'left' && diff.fileA || side === 'right' && diff.fileB;
+			
+			if (file) files.push(file);
+			
+		});
+		
+		return files;
+		
+	}
+	
+	private getDiffsByIds (ids:string[]) :DiffResultMessage {
 		
 		const items = ids.map((id) => this.map[id]);
 		
@@ -264,23 +280,32 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public copy (from:'left'|'right', ids:string[]) :void {
+	public open (ids:string[], openToSide:boolean) :void {
 		
-		const diffResult = this.getCopyListByIds(ids, from);
+		const diffResult = this.getDiffsByIds(ids);
 		
-		if (diffResult.diffs.length) msg.send(`copy:${from}`, diffResult);
+		if (diffResult.diffs.length) msg.send<DiffOpenMessage>('open:diff', { ...diffResult, openToSide });
 		
 	}
 	
-	public multiCopy (from:'left'|'right', ids:string[]) :void {
+	public copy (ids:string[], from:'left'|'right') :void {
 		
-		if (this.diffResult.pathA && this.diffResult.pathB) {
-			msg.send(`multi-copy:${from}`, {
+		const diffResult = this.getCopyListByIds(ids, from);
+		
+		if (diffResult.diffs.length) msg.send<DiffCopyMessage>(`copy:${from}`, diffResult);
+		else this.dispatchEvent('cancel');
+		
+	}
+	
+	public multiCopy (ids:string[], from:'left'|'right') :void {
+		
+		if (ids.length && this.diffResult.pathA && this.diffResult.pathB) {
+			msg.send<DiffMultiCopyMessage>(`multi-copy:${from}`, {
 				ids,
 				pathA: this.diffResult.pathA,
 				pathB: this.diffResult.pathB,
 			});
-		}
+		} else this.dispatchEvent('cancel');
 		
 	}
 	
@@ -292,9 +317,17 @@ export class L13DiffListViewModel extends ViewModel {
 			if (diffCopy.diffs.length) {
 				this.dispatchEvent('multicopy');
 				diffCopy.multi = true;
-				msg.send(`copy:${from}`, diffCopy);
+				msg.send<DiffCopyMessage>(`copy:${from}`, diffCopy);
 			}
 		}
+		
+	}
+	
+	public goto (ids:string[], side:'left'|'right', openToSide:boolean) :void {
+		
+		const files = this.getGoToListByIds(ids, side);
+		
+		if (files.length) msg.send('goto:file', { files, openToSide });
 		
 	}
 	
@@ -302,7 +335,8 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
-		if (diffResult.diffs.length) msg.send(`delete:${side}`, diffResult);
+		if (diffResult.diffs.length) msg.send<DiffResultMessage>(`delete:${side}`, diffResult);
+		else this.dispatchEvent('cancel');
 		
 	}
 	

@@ -33,7 +33,7 @@ export type DiffFile = {
 	dirname:string,
 	extname:string,
 	ignore:boolean,
-	type?:'error'|'file'|'folder'|'symlink'|'unknown',
+	type:'error'|'file'|'folder'|'symlink'|'unknown',
 };
 
 export type DiffStatus = 'conflicting'|'deleted'|'ignored'|'modified'|'unchanged'|'untracked';
