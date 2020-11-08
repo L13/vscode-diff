@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff } from './diffs';
+import { Diff, DiffFile } from './diffs';
 
 //	Variables __________________________________________________________________
 
@@ -19,6 +19,15 @@ export type DiffCopyMessage = {
 	pathB:string,
 };
 
+export type DiffDialogMessage = {
+	fsPath:string,
+};
+
+export type DiffGoToMessage = {
+	files:DiffFile[],
+	openToSide:boolean,
+};
+
 export type DiffInitMessage = {
 	pathA:string,
 	pathB:string,
@@ -30,14 +39,17 @@ export type DiffMultiCopyMessage = {
 	pathB:string,
 };
 
-export type DiffOpenMessage = {
-	fsPath:string,
-};
-
 export type DiffResultMessage = {
 	diffs:Diff[],
 	pathA:string,
 	pathB:string,
+};
+
+export type DiffOpenMessage = {
+	diffs:Diff[],
+	pathA:string,
+	pathB:string,
+	openToSide:boolean,
 };
 
 export type MessageListener = (...args:any[]) => void;

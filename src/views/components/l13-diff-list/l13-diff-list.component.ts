@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
+import { formatFileSize } from '../../../@l13/formats';
+import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
 import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
 
@@ -11,8 +13,6 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../common';
 import styles from '../styles';
 import templates from '../templates';
-
-import { formatFileSize } from '../../../@l13/formats';
 
 //	Variables __________________________________________________________________
 
@@ -84,11 +84,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.unselect();
 					break;
 				case 'Enter':
-					this.getIdsBySelection().forEach((id) => {
-						
-						msg.send(ctrlKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
-						
-					});
+					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
 					break;
 				case 'ArrowUp':
 					this.selectPreviousOrNext(PREVIOUS, event);
@@ -158,7 +154,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
 			
-			msg.send(altKey ? 'open:diffToSide' : 'open:diff', this.viewmodel.getDiffById(id));
+			this.viewmodel.open([id], altKey);
 			
 		});
 		
@@ -192,7 +188,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (element) {
 				const dropable:HTMLElement = element.closest('l13-diff-list-file');
-				if (dropable) {
+				if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
 					if (dropHoverElement && dropHoverElement !== dropable) {
 						dropHoverElement.classList.remove('-draghover');
 					}
@@ -248,24 +244,32 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			event.preventDefault()
+			event.preventDefault();
 			
 			const target = (<HTMLElement>(<HTMLElement>event.target).closest('l13-diff-list-file'));
 			const rowNode = (<HTMLElement>target.closest('l13-diff-list-row'));
 			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
 			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
 			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+			const typeA = fileA.type;
 			
-			if (fileA.fsPath === fileB.fsPath) return;
+			if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
 			
-			msg.send('open:diff', {
-				id: fileA.relative === fileB.relative ? fileA.relative : `${fileA.relative}|${fileB.relative}`,
-				status: 'modified',
-				type: fileA.type === fileB.type ? fileA.type : 'mixed',
-				ignoredWhitespace: false,
-				ignoredEOL: false,
-				fileA,
-				fileB,
+			msg.send<DiffOpenMessage>('open:diff', {
+				pathA: fileA.root,
+				pathB: fileB.root,
+				diffs: [
+					{
+						id: null,
+						status: 'modified',
+						type: typeA,
+						ignoredWhitespace: false,
+						ignoredEOL: false,
+						fileA,
+						fileB,
+					}
+				],
+				openToSide: event.altKey,
 			});
 			
 		});
@@ -325,16 +329,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
 		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
-		this.context.addEventListener('open', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fsPath = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
-			
-			msg.send('open:file', { fsPath, openToSide: detail.altKey });
-			
-		});
-		
 		this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
 			if (this.disabled) return;
@@ -349,8 +343,35 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			this.dispatchCustomEvent('copy');
 			
-			if (detail.altKey) this.viewmodel.multiCopy(fileNode.nextElementSibling ? 'left' : 'right', ids);
-			else this.viewmodel.copy(fileNode.nextElementSibling ? 'left' : 'right', ids);
+			if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+			else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+			
+		});
+		
+		this.context.addEventListener('goto', ({ target, detail }:any) => {
+			
+			if (this.disabled) return;
+			
+			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const isSelected = rowNode.classList.contains('-selected');
+			const selections = this.getIdsBySelection();
+			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
+			
+			if (!isSelected) this.cacheCurrentSelections = selections;
+			
+			// this.dispatchCustomEvent('goto');
+			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
+			
+		});
+		
+		this.context.addEventListener('reveal', ({ target }) => {
+			
+			if (this.disabled) return;
+			
+			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
+			
+			msg.send<string>('reveal:file', pathname);
 			
 		});
 		
@@ -368,16 +389,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			this.dispatchCustomEvent('delete');
 			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
-		this.context.addEventListener('reveal', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
-			
-			msg.send('reveal:file', pathname);
 			
 		});
 		
@@ -625,7 +636,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public selectAll () {
 		
-		this.selectByStatus(['deleted', 'modified', 'untracked']);
+		this.selectByStatus(['conflicting', 'deleted', 'modified', 'unchanged', 'untracked']);
 		
 	}
 	
@@ -654,13 +665,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public copy (from:'left'|'right') :void {
 		
-		this.viewmodel.copy(from, this.getIdsBySelection());
+		this.viewmodel.copy(this.getIdsBySelection(), from);
 		
 	}
 	
 	public multiCopy (from:'left'|'right') :void {
 		
-		this.viewmodel.multiCopy(from, this.getIdsBySelection());
+		this.viewmodel.multiCopy(this.getIdsBySelection(), from);
 		
 	}
 	
@@ -769,16 +780,20 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 	const column = document.createElement('l13-diff-list-file');
 	
 	if (file) {
-		column.classList.add(`-${file.type}`);
-		column.setAttribute('data-type', file.type);
-		column.setAttribute('data-fs-path', file.fsPath);
-		column.title = file.fsPath;
+		const type = file.type;
+		const fsPath = file.fsPath;
+		
+		column.classList.add(`-${type}`);
+		column.setAttribute('data-type', type);
+		column.setAttribute('data-fs-path', fsPath);
+		column.title = fsPath;
 		
 		if (file.stat) {
+			const stat = file.stat;
 			column.title += `
-Size: ${formatFileSize(file.stat.size)}
-Created: ${new Date(file.stat.birthtime).toLocaleDateString(language, dateOptions)}
-Modified: ${new Date(file.stat.mtime).toLocaleDateString(language, dateOptions)}`;
+Size: ${formatFileSize(stat.size)}
+Created: ${new Date(stat.birthtime).toLocaleDateString(language, dateOptions)}
+Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 		}
 		
 		if (file.ignore) {
@@ -787,7 +802,7 @@ Modified: ${new Date(file.stat.mtime).toLocaleDateString(language, dateOptions)}
 		}
 		
 		const path = document.createElement('SPAN');
-		path.draggable = true;
+		path.draggable = type === 'file' || type === 'folder' || type === 'symlink';
 		column.appendChild(path);
 		
 		if (file.dirname) {

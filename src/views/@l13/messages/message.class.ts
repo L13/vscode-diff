@@ -40,7 +40,7 @@ export class Message {
 		
 	}
 	
-	public send (command:string, data:any = null) :void {
+	public send <T> (command:string, data:T = null) :void {
 		
 		this.root.postMessage({ command, data });
 		

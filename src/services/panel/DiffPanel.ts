@@ -3,7 +3,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffCopyMessage, DiffFile, DiffInitMessage, DiffMultiCopyMessage, StatsMap, Uri } from '../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffGoToMessage, DiffInitMessage, DiffMultiCopyMessage, DiffOpenMessage, StatsMap, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
 import { formatAmount } from '../../@l13/formats';
@@ -182,7 +182,7 @@ export class DiffPanel {
 			this.output.log(`${text}\n\n\n`);
 			this.output.msg(diffStats.report());
 			
-			if (!comparedEntries) vscode.window.showInformationMessage('No files or folders to compare!');
+			if (!comparedEntries) vscode.window.showInformationMessage('No files or folders to compare.');
 			
 			this.msg.send('create:diffs', data);
 			
@@ -272,10 +272,22 @@ export class DiffPanel {
 		
 	//	open
 		
-		this.msg.on('open:diffToSide', (diff:Diff) => DiffOpen.open(diff, true));
-		this.msg.on('open:diff', (diff:Diff) => DiffOpen.open(diff, settings.get('openToSide', false)));
+		this.msg.on('open:diff', async ({ diffs, openToSide }:DiffOpenMessage) => {
+			
+			openToSide = settings.get('openToSide', false) || openToSide;
+			
+			for (let i = 0; i < diffs.length; i++) await DiffOpen.open(diffs[i], i === 0 && openToSide);
+			
+		});
 		
-		this.msg.on('open:file', ({ fsPath, openToSide }) => DiffOpen.openFile(fsPath, openToSide));
+		this.msg.on('goto:file', async ({ files, openToSide }:DiffGoToMessage) => {
+			
+			openToSide = settings.get('openToSide', false) || openToSide;
+			
+			for (let i = 0; i < files.length; i++) await DiffOpen.openFile(files[i], i === 0 && openToSide);
+			
+		});
+		
 		this.msg.on('reveal:file', (fsPath:string) => files.reveal(fsPath));
 		
 		this.msg.on('dialog:file', async () => {

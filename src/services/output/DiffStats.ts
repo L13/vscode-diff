@@ -140,7 +140,6 @@ function countDetailStats (stats:DetailStats, diff:Diff) {
 	if (diff.fileA) countFileStats(stats, diff.fileA);
 	if (diff.fileB) countFileStats(stats, diff.fileB);
 	
-	
 }
 
 function formatFileStats (name:string, stats:DetailStats|FolderStats) {
