@@ -636,7 +636,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public selectAll () {
 		
-		this.selectByStatus(['deleted', 'modified', 'untracked']);
+		this.selectByStatus(['conflicting', 'deleted', 'modified', 'unchanged', 'untracked']);
 		
 	}
 	

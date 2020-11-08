@@ -7,6 +7,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 - Fixed `Go to File` for multiple files.
 - Fixed missing description in README for `Go to File`.
 - Fixed open to side for multiple files.
+- Fixed select all files.
 
 ### Changed
 - Disabled ui if files will be deleted.
