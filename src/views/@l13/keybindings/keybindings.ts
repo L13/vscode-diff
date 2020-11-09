@@ -1,15 +1,10 @@
 //	Imports ____________________________________________________________________
 
 import { isMacOs, isWindows } from '../os/platforms';
-import keycodes from './keyboard.us';
 
-import { Keybinding, KeyboardShortcut, SimpleMap } from '../../../types';
-
-const { fromCharCode } = String;
+import { Keybinding } from '../../../types';
 
 //	Variables __________________________________________________________________
-
-const findKey = /([a-zA-Z]+)\+/g;
 
 const ALT = '⌥';
 const CMD = '⌘';
@@ -26,8 +21,6 @@ const macOSSymbols = {
 	Option: ALT,
 	Shift: SHIFT,
 };
-
-const keyvalues = Object.values(keycodes);
 
 //	Initialize _________________________________________________________________
 
@@ -47,19 +40,7 @@ export function getKeyLabel (key:string) {
 	
 }
 
-export function addKeyListener (element:HTMLElement|Window, { key, mac, win, title }:Keybinding, listener:(event?:Event) => void) {
-	
-	if (title && element instanceof HTMLElement) setLabel(element, title, { key, mac, win });
-	
-	registerKeybinding(element, parseKeybinding(detectKeybinding({ key, mac, win })), listener);
-	
-}
-
-export function setLabel (element:HTMLElement, title:string, { key, mac, win }:Keybinding = { key: null, mac: null, win: null}) {
-	
-	key = detectKeybinding({ key, mac, win });
-	
-	if (key) title += ` (${isMacOs ? formatKeybinding(key) : key})`;
+export function setLabel (element:HTMLElement, title:string) {
 	
 	element.setAttribute('aria-label', title);
 	element.setAttribute('title', title);
@@ -68,55 +49,3 @@ export function setLabel (element:HTMLElement, title:string, { key, mac, win }:K
 
 //	Functions __________________________________________________________________
 
-function formatKeybinding (key:string) {
-	
-	return key.replace(findKey, (match, value) => (<any>macOSSymbols)[value] || match);
-	
-}
-
-function registerKeybinding (element:HTMLElement|Window, shortcut:KeyboardShortcut, listener:(event?:Event) => void) {
-	
-	element.addEventListener('keydown', (event:KeyboardEvent|Event) => {
-		
-		if (shortcut.key // if key does not exist, nothing happens
-			&& shortcut.key === (<SimpleMap>keycodes)[code(<KeyboardEvent>event)]
-			&& shortcut.altKey === (<KeyboardEvent>event).altKey
-			&& shortcut.ctrlKey === (<KeyboardEvent>event).ctrlKey
-			&& shortcut.metaKey === (<KeyboardEvent>event).metaKey
-			&& shortcut.shiftKey === (<KeyboardEvent>event).shiftKey
-		) listener.call(element, event);
-		
-	});
-	
-}
-
-function parseKeybinding (value:string) {
-	
-	const shortcut:KeyboardShortcut = {
-		key: '',
-		altKey: false,
-		ctrlKey: false,
-		metaKey: false,
-		shiftKey: false,
-	};
-	
-	value.split('+').forEach((key) => {
-		
-		if (key === 'Alt' || key === 'Option') shortcut.altKey = true;
-		else if (key === 'Ctrl' || key === 'Control') shortcut.ctrlKey = true;
-		else if (key === 'Meta' || key === 'Cmd' || key === 'Command') shortcut.metaKey = true;
-		else if (key === 'Shift') shortcut.shiftKey = true;
-		else if (keyvalues.includes(key)) shortcut.key = key;
-		
-	});
-	
-	return shortcut;
-	
-}
-
-function code ({ code, keyCode }:KeyboardEvent) {
-	
-	// Fixes the issue with different keyboard layouts for A to Z.
-	return keyCode >= 65 && keyCode <= 90 ? `Key${fromCharCode(keyCode)}` : code;
-	
-}

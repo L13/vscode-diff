@@ -4,7 +4,7 @@ import { remove } from '../../../@l13/arrays';
 import { formatFileSize } from '../../../@l13/formats';
 import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
-import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
+import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
@@ -65,10 +65,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		this.context.vmId = 'context';
 		
-		this.addEventListener('focus', () => this.content.classList.add('-focus'));
-		this.addEventListener('blur', () => this.content.classList.remove('-focus'));
+		this.addEventListener('focus', () => {
+			
+			this.content.classList.add('-focus');
+			msg.send('context', { name: 'l13DiffListFocus', value: true });
+			
+		});
 		
-		addKeyListener(this, { key: 'Ctrl+A', mac: 'Cmd+A' }, () => this.selectAll());
+		this.addEventListener('blur', () => {
+			
+			this.content.classList.remove('-focus');
+			msg.send('context', { name: 'l13DiffListFocus', value: false });
+			
+		});
 		
 		this.addEventListener('keydown', (event) => {
 			
@@ -79,9 +88,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			switch (key) {
 				case 'F12': // Debug Mode
 					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
-					break;
-				case 'Escape':
-					this.unselect();
 					break;
 				case 'Enter':
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);

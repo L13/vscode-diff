@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { addKeyListener, L13Component, L13Element, L13Query } from '../../@l13/core';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { DiffInitMessage } from '../../../types';
 
@@ -125,7 +125,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		msg.on('compare:multi', () => this.initCompare());
 		
-		addKeyListener(window, { key: 'Ctrl+C', mac: 'Cmd+C' }, () => {
+		msg.on('l13Diff.panel.action.compare', () => {
 			
 			if (!this.left.focused && !this.right.focused && !search.focused) {
 				event.stopPropagation();
@@ -135,7 +135,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		addKeyListener(window, { key: 'Alt+Ctrl+C', mac: 'Alt+Cmd+C' }, () => {
+		msg.on('l13Diff.panel.action.compareAll', () => {
 			
 			if (!this.left.focused && !this.right.focused && !search.focused) {
 				event.stopPropagation();
@@ -149,21 +149,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		this.swap.addEventListener('swap', ({ detail }:any) => this.swapInputs(detail.altKey));
 		
-		addKeyListener(window, { key: 'Ctrl+S', mac: 'Cmd+S' }, (event) => {
-			
-			event.stopPropagation();
-			event.preventDefault();
-			this.swapInputs();
-			
-		});
+		msg.on('l13Diff.panel.action.swap', () => this.swapInputs());
 		
-		addKeyListener(window, { key: 'Alt+Ctrl+S', mac: 'Alt+Cmd+S' }, (event) => {
-			
-			event.stopPropagation();
-			event.preventDefault();
-			this.swapInputs(true);
-			
-		});
+		msg.on('l13Diff.panel.action.swapAll', () => this.swapInputs(true));
 		
 	//	actions view
 		
@@ -221,7 +209,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 			
 		});
 		
-		addKeyListener(window, { key: 'Ctrl+F', mac: 'Cmd+F' }, async () => {
+		msg.on('l13Diff.panel.action.filter', async () => {
 			
 			if (!search.parentNode) {
 				this.widgets.appendChild(search);
@@ -269,12 +257,20 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
 		this.list.addEventListener('filtered', () => this.updateNavigator());
 		
-		addKeyListener(window, { key: 'Delete', mac: 'Cmd+Backspace' }, () => {
+		msg.on('l13Diff.panel.action.delete', () => {
 			
 			if (this.list.disabled) return;
 			
 			disable();
 			this.list.delete();
+			
+		});
+		
+		msg.on('l13Diff.panel.action.selectAllEntries', () => this.list.selectAll());
+		
+		msg.on('l13Diff.panel.action.unselect', () => {
+			
+			if (!search.focused) this.list.unselect();
 			
 		});
 		
@@ -484,8 +480,11 @@ function enable (disableCopy:boolean = true) {
 	
 	panelVM.loading = false;
 	
-	actionsVM.enable();
-	if (disableCopy) actionsVM.disableCopy();
+	if (listVM.items.length) {
+		actionsVM.enable();
+		if (disableCopy) actionsVM.disableCopy();
+	}
+	
 	compareVM.enable();
 	leftVM.enable();
 	listVM.enable();

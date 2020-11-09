@@ -33,10 +33,7 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 		
 		super();
 		
-		setLabel(this.button, 'Compare', {
-			key: 'Ctrl+C',
-			mac: 'Cmd+C',
-		});
+		setLabel(this.button, 'Compare');
 		
 		this.button.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('compare', { altKey }));
 		

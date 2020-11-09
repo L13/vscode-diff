@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.30.1",
+	"version": "0.31.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -291,6 +291,114 @@
 			{
 				"command": "l13Diff.compareSelected",
 				"title": "Compare Selected"
+			},
+			{
+				"command": "l13Diff.panel.action.compare",
+				"title": "Compare"
+			},
+			{
+				"command": "l13Diff.panel.action.compareAll",
+				"title": "Compare all open panels"
+			},
+			{
+				"command": "l13Diff.panel.action.copyLeft",
+				"title": "Copy selection to the right folder"
+			},
+			{
+				"command": "l13Diff.panel.action.copyRight",
+				"title": "Copy selection to the left folder"
+			},
+			{
+				"command": "l13Diff.panel.action.delete",
+				"title": "Delete"
+			},
+			{
+				"command": "l13Diff.panel.action.filter",
+				"title": "Filter"
+			},
+			{
+				"command": "l13Diff.panel.action.selectCreatedEntries",
+				"title": "Select all created files"
+			},
+			{
+				"command": "l13Diff.panel.action.selectDeletedEntries",
+				"title": "Select all deleted files"
+			},
+			{
+				"command": "l13Diff.panel.action.selectModifiedEntries",
+				"title": "Select all modified files"
+			},
+			{
+				"command": "l13Diff.panel.action.selectAllEntries",
+				"title": "Select all files"
+			},
+			{
+				"command": "l13Diff.panel.action.swap",
+				"title": "Swap left and right input fields"
+			},
+			{
+				"command": "l13Diff.panel.action.swapAll",
+				"title": "Swap input fields and list"
+			},
+			{
+				"command": "l13Diff.panel.action.toggleShowAllCreated",
+				"title": "Show all created files"
+			},
+			{
+				"command": "l13Diff.panel.action.toggleShowAllDeleted",
+				"title": "Show all deleted files"
+			},
+			{
+				"command": "l13Diff.panel.action.toggleShowAllIgnored",
+				"title": "Show all ignored files"
+			},
+			{
+				"command": "l13Diff.panel.action.toggleShowAllModified",
+				"title": "Show all modified files"
+			},
+			{
+				"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+				"title": "Show all unchanged files"
+			},
+			{
+				"command": "l13Diff.panel.action.unselect",
+				"title": "Unselect"
+			},
+			{
+				"command": "l13Diff.panel.menu.close",
+				"title": "Close"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.close",
+				"title": "Close"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+				"title": "Match Case"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+				"title": "Show Conflicts"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+				"title": "Show Files"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+				"title": "Show Folders"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindOthers",
+				"title": "Show Others"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+				"title": "Use Regular Expression"
+			},
+			{
+				"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+				"title": "Show Symbolic Links"
 			}
 		],
 		"keybindings": [
@@ -314,6 +422,159 @@
 				"mac": "meta+l meta+o",
 				"win": "ctrl+l ctrl+o",
 				"command": "l13Diff.showOutput"
+			},
+			{
+				"mac": "meta+c",
+				"key": "ctrl+c",
+				"command": "l13Diff.panel.action.compare",
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+c",
+				"key": "ctrl+alt+c",
+				"command": "l13Diff.panel.action.compareAll",
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+?",
+				"key": "ctrl+?",
+				"command": "l13Diff.panel.action.copyLeft",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+?",
+				"key": "ctrl+?",
+				"command": "l13Diff.panel.action.copyRight",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+backspace",
+				"key": "delete",
+				"command": "l13Diff.panel.action.delete",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+f",
+				"key": "ctrl+f",
+				"command": "l13Diff.panel.action.filter",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+?",
+				"key": "ctrl+?",
+				"command": "l13Diff.panel.action.selectCreatedEntries",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+?",
+				"key": "ctrl+?",
+				"command": "l13Diff.panel.action.selectDeletedEntries",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+?",
+				"key": "ctrl+?",
+				"command": "l13Diff.panel.action.selectModifiedEntries",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+a",
+				"key": "ctrl+a",
+				"command": "l13Diff.panel.action.selectAllEntries",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+s",
+				"key": "ctrl+s",
+				"command": "l13Diff.panel.action.swap",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+s",
+				"key": "ctrl+alt+s",
+				"command": "l13Diff.panel.action.swapAll",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+4",
+				"key": "ctrl+4",
+				"command": "l13Diff.panel.action.toggleShowAllCreated",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+2",
+				"key": "ctrl+2",
+				"command": "l13Diff.panel.action.toggleShowAllDeleted",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+5",
+				"key": "ctrl+5",
+				"command": "l13Diff.panel.action.toggleShowAllIgnored",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+3",
+				"key": "ctrl+3",
+				"command": "l13Diff.panel.action.toggleShowAllModified",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+1",
+				"key": "ctrl+1",
+				"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+				"when": "l13DiffFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.panel.action.unselect",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.panel.menu.close",
+				"when": "l13DiffFocus && l13DiffInputFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.panel.searchWidget.close",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+c",
+				"key": "alt+c",
+				"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+?",
+				"key": "alt+?",
+				"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+f",
+				"key": "alt+f",
+				"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+d",
+				"key": "alt+d",
+				"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+r",
+				"key": "alt+r",
+				"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+l",
+				"key": "alt+l",
+				"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+				"when": "l13DiffFocus"
 			}
 		],
 		"menus": {
@@ -457,6 +718,110 @@
 				{
 					"command": "l13Diff.compareSelected",
 					"when": "false"
+				},
+				{
+					"command": "l13Diff.panel.action.compare",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.compareAll",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.copyLeft",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.copyRight",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.delete",
+					"when": "l13DiffFocus && l13DiffListFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.filter",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.selectCreatedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.selectDeletedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.selectModifiedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.selectAllEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.swap",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.swapAll",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.toggleShowAllCreated",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.toggleShowAllDeleted",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.toggleShowAllIgnored",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.toggleShowAllModified",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.action.unselect",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.menu.close",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.close",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+					"when": "l13DiffFocus"
 				}
 			],
 			"explorer/context": [

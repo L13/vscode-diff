@@ -63,6 +63,8 @@ export class DiffPanel {
 	private readonly copy:DiffCopy;
 	private readonly delete:DiffDelete;
 	
+	public readonly contextStates:{ [name:string]: boolean } = {};
+	
 	private disposables:vscode.Disposable[] = [];
 	
 	private _onDidInit:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
@@ -100,6 +102,9 @@ export class DiffPanel {
 				this.msg.send('focus'); // Fixes losing focus if other tab has been closed
 				this.status.activate();
 				this.output.activate();
+				for (const name in this.contextStates) this.setContext(name, this.contextStates[name]);
+			} else {
+				for (const name in this.contextStates) this.setContext(name, false);
 			}
 			
 		}, null, this.disposables);
@@ -341,6 +346,10 @@ export class DiffPanel {
 			
 		});
 		
+	//	context
+		
+		this.msg.on('context', ({ name, value }) => this.setContext(name, value));
+		
 		this.setContextFocus(true);
 		
 	}
@@ -358,6 +367,10 @@ export class DiffPanel {
 			if (disposable) disposable.dispose();
 		}
 		
+		if (this === DiffPanel.currentPanel) {
+			for (const name in this.contextStates) this.setContext(name, false);
+		}
+		
 		DiffPanel.currentPanel = currentPanels[currentPanels.length - 1];
 		
 		for (const diffPanel of currentPanels) {
@@ -370,7 +383,10 @@ export class DiffPanel {
 		if (DiffPanel.currentPanel) {
 			DiffPanel.currentPanel.status.activate();
 			DiffPanel.currentPanel.output.activate();
-			this.setContextFocus(DiffPanel.currentPanel.panel.active);
+			if (DiffPanel.currentPanel.panel.active) {
+				this.setContextFocus(true);
+				for (const name in this.contextStates) this.setContext(name, this.contextStates[name]);
+			}
 		} else this.setContextFocus(false);
 		
 	}
@@ -400,6 +416,14 @@ export class DiffPanel {
 	private savePanelState (data:any) :void {
 		
 		this.context.globalState.update(PANEL_STATE, data);
+		
+	}
+	
+	private setContext (name:string, value:boolean) {
+		
+		this.contextStates[name] = value;
+		
+		vscode.commands.executeCommand('setContext', name, value);
 		
 	}
 	
@@ -513,13 +537,13 @@ export class DiffPanel {
 	
 	public static addToFavorites () {
 		
-		if (DiffPanel.currentPanel) DiffPanel.currentPanel.msg.send('save:favorite');
+		DiffPanel.currentPanel?.msg.send('save:favorite');
 		
 	}
 	
-	public static send (name:string, data:any) {
+	public static send (name:string, data:any = null) {
 		
-		if (DiffPanel.currentPanel) DiffPanel.currentPanel.msg.send(name, data);
+		DiffPanel.currentPanel?.msg.send(name, data);
 		
 	}
 	

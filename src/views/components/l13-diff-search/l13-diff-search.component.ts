@@ -1,13 +1,13 @@
 //	Imports ____________________________________________________________________
 
-import { addKeyListener, L13Class, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { L13Class, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 import { DiffFile } from '../../../@types/diffs';
 
-import { parseIcons } from '../common';
+import { msg, parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -70,22 +70,33 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		super();
 		
-		setLabel(this.inputCaseSensitive, 'Match Case', { key: 'Ctrl+Alt+C', mac: 'Cmd+Alt+C' });
-		setLabel(this.inputRegExp, 'Use Regular Expression', { key: 'Ctrl+Alt+C', mac: 'Cmd+Alt+R' });
+		setLabel(this.inputCaseSensitive, 'Match Case');
+		setLabel(this.inputRegExp, 'Use Regular Expression');
 		setLabel(this.inputFiles, 'Show Files');
 		setLabel(this.inputFolders, 'Show Folders');
 		setLabel(this.inputSymlinks, 'Show Symbolic Links');
 		setLabel(this.inputConflicts, 'Show Conflicts');
 		setLabel(this.inputOthers, 'Show Errors and Others');
-		setLabel(this.button, 'Close', { key: 'Escape' });
+		setLabel(this.button, 'Close');
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		
 		this.inputSearchterm.placeholder = 'Find';
 		
-		this.inputSearchterm.addEventListener('focus', () => this.focused = true);
-		this.inputSearchterm.addEventListener('blur', () => this.focused = false);
+		this.inputSearchterm.addEventListener('focus', () => {
+			
+			this.focused = true;
+			msg.send('context', { name: 'l13DiffSearchFocus', value: true });
+			
+		});
+		
+		this.inputSearchterm.addEventListener('blur', () => {
+			
+			this.focused = false;
+			msg.send('context', { name: 'l13DiffSearchFocus', value: false });
+			
+		});
 		
 		this.inputSearchterm.addEventListener('dragover', (event) => event.preventDefault());
 		
@@ -98,25 +109,58 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 			
 		});
 		
-		addKeyListener(this, { key: 'Escape' }, () => this.close());
+		msg.on('l13Diff.panel.searchWidget.close', () => {
+			
+			if (this.focused) this.close();
+			
+		});
 		
-		addKeyListener(this, { key: 'Alt+C', mac: 'Cmd+Alt+C' }, (event) => {
+		msg.on('l13Diff.panel.searchWidget.toggleFindCaseSensitive', () => {
 			
 			this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
 			this.viewmodel.requestUpdate();
 			
-			event.preventDefault();
-			event.stopPropagation();
-			
 		});
 		
-		addKeyListener(this, { key: 'Alt+R', mac: 'Cmd+Alt+R' }, () => {
+		msg.on('l13Diff.panel.searchWidget.toggleFindRegex', () => {
 			
 			this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
 			this.viewmodel.requestUpdate();
 			
-			event.preventDefault();
-			event.stopPropagation();
+		});
+		
+		msg.on('l13Diff.panel.searchWidget.toggleFindFiles', () => {
+			
+			this.viewmodel.useFiles = !this.viewmodel.useFiles;
+			this.viewmodel.requestUpdate();
+			
+		});
+		
+		msg.on('l13Diff.panel.searchWidget.toggleFindFolders', () => {
+			
+			this.viewmodel.useFolders = !this.viewmodel.useFolders;
+			this.viewmodel.requestUpdate();
+			
+		});
+		
+		msg.on('l13Diff.panel.searchWidget.toggleFindSymbolicLinks', () => {
+			
+			this.viewmodel.useSymlinks = !this.viewmodel.useSymlinks;
+			this.viewmodel.requestUpdate();
+			
+		});
+		
+		msg.on('l13Diff.panel.searchWidget.toggleFindConflicts', () => {
+			
+			this.viewmodel.useFiles = !this.viewmodel.useFiles;
+			this.viewmodel.requestUpdate();
+			
+		});
+		
+		msg.on('l13Diff.panel.searchWidget.toggleFindOthers', () => {
+			
+			this.viewmodel.useOthers = !this.viewmodel.useOthers;
+			this.viewmodel.requestUpdate();
 			
 		});
 		

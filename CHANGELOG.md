@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.31.0] - 2020-11-22
+
+### Added
+- Added support for custom keyboard shortcuts.
+
+### Fixed
+- Fixed enabled actions for empty list.
+
 ## [0.30.1] - 2020-11-08
 
 ### Fixed
