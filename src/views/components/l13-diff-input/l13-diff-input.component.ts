@@ -88,14 +88,6 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 		});
 		
-		msg.on('l13Diff.panel.menu.close', () => {
-			
-			const menu = this.menu;
-			
-			if (menu && menu.parentNode) menu.remove();
-			
-		});
-		
 		this.input.addEventListener('keydown', ({ key, metaKey, ctrlKey, altKey, shiftKey }) => {
 			
 			const menu = this.menu;

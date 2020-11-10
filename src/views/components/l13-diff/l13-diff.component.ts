@@ -2,7 +2,10 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { DiffInitMessage } from '../../../types';
+import { DiffInitMessage, DiffPanelStateMessage } from '../../../types';
+
+import * as commands from './commands';
+import * as events from './events';
 
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
@@ -30,7 +33,7 @@ import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.s
 import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
 import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 
-import { isMetaKey, msg } from '../common';
+import { msg } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -100,307 +103,75 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		super();
 		
-		const menu = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
-		menu.vmId = 'menu';
+		const menuComponent = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
+		menuComponent.vmId = 'menu';
 		
-		const search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
-		search.vmId = 'search';
-		
-	//	input view
-		
-		this.left.menu = menu;
-		this.right.menu = menu;
-		
-		this.left.addEventListener('compare', () => this.initCompare());
-		this.right.addEventListener('compare', () => this.initCompare());
-		
-	//	compare view
-		
-		this.compare.addEventListener('compare', (event) => {
-			
-			if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
-			else this.initCompare();
-			
-		});
-		
-		msg.on('compare:multi', () => this.initCompare());
-		
-		msg.on('l13Diff.panel.action.compare', () => {
-			
-			if (!this.left.focused && !this.right.focused && !search.focused) {
-				event.stopPropagation();
-				event.preventDefault();
-				this.initCompare();
-			}
-			
-		});
-		
-		msg.on('l13Diff.panel.action.compareAll', () => {
-			
-			if (!this.left.focused && !this.right.focused && !search.focused) {
-				event.stopPropagation();
-				event.preventDefault();
-				msg.send('compare:multi');
-			}
-			
-		});
-			
-	//	swap view
-			
-		this.swap.addEventListener('swap', ({ detail }:any) => this.swapInputs(detail.altKey));
-		
-		msg.on('l13Diff.panel.action.swap', () => this.swapInputs());
-		
-		msg.on('l13Diff.panel.action.swapAll', () => this.swapInputs(true));
-		
-	//	actions view
-		
-		this.actions.addEventListener('select', (event) => {
-			
-			const { metaKey, ctrlKey, status } = (<any>event).detail;
-			
-			if (status) this.list.selectByStatus(status, isMetaKey(ctrlKey, metaKey));
-			else this.list.selectAll();
-			
-		});
-		
-		this.actions.addEventListener('copy', (event) => {
-			
-			const detail = (<any>event).detail;
-			
-			disable();
-			
-			if (detail.altKey) this.list.multiCopy(detail.from);
-			else this.list.copy(detail.from);
-			
-		});
-		
-	//	views view
-		
-		//	Please see msg.on('init:view', (data) => { ... });
-		
-	//	search view
+		const searchComponent = <L13DiffSearchComponent>document.createElement('l13-diff-search');
+		searchComponent.vmId = 'search';
 		
 		searchVM.disable();
 		
-		//	Please see msg.on('init:view', (data) => { ... });
+		commands.actions.init(this.list);
+		commands.compare.init(this, this.left, this.right, searchComponent);
+		commands.favorites.init(leftVM, rightVM);
+		commands.input.init(menuComponent);
+		commands.list.init(this, this.list, searchComponent);
+		commands.search.init(searchComponent, searchVM, this.list, this.widgets);
+		commands.swap.init(this);
+		commands.views.init(viewsVM);
 		
-		search.addEventListener('close', () => {
-			
-			this.list.classList.remove('-widgets');
-			search.classList.add('-moveout');
-			
-		});
+		events.actions.init(this, this.actions, this.list);
+		events.compare.init(this, this.compare);
+		events.input.init(this, this.left, this.right, menuComponent);
+		events.list.init(this, this.list, listVM, this.left, this.right, searchComponent, this.navigator, actionsVM, this.result, this.intro);
+		events.search.init(this, searchComponent, this.list, this.navigator);
+		events.swap.init(this, this.swap);
 		
-		search.addEventListener('animationend', () => {
-			
-			if (search.classList.contains('-moveout')) {
-				this.navigator.classList.remove('-widgets');
-				search.classList.remove('-moveout');
-				search.viewmodel.disable();
-				search.remove();
-			} else {
-				this.navigator.classList.add('-widgets');
-				search.classList.remove('-movein');
-			}
-			
-			this.updateNavigator();
-			this.updateSelection();
-			
-		});
-		
-		msg.on('l13Diff.panel.action.filter', async () => {
-			
-			if (!search.parentNode) {
-				this.widgets.appendChild(search);
-				this.list.classList.add('-widgets');
-				search.classList.add('-movein');
-				await search.viewmodel.enable();
-				search.focus()
-			} else search.focus();
-			
-		});
-		
-	//	list view
-		
-		listVM.on('cancel', () => this.enable());
-		listVM.on('compared', () => this.enable());
-		listVM.on('copied', () => this.enable());
-		listVM.on('deleted', () => this.enable());
-		listVM.on('updated', () => this.enable());
-		listVM.on('multicopy', () => disable());
-		
-		listVM.on('filtered', () => {
-			
-			this.result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';
-			this.intro.style.display = listVM.items.length ? 'none' : 'block';
-			
-		});
-		
-		this.list.addEventListener('copy', () => disable());
-		this.list.addEventListener('delete', () => disable());
-		
-		this.list.addEventListener('selected', () => {
-			
-			actionsVM.enableCopy();
-			this.updateSelection();
-			
-		});
-		
-		this.list.addEventListener('unselected', () => {
-			
-			actionsVM.disableCopy();
-			this.navigator.clearSelection();
-			
-		});
-		
-		this.list.addEventListener('scroll', () => this.setScrollbarPosition());
-		this.list.addEventListener('filtered', () => this.updateNavigator());
-		
-		msg.on('l13Diff.panel.action.delete', () => {
-			
-			if (this.list.disabled) return;
-			
-			disable();
-			this.list.delete();
-			
-		});
-		
-		msg.on('l13Diff.panel.action.selectAllEntries', () => this.list.selectAll());
-		
-		msg.on('l13Diff.panel.action.unselect', () => {
-			
-			if (!search.focused) this.list.unselect();
-			
-		});
-		
-		document.addEventListener('mouseup', ({ target }) => {
-			
-			if (this.list.disabled) return;
-			
-			if (target === document.body || target === document.documentElement) this.list.unselect();
-			
-		});
-		
-		const focusListView = () => {
-			
-			if (!this.left.focused && !this.right.focused) this.list.focus();
-			
-		};
-		
-		window.addEventListener('focus', () => {
-			
-			if (this.list.content.firstElementChild && !this.left.focused && !this.right.focused) {
-				setTimeout(focusListView, 0);
-			}
-			
-		});
-		
-	//	navigator view
-		
-		this.navigator.addEventListener('scroll', () => {
-			
-			const list = this.list;
-			const navigator = this.navigator;
-			
-			list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.canvasMap.offsetHeight * list.scrollHeight);
-			
-		});
-		
-		this.navigator.addEventListener('mousedownscroll', () => this.list.classList.add('-active'));
-		this.navigator.addEventListener('mouseupscroll', () => this.list.classList.remove('-active'));
-		
-		window.addEventListener('theme', () => {
-			
-			this.updateNavigator();
-			this.updateSelection();
-			
-		});
-		
-		window.addEventListener('resize', () => {
-			
-			this.updateNavigator();
-			this.updateSelection();
-			
-		});
-		
-	//	messages
-		
-		msg.on('cancel', () => this.enable());
-		
-		msg.on('focus', () => setTimeout(() => window.focus(), 0)); // Fixes losing focus if other tab has been closed
-		
-		msg.on('update:paths', (data) => {
-			
-			if (data.uris.length) {
-				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
-				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-				if (data.compare) this.initCompare();
-			}
-			
-		});
-		
-		msg.on('save:favorite', () => {
-			
-			msg.send('save:favorite', {
-				pathA: this.left.viewmodel.value,
-				pathB: this.right.viewmodel.value,
-			});
-			
-		});
-		
-		msg.on('init:view', (data) => {
-			
-			msg.removeMessageListener('init:view');
-			
-			if (data.panel?.views) viewsVM.setState(data.panel.views);
-			if (data.panel?.search) searchVM.setState(data.panel.search);
-			
-			viewsVM.on('update', () => this.savePanelState());
-			searchVM.on('update', () => this.savePanelState());
-			
-			if (data.uris.length) {
-				this.left.viewmodel.value = (data.uris[0] || 0).fsPath || '';
-				this.right.viewmodel.value = (data.uris[1] || 0).fsPath || '';
-			} else {
-				this.left.viewmodel.value = data.workspaces[0] || '';
-				this.right.viewmodel.value = data.workspaces[1] || '';
-			}
-			
-			if (data.compare) this.initCompare();
-			
-		});
-		
-		msg.send('init:view');
+		events.diff.init(this, leftVM, rightVM);
 		
 	}
 	
-	private enable () :void {
+	public enable () :void {
 		
-		enable(!this.list.content.querySelector('.-selected'));
+		panelVM.loading = false;
+	
+		if (listVM.items.length) {
+			actionsVM.enable();
+			if (!this.list.content.querySelector('.-selected')) actionsVM.disableCopy();
+		}
+		
+		compareVM.enable();
+		leftVM.enable();
+		listVM.enable();
+		rightVM.enable();
+		swapVM.enable();
+		viewsVM.enable();
 		
 		this.list.focus();
 		
 	}
 	
-	private savePanelState () :void {
+	public disable () :void {
 		
-		msg.send('save:panelstate', {
-			views: viewsVM.getState(),
-			search: searchVM.getState(),
-		});
+		panelVM.loading = true;
+		
+		actionsVM.disable();
+		compareVM.disable();
+		leftVM.disable();
+		listVM.disable();
+		rightVM.disable();
+		swapVM.disable();
+		viewsVM.disable();
 		
 	}
 	
-	private swapInputs (altKey:boolean = false) :void {
+	public swapInputs (altKey:boolean = false) :void {
 		
 		if (altKey) {
-			const viewmodel = this.list.viewmodel;
-			
-			if (viewmodel.items.length) {
-				viewmodel.swapList();
-				leftVM.value = viewmodel.diffResult.pathA;
-				rightVM.value = viewmodel.diffResult.pathB;
+			if (listVM.items.length) {
+				listVM.swapList();
+				leftVM.value = listVM.diffResult.pathA;
+				rightVM.value = listVM.diffResult.pathB;
 			}
 		} else {
 			const value = leftVM.value;
@@ -411,7 +182,31 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private setScrollbarPosition () {
+	public initCompare () {
+		
+		this.disable();
+		
+		listVM.items = [];
+		listVM.requestUpdate();
+		
+		msg.send<DiffInitMessage>('create:diffs', {
+			pathA: leftVM.value,
+			pathB: rightVM.value,
+		});
+		
+	}
+	
+	public initPanelStates (panel:DiffPanelStateMessage) {
+		
+		if (panel?.views) viewsVM.setState(panel.views);
+		if (panel?.search) searchVM.setState(panel.search);
+		
+		viewsVM.on('update', () => savePanelState());
+		searchVM.on('update', () => savePanelState());
+		
+	}
+	
+	public setScrollbarPosition () {
 		
 		const list = this.list;
 		const navigator = this.navigator;
@@ -420,23 +215,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private initCompare () :void {
-		
-		disable();
-		
-		listVM.items = [];
-		listVM.requestUpdate();
-		
-		const diffInit:DiffInitMessage = {
-			pathA: leftVM.value,
-			pathB: rightVM.value,
-		};
-		
-		msg.send('create:diffs', diffInit);
-		
-	}
-	
-	private updateSelection () :void {
+	public updateSelection () {
 			
 		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:any[] = [];
@@ -453,7 +232,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private updateNavigator () :void {
+	public updateNavigator () {
 			
 		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:any[] = [];
@@ -476,34 +255,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
-function enable (disableCopy:boolean = true) {
-	
-	panelVM.loading = false;
-	
-	if (listVM.items.length) {
-		actionsVM.enable();
-		if (disableCopy) actionsVM.disableCopy();
-	}
-	
-	compareVM.enable();
-	leftVM.enable();
-	listVM.enable();
-	rightVM.enable();
-	swapVM.enable();
-	viewsVM.enable();
-	
-}
-
-function disable () {
-	
-	panelVM.loading = true;
+function savePanelState () :void {
 		
-	actionsVM.disable();
-	compareVM.disable();
-	leftVM.disable();
-	listVM.disable();
-	rightVM.disable();
-	swapVM.disable();
-	viewsVM.disable();
+	msg.send<DiffPanelStateMessage>('save:panelstate', {
+		views: viewsVM.getState(),
+		search: searchVM.getState(),
+	});
 	
 }

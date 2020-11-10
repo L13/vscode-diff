@@ -109,61 +109,6 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 			
 		});
 		
-		msg.on('l13Diff.panel.searchWidget.close', () => {
-			
-			if (this.focused) this.close();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindCaseSensitive', () => {
-			
-			this.viewmodel.useCaseSensitive = !this.viewmodel.useCaseSensitive;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindRegex', () => {
-			
-			this.viewmodel.useRegExp = !this.viewmodel.useRegExp;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindFiles', () => {
-			
-			this.viewmodel.useFiles = !this.viewmodel.useFiles;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindFolders', () => {
-			
-			this.viewmodel.useFolders = !this.viewmodel.useFolders;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindSymbolicLinks', () => {
-			
-			this.viewmodel.useSymlinks = !this.viewmodel.useSymlinks;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindConflicts', () => {
-			
-			this.viewmodel.useFiles = !this.viewmodel.useFiles;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
-		msg.on('l13Diff.panel.searchWidget.toggleFindOthers', () => {
-			
-			this.viewmodel.useOthers = !this.viewmodel.useOthers;
-			this.viewmodel.requestUpdate();
-			
-		});
-		
 		this.button.addEventListener('click', () => this.close());
 		
 		this.resizer.addEventListener('mousedown', this.resizeDown);

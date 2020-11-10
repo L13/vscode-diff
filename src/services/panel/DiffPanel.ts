@@ -535,12 +535,6 @@ export class DiffPanel {
 		
 	}
 	
-	public static addToFavorites () {
-		
-		DiffPanel.currentPanel?.msg.send('save:favorite');
-		
-	}
-	
 	public static send (name:string, data:any = null) {
 		
 		DiffPanel.currentPanel?.msg.send(name, data);

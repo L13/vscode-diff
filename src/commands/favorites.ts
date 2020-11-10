@@ -60,7 +60,6 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.addToFavorites': () => DiffPanel.addToFavorites(),
 		'l13Diff.renameFavorite': ({ favorite }) => DiffFavorites.renameFavorite(context, favorite),
 		'l13Diff.removeFavorite': ({ favorite }) => DiffFavorites.removeFavorite(context, favorite),
 		'l13Diff.addFavoriteGroup': () => DiffFavorites.addFavoriteGroup(context),

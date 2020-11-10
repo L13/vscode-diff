@@ -23,6 +23,11 @@ export type DiffDialogMessage = {
 	fsPath:string,
 };
 
+export type DiffFavoriteMessage = {
+	pathA:string,
+	pathB:string,
+};
+
 export type DiffGoToMessage = {
 	files:DiffFile[],
 	openToSide:boolean,
@@ -37,6 +42,26 @@ export type DiffMultiCopyMessage = {
 	ids:string[],
 	pathA:string,
 	pathB:string,
+};
+
+export type DiffPanelStateMessage = {
+	views: {
+		unchangedChecked:boolean,
+		deletedChecked:boolean,
+		modifiedChecked:boolean,
+		untrackedChecked:boolean,
+		ignoredChecked:boolean,
+	},
+	search: {
+		searchterm:string,
+		useRegExp:boolean,
+		useCaseSensitive:boolean,
+		useFiles:boolean,
+		useFolders:boolean,
+		useSymlinks:boolean,
+		useConflicts:boolean,
+		useOthers:boolean,
+	},
 };
 
 export type DiffResultMessage = {

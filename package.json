@@ -109,7 +109,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.addToFavorites",
+				"command": "l13Diff.action.addToFavorites",
 				"title": "Add to Favorites",
 				"icon": {
 					"light": "images/favorites/favorite-add-light.svg",
@@ -293,111 +293,111 @@
 				"title": "Compare Selected"
 			},
 			{
-				"command": "l13Diff.panel.action.compare",
+				"command": "l13Diff.action.compare",
 				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.panel.action.compareAll",
+				"command": "l13Diff.action.compareAll",
 				"title": "Compare all open panels"
 			},
 			{
-				"command": "l13Diff.panel.action.copyLeft",
+				"command": "l13Diff.action.actions.copyToRightFolder",
 				"title": "Copy selection to the right folder"
 			},
 			{
-				"command": "l13Diff.panel.action.copyRight",
+				"command": "l13Diff.action.actions.copyToLeftFolder",
 				"title": "Copy selection to the left folder"
 			},
 			{
-				"command": "l13Diff.panel.action.delete",
+				"command": "l13Diff.action.list.delete",
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.panel.action.filter",
+				"command": "l13Diff.action.search.open",
 				"title": "Filter"
 			},
 			{
-				"command": "l13Diff.panel.action.selectCreatedEntries",
+				"command": "l13Diff.action.actions.selectCreatedEntries",
 				"title": "Select all created files"
 			},
 			{
-				"command": "l13Diff.panel.action.selectDeletedEntries",
+				"command": "l13Diff.action.actions.selectDeletedEntries",
 				"title": "Select all deleted files"
 			},
 			{
-				"command": "l13Diff.panel.action.selectModifiedEntries",
+				"command": "l13Diff.action.actions.selectModifiedEntries",
 				"title": "Select all modified files"
 			},
 			{
-				"command": "l13Diff.panel.action.selectAllEntries",
+				"command": "l13Diff.action.actions.selectAllEntries",
 				"title": "Select all files"
 			},
 			{
-				"command": "l13Diff.panel.action.swap",
+				"command": "l13Diff.action.swap",
 				"title": "Swap left and right input fields"
 			},
 			{
-				"command": "l13Diff.panel.action.swapAll",
+				"command": "l13Diff.action.swapAll",
 				"title": "Swap input fields and list"
 			},
 			{
-				"command": "l13Diff.panel.action.toggleShowAllCreated",
+				"command": "l13Diff.action.views.toggleShowAllCreated",
 				"title": "Show all created files"
 			},
 			{
-				"command": "l13Diff.panel.action.toggleShowAllDeleted",
+				"command": "l13Diff.action.views.toggleShowAllDeleted",
 				"title": "Show all deleted files"
 			},
 			{
-				"command": "l13Diff.panel.action.toggleShowAllIgnored",
+				"command": "l13Diff.action.views.toggleShowAllIgnored",
 				"title": "Show all ignored files"
 			},
 			{
-				"command": "l13Diff.panel.action.toggleShowAllModified",
+				"command": "l13Diff.action.views.toggleShowAllModified",
 				"title": "Show all modified files"
 			},
 			{
-				"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+				"command": "l13Diff.action.views.toggleShowAllUnchanged",
 				"title": "Show all unchanged files"
 			},
 			{
-				"command": "l13Diff.panel.action.unselect",
+				"command": "l13Diff.action.list.unselect",
 				"title": "Unselect"
 			},
 			{
-				"command": "l13Diff.panel.menu.close",
+				"command": "l13Diff.action.menu.close",
 				"title": "Close"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.close",
+				"command": "l13Diff.action.search.close",
 				"title": "Close"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+				"command": "l13Diff.action.search.toggleFindCaseSensitive",
 				"title": "Match Case"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+				"command": "l13Diff.action.search.toggleFindConflicts",
 				"title": "Show Conflicts"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+				"command": "l13Diff.action.search.toggleFindFiles",
 				"title": "Show Files"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+				"command": "l13Diff.action.search.toggleFindFolders",
 				"title": "Show Folders"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindOthers",
+				"command": "l13Diff.action.search.toggleFindOthers",
 				"title": "Show Others"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+				"command": "l13Diff.action.search.toggleFindRegularExpression",
 				"title": "Use Regular Expression"
 			},
 			{
-				"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 				"title": "Show Symbolic Links"
 			}
 		],
@@ -410,7 +410,7 @@
 			{
 				"mac": "meta+d",
 				"key": "ctrl+d",
-				"command": "l13Diff.addToFavorites",
+				"command": "l13Diff.action.addToFavorites",
 				"when": "l13DiffFocus"
 			},
 			{
@@ -426,161 +426,161 @@
 			{
 				"mac": "meta+c",
 				"key": "ctrl+c",
-				"command": "l13Diff.panel.action.compare",
+				"command": "l13Diff.action.compare",
 				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+alt+c",
 				"key": "ctrl+alt+c",
-				"command": "l13Diff.panel.action.compareAll",
+				"command": "l13Diff.action.compareAll",
 				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+?",
 				"key": "ctrl+?",
-				"command": "l13Diff.panel.action.copyLeft",
+				"command": "l13Diff.action.actions.copyToRightFolder",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+?",
 				"key": "ctrl+?",
-				"command": "l13Diff.panel.action.copyRight",
+				"command": "l13Diff.action.actions.copyToLeftFolder",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+backspace",
 				"key": "delete",
-				"command": "l13Diff.panel.action.delete",
+				"command": "l13Diff.action.list.delete",
 				"when": "l13DiffFocus && l13DiffListFocus"
 			},
 			{
 				"mac": "meta+f",
 				"key": "ctrl+f",
-				"command": "l13Diff.panel.action.filter",
+				"command": "l13Diff.action.search.open",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+?",
 				"key": "ctrl+?",
-				"command": "l13Diff.panel.action.selectCreatedEntries",
+				"command": "l13Diff.action.actions.selectCreatedEntries",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+?",
 				"key": "ctrl+?",
-				"command": "l13Diff.panel.action.selectDeletedEntries",
+				"command": "l13Diff.action.actions.selectDeletedEntries",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+?",
 				"key": "ctrl+?",
-				"command": "l13Diff.panel.action.selectModifiedEntries",
+				"command": "l13Diff.action.actions.selectModifiedEntries",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+a",
 				"key": "ctrl+a",
-				"command": "l13Diff.panel.action.selectAllEntries",
+				"command": "l13Diff.action.actions.selectAllEntries",
 				"when": "l13DiffFocus && l13DiffListFocus"
 			},
 			{
 				"mac": "meta+s",
 				"key": "ctrl+s",
-				"command": "l13Diff.panel.action.swap",
+				"command": "l13Diff.action.swap",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+alt+s",
 				"key": "ctrl+alt+s",
-				"command": "l13Diff.panel.action.swapAll",
+				"command": "l13Diff.action.swapAll",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+4",
 				"key": "ctrl+4",
-				"command": "l13Diff.panel.action.toggleShowAllCreated",
+				"command": "l13Diff.action.views.toggleShowAllCreated",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+2",
 				"key": "ctrl+2",
-				"command": "l13Diff.panel.action.toggleShowAllDeleted",
+				"command": "l13Diff.action.views.toggleShowAllDeleted",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+5",
 				"key": "ctrl+5",
-				"command": "l13Diff.panel.action.toggleShowAllIgnored",
+				"command": "l13Diff.action.views.toggleShowAllIgnored",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+3",
 				"key": "ctrl+3",
-				"command": "l13Diff.panel.action.toggleShowAllModified",
+				"command": "l13Diff.action.views.toggleShowAllModified",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+1",
 				"key": "ctrl+1",
-				"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+				"command": "l13Diff.action.views.toggleShowAllUnchanged",
 				"when": "l13DiffFocus"
 			},
 			{
 				"key": "escape",
-				"command": "l13Diff.panel.action.unselect",
+				"command": "l13Diff.action.list.unselect",
 				"when": "l13DiffFocus && l13DiffListFocus"
 			},
 			{
 				"key": "escape",
-				"command": "l13Diff.panel.menu.close",
+				"command": "l13Diff.action.menu.close",
 				"when": "l13DiffFocus && l13DiffInputFocus"
 			},
 			{
 				"key": "escape",
-				"command": "l13Diff.panel.searchWidget.close",
+				"command": "l13Diff.action.search.close",
 				"when": "l13DiffFocus && l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+alt+c",
 				"key": "alt+c",
-				"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+				"command": "l13Diff.action.search.toggleFindCaseSensitive",
 				"when": "l13DiffFocus && l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+alt+?",
 				"key": "alt+?",
-				"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+				"command": "l13Diff.action.search.toggleFindConflicts",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+alt+f",
 				"key": "alt+f",
-				"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+				"command": "l13Diff.action.search.toggleFindFiles",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+alt+d",
 				"key": "alt+d",
-				"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+				"command": "l13Diff.action.search.toggleFindFolders",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+alt+r",
 				"key": "alt+r",
-				"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+				"command": "l13Diff.action.search.toggleFindRegularExpression",
 				"when": "l13DiffFocus && l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+alt+l",
 				"key": "alt+l",
-				"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 				"when": "l13DiffFocus"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "l13Diff.addToFavorites",
+					"command": "l13Diff.action.addToFavorites",
 					"when": "l13DiffFocus"
 				},
 				{
@@ -720,107 +720,107 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.panel.action.compare",
+					"command": "l13Diff.action.compare",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.compareAll",
+					"command": "l13Diff.action.compareAll",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.copyLeft",
+					"command": "l13Diff.action.actions.copyToRightFolder",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.copyRight",
+					"command": "l13Diff.action.actions.copyToLeftFolder",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.delete",
+					"command": "l13Diff.action.list.delete",
 					"when": "l13DiffFocus && l13DiffListFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.filter",
+					"command": "l13Diff.action.search.open",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.selectCreatedEntries",
+					"command": "l13Diff.action.actions.selectCreatedEntries",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.selectDeletedEntries",
+					"command": "l13Diff.action.actions.selectDeletedEntries",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.selectModifiedEntries",
+					"command": "l13Diff.action.actions.selectModifiedEntries",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.selectAllEntries",
+					"command": "l13Diff.action.actions.selectAllEntries",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.swap",
+					"command": "l13Diff.action.swap",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.swapAll",
+					"command": "l13Diff.action.swapAll",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.toggleShowAllCreated",
+					"command": "l13Diff.action.views.toggleShowAllCreated",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.toggleShowAllDeleted",
+					"command": "l13Diff.action.views.toggleShowAllDeleted",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.toggleShowAllIgnored",
+					"command": "l13Diff.action.views.toggleShowAllIgnored",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.toggleShowAllModified",
+					"command": "l13Diff.action.views.toggleShowAllModified",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.toggleShowAllUnchanged",
+					"command": "l13Diff.action.views.toggleShowAllUnchanged",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.action.unselect",
+					"command": "l13Diff.action.list.unselect",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.menu.close",
+					"command": "l13Diff.action.menu.close",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.close",
+					"command": "l13Diff.action.search.close",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindCaseSensitive",
+					"command": "l13Diff.action.search.toggleFindCaseSensitive",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindConflicts",
+					"command": "l13Diff.action.search.toggleFindConflicts",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindFiles",
+					"command": "l13Diff.action.search.toggleFindFiles",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindFolders",
+					"command": "l13Diff.action.search.toggleFindFolders",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindRegex",
+					"command": "l13Diff.action.search.toggleFindRegularExpression",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.panel.searchWidget.toggleFindSymbolicLinks",
+					"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 					"when": "l13DiffFocus"
 				}
 			],
@@ -962,7 +962,7 @@
 			],
 			"editor/title": [
 				{
-					"command": "l13Diff.addToFavorites",
+					"command": "l13Diff.action.addToFavorites",
 					"when": "l13DiffFocus",
 					"group": "navigation@1"
 				},
