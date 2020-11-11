@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
+import { DiffPanelStateMessage } from '../../types';
 
+import { DiffPanel } from '../panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -12,13 +14,11 @@
 
 //	Exports ____________________________________________________________________
 
-export type ContextStates = {
-	[name:string]: boolean,
-};
-
-export type Uri = {
-	fsPath:string,
-};
+export function init (currentDiffPanel:DiffPanel) {
+	
+	currentDiffPanel.msg.on('save:panelstate', (data:DiffPanelStateMessage) => currentDiffPanel.savePanelState(data));
+	
+}
 
 //	Functions __________________________________________________________________
 

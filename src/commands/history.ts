@@ -53,7 +53,7 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		'l13Diff.removeComparison': ({ comparison }) => DiffHistory.removeComparison(context, comparison),
 		
-		'l13Diff.clearHistory': async () => {
+		'l13Diff.action.clearHistory': async () => {
 			
 			const value = await dialogs.confirm('Delete the complete history?', 'Delete');
 			

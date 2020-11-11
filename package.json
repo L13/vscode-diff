@@ -34,7 +34,7 @@
 	"activationEvents": [
 		"onCommand:l13Diff.show",
 		"onCommand:l13Diff.open",
-		"onCommand:l13Diff.clearHistory",
+		"onCommand:l13Diff.action.clearHistory",
 		"onCommand:l13Diff.clearFavorites",
 		"onCommand:l13Diff.showOutput",
 		"onCommand:l13Diff.compareProjectWithWorkspace",
@@ -101,7 +101,7 @@
 				"title": "Open in Diff Folders"
 			},
 			{
-				"command": "l13Diff.clearHistory",
+				"command": "l13Diff.action.clearHistory",
 				"title": "Diff Folders: Clear History",
 				"icon": {
 					"light": "images/history/history-clear-light.svg",
@@ -853,7 +853,7 @@
 					"group": "navigation@2"
 				},
 				{
-					"command": "l13Diff.clearHistory",
+					"command": "l13Diff.action.clearHistory",
 					"when": "view == l13DiffHistory",
 					"group": "navigation@1"
 				}
@@ -1095,6 +1095,21 @@
 						"Uses the value of 'diffEditor.ignoreTrimWhitespace'.",
 						"Ignores leading and trailing whitespace for a comparison in a text file.",
 						"Does not ignore leading and trailing whitespace for a comparison in a text file."
+					]
+				},
+				"l13Diff.enableTrash": {
+					"type": "string",
+					"default": "default",
+					"enum": [
+						"default",
+						"on",
+						"off"
+					],
+					"description": "Moves files/folders to the OS trash when deleting. Disabling this will delete files/folders permanently.",
+					"enumDescriptions": [
+						"Uses the value of 'files.enableTrash'.",
+						"Moves files/folders to the OS trash.",
+						"Deletes files/folders permanently."
 					]
 				},
 				"l13Diff.confirmCaseInsensitiveCompare": {

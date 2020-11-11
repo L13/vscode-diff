@@ -53,7 +53,9 @@ export function ignoreTrimWhitespace () {
 
 export function enableTrash () {
 	
-	return vscode.workspace.getConfiguration('files').get('enableTrash', true);
+	const enableTrash = get('enableTrash', 'default');
+	
+	return enableTrash === 'default' ? vscode.workspace.getConfiguration('files').get('enableTrash', true) : enableTrash === 'on';
 	
 }
 

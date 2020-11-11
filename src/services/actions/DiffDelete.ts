@@ -29,14 +29,14 @@ const selectableDeleteDialog:DeleteDialog = {
 
 const simpleTrashDialog:DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
-	textSingle: 'Are you sure to delete selected file?',
+	textSingle: 'Are you sure to delete the selected file?',
 	buttonAll: 'Move to Trash',
 	buttonOk: 'Move, don\'t show again',
 };
 
 const simpleDeleteDialog:DeleteDialog = {
-	text: 'Are you sure to delete all selected files?',
-	textSingle: 'Are you sure to delete selected file?',
+	text: 'Are you sure to delete all selected files permanently?',
+	textSingle: 'Are you sure to delete the selected file permanently?',
 	buttonAll: 'Delete',
 	buttonOk: 'Delete, don\'t show again',
 };
@@ -84,24 +84,28 @@ export class DiffDelete {
 		
 		if (!diffs.length) return;
 		
-		let sides:number = 0;
+		let sides = 0;
+		let selectSide = false;
 		
 		for (const diff of diffs) {
 			// tslint:disable-next-line: no-bitwise
 			if (diff.fileA) sides |= 1;
 			// tslint:disable-next-line: no-bitwise
 			if (diff.fileB) sides |= 2;
-			if (sides > 2) break;
+			if (sides === 3) {
+				selectSide = true;
+				break;
+			}
 		}
 		
 		const useTrash:boolean = settings.enableTrash();
 		const confirmDelete:boolean = settings.get('confirmDelete', true);
 		
-		if (confirmDelete || sides > 2) {
+		if (confirmDelete || selectSide) {
 			let dialog:DeleteDialog = null;
 			const args = [];
 			
-			if (sides > 2) {
+			if (selectSide) {
 				dialog = useTrash ? selectableTrashDialog : selectableDeleteDialog;
 				if (process.platform === 'win32') args.push(dialog.buttonLeft, dialog.buttonRight); // Fixes confusing order of buttons
 				else args.push(dialog.buttonRight, dialog.buttonLeft);

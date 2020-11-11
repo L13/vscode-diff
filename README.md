@@ -7,6 +7,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in Diff Folders 0.31.0
 
 - Added support for custom keyboard shortcuts.
+- Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
 
 ## Index
 
@@ -102,6 +103,10 @@ Compare two folders in Visual Studio Code.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
+* `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
+	* `default` - (default) Uses the value of `files.enableTrash`.
+	* `on` - Moves files and folders to the OS trash.
+	* `off` - Deletes files and folders permanently.
 
 [1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 

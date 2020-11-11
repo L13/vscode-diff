@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 //	Variables __________________________________________________________________
 
-
+type DiffFileTypes = 'error'|'file'|'folder'|'symlink'|'unknown';
 
 //	Initialize _________________________________________________________________
 
@@ -15,7 +15,7 @@ import * as fs from 'fs';
 export type Diff = {
 	id:string,
 	status:DiffStatus,
-	type:'error'|'file'|'folder'|'mixed'|'symlink'|'unknown',
+	type:DiffFileTypes|'mixed',
 	ignoredWhitespace:boolean,
 	ignoredEOL:boolean,
 	fileA:null|DiffFile,
@@ -33,7 +33,7 @@ export type DiffFile = {
 	dirname:string,
 	extname:string,
 	ignore:boolean,
-	type:'error'|'file'|'folder'|'symlink'|'unknown',
+	type:DiffFileTypes,
 };
 
 export type DiffStatus = 'conflicting'|'deleted'|'ignored'|'modified'|'unchanged'|'untracked';

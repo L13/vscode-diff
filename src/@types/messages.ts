@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import { Uri } from '../types';
+
 import { Diff, DiffFile } from './diffs';
 
 //	Variables __________________________________________________________________
@@ -38,10 +40,24 @@ export type DiffInitMessage = {
 	pathB:string,
 };
 
+export type DiffInitViewMessage = {
+	panel:DiffPanelStateMessage,
+	uris:Uri[],
+	workspaces:string[],
+	compare:boolean,
+};
+
 export type DiffMultiCopyMessage = {
 	ids:string[],
 	pathA:string,
 	pathB:string,
+};
+
+export type DiffOpenMessage = {
+	diffs:Diff[],
+	pathA:string,
+	pathB:string,
+	openToSide:boolean,
 };
 
 export type DiffPanelStateMessage = {
@@ -70,11 +86,9 @@ export type DiffResultMessage = {
 	pathB:string,
 };
 
-export type DiffOpenMessage = {
-	diffs:Diff[],
-	pathA:string,
-	pathB:string,
-	openToSide:boolean,
+export type DiffUpdatePathsMessage = {
+	uris:Uri[],
+	compare:boolean,
 };
 
 export type MessageListener = (...args:any[]) => void;

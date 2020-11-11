@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import * as vscode from 'vscode';
 
 //	Variables __________________________________________________________________
 
@@ -12,13 +12,11 @@
 
 //	Exports ____________________________________________________________________
 
-export type ContextStates = {
-	[name:string]: boolean,
-};
-
-export type Uri = {
-	fsPath:string,
-};
+export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
+	
+	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
+	
+}
 
 //	Functions __________________________________________________________________
 

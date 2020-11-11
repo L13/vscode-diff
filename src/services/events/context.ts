@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { DiffPanel } from '../panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -12,13 +12,11 @@
 
 //	Exports ____________________________________________________________________
 
-export type ContextStates = {
-	[name:string]: boolean,
-};
-
-export type Uri = {
-	fsPath:string,
-};
+export function init (currentDiffPanel:DiffPanel) {
+	
+	currentDiffPanel.msg.on('context', ({ name, value }) => currentDiffPanel.setContext(name, value));
+	
+}
 
 //	Functions __________________________________________________________________
 
