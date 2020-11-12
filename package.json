@@ -293,15 +293,15 @@
 			},
 			{
 				"command": "l13Diff.action.panel.compareAll",
-				"title": "Compare all open panels"
+				"title": "Compare All"
 			},
 			{
 				"command": "l13Diff.action.actions.copyToRightFolder",
-				"title": "Copy selection to the right folder"
+				"title": "Copy Selection to the Right Folder"
 			},
 			{
 				"command": "l13Diff.action.actions.copyToLeftFolder",
-				"title": "Copy selection to the left folder"
+				"title": "Copy Selection to the Left Folder"
 			},
 			{
 				"command": "l13Diff.action.list.delete",
@@ -313,47 +313,47 @@
 			},
 			{
 				"command": "l13Diff.action.actions.selectCreatedEntries",
-				"title": "Select all created files"
+				"title": "Select All Created Files"
 			},
 			{
 				"command": "l13Diff.action.actions.selectDeletedEntries",
-				"title": "Select all deleted files"
+				"title": "Select All Deleted Files"
 			},
 			{
 				"command": "l13Diff.action.actions.selectModifiedEntries",
-				"title": "Select all modified files"
+				"title": "Select All Modified Files"
 			},
 			{
 				"command": "l13Diff.action.actions.selectAllEntries",
-				"title": "Select all files"
+				"title": "Select All Files"
 			},
 			{
 				"command": "l13Diff.action.input.swap",
-				"title": "Swap left and right input fields"
+				"title": "Swap Left and Right Input Fields"
 			},
 			{
 				"command": "l13Diff.action.input.swapAll",
-				"title": "Swap input fields and list"
+				"title": "Swap Input Fields and List"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllCreated",
-				"title": "Show all created files"
+				"title": "Toggle Show All Created Files"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllDeleted",
-				"title": "Show all deleted files"
+				"title": "Toggle Show All Deleted Files"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllIgnored",
-				"title": "Show all ignored files"
+				"title": "Toggle Show All Ignored Files"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllModified",
-				"title": "Show all modified files"
+				"title": "Toggle Show All Modified Files"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllUnchanged",
-				"title": "Show all unchanged files"
+				"title": "Toggle Show All Unchanged Files"
 			},
 			{
 				"command": "l13Diff.action.list.unselect",
@@ -373,27 +373,27 @@
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindConflicts",
-				"title": "Show Conflicts"
+				"title": "Toggle Find Conflicts"
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindFiles",
-				"title": "Show Files"
+				"title": "Toggle Find Files"
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindFolders",
-				"title": "Show Folders"
+				"title": "Toggle Find Folders"
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindOthers",
-				"title": "Show Others"
+				"title": "Toggle Find Others"
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindRegularExpression",
-				"title": "Use Regular Expression"
+				"title": "Toggle Use Regular Expression"
 			},
 			{
 				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
-				"title": "Show Symbolic Links"
+				"title": "Toggle Find Symbolic Links"
 			}
 		],
 		"keybindings": [

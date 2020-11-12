@@ -25,28 +25,28 @@ export function init (viewsVM:L13DiffViewsViewModel) {
 	
 	msg.on('l13Diff.action.views.toggleShowAllDeleted', () => {
 		
-		viewsVM.untrackedChecked = !viewsVM.untrackedChecked;
+		viewsVM.deletedChecked = !viewsVM.deletedChecked;
 		viewsVM.requestUpdate();
 		
 	});
 	
 	msg.on('l13Diff.action.views.toggleShowAllIgnored', () => {
 		
-		viewsVM.untrackedChecked = !viewsVM.untrackedChecked;
+		viewsVM.ignoredChecked = !viewsVM.ignoredChecked;
 		viewsVM.requestUpdate();
 		
 	});
 	
 	msg.on('l13Diff.action.views.toggleShowAllModified', () => {
 		
-		viewsVM.untrackedChecked = !viewsVM.untrackedChecked;
+		viewsVM.modifiedChecked = !viewsVM.modifiedChecked;
 		viewsVM.requestUpdate();
 		
 	});
 	
 	msg.on('l13Diff.action.views.toggleShowAllUnchanged', () => {
 		
-		viewsVM.untrackedChecked = !viewsVM.untrackedChecked;
+		viewsVM.unchangedChecked = !viewsVM.unchangedChecked;
 		viewsVM.requestUpdate();
 		
 	});
