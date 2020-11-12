@@ -1,10 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffCompareViewModelService } from './l13-diff-compare.service';
 import { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
 
+import { setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 

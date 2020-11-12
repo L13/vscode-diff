@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { workspacePaths } from '../common';
+import { workspacePaths } from '../common/paths';
 
 import { DiffMenu } from '../panel/DiffMenu';
 import { DiffPanel } from '../panel/DiffPanel';

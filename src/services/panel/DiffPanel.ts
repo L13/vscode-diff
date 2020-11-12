@@ -19,8 +19,8 @@ import { DiffStatusbar } from '../output/DiffStatusbar';
 
 import { DiffHistory } from '../sidebar/DiffHistory';
 
-import { workspacePaths } from '../common';
-import * as events from '../events';
+import { workspacePaths } from '../common/paths';
+import * as events from './events';
 
 import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';

@@ -57,14 +57,14 @@ gulp.task('icons:fix', (done) => {
 
 gulp.task('icons:common', () => {
 	
-	return gulp.src('src/views/icons/**/*.svg')
+	return gulp.src('src/views/icons/panel/**/*.svg')
 		.pipe(gulp.dest('media/icons'));
 	
 });
 
 gulp.task('icons:json', () => {
 	
-	return gulp.src('src/views/components/icons/**/*.svg')
+	return gulp.src('src/views/components/icons/components/**/*.svg')
 		.pipe(file2json({
 			path: 'icons.ts',
 			indent: '\t',

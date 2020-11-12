@@ -10,9 +10,9 @@ import { lstatSync, walkTree } from '../@l13/fse';
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
-import * as dialogs from '../../common/dialogs';
-import { textfiles } from '../../common/extensions';
-import * as settings from '../../common/settings';
+import * as dialogs from '../common/dialogs';
+import { textfiles } from '../common/extensions';
+import * as settings from '../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
 

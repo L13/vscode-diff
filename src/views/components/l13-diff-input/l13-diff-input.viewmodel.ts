@@ -2,10 +2,6 @@
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
-import { msg } from '../common';
-
-import { DiffDialogMessage } from '../../../@types/messages';
-
 //	Variables __________________________________________________________________
 
 const VALUE = Symbol.for('value');

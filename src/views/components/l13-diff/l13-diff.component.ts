@@ -1,14 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query } from '../../@l13/core';
-
 import { DiffInitMessage, DiffPanelStateMessage } from '../../../types';
 
-import * as commands from './commands';
-import * as events from './events';
-
-import { L13DiffViewModelService } from './l13-diff.service';
-import { L13DiffViewModel } from './l13-diff.viewmodel';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
 import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
@@ -36,6 +30,12 @@ import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 import { msg } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffViewModelService } from './l13-diff.service';
+import { L13DiffViewModel } from './l13-diff.viewmodel';
+
+import * as commands from './commands';
+import * as events from './events';
 
 //	Variables __________________________________________________________________
 

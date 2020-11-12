@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import * as files from '../../common/files';
-import * as settings from '../../common/settings';
+import * as files from '../common/files';
+import * as settings from '../common/settings';
 
 import { DiffGoToMessage, DiffOpenMessage } from '../../types';
 

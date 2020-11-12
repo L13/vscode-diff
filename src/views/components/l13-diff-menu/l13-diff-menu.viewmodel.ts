@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
+
 import { msg } from '../common';
 
 //	Variables __________________________________________________________________

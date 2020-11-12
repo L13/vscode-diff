@@ -1,17 +1,33 @@
 //	Imports ____________________________________________________________________
 
-import { detectKeybinding, getKeyLabel, L13Component, L13Element, L13Query } from '../../@l13/core';
+import { DisplayShortcut, Keybinding } from '../../../types';
+
+import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
 import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
-
-import { DisplayShortcut } from '../../../types';
 
 import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
 //	Variables __________________________________________________________________
+
+const ALT = '⌥';
+const CMD = '⌘';
+const CTRL = '⌃';
+const SHIFT = '⇧';
+
+const macOSSymbols = {
+	Alt: ALT,
+	Cmd: CMD,
+	Command: CMD,
+	Control: CTRL,
+	Ctrl: CTRL,
+	Meta: CMD,
+	Option: ALT,
+	Shift: SHIFT,
+};
 
 const keyboardShortcuts:DisplayShortcut[] = [
 	{
@@ -54,6 +70,18 @@ export class L13DiffIntroComponent extends L13Element<L13DiffIntroViewModel> {
 }
 
 //	Functions __________________________________________________________________
+
+export function detectKeybinding ({ key, mac, win }:Keybinding) {
+	
+	return isMacOs && mac ? mac : isWindows && win ? win : key;
+	
+}
+
+export function getKeyLabel (key:string) {
+	
+	return isMacOs ? (<any>macOSSymbols)[key] || key : key;
+	
+}
 
 function createShortcutViews (shortcuts:DisplayShortcut[]) {
 	

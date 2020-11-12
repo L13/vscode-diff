@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffSwapViewModelService } from './l13-diff-swap.service';
 import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 
-import { addButtonActiveStyleEvents, parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 

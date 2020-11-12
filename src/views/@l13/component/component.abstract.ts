@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Options } from './types';
+import { Options } from '../../@types/components';
 import { ViewModelService } from './view-model-service.abstract';
 import { ViewModel } from './view-model.abstract';
 

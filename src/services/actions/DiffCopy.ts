@@ -10,8 +10,8 @@ import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse'
 
 import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
 
-import * as dialogs from '../../common/dialogs';
-import * as settings from '../../common/settings';
+import * as dialogs from '../common/dialogs';
+import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
 

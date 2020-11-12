@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as dialogs from '../../common/dialogs';
+import * as dialogs from '../common/dialogs';
 
 import { DiffPanel } from '../panel/DiffPanel';
 
