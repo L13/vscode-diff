@@ -21,28 +21,15 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.show': () => DiffPanel.create(context),
+		'l13Diff.action.panel.open': () => DiffPanel.create(context),
 		
-		'l13Diff.openAndCompare': (left, right, newPanel, openToSide) => {
+		'l13Diff.action.panel.openAndCompare': (left, right, newPanel, openToSide) => {
 			
 			if (newPanel) DiffPanel.create(context, [left, right], true, openToSide);
 			else DiffPanel.createOrShow(context, [left, right], true);
 			
 		},
 		
-		'l13Diff.open': async (...uris:any[]) => {
-			
-			if (!uris.length) {
-				const dialogUris = await vscode.window.showOpenDialog({
-					canSelectFiles: true,
-					canSelectFolders: true,
-					canSelectMany: true,
-				});
-				
-				if (dialogUris) DiffPanel.create(context, dialogUris.slice(0, 2));
-			} else DiffPanel.create(context, uris[1].slice(0, 2));
-			
-		},
 	});
 	
 	if (vscode.window.registerWebviewPanelSerializer) {

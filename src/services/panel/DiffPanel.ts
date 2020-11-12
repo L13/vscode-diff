@@ -63,7 +63,7 @@ export class DiffPanel {
 	public static currentPanel:DiffPanel|undefined;
 	public static currentPanels:DiffPanel[] = [];
 	
-	public static readonly viewType = 'l13Diff';
+	public static readonly viewType = 'l13DiffPanel';
 	
 	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
 		

@@ -21,7 +21,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.compareProjectWithWorkspace': async ({ project }) => {
+		'l13Diff.action.projects.compareWithWorkspace': async ({ project }) => {
 			
 			const compare = settings.get('openFavoriteAndCompare', false);
 			const workspaces = workspaceFoldersQuickPickItems();
@@ -35,7 +35,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.openProject': ({ project }) => {
+		'l13Diff.action.projects.open': ({ project }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: project.path }, { fsPath: '' }]);
 			

@@ -73,7 +73,7 @@ export function init (search:L13DiffSearchComponent, searchVM:L13DiffSearchViewM
 	
 	msg.on('l13Diff.action.search.toggleFindConflicts', () => {
 		
-		searchVM.useFiles = !searchVM.useFiles;
+		searchVM.useConflicts = !searchVM.useConflicts;
 		searchVM.requestUpdate();
 		
 	});

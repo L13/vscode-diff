@@ -24,7 +24,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.compareWhitespace': () => {
+		'l13Diff.action.settings.compareWhitespace': () => {
 			
 			const useDefault = settings.get('ignoreTrimWhitespace', 'default');
 			
@@ -33,7 +33,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.ignoreWhitespace': () => {
+		'l13Diff.action.settings.ignoreWhitespace': () => {
 			
 			const useDefault = settings.get('ignoreTrimWhitespace', 'default');
 			
@@ -42,11 +42,11 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.compareEndOfLine': () => settings.update('ignoreEndOfLine', false),
-		'l13Diff.ignoreEndOfLine': () => settings.update('ignoreEndOfLine', true),
+		'l13Diff.action.settings.compareEndOfLine': () => settings.update('ignoreEndOfLine', false),
+		'l13Diff.action.settings.ignoreEndOfLine': () => settings.update('ignoreEndOfLine', true),
 		
-		'l13Diff.useCaseSensitive': () => settings.update('useCaseSensitiveFileName', 'on'),
-		'l13Diff.ignoreCaseSensitive': () => settings.update('useCaseSensitiveFileName', 'off'),
+		'l13Diff.action.settings.useCaseSensitive': () => settings.update('useCaseSensitiveFileName', 'on'),
+		'l13Diff.action.settings.ignoreCaseSensitive': () => settings.update('useCaseSensitiveFileName', 'off'),
 		
 	});
 	

@@ -19,11 +19,12 @@ import { DiffPanel } from '../services/panel/DiffPanel';
 export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, createKeyboardShortcuts([
-		'l13Diff.action.addToFavorites',
-		'l13Diff.action.compare',
-		'l13Diff.action.compareAll',
-		'l13Diff.action.swap',
-		'l13Diff.action.swapAll',
+		'l13Diff.action.panel.addToFavoritesorites',
+		'l13Diff.action.panel.compare',
+		'l13Diff.action.panel.compareAll',
+		
+		'l13Diff.action.input.swap',
+		'l13Diff.action.input.swapAll',
 		
 		'l13Diff.action.actions.copyToLeftFolder',
 		'l13Diff.action.actions.copyToRightFolder',
@@ -43,6 +44,7 @@ export function activate (context:vscode.ExtensionContext) {
 		'l13Diff.action.search.toggleFindConflicts',
 		'l13Diff.action.search.toggleFindFiles',
 		'l13Diff.action.search.toggleFindFolders',
+		'l13Diff.action.search.toggleFindOthers',
 		'l13Diff.action.search.toggleFindRegularExpression',
 		'l13Diff.action.search.toggleFindSymbolicLinks',
 		

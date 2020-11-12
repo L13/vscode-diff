@@ -19,13 +19,13 @@ import { L13DiffComponent } from '../l13-diff.component';
 
 export function init (diff:L13DiffComponent, left:L13DiffInputComponent, right:L13DiffInputComponent, search:L13DiffSearchComponent) {
 	
-	msg.on('l13Diff.action.compare', () => {
+	msg.on('l13Diff.action.panel.compare', () => {
 		
 		if (!left.focused && !right.focused && !search.focused) diff.initCompare();
 		
 	});
 	
-	msg.on('l13Diff.action.compareAll', () => {
+	msg.on('l13Diff.action.panel.compareAll', () => {
 		
 		if (!left.focused && !right.focused && !search.focused) msg.send('compare:multi');
 		

@@ -23,7 +23,7 @@ export class HistoryTreeItem extends vscode.TreeItem {
 	
 	public command = {
 		arguments: [this],
-		command: 'l13Diff.openComparison',
+		command: 'l13Diff.action.history.open',
 		title: 'Open Comparison',
 	};
 	
@@ -35,17 +35,8 @@ export class HistoryTreeItem extends vscode.TreeItem {
 		
 		super(comparison.label);
 		
-	}
-	
-	public get tooltip () :string {
-		
-		return `${this.comparison.fileA} ↔ ${this.comparison.fileB}`;
-		
-	}
-	
-	public get description () :string {
-		
-		return `${this.comparison.desc || ''}`;
+		this.description = `${this.comparison.desc || ''}`;
+		this.tooltip = `${this.comparison.fileA} ↔ ${this.comparison.fileB}`;
 		
 	}
 	

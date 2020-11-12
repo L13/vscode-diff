@@ -16,9 +16,9 @@ import { L13DiffComponent } from '../l13-diff.component';
 
 export function init (diff:L13DiffComponent) {
 	
-	msg.on('l13Diff.action.swap', () => diff.swapInputs());
+	msg.on('l13Diff.action.input.swap', () => diff.swapInputs());
 	
-	msg.on('l13Diff.action.swapAll', () => diff.swapInputs(true));
+	msg.on('l13Diff.action.input.swapAll', () => diff.swapInputs(true));
 	
 }
 

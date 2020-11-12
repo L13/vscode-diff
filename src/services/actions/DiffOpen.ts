@@ -52,7 +52,7 @@ export class DiffOpen {
 			} else if (statA.isDirectory() && statB.isDirectory()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
-				await vscode.commands.executeCommand('l13Diff.openAndCompare', left, right, true, openToSide);
+				await vscode.commands.executeCommand('l13Diff.action.panel.openAndCompare', left, right, true, openToSide);
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);

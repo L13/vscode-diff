@@ -19,7 +19,7 @@ import { DiffOutput } from '../services/output/DiffOutput';
 export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
-		'l13Diff.showOutput': () => DiffOutput.currentOutput?.show(),
+		'l13Diff.action.output.show': () => DiffOutput.currentOutput?.show(),
 	});
 	
 }

@@ -18,7 +18,7 @@ import { L13DiffInputViewModel } from '../../l13-diff-input/l13-diff-input.viewm
 
 export function init (leftVM:L13DiffInputViewModel, rightVM:L13DiffInputViewModel) {
 	
-	msg.on('l13Diff.action.addToFavorites', () => {
+	msg.on('l13Diff.action.panel.addToFavorites', () => {
 		
 		msg.send<DiffFavoriteMessage>('save:favorite', {
 			pathA: leftVM.value,

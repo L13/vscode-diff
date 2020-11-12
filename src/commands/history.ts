@@ -27,33 +27,33 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.openComparison': ({ comparison }) => {
+		'l13Diff.action.history.open': ({ comparison }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 			
 		},
 		
-		'l13Diff.openComparisonOnly': ({ comparison }) => {
+		'l13Diff.action.history.openOnly': ({ comparison }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], false);
 			
 		},
 		
-		'l13Diff.openComparisonAndCompare': ({ comparison }) => {
+		'l13Diff.action.history.openAndCompare': ({ comparison }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 			
 		},
 		
-		'l13Diff.openComparisonInNewPanel': ({ comparison }) => {
+		'l13Diff.action.history.openInNewPanel': ({ comparison }) => {
 			
 			DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 			
 		},
 		
-		'l13Diff.removeComparison': ({ comparison }) => DiffHistory.removeComparison(context, comparison),
+		'l13Diff.action.history.remove': ({ comparison }) => DiffHistory.removeComparison(context, comparison),
 		
-		'l13Diff.action.clearHistory': async () => {
+		'l13Diff.action.history.clear': async () => {
 			
 			const value = await dialogs.confirm('Delete the complete history?', 'Delete');
 			

@@ -14,7 +14,7 @@ const { round } = Math;
 
 //	Exports ____________________________________________________________________
 
-export function listen (diff:L13DiffComponent, navigator:L13DiffNavigatorComponent, list:L13DiffListComponent) {
+export function init (diff:L13DiffComponent, navigator:L13DiffNavigatorComponent, list:L13DiffListComponent) {
 	
 	navigator.addEventListener('scroll', () => {
 		

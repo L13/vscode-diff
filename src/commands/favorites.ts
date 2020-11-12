@@ -34,7 +34,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 	
-		'l13Diff.openFavorite': ({ favorite }) => {
+		'l13Diff.action.favorite.open': ({ favorite }) => {
 			
 			const compare = settings.get('openFavoriteAndCompare', false);
 			
@@ -42,29 +42,29 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.openFavoriteOnly': ({ favorite }) => {
+		'l13Diff.action.favorite.openOnly': ({ favorite }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], false);
 			
 		},
 		
-		'l13Diff.openFavoriteAndCompare': ({ favorite }) => {
+		'l13Diff.action.favorite.openAndCompare': ({ favorite }) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
 			
 		},
 		
-		'l13Diff.openFavoriteInNewPanel': ({ favorite }) => {
+		'l13Diff.action.favorite.openInNewPanel': ({ favorite }) => {
 			
 			DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
 			
 		},
 		
-		'l13Diff.renameFavorite': ({ favorite }) => DiffFavorites.renameFavorite(context, favorite),
-		'l13Diff.removeFavorite': ({ favorite }) => DiffFavorites.removeFavorite(context, favorite),
-		'l13Diff.addFavoriteGroup': () => DiffFavorites.addFavoriteGroup(context),
+		'l13Diff.action.favorite.rename': ({ favorite }) => DiffFavorites.renameFavorite(context, favorite),
+		'l13Diff.action.favorite.remove': ({ favorite }) => DiffFavorites.removeFavorite(context, favorite),
+		'l13Diff.action.favorites.group.add': () => DiffFavorites.addFavoriteGroup(context),
 		
-		'l13Diff.openFavoriteGroup': async ({ favoriteGroup }) => {
+		'l13Diff.action.favorites.group.open': async ({ favoriteGroup }) => {
 			
 			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
 			const compare = settings.get('openFavoriteAndCompare', false);
@@ -75,7 +75,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.openFavoriteGroupOnly': async ({ favoriteGroup }) => {
+		'l13Diff.action.favorites.group.openOnly': async ({ favoriteGroup }) => {
 			
 			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
 			
@@ -85,7 +85,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.openFavoriteGroupAndCompare': async ({ favoriteGroup }) => {
+		'l13Diff.action.favorites.group.openAndCompare': async ({ favoriteGroup }) => {
 			
 			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
 			
@@ -95,11 +95,11 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.addToFavoriteGroup': ({ favorite }) => DiffFavorites.addToFavoriteGroup(context, favorite),
-		'l13Diff.removeFromFavoriteGroup': ({ favorite }) => DiffFavorites.removeFromFavoriteGroup(context, favorite),
-		'l13Diff.renameFavoriteGroup': ({ favoriteGroup }) => DiffFavorites.renameFavoriteGroup(context, favoriteGroup),
-		'l13Diff.removeFavoriteGroup': ({ favoriteGroup }) => DiffFavorites.removeFavoriteGroup(context, favoriteGroup),
-		'l13Diff.clearFavorites': () => DiffFavorites.clearFavorites(context),
+		'l13Diff.action.favorite.addToGroup': ({ favorite }) => DiffFavorites.addToFavoriteGroup(context, favorite),
+		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => DiffFavorites.removeFromFavoriteGroup(context, favorite),
+		'l13Diff.action.favorites.group.rename': ({ favoriteGroup }) => DiffFavorites.renameFavoriteGroup(context, favoriteGroup),
+		'l13Diff.action.favorites.group.remove': ({ favoriteGroup }) => DiffFavorites.removeFavoriteGroup(context, favoriteGroup),
+		'l13Diff.action.favorites.clear': () => DiffFavorites.clearFavorites(context),
 		
 	});
 	
