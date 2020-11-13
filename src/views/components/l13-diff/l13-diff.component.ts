@@ -114,8 +114,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		commands.actions.init(this.list);
 		commands.compare.init(this, this.left, this.right, searchComponent);
 		commands.favorites.init(leftVM, rightVM);
-		commands.input.init(menuComponent);
+		commands.input.init(leftVM, rightVM);
 		commands.list.init(this, this.list, searchComponent);
+		commands.menu.init(menuComponent);
 		commands.search.init(searchComponent, searchVM, this.list, this.widgets);
 		commands.swap.init(this);
 		commands.views.init(viewsVM);

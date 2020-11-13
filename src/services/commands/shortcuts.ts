@@ -23,8 +23,13 @@ export function activate (context:vscode.ExtensionContext) {
 		'l13Diff.action.panel.compare',
 		'l13Diff.action.panel.compareAll',
 		
-		'l13Diff.action.input.swap',
-		'l13Diff.action.input.swapAll',
+		'l13Diff.action.inputs.swap',
+		'l13Diff.action.inputs.swapAll',
+		
+		'l13Diff.action.input.pickLeftFolder',
+		'l13Diff.action.input.pickLeftFile',
+		'l13Diff.action.input.pickRightFolder',
+		'l13Diff.action.input.pickRightFile',
 		
 		'l13Diff.action.actions.copyToLeftFolder',
 		'l13Diff.action.actions.copyToRightFolder',

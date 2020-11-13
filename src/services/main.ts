@@ -2,16 +2,16 @@
 
 import * as vscode from 'vscode';
 
-import * as common from './services/commands/common';
-import * as favorites from './services/commands/favorites';
-import * as history from './services/commands/history';
-import * as list from './services/commands/list';
-import * as output from './services/commands/output';
-import * as panel from './services/commands/panel';
-import * as projects from './services/commands/projects';
-import * as settings from './services/commands/settings';
-import * as shortcuts from './services/commands/shortcuts';
-import * as symlinks from './services/commands/symlinks';
+import * as common from './commands/common';
+import * as favorites from './commands/favorites';
+import * as history from './commands/history';
+import * as list from './commands/list';
+import * as output from './commands/output';
+import * as panel from './commands/panel';
+import * as projects from './commands/projects';
+import * as settings from './commands/settings';
+import * as shortcuts from './commands/shortcuts';
+import * as symlinks from './commands/symlinks';
 
 //	Variables __________________________________________________________________
 

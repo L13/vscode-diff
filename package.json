@@ -328,12 +328,28 @@
 				"title": "Select All Files"
 			},
 			{
-				"command": "l13Diff.action.input.swap",
+				"command": "l13Diff.action.inputs.swap",
 				"title": "Swap Left and Right Input Fields"
 			},
 			{
-				"command": "l13Diff.action.input.swapAll",
+				"command": "l13Diff.action.inputs.swapAll",
 				"title": "Swap Input Fields and List"
+			},
+			{
+				"command": "l13Diff.action.input.pickLeftFolder",
+				"title": "Pick Folder for Left Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickLeftFile",
+				"title": "Pick File for Left Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickRightFolder",
+				"title": "Pick Folder for Right Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickRightFile",
+				"title": "Pick File for Right Input Field"
 			},
 			{
 				"command": "l13Diff.action.views.toggleShowAllCreated",
@@ -481,13 +497,13 @@
 			{
 				"mac": "meta+s",
 				"key": "ctrl+s",
-				"command": "l13Diff.action.input.swap",
+				"command": "l13Diff.action.inputs.swap",
 				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+alt+s",
 				"key": "ctrl+alt+s",
-				"command": "l13Diff.action.input.swapAll",
+				"command": "l13Diff.action.inputs.swapAll",
 				"when": "l13DiffFocus"
 			},
 			{
@@ -731,11 +747,27 @@
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.action.input.swap",
+					"command": "l13Diff.action.inputs.swap",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.action.input.swapAll",
+					"command": "l13Diff.action.inputs.swapAll",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickLeftFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickLeftFile",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickRightFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickRightFile",
 					"when": "l13DiffFocus"
 				},
 				{

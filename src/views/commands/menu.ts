@@ -2,7 +2,7 @@
 
 import { msg } from '../components/common';
 
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
 
 //	Variables __________________________________________________________________
 
@@ -14,11 +14,13 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent) {
+export function init (menu:L13DiffMenuComponent) {
 	
-	msg.on('l13Diff.action.inputs.swap', () => diff.swapInputs());
-	
-	msg.on('l13Diff.action.inputs.swapAll', () => diff.swapInputs(true));
+	msg.on('l13Diff.action.menu.close', () => {
+		
+		if (menu && menu.parentNode) menu.remove();
+		
+	});
 	
 }
 

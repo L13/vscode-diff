@@ -147,7 +147,7 @@ gulp.task('script:view', () => {
 gulp.task('script:services', () => {
 	
 	return rollup.rollup({
-		input: 'src/extension.ts',
+		input: 'src/services/main.ts',
 		onwarn,
 		external: [
 			'child_process',
@@ -163,7 +163,6 @@ gulp.task('script:services', () => {
 					'src/commands/**/!(.test).ts',
 					'src/common/**/!(.test).ts',
 					'src/services/**/!(.test).ts',
-					'src/extension.ts',
 					'src/types.ts',
 				],
 			}),
