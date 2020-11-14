@@ -47,15 +47,13 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 		this.lists.addEventListener('click', (event:Event) => {
 
-			const target = <HTMLElement>event.target;
+			const item = (<HTMLElement>event.target).closest('li');
 			const parentNode = this.parentNode;
 
 			if (parentNode instanceof L13DiffInputComponent) {
-				if (target.nodeName === 'LI') {
-					parentNode.viewmodel.value = target.firstElementChild.textContent;
-					parentNode.focus();
-					this.remove();
-				} else parentNode.focus();
+				parentNode.viewmodel.value = item.firstElementChild.textContent;
+				parentNode.focus();
+				this.remove();
 			}
 
 		});
