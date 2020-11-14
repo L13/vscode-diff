@@ -807,7 +807,8 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			 if (!diff.fileB) column.classList.add('-deleted');
 		}
 		
-		const path = document.createElement('SPAN');
+		const path = document.createElement('DIV');
+		path.classList.add(`-path`);
 		path.draggable = type === 'file' || type === 'folder' || type === 'symlink';
 		column.appendChild(path);
 		
