@@ -808,7 +808,7 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 		}
 		
 		const path = document.createElement('DIV');
-		path.classList.add(`-path`);
+		path.classList.add('-path');
 		path.draggable = type === 'file' || type === 'folder' || type === 'symlink';
 		column.appendChild(path);
 		
@@ -817,14 +817,14 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			
 			if (exists[0]) {
 				const dirnameExists = document.createElement('SPAN');
-				dirnameExists.classList.add(`-exists`);
+				dirnameExists.classList.add('-exists');
 				dirnameExists.textContent = exists[0];
 				dirname.appendChild(dirnameExists);
 			}
 			
 			if (exists[1]) {
 				const dirnameMissing = document.createElement('SPAN');
-				dirnameMissing.classList.add(`-missing`);
+				dirnameMissing.classList.add('-missing');
 				dirnameMissing.textContent = exists[1];
 				dirname.appendChild(dirnameMissing);
 			}
@@ -834,7 +834,7 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 		
 		const basename = document.createElement('SPAN');
 		basename.textContent = file.basename;
-		basename.classList.add(`-basename`);
+		basename.classList.add('-basename');
 		path.appendChild(basename);
 		
 		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
@@ -844,7 +844,7 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			if (diff.ignoredWhitespace) values.push('whitespace');
 			ignored.textContent = `(ignored ${values.join(' and ')})`;
 			ignored.classList.add('-info');
-			column.appendChild(ignored);
+			path.appendChild(ignored);
 		}
 	}
 	
