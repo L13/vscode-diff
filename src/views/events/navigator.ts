@@ -25,19 +25,8 @@ export function init (diff:L13DiffComponent, navigator:L13DiffNavigatorComponent
 	navigator.addEventListener('mousedownscroll', () => list.classList.add('-active'));
 	navigator.addEventListener('mouseupscroll', () => list.classList.remove('-active'));
 	
-	window.addEventListener('theme', () => {
-		
-		diff.updateNavigator();
-		diff.updateSelection();
-		
-	});
-	
-	window.addEventListener('resize', () => {
-		
-		diff.updateNavigator();
-		diff.updateSelection();
-		
-	});
+	window.addEventListener('theme', () => diff.updateNavigator());
+	window.addEventListener('resize', () => diff.updateNavigator());
 	
 }
 

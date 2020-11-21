@@ -21,20 +21,13 @@ export function init (search:L13DiffSearchComponent, searchVM:L13DiffSearchViewM
 	msg.on('l13Diff.action.search.open', async () => {
 		
 		if (!search.parentNode) {
-			widgets.appendChild(search);
-			list.classList.add('-widgets');
 			search.classList.add('-movein');
-			await search.viewmodel.enable();
-			search.focus()
+			widgets.appendChild(search);
 		} else search.focus();
 		
 	});
 	
-	msg.on('l13Diff.action.search.close', () => {
-		
-		if (search.focused) search.close();
-		
-	});
+	msg.on('l13Diff.action.search.close', () => search.close());
 	
 	msg.on('l13Diff.action.search.toggleFindCaseSensitive', () => {
 		

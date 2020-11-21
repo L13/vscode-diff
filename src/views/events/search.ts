@@ -20,25 +20,28 @@ export function init (diff:L13DiffComponent, search:L13DiffSearchComponent, list
 	
 	search.addEventListener('close', () => {
 		
-		list.classList.remove('-widgets');
 		search.classList.add('-moveout');
 		
 	});
 	
-	search.addEventListener('animationend', () => {
+	search.addEventListener('animationend', async () => {
 		
 		if (search.classList.contains('-moveout')) {
+			list.classList.remove('-widgets');
 			navigator.classList.remove('-widgets');
 			search.classList.remove('-moveout');
 			search.viewmodel.disable();
 			search.remove();
+			list.focus();
 		} else {
+			list.classList.add('-widgets');
 			navigator.classList.add('-widgets');
 			search.classList.remove('-movein');
+			await search.viewmodel.enable();
+			search.focus();
 		}
 		
 		diff.updateNavigator();
-		diff.updateSelection();
 		
 	});
 	

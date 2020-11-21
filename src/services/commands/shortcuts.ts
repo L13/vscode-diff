@@ -19,7 +19,7 @@ import { DiffPanel } from '../panel/DiffPanel';
 export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, createKeyboardShortcuts([
-		'l13Diff.action.panel.addToFavoritesorites',
+		'l13Diff.action.panel.addToFavorites',
 		'l13Diff.action.panel.compare',
 		'l13Diff.action.panel.compareAll',
 		

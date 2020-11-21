@@ -53,7 +53,7 @@ export function init (
 	list.addEventListener('selected', () => {
 		
 		actionsVM.enableCopy();
-		diff.updateSelection();
+		diff.updateNavigator(false, true);
 		
 	});
 	
@@ -65,7 +65,7 @@ export function init (
 	});
 	
 	list.addEventListener('scroll', () => diff.setScrollbarPosition());
-	list.addEventListener('filtered', () => diff.updateNavigator());
+	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
 	
 	document.addEventListener('mouseup', ({ target }) => {
 		

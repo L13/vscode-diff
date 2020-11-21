@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffInitMessage, DiffPanelStateMessage } from '../../../types';
+import { DiffInitMessage, DiffPanelStateMessage, DiffStatus, ListItemInfo } from '../../../types';
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
@@ -217,39 +217,31 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public updateSelection () {
+	public updateNavigator (updateMap:boolean = true, updateSelection:boolean = true) {
 			
 		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
-		const values:any[] = [];
+		const values:ListItemInfo[] = [];
 		
 		while (element) {
 			values.push({
 				selected: element.classList.contains('-selected'),
+				status: <DiffStatus>element.getAttribute('data-status'),
 				offsetHeight: element.offsetHeight,
 			});
 			element = <HTMLElement>element.nextElementSibling;
 		}
 		
-		this.navigator.buildSelection(values, this.list.offsetHeight);
+		const listHeight = this.list.offsetHeight;
 		
-	}
-	
-	public updateNavigator () {
-			
-		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
-		const values:any[] = [];
-		
-		while (element) {
-			values.push({
-				status: element.getAttribute('data-status'),
-				offsetHeight: element.offsetHeight,
-			});
-			element = <HTMLElement>element.nextElementSibling;
+		if (updateMap) {
+			this.navigator.build(values, listHeight);
+			this.navigator.style.top = this.panel.offsetHeight + 'px';
+			this.setScrollbarPosition();
 		}
 		
-		this.navigator.build(values, this.list.offsetHeight);
-		this.navigator.style.top = this.panel.offsetHeight + 'px';
-		this.setScrollbarPosition();
+		if (updateSelection) {
+			this.navigator.buildSelection(values, listHeight);
+		}
 		
 	}
 	

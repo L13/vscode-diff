@@ -492,7 +492,7 @@
 				"mac": "meta+a",
 				"key": "ctrl+a",
 				"command": "l13Diff.action.actions.selectAllEntries",
-				"when": "l13DiffFocus && l13DiffListFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
 			},
 			{
 				"mac": "meta+s",
@@ -562,6 +562,36 @@
 				"key": "alt+l",
 				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+4",
+				"key": "ctrl+alt+4",
+				"command": "l13Diff.action.views.toggleShowAllCreated",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+2",
+				"key": "ctrl+alt+2",
+				"command": "l13Diff.action.views.toggleShowAllDeleted",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+5",
+				"key": "ctrl+alt+5",
+				"command": "l13Diff.action.views.toggleShowAllIgnored",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+3",
+				"key": "ctrl+alt+3",
+				"command": "l13Diff.action.views.toggleShowAllModified",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+1",
+				"key": "ctrl+alt+1",
+				"command": "l13Diff.action.views.toggleShowAllUnchanged",
+				"when": "l13DiffFocus && l13DiffListFocus"
 			}
 		],
 		"menus": {
