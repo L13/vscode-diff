@@ -1104,6 +1104,11 @@
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				},
+				"l13Diff.ignoreContents": {
+					"type": "boolean",
+					"default": false,
+					"description": "Should the contents not be compared?"
+				},
 				"l13Diff.useCaseSensitiveFileName": {
 					"type": "string",
 					"default": "detect",

@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -16,7 +17,12 @@ import { isMacOs, isWindows } from '../@l13/platforms';
 
 //	Exports ____________________________________________________________________
 
-export function reveal (pathname:string) :void {
+export function reveal (pathname:string) {
+	
+	if (!fs.existsSync(pathname)) {
+		vscode.window.showErrorMessage(`File "${pathname}" does not exit!`);
+		return;
+	}
 	
 	let process:ChildProcessWithoutNullStreams = null;
 	
