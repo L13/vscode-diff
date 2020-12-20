@@ -8,6 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added support for custom keyboard shortcuts.
 - Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
+- Added `l13Diff.ignoreContents` for comparing files.
 
 ## Index
 
@@ -98,6 +99,7 @@ Compare two folders in Visual Studio Code.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.
+* `l13Diff.ignoreContents` - If true files will only be compared by size and the contents will be ignored.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores leading and trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
@@ -333,7 +335,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ## Recommended Settings
 
-The two fastest ways to compare files are
+The two fastest ways to compare files accurate are
 
 ```json
 {
