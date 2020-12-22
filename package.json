@@ -1107,7 +1107,7 @@
 				"l13Diff.ignoreContents": {
 					"type": "boolean",
 					"default": false,
-					"description": "Should the contents not be compared?"
+					"description": "Should only the file size be compared and not the contents?"
 				},
 				"l13Diff.useCaseSensitiveFileName": {
 					"type": "string",

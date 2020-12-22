@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
-import { formatFileSize } from '../../../@l13/formats';
+import { formatFileSize, formatDate } from '../../../@l13/formats';
 import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
-import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
+import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
@@ -18,15 +18,6 @@ import templates from '../templates';
 
 enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
-
-const dateOptions = {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-	hour: 'numeric',
-	minute: '2-digit',
-	second: '2-digit',
-};
 
 //	Initialize _________________________________________________________________
 
@@ -798,8 +789,8 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 			const stat = file.stat;
 			column.title += `
 Size: ${formatFileSize(stat.size)}
-Created: ${new Date(stat.birthtime).toLocaleDateString(language, dateOptions)}
-Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
+Created: ${formatDate(new Date(stat.birthtime))}
+Modified: ${formatDate(new Date(stat.mtime))}`;
 		}
 		
 		if (file.ignore) {

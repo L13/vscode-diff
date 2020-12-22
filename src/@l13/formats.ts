@@ -39,5 +39,16 @@ export function formatFileSize (size:number) {
 	
 }
 
+export function formatDate (date:Date) {
+	
+	return `${date.getFullYear()}-${formatDigit(date.getMonth() + 1)}-${formatDigit(date.getDate())} ${date.getHours()}:${formatDigit(date.getMinutes())}:${formatDigit(date.getSeconds())}`;
+	
+}
+
 //	Functions __________________________________________________________________
 
+function formatDigit (digit:number) {
+	
+	return `${digit}`.padStart(2, '0');
+	
+}
