@@ -8,6 +8,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 - Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
 - Added `l13Diff.ignoreContents` for comparing files.
 
+### Changed
+
+- Changed date format in list view for file info to `0000-00-00 00:00:00`.
+
 ### Fixed
 - Fixed enabled actions for empty list.
 - Fixed update list view for deleted files.

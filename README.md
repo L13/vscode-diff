@@ -17,6 +17,7 @@ Compare two folders in Visual Studio Code.
 1. [Available Settings](#available-settings)
 1. [Predefined Variables](#predefined-variables)
 1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
+1. [Custom Keybindings](#custom-keybindings)
 1. [Recommended Settings](#recommended-settings)
 1. [Recommended Extensions](#recommended-extensions)
 
@@ -332,6 +333,15 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Compare with Selected` - Compare the folder, repository or project with the selected one.
 * `Compare with Workspace` - Compare the folder, repository or project with the current workspace.
 * `Open in Diff Folders` - Open the folder, repository or project in Diff Folders.
+
+## Custom Keybindings
+
+Custom keyboard shortcuts can be assigned to the commands. But not every command works properly because the right context is required. If a command has no default keyboard shortcut it is maybe necessary to add a when clause. The following list of context values are available in different view states.
+
+* `l13DiffFocus` - The value is true if a diff panel has focus.
+* `l13DiffListFocus` - The value is true if the list view has focus.
+* `l13DiffInputFocus` - The value is true if the left or right input has focus.
+* `l13DiffSearchFocus` - The value is true if the search input has focus.
 
 ## Recommended Settings
 
