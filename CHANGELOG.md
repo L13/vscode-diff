@@ -1,12 +1,13 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [0.31.0] - 2020-11-22
+## [0.31.0] - 2021-01-31
 
 ### Added
 - Added support for custom keyboard shortcuts.
 - Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
 - Added `l13Diff.ignoreContents` for comparing files.
+- Added `l13Diff.labelFormat` for different labels formats in the editor tab.
 
 ### Changed
 

@@ -9,6 +9,7 @@ Compare two folders in Visual Studio Code.
 - Added support for custom keyboard shortcuts.
 - Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
 - Added `l13Diff.ignoreContents` for comparing files.
+- Added `l13Diff.labelFormat` for different labels formats in the editor tab.
 
 ## Index
 

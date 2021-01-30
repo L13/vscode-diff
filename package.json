@@ -1049,6 +1049,21 @@
 			"type": "object",
 			"title": "Diff Folders",
 			"properties": {
+				"l13Diff.labelFormat": {
+					"type": "string",
+					"default": "complete",
+					"enum": [
+						"complete",
+						"relative",
+						"filename"
+					],
+					"description": "Indicates if the title of a tab should be only the filenames, the relative paths or relative paths including the common path.",
+					"enumDescriptions": [
+						"Show relative paths including the common path.",
+						"Show only the relative paths.",
+						"Show only the filenames."
+					]
+				},
 				"l13Diff.maxRecentlyUsed": {
 					"type": "number",
 					"default": 10,

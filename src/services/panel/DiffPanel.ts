@@ -7,7 +7,7 @@ import { ContextStates, DiffInitMessage, DiffInitViewMessage, DiffPanelStateMess
 
 import { remove } from '../../@l13/arrays';
 
-import { formatNameAndDesc } from '../@l13/formats';
+import { formatName, formatNameAndDesc } from '../@l13/formats';
 import { isMacOs, isWindows } from '../@l13/platforms';
 
 import { DiffCompare } from '../actions/DiffCompare';
@@ -20,6 +20,7 @@ import { DiffStatusbar } from '../output/DiffStatusbar';
 import { DiffHistory } from '../sidebar/DiffHistory';
 
 import { workspacePaths } from '../common/paths';
+import * as settings from '../common/settings';
 import * as events from './events';
 
 import { DiffMenu } from './DiffMenu';
@@ -173,11 +174,14 @@ export class DiffPanel {
 	
 	public setTitle (pathA?:string, pathB?:string) {
 		
+		const labelFormat = settings.get('labelFormat');
 		let title = 'Diff Folders';
 		
 		if (pathA && pathB) {
-			const [label, desc] = formatNameAndDesc(pathA, pathB);
-			title = desc ? `${label} (${desc})` : label;
+			if (labelFormat !== 'filename') {
+				const [label, desc] = formatNameAndDesc(pathA, pathB);
+				title = desc && labelFormat === 'complete' ? `${label} (${desc})` : label;
+			} else title = formatName(pathA, pathB);
 		}
 		
 		this.panel.title = title;
@@ -267,7 +271,7 @@ export class DiffPanel {
 		
 		return new Promise((resolve) => {
 			
-			diffPanel.onDidInit(() => resolve(), null, diffPanel.disposables);
+			diffPanel.onDidInit(() => resolve(undefined), null, diffPanel.disposables);
 			
 			diffPanel.msg.on('error:init', async ({ error }) => {
 				
