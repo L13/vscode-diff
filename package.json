@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.30.1",
+	"version": "0.31.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -32,21 +32,20 @@
 		"workspace"
 	],
 	"activationEvents": [
-		"onCommand:l13Diff.show",
-		"onCommand:l13Diff.open",
-		"onCommand:l13Diff.clearHistory",
-		"onCommand:l13Diff.clearFavorites",
-		"onCommand:l13Diff.showOutput",
-		"onCommand:l13Diff.compareProjectWithWorkspace",
-		"onCommand:l13Diff.openProject",
-		"onCommand:l13Diff.selectProjectForCompare",
-		"onCommand:l13Diff.compareProjectWithSelected",
-		"onCommand:l13Diff.selectForCompare",
-		"onCommand:l13Diff.compareWithSelected",
-		"onCommand:l13Diff.compareSelected",
+		"onCommand:l13Diff.action.panel.open",
+		"onCommand:l13Diff.action.history.clear",
+		"onCommand:l13Diff.action.favorites.clear",
+		"onCommand:l13Diff.action.output.show",
+		"onCommand:l13Diff.action.projects.compareWithWorkspace",
+		"onCommand:l13Diff.action.projects.open",
+		"onCommand:l13Diff.action.projects.selectForCompare",
+		"onCommand:l13Diff.action.projects.compareWithSelected",
+		"onCommand:l13Diff.action.explorer.selectForCompare",
+		"onCommand:l13Diff.action.explorer.compareWithSelected",
+		"onCommand:l13Diff.action.explorer.compareSelected",
 		"onView:l13DiffFavorites",
 		"onView:l13DiffHistory",
-		"onWebviewPanel:l13Diff"
+		"onWebviewPanel:l13DiffPanel"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -74,12 +73,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.show)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.show)",
+				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
 				"when": "isMac"
 			},
 			{
@@ -89,7 +88,7 @@
 		],
 		"commands": [
 			{
-				"command": "l13Diff.show",
+				"command": "l13Diff.action.panel.open",
 				"title": "Diff Folders",
 				"icon": {
 					"light": "images/favorites/open-diff-light.svg",
@@ -97,11 +96,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.open",
-				"title": "Open in Diff Folders"
-			},
-			{
-				"command": "l13Diff.clearHistory",
+				"command": "l13Diff.action.history.clear",
 				"title": "Diff Folders: Clear History",
 				"icon": {
 					"light": "images/history/history-clear-light.svg",
@@ -109,7 +104,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.addToFavorites",
+				"command": "l13Diff.action.panel.addToFavorites",
 				"title": "Add to Favorites",
 				"icon": {
 					"light": "images/favorites/favorite-add-light.svg",
@@ -117,19 +112,19 @@
 				}
 			},
 			{
-				"command": "l13Diff.openFavorite",
+				"command": "l13Diff.action.favorite.open",
 				"title": "Open"
 			},
 			{
-				"command": "l13Diff.openFavoriteOnly",
+				"command": "l13Diff.action.favorite.openOnly",
 				"title": "Open"
 			},
 			{
-				"command": "l13Diff.openFavoriteAndCompare",
+				"command": "l13Diff.action.favorite.openAndCompare",
 				"title": "Open & Compare"
 			},
 			{
-				"command": "l13Diff.openFavoriteInNewPanel",
+				"command": "l13Diff.action.favorite.openInNewPanel",
 				"title": "Open in New Panel",
 				"icon": {
 					"light": "images/favorites/open-diff-light.svg",
@@ -137,15 +132,15 @@
 				}
 			},
 			{
-				"command": "l13Diff.renameFavorite",
+				"command": "l13Diff.action.favorite.rename",
 				"title": "Rename"
 			},
 			{
-				"command": "l13Diff.removeFavorite",
+				"command": "l13Diff.action.favorite.remove",
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.addFavoriteGroup",
+				"command": "l13Diff.action.favorites.group.add",
 				"title": "New Group",
 				"icon": {
 					"light": "images/favorites/new-group-light.svg",
@@ -153,15 +148,15 @@
 				}
 			},
 			{
-				"command": "l13Diff.addToFavoriteGroup",
+				"command": "l13Diff.action.favorite.addToGroup",
 				"title": "Add to Group"
 			},
 			{
-				"command": "l13Diff.removeFromFavoriteGroup",
-				"title": "Remove"
+				"command": "l13Diff.action.favorite.removeFromGroup",
+				"title": "Remove from Group"
 			},
 			{
-				"command": "l13Diff.openFavoriteGroup",
+				"command": "l13Diff.action.favorites.group.open",
 				"title": "Open All",
 				"icon": {
 					"light": "images/favorites/open-group-light.svg",
@@ -169,39 +164,39 @@
 				}
 			},
 			{
-				"command": "l13Diff.openFavoriteGroupOnly",
+				"command": "l13Diff.action.favorites.group.openOnly",
 				"title": "Open All"
 			},
 			{
-				"command": "l13Diff.openFavoriteGroupAndCompare",
+				"command": "l13Diff.action.favorites.group.openAndCompare",
 				"title": "Open All & Compare"
 			},
 			{
-				"command": "l13Diff.renameFavoriteGroup",
+				"command": "l13Diff.action.favorites.group.rename",
 				"title": "Rename"
 			},
 			{
-				"command": "l13Diff.removeFavoriteGroup",
+				"command": "l13Diff.action.favorites.group.remove",
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.clearFavorites",
+				"command": "l13Diff.action.favorites.clear",
 				"title": "Diff Folders: Delete All Favorites"
 			},
 			{
-				"command": "l13Diff.openComparison",
+				"command": "l13Diff.action.history.open",
 				"title": "Open"
 			},
 			{
-				"command": "l13Diff.openComparisonOnly",
+				"command": "l13Diff.action.history.openOnly",
 				"title": "Open"
 			},
 			{
-				"command": "l13Diff.openComparisonAndCompare",
+				"command": "l13Diff.action.history.openAndCompare",
 				"title": "Open & Compare"
 			},
 			{
-				"command": "l13Diff.openComparisonInNewPanel",
+				"command": "l13Diff.action.history.openInNewPanel",
 				"title": "Open in New Panel",
 				"icon": {
 					"light": "images/favorites/open-diff-light.svg",
@@ -209,31 +204,31 @@
 				}
 			},
 			{
-				"command": "l13Diff.removeComparison",
+				"command": "l13Diff.action.history.remove",
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.showOutput",
+				"command": "l13Diff.action.output.show",
 				"title": "Diff Folders: Show Output Channel"
 			},
 			{
-				"command": "l13Diff.compareProjectWithWorkspace",
+				"command": "l13Diff.action.projects.compareWithWorkspace",
 				"title": "Compare with Workspace"
 			},
 			{
-				"command": "l13Diff.openProject",
+				"command": "l13Diff.action.projects.open",
 				"title": "Open in Diff Folders"
 			},
 			{
-				"command": "l13Diff.selectProjectForCompare",
+				"command": "l13Diff.action.projects.selectForCompare",
 				"title": "Select for Compare"
 			},
 			{
-				"command": "l13Diff.compareProjectWithSelected",
+				"command": "l13Diff.action.projects.compareWithSelected",
 				"title": "Compare with Selected"
 			},
 			{
-				"command": "l13Diff.ignoreWhitespace",
+				"command": "l13Diff.action.settings.ignoreWhitespace",
 				"title": "Ignore Leading/Trailing Whitespace",
 				"icon": {
 					"light": "images/panels/toggle-whitespace-light.svg",
@@ -241,7 +236,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.compareWhitespace",
+				"command": "l13Diff.action.settings.compareWhitespace",
 				"title": "Compare Leading/Trailing Whitespace",
 				"icon": {
 					"light": "images/panels/toggle-whitespace-disabled-light.svg",
@@ -249,7 +244,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.ignoreEndOfLine",
+				"command": "l13Diff.action.settings.ignoreEndOfLine",
 				"title": "Ignore End of Line",
 				"icon": {
 					"light": "images/panels/toggle-eol-light.svg",
@@ -257,7 +252,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.compareEndOfLine",
+				"command": "l13Diff.action.settings.compareEndOfLine",
 				"title": "Compare End of Line",
 				"icon": {
 					"light": "images/panels/toggle-eol-disabled-light.svg",
@@ -265,7 +260,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.ignoreCaseSensitive",
+				"command": "l13Diff.action.settings.ignoreCaseSensitive",
 				"title": "Disable Case Sensitive",
 				"icon": {
 					"light": "images/panels/toggle-case-sensitive-light.svg",
@@ -273,7 +268,7 @@
 				}
 			},
 			{
-				"command": "l13Diff.useCaseSensitive",
+				"command": "l13Diff.action.settings.useCaseSensitive",
 				"title": "Enable Case Sensitive",
 				"icon": {
 					"light": "images/panels/toggle-case-sensitive-disabled-light.svg",
@@ -281,28 +276,152 @@
 				}
 			},
 			{
-				"command": "l13Diff.selectForCompare",
+				"command": "l13Diff.action.explorer.selectForCompare",
 				"title": "Select for Compare"
 			},
 			{
-				"command": "l13Diff.compareWithSelected",
+				"command": "l13Diff.action.explorer.compareWithSelected",
 				"title": "Compare with Selected"
 			},
 			{
-				"command": "l13Diff.compareSelected",
+				"command": "l13Diff.action.explorer.compareSelected",
 				"title": "Compare Selected"
+			},
+			{
+				"command": "l13Diff.action.panel.compare",
+				"title": "Compare"
+			},
+			{
+				"command": "l13Diff.action.panel.compareAll",
+				"title": "Compare All"
+			},
+			{
+				"command": "l13Diff.action.actions.copyToRightFolder",
+				"title": "Copy Selection to the Right Folder"
+			},
+			{
+				"command": "l13Diff.action.actions.copyToLeftFolder",
+				"title": "Copy Selection to the Left Folder"
+			},
+			{
+				"command": "l13Diff.action.list.delete",
+				"title": "Delete"
+			},
+			{
+				"command": "l13Diff.action.search.open",
+				"title": "Filter"
+			},
+			{
+				"command": "l13Diff.action.actions.selectCreatedEntries",
+				"title": "Select All Created Files"
+			},
+			{
+				"command": "l13Diff.action.actions.selectDeletedEntries",
+				"title": "Select All Deleted Files"
+			},
+			{
+				"command": "l13Diff.action.actions.selectModifiedEntries",
+				"title": "Select All Modified Files"
+			},
+			{
+				"command": "l13Diff.action.actions.selectAllEntries",
+				"title": "Select All Files"
+			},
+			{
+				"command": "l13Diff.action.inputs.swap",
+				"title": "Swap Left and Right Input Fields"
+			},
+			{
+				"command": "l13Diff.action.inputs.swapAll",
+				"title": "Swap Input Fields and List"
+			},
+			{
+				"command": "l13Diff.action.input.pickLeftFolder",
+				"title": "Pick Folder for Left Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickLeftFile",
+				"title": "Pick File for Left Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickRightFolder",
+				"title": "Pick Folder for Right Input Field"
+			},
+			{
+				"command": "l13Diff.action.input.pickRightFile",
+				"title": "Pick File for Right Input Field"
+			},
+			{
+				"command": "l13Diff.action.views.toggleShowAllCreated",
+				"title": "Toggle Show All Created Files"
+			},
+			{
+				"command": "l13Diff.action.views.toggleShowAllDeleted",
+				"title": "Toggle Show All Deleted Files"
+			},
+			{
+				"command": "l13Diff.action.views.toggleShowAllIgnored",
+				"title": "Toggle Show All Ignored Files"
+			},
+			{
+				"command": "l13Diff.action.views.toggleShowAllModified",
+				"title": "Toggle Show All Modified Files"
+			},
+			{
+				"command": "l13Diff.action.views.toggleShowAllUnchanged",
+				"title": "Toggle Show All Unchanged Files"
+			},
+			{
+				"command": "l13Diff.action.list.unselect",
+				"title": "Unselect"
+			},
+			{
+				"command": "l13Diff.action.menu.close",
+				"title": "Close"
+			},
+			{
+				"command": "l13Diff.action.search.close",
+				"title": "Close"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindCaseSensitive",
+				"title": "Match Case"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindConflicts",
+				"title": "Toggle Find Conflicts"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindFiles",
+				"title": "Toggle Find Files"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindFolders",
+				"title": "Toggle Find Folders"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindOthers",
+				"title": "Toggle Find Others"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindRegularExpression",
+				"title": "Toggle Use Regular Expression"
+			},
+			{
+				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
+				"title": "Toggle Find Symbolic Links"
 			}
 		],
 		"keybindings": [
 			{
 				"mac": "meta+l meta+l",
 				"key": "ctrl+l ctrl+l",
-				"command": "l13Diff.show"
+				"command": "l13Diff.action.panel.open"
 			},
 			{
 				"mac": "meta+d",
 				"key": "ctrl+d",
-				"command": "l13Diff.addToFavorites",
+				"command": "l13Diff.action.panel.addToFavorites",
 				"when": "l13DiffFocus"
 			},
 			{
@@ -313,331 +432,584 @@
 			{
 				"mac": "meta+l meta+o",
 				"win": "ctrl+l ctrl+o",
-				"command": "l13Diff.showOutput"
+				"command": "l13Diff.action.output.show"
+			},
+			{
+				"mac": "meta+c",
+				"key": "ctrl+c",
+				"command": "l13Diff.action.panel.compare",
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+c",
+				"key": "ctrl+alt+c",
+				"command": "l13Diff.action.panel.compareAll",
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+backspace",
+				"key": "delete",
+				"command": "l13Diff.action.list.delete",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+f",
+				"key": "ctrl+f",
+				"command": "l13Diff.action.search.open",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+a",
+				"key": "ctrl+a",
+				"command": "l13Diff.action.actions.selectAllEntries",
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+s",
+				"key": "ctrl+s",
+				"command": "l13Diff.action.inputs.swap",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+s",
+				"key": "ctrl+alt+s",
+				"command": "l13Diff.action.inputs.swapAll",
+				"when": "l13DiffFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.action.list.unselect",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.action.menu.close",
+				"when": "l13DiffFocus && l13DiffInputFocus"
+			},
+			{
+				"key": "escape",
+				"command": "l13Diff.action.search.close",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+c",
+				"key": "alt+c",
+				"command": "l13Diff.action.search.toggleFindCaseSensitive",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+x",
+				"key": "alt+x",
+				"command": "l13Diff.action.search.toggleFindConflicts",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+f",
+				"key": "alt+f",
+				"command": "l13Diff.action.search.toggleFindFiles",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+d",
+				"key": "alt+d",
+				"command": "l13Diff.action.search.toggleFindFolders",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+o",
+				"key": "alt+o",
+				"command": "l13Diff.action.search.toggleFindOthers",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+r",
+				"key": "alt+r",
+				"command": "l13Diff.action.search.toggleFindRegularExpression",
+				"when": "l13DiffFocus && l13DiffSearchFocus"
+			},
+			{
+				"mac": "meta+alt+l",
+				"key": "alt+l",
+				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
+				"when": "l13DiffFocus"
+			},
+			{
+				"mac": "meta+alt+4",
+				"key": "ctrl+alt+4",
+				"command": "l13Diff.action.views.toggleShowAllCreated",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+2",
+				"key": "ctrl+alt+2",
+				"command": "l13Diff.action.views.toggleShowAllDeleted",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+5",
+				"key": "ctrl+alt+5",
+				"command": "l13Diff.action.views.toggleShowAllIgnored",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+3",
+				"key": "ctrl+alt+3",
+				"command": "l13Diff.action.views.toggleShowAllModified",
+				"when": "l13DiffFocus && l13DiffListFocus"
+			},
+			{
+				"mac": "meta+alt+1",
+				"key": "ctrl+alt+1",
+				"command": "l13Diff.action.views.toggleShowAllUnchanged",
+				"when": "l13DiffFocus && l13DiffListFocus"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "l13Diff.addToFavorites",
+					"command": "l13Diff.action.panel.addToFavorites",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.showOutput",
+					"command": "l13Diff.action.output.show",
 					"when": "l13DiffFocus"
 				},
 				{
-					"command": "l13Diff.ignoreCaseSensitive",
+					"command": "l13Diff.action.settings.ignoreCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'"
 				},
 				{
-					"command": "l13Diff.useCaseSensitive",
+					"command": "l13Diff.action.settings.useCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'"
 				},
 				{
-					"command": "l13Diff.ignoreEndOfLine",
+					"command": "l13Diff.action.settings.ignoreEndOfLine",
 					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine"
 				},
 				{
-					"command": "l13Diff.compareEndOfLine",
+					"command": "l13Diff.action.settings.compareEndOfLine",
 					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine"
 				},
 				{
-					"command": "l13Diff.ignoreWhitespace",
+					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace"
 				},
 				{
-					"command": "l13Diff.ignoreWhitespace",
+					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'"
 				},
 				{
-					"command": "l13Diff.compareWhitespace",
+					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace"
 				},
 				{
-					"command": "l13Diff.compareWhitespace",
+					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'"
 				},
 				{
-					"command": "l13Diff.openFavorite",
+					"command": "l13Diff.action.favorite.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteOnly",
+					"command": "l13Diff.action.favorite.openOnly",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteAndCompare",
+					"command": "l13Diff.action.favorite.openAndCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteInNewPanel",
+					"command": "l13Diff.action.favorite.openInNewPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.renameFavorite",
+					"command": "l13Diff.action.favorite.rename",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.removeFavorite",
+					"command": "l13Diff.action.favorite.remove",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.addToFavoriteGroup",
+					"command": "l13Diff.action.favorite.addToGroup",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.removeFromFavoriteGroup",
+					"command": "l13Diff.action.favorite.removeFromGroup",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroupOnly",
+					"command": "l13Diff.action.favorites.group.openOnly",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"command": "l13Diff.action.favorites.group.openAndCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.renameFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.rename",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.removeFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.remove",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openComparison",
+					"command": "l13Diff.action.history.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openComparisonOnly",
+					"command": "l13Diff.action.history.openOnly",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openComparisonAndCompare",
+					"command": "l13Diff.action.history.openAndCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openComparisonInNewPanel",
+					"command": "l13Diff.action.history.openInNewPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.removeComparison",
+					"command": "l13Diff.action.history.remove",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.compareProjectWithWorkspace",
+					"command": "l13Diff.action.projects.compareWithWorkspace",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.openProject",
+					"command": "l13Diff.action.projects.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.selectProjectForCompare",
+					"command": "l13Diff.action.projects.selectForCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.compareProjectWithSelected",
+					"command": "l13Diff.action.projects.compareWithSelected",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.selectForCompare",
+					"command": "l13Diff.action.explorer.selectForCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.compareWithSelected",
+					"command": "l13Diff.action.explorer.compareWithSelected",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.compareSelected",
+					"command": "l13Diff.action.explorer.compareSelected",
 					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.panel.compare",
+					"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				},
+				{
+					"command": "l13Diff.action.panel.compareAll",
+					"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.copyToRightFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.copyToLeftFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.list.delete",
+					"when": "l13DiffFocus && l13DiffListFocus"
+				},
+				{
+					"command": "l13Diff.action.search.open",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.selectCreatedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.selectDeletedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.selectModifiedEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.actions.selectAllEntries",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.inputs.swap",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.inputs.swapAll",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickLeftFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickLeftFile",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickRightFolder",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.input.pickRightFile",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.views.toggleShowAllCreated",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.views.toggleShowAllDeleted",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.views.toggleShowAllIgnored",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.views.toggleShowAllModified",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.views.toggleShowAllUnchanged",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.list.unselect",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.menu.close",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.search.close",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindCaseSensitive",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindConflicts",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindFiles",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindFolders",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindOthers",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindRegularExpression",
+					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.search.toggleFindSymbolicLinks",
+					"when": "l13DiffFocus"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "l13Diff.compareWithSelected",
+					"command": "l13Diff.action.explorer.compareWithSelected",
 					"group": "3_compare@1",
 					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection && l13DiffSelectedFolder"
 				},
 				{
-					"command": "l13Diff.selectForCompare",
+					"command": "l13Diff.action.explorer.selectForCompare",
 					"group": "3_compare@2",
 					"when": "explorerResourceIsFolder && listHasSelectionOrFocus && !listDoubleSelection"
 				},
 				{
-					"command": "l13Diff.compareSelected",
+					"command": "l13Diff.action.explorer.compareSelected",
 					"group": "3_compare@1",
 					"when": "explorerResourceIsFolder && listDoubleSelection"
 				}
 			],
 			"view/title": [
 				{
-					"command": "l13Diff.show",
+					"command": "l13Diff.action.panel.open",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@1"
 				},
 				{
-					"command": "l13Diff.addFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.add",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@2"
 				},
 				{
-					"command": "l13Diff.clearHistory",
+					"command": "l13Diff.action.history.clear",
 					"when": "view == l13DiffHistory",
 					"group": "navigation@1"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "l13Diff.openFavoriteOnly",
+					"command": "l13Diff.action.favorite.openOnly",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.openFavoriteAndCompare",
+					"command": "l13Diff.action.favorite.openAndCompare",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.addToFavoriteGroup",
+					"command": "l13Diff.action.favorite.addToGroup",
 					"group": "navigation@3",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.openFavoriteInNewPanel",
+					"command": "l13Diff.action.favorite.openInNewPanel",
 					"group": "inline",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.removeFromFavoriteGroup",
+					"command": "l13Diff.action.favorite.removeFromGroup",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == subfavorite"
 				},
 				{
-					"command": "l13Diff.renameFavorite",
+					"command": "l13Diff.action.favorite.rename",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.removeFavorite",
+					"command": "l13Diff.action.favorite.remove",
 					"group": "7_modification@3",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.open",
 					"group": "inline",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroupOnly",
+					"command": "l13Diff.action.favorites.group.openOnly",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.openFavoriteGroupAndCompare",
+					"command": "l13Diff.action.favorites.group.openAndCompare",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.renameFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.rename",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.removeFavoriteGroup",
+					"command": "l13Diff.action.favorites.group.remove",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.openComparisonOnly",
+					"command": "l13Diff.action.history.openOnly",
 					"group": "navigation@1",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.openComparisonAndCompare",
+					"command": "l13Diff.action.history.openAndCompare",
 					"group": "navigation@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.openComparisonInNewPanel",
+					"command": "l13Diff.action.history.openInNewPanel",
 					"group": "inline",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.removeComparison",
+					"command": "l13Diff.action.history.remove",
 					"group": "7_modification@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.compareProjectWithSelected",
+					"command": "l13Diff.action.projects.compareWithSelected",
 					"group": "3_compare@1",
 					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				},
 				{
-					"command": "l13Diff.selectProjectForCompare",
+					"command": "l13Diff.action.projects.selectForCompare",
 					"group": "3_compare@2",
 					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				},
 				{
-					"command": "l13Diff.compareProjectWithWorkspace",
+					"command": "l13Diff.action.projects.compareWithWorkspace",
 					"group": "3_compare@3",
 					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				},
 				{
-					"command": "l13Diff.openProject",
+					"command": "l13Diff.action.projects.open",
 					"group": "3_compare@4",
 					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
 				}
 			],
 			"editor/title": [
 				{
-					"command": "l13Diff.addToFavorites",
+					"command": "l13Diff.action.panel.addToFavorites",
 					"when": "l13DiffFocus",
 					"group": "navigation@1"
 				},
 				{
-					"command": "l13Diff.ignoreCaseSensitive",
+					"command": "l13Diff.action.settings.ignoreCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
 					"group": "navigation@2"
 				},
 				{
-					"command": "l13Diff.useCaseSensitive",
+					"command": "l13Diff.action.settings.useCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
 					"group": "navigation@2"
 				},
 				{
-					"command": "l13Diff.ignoreEndOfLine",
+					"command": "l13Diff.action.settings.ignoreEndOfLine",
 					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
 					"group": "navigation@3"
 				},
 				{
-					"command": "l13Diff.compareEndOfLine",
+					"command": "l13Diff.action.settings.compareEndOfLine",
 					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
 					"group": "navigation@3"
 				},
 				{
-					"command": "l13Diff.ignoreWhitespace",
+					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
 					"group": "navigation@4"
 				},
 				{
-					"command": "l13Diff.ignoreWhitespace",
+					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
 					"group": "navigation@4"
 				},
 				{
-					"command": "l13Diff.compareWhitespace",
+					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
 					"group": "navigation@4"
 				},
 				{
-					"command": "l13Diff.compareWhitespace",
+					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"group": "navigation@4"
 				}
@@ -647,6 +1019,21 @@
 			"type": "object",
 			"title": "Diff Folders",
 			"properties": {
+				"l13Diff.labelFormat": {
+					"type": "string",
+					"default": "complete",
+					"enum": [
+						"complete",
+						"relative",
+						"filename"
+					],
+					"description": "Indicates if the title of a tab should be only the filenames, the relative paths or relative paths including the common path.",
+					"enumDescriptions": [
+						"Show relative paths including the common path.",
+						"Show only the relative paths.",
+						"Show only the filenames."
+					]
+				},
 				"l13Diff.maxRecentlyUsed": {
 					"type": "number",
 					"default": 10,
@@ -702,6 +1089,11 @@
 					"default": false,
 					"description": "Should CR/LF be ignored for text files?"
 				},
+				"l13Diff.ignoreContents": {
+					"type": "boolean",
+					"default": false,
+					"description": "Should only the file size be compared and not the contents?"
+				},
 				"l13Diff.useCaseSensitiveFileName": {
 					"type": "string",
 					"default": "detect",
@@ -730,6 +1122,21 @@
 						"Uses the value of 'diffEditor.ignoreTrimWhitespace'.",
 						"Ignores leading and trailing whitespace for a comparison in a text file.",
 						"Does not ignore leading and trailing whitespace for a comparison in a text file."
+					]
+				},
+				"l13Diff.enableTrash": {
+					"type": "string",
+					"default": "default",
+					"enum": [
+						"default",
+						"on",
+						"off"
+					],
+					"description": "Moves files/folders to the OS trash when deleting. Disabling this will delete files/folders permanently.",
+					"enumDescriptions": [
+						"Uses the value of 'files.enableTrash'.",
+						"Moves files/folders to the OS trash.",
+						"Deletes files/folders permanently."
 					]
 				},
 				"l13Diff.confirmCaseInsensitiveCompare": {

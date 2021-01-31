@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
+import { DiffDialogMessage } from '../../../@types/messages';
+
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 import { msg } from '../common';
-
-import { DiffDialogMessage } from '../../../@types/messages';
 
 //	Variables __________________________________________________________________
 
@@ -46,6 +46,28 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 		this[VALUE] = val;
 		this.requestUpdate();
+		
+	}
+	
+	private eventName:string = null;
+	
+	private dialogListener = (data:DiffDialogMessage) => {
+	
+	
+		if (data.fsPath) this.value = data.fsPath;
+		
+		msg.removeMessageListener(this.eventName, this.dialogListener);
+		
+		this.eventName = null;
+		
+	}
+	
+	public pick (file:boolean = false) {
+		
+		this.eventName = `dialog:${file ? 'file' : 'folder'}`;
+		
+		msg.on(this.eventName, this.dialogListener);
+		msg.send(this.eventName);
 		
 	}
 	

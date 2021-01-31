@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { normalize, sep } from 'path';
+import { basename, normalize, sep } from 'path';
 
 //	Variables __________________________________________________________________
 
@@ -39,6 +39,12 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 	}
 	
 	return [`${namesA.join(sep)} ↔ ${namesB.join(sep)}`, desc.join(sep)];
+	
+}
+
+export function formatName (pathA:string, pathB:string) {
+	
+	return `${basename(pathA)} ↔ ${basename(pathB)}`;
 	
 }
 

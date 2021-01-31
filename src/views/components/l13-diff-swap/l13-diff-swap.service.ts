@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModelConstructor } from '../../@l13/component/types';
 import { ViewModelService } from '../../@l13/component/view-model-service.abstract';
+import { ViewModelConstructor } from '../../@types/components';
 
 import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 

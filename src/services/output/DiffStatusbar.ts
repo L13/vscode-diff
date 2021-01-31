@@ -28,7 +28,7 @@ export class DiffStatusbar {
 		
 		if (!DiffStatusbar.statusBarItem) {
 			DiffStatusbar.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-			DiffStatusbar.statusBarItem.command = 'l13Diff.showOutput';
+			DiffStatusbar.statusBarItem.command = 'l13Diff.action.output.show';
 			DiffStatusbar.statusBarItem.tooltip = 'Diff Folders Output';
 			DiffStatusbar.statusBarItem.show();
 			context.subscriptions.push(DiffStatusbar.statusBarItem);

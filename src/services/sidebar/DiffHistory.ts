@@ -5,8 +5,8 @@ import * as vscode from 'vscode';
 import { Comparison } from '../../types';
 import { formatNameAndDesc } from '../@l13/formats';
 
-import * as dialogs from '../../common/dialogs';
-import * as settings from '../../common/settings';
+import * as dialogs from '../common/dialogs';
+import * as settings from '../common/settings';
 
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 

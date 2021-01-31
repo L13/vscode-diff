@@ -10,9 +10,9 @@ import { lstatSync, walkTree } from '../@l13/fse';
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
 
-import * as dialogs from '../../common/dialogs';
-import { textfiles } from '../../common/extensions';
-import * as settings from '../../common/settings';
+import * as dialogs from '../common/dialogs';
+import { textfiles } from '../common/extensions';
+import * as settings from '../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
 
@@ -94,6 +94,7 @@ export class DiffCompare {
 	public updateDiffs (data:DiffResult) :void {
 		
 		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+		const ignoreContents = settings.get('ignoreContents', false);
 		const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 		
 		data.diffs.forEach((diff:Diff) => {
@@ -101,7 +102,7 @@ export class DiffCompare {
 			diff.fileA.stat = lstatSync(diff.fileA.fsPath);
 			diff.fileB.stat = lstatSync(diff.fileB.fsPath);
 			
-			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace);
+			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace, ignoreContents);
 			
 			this._onDidUpdateDiff.fire(diff);
 			
@@ -198,7 +199,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
+		const id = useCaseSensitive ? file.name : file.name.toUpperCase();
 		
 		if (!diffs[id]) addFile(diffs, id, file, null);
 		else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
@@ -210,16 +211,17 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
 	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
+	const ignoreContents = settings.get('ignoreContents', false);
 	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 	
 	Object.keys(result).forEach((pathname) => {
 		
 		const file = result[pathname];
-		const id = useCaseSensitive ? file.relative : file.relative.toUpperCase();
+		const id = useCaseSensitive ? file.name : file.name.toUpperCase();
 		const diff = diffs[id];
 		
 		if (diff) {
-			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace);
+			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace, ignoreContents);
 			else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
 		} else addFile(diffs, id, null, file);
 		
@@ -227,7 +229,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 	
 }
 
-function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
+function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean, ignoreContents:boolean) {
 	
 	const statA = <fs.Stats>fileA.stat;
 	const statB = <fs.Stats>fileB.stat;
@@ -243,7 +245,9 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 		diff.status = 'conflicting';
 		diff.type = 'mixed';
 	} else if (fileA.type === 'file' && fileB.type === 'file') {
-		if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
+		if (ignoreContents) {
+			if (statA.size !== statB.size) diff.status = 'modified';
+		} else if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
 			(textfiles.extensions.includes(fileA.extname) ||
 			textfiles.filenames.includes(fileA.basename) ||
 			textfiles.glob && textfiles.glob.test(fileA.basename))) {
@@ -270,9 +274,13 @@ function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine
 			} else diff.status = 'modified';
 		}
 	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
-		const linkA = fs.readlinkSync(fileA.fsPath);
-		const linkB = fs.readlinkSync(fileB.fsPath);
-		if (linkA !== linkB) diff.status = 'modified';
+		if (ignoreContents) {
+			if (statA.size !== statB.size) diff.status = 'modified';
+		} else {
+			const linkA = fs.readlinkSync(fileA.fsPath);
+			const linkB = fs.readlinkSync(fileB.fsPath);
+			if (linkA !== linkB) diff.status = 'modified';
+		}
 	}
 	
 }

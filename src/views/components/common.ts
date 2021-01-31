@@ -79,6 +79,13 @@ export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputE
 	
 }
 
+export function setLabel (element:HTMLElement, title:string) {
+	
+	element.setAttribute('aria-label', title);
+	element.setAttribute('title', title);
+	
+}
+
 //	Functions __________________________________________________________________
 
 function initThemeChangeListener () {

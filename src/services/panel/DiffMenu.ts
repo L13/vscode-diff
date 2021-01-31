@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { remove } from '../../@l13/arrays';
 
-import * as settings from '../../common/settings';
+import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
 

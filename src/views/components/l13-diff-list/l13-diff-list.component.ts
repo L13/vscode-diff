@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
-import { formatFileSize } from '../../../@l13/formats';
+import { formatFileSize, formatDate } from '../../../@l13/formats';
 import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
-import { addKeyListener, changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query, language } from '../../@l13/core';
+import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
@@ -18,15 +18,6 @@ import templates from '../templates';
 
 enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
-
-const dateOptions = {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-	hour: 'numeric',
-	minute: '2-digit',
-	second: '2-digit',
-};
 
 //	Initialize _________________________________________________________________
 
@@ -65,10 +56,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		this.context.vmId = 'context';
 		
-		this.addEventListener('focus', () => this.content.classList.add('-focus'));
-		this.addEventListener('blur', () => this.content.classList.remove('-focus'));
+		this.addEventListener('focus', () => {
+			
+			this.content.classList.add('-focus');
+			msg.send('context', { name: 'l13DiffListFocus', value: true });
+			
+		});
 		
-		addKeyListener(this, { key: 'Ctrl+A', mac: 'Cmd+A' }, () => this.selectAll());
+		this.addEventListener('blur', () => {
+			
+			this.content.classList.remove('-focus');
+			msg.send('context', { name: 'l13DiffListFocus', value: false });
+			
+		});
 		
 		this.addEventListener('keydown', (event) => {
 			
@@ -79,9 +79,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			switch (key) {
 				case 'F12': // Debug Mode
 					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
-					break;
-				case 'Escape':
-					this.unselect();
 					break;
 				case 'Enter':
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
@@ -792,8 +789,8 @@ function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:stri
 			const stat = file.stat;
 			column.title += `
 Size: ${formatFileSize(stat.size)}
-Created: ${new Date(stat.birthtime).toLocaleDateString(language, dateOptions)}
-Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
+Created: ${formatDate(new Date(stat.birthtime))}
+Modified: ${formatDate(new Date(stat.mtime))}`;
 		}
 		
 		if (file.ignore) {
@@ -801,7 +798,8 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			 if (!diff.fileB) column.classList.add('-deleted');
 		}
 		
-		const path = document.createElement('SPAN');
+		const path = document.createElement('DIV');
+		path.classList.add('-path');
 		path.draggable = type === 'file' || type === 'folder' || type === 'symlink';
 		column.appendChild(path);
 		
@@ -810,14 +808,14 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			
 			if (exists[0]) {
 				const dirnameExists = document.createElement('SPAN');
-				dirnameExists.classList.add(`-exists`);
+				dirnameExists.classList.add('-exists');
 				dirnameExists.textContent = exists[0];
 				dirname.appendChild(dirnameExists);
 			}
 			
 			if (exists[1]) {
 				const dirnameMissing = document.createElement('SPAN');
-				dirnameMissing.classList.add(`-missing`);
+				dirnameMissing.classList.add('-missing');
 				dirnameMissing.textContent = exists[1];
 				dirname.appendChild(dirnameMissing);
 			}
@@ -827,7 +825,7 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 		
 		const basename = document.createElement('SPAN');
 		basename.textContent = file.basename;
-		basename.classList.add(`-basename`);
+		basename.classList.add('-basename');
 		path.appendChild(basename);
 		
 		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
@@ -837,7 +835,7 @@ Modified: ${new Date(stat.mtime).toLocaleDateString(language, dateOptions)}`;
 			if (diff.ignoredWhitespace) values.push('whitespace');
 			ignored.textContent = `(ignored ${values.join(' and ')})`;
 			ignored.classList.add('-info');
-			column.appendChild(ignored);
+			path.appendChild(ignored);
 		}
 	}
 	

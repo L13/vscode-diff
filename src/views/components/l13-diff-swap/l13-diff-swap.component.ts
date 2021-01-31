@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffSwapViewModelService } from './l13-diff-swap.service';
 import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 
-import { addButtonActiveStyleEvents, parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -34,10 +34,7 @@ export class L13DiffSwapComponent extends L13Element<L13DiffSwapViewModel> {
 		
 		super();
 		
-		setLabel(this.button, 'Swap left and right input fields', {
-			key: 'Ctrl+S',
-			mac: 'Cmd+S',
-		});
+		setLabel(this.button, 'Swap left and right input fields');
 		
 		this.button.addEventListener('click', (event) => this.dispatchCustomEvent('swap', event));
 		

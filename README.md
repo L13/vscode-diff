@@ -4,14 +4,12 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.30.0
+## What's new in Diff Folders 0.31.0
 
-- Added property `l13Diff.abortOnError` to ignore errors during the scan process.
-- Added new list types `error` and `unknown` if an error raises during scan process or an other type is found.
-- Added `Show Errors and Others` button to search widget to filter new list types `error` and `unknown`.
-- Added `Alt + Click` for left and right input icon to pick a file by dialog.
-- Added `Go to File` to context menu. `Click` opens file and `Alt + Click` opens file to side.
-- Added file info for size, created and modified to tooltip in list view.
+- Added support for custom keyboard shortcuts.
+- Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
+- Added `l13Diff.ignoreContents` for comparing files.
+- Added `l13Diff.labelFormat` for different labels formats in the editor tab.
 
 ## Index
 
@@ -20,6 +18,7 @@ Compare two folders in Visual Studio Code.
 1. [Available Settings](#available-settings)
 1. [Predefined Variables](#predefined-variables)
 1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
+1. [Custom Keybindings](#custom-keybindings)
 1. [Recommended Settings](#recommended-settings)
 1. [Recommended Extensions](#recommended-extensions)
 
@@ -102,11 +101,16 @@ Compare two folders in Visual Studio Code.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.
+* `l13Diff.ignoreContents` - If true files will only be compared by size and the contents will be ignored.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores leading and trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
+* `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
+	* `default` - (default) Uses the value of `files.enableTrash`.
+	* `on` - Moves files and folders to the OS trash.
+	* `off` - Deletes files and folders permanently.
 
 [1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
 
@@ -331,9 +335,18 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Compare with Workspace` - Compare the folder, repository or project with the current workspace.
 * `Open in Diff Folders` - Open the folder, repository or project in Diff Folders.
 
+## Custom Keybindings
+
+Custom keyboard shortcuts can be assigned to the commands. But not every command works properly because the right context is required. If a command has no default keyboard shortcut it is maybe necessary to add a when clause. The following list of context values are available in different view states.
+
+* `l13DiffFocus` - The value is true if a diff panel has focus.
+* `l13DiffListFocus` - The value is true if the list view has focus.
+* `l13DiffInputFocus` - The value is true if the left or right input has focus.
+* `l13DiffSearchFocus` - The value is true if the search input has focus.
+
 ## Recommended Settings
 
-The two fastest ways to compare files are
+The two fastest ways to compare files accurate are
 
 ```json
 {

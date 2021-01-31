@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffCopyMessage, DiffFile, DiffGoToMessage, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage } from '../../../types';
+import { Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage } from '../../../types';
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 import { L13DiffListPipe } from './l13-diff-list.interface';
 

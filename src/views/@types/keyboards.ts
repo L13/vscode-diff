@@ -19,17 +19,5 @@ export type Keybinding = {
 	win?:string,
 };
 
-export type KeyboardShortcut = {
-	key:string,
-	altKey:boolean,
-	ctrlKey:boolean,
-	metaKey:boolean,
-	shiftKey:boolean,
-};
-
-export type SimpleMap = {
-	[code:string]:string,
-};
-
 //	Functions __________________________________________________________________
 

@@ -6,7 +6,7 @@ import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.componen
 import { L13DiffMenuViewModelService } from './l13-diff-menu.service';
 import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 
-import { removeChildren, scrollElementIntoView } from '../common';
+import { removeChildren, scrollElementIntoView, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -42,23 +42,18 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 		super();
 
-		this.listRecentlyUsed.setAttribute('data-text', 'recently used');
-		this.listWorkspaces.setAttribute('data-text', 'workspaces');
-
 		this.addEventListener('mouseenter', () => this.isCursorInMenu = true);
 		this.addEventListener('mouseleave', () => this.isCursorInMenu = false);
 
 		this.lists.addEventListener('click', (event:Event) => {
 
-			const target = <HTMLElement>event.target;
+			const item = (<HTMLElement>event.target).closest('li');
 			const parentNode = this.parentNode;
 
 			if (parentNode instanceof L13DiffInputComponent) {
-				if (target.nodeName === 'LI') {
-					parentNode.viewmodel.value = target.textContent;
-					parentNode.focus();
-					this.remove();
-				} else parentNode.focus();
+				parentNode.viewmodel.value = item.firstElementChild.textContent;
+				parentNode.focus();
+				this.remove();
 			}
 
 		});
@@ -72,28 +67,39 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		removeChildren(this.lists);
 
 		if (this.viewmodel.history.length) {
-			this.updateList(this.listRecentlyUsed, this.viewmodel.history);
+			this.updateList(this.listRecentlyUsed, this.viewmodel.history, 'recently used');
 			this.lists.appendChild(this.listRecentlyUsed);
 		}
 
 		if (this.viewmodel.workspaces.length) {
-			this.updateList(this.listWorkspaces, this.viewmodel.workspaces);
+			this.updateList(this.listWorkspaces, this.viewmodel.workspaces, 'workspaces');
 			this.lists.appendChild(this.listWorkspaces);
 		}
 
 	}
 
-	public updateList (list:HTMLElement, entries:string[]) {
+	public updateList (list:HTMLElement, entries:string[], info:string) {
 
 		const fragment = document.createDocumentFragment();
 
 		removeChildren(list);
 
-		entries.forEach((entry) => {
+		entries.forEach((entry, index) => {
 
 			const item = document.createElement('LI');
-
-			item.textContent = entry;
+			const path = document.createElement('DIV');
+			
+			path.classList.add('-path');
+			path.textContent = entry;
+			item.appendChild(path);
+			setLabel(item, entry);
+			
+			if (index === 0) {
+				const description = document.createElement('DIV');
+				description.classList.add('-info');
+				description.textContent = info;
+				item.appendChild(description);
+			}
 
 			fragment.appendChild(item);
 

@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModel } from '../../@l13/component/view-model.abstract';
-
 import { ViewsState } from '../../../types';
+
+import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 
