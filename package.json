@@ -447,18 +447,6 @@
 				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
 			},
 			{
-				"mac": "meta+?",
-				"key": "ctrl+?",
-				"command": "l13Diff.action.actions.copyToRightFolder",
-				"when": "l13DiffFocus"
-			},
-			{
-				"mac": "meta+?",
-				"key": "ctrl+?",
-				"command": "l13Diff.action.actions.copyToLeftFolder",
-				"when": "l13DiffFocus"
-			},
-			{
 				"mac": "meta+backspace",
 				"key": "delete",
 				"command": "l13Diff.action.list.delete",
@@ -468,24 +456,6 @@
 				"mac": "meta+f",
 				"key": "ctrl+f",
 				"command": "l13Diff.action.search.open",
-				"when": "l13DiffFocus"
-			},
-			{
-				"mac": "meta+?",
-				"key": "ctrl+?",
-				"command": "l13Diff.action.actions.selectCreatedEntries",
-				"when": "l13DiffFocus"
-			},
-			{
-				"mac": "meta+?",
-				"key": "ctrl+?",
-				"command": "l13Diff.action.actions.selectDeletedEntries",
-				"when": "l13DiffFocus"
-			},
-			{
-				"mac": "meta+?",
-				"key": "ctrl+?",
-				"command": "l13Diff.action.actions.selectModifiedEntries",
 				"when": "l13DiffFocus"
 			},
 			{
