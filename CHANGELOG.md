@@ -12,6 +12,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Changed
 
 - Changed date format in list view for file info to `0000-00-00 00:00:00`.
+- Changed all commands for custom keyboard shortcuts.
 
 ### Fixed
 - Fixed enabled actions for empty list.
