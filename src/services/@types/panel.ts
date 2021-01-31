@@ -12,6 +12,10 @@
 
 //	Exports ____________________________________________________________________
 
+export type ContextStates = {
+	[name:string]: boolean,
+};
+
 export type Uri = {
 	fsPath:string,
 };

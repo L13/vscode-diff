@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { changePlatform, L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { changePlatform, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 
@@ -8,9 +8,8 @@ import { L13DiffInputViewModelService } from './l13-diff-input.service';
 import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
 import { DiffFile } from '../../../@types/diffs';
-import { DiffDialogMessage } from '../../../@types/messages';
 
-import { addButtonActiveStyleEvents, msg, parseIcons } from '../common';
+import { addButtonActiveStyleEvents, msg, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -53,6 +52,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			const menu = this.menu;
 			
 			this.focused = true;
+			msg.send('context', { name: 'l13DiffInputFocus', value: true });
 			this.appendChild(menu);
 			
 		//	Weird focus blur switch if click is outside of panel view.
@@ -81,6 +81,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			const menu = this.menu;
 			
 			this.focused = false;
+			msg.send('context', { name: 'l13DiffInputFocus', value: false });
 			
 			if (!menu.isCursorInMenu && menu.parentNode === this) menu.remove();
 			
@@ -104,7 +105,6 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 					}
 					break;
 				case 'Tab':
-				case 'Escape':
 					if (menu && menu.parentNode) menu.remove();
 					break;
 				case 'ArrowUp':
@@ -152,26 +152,9 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		addButtonActiveStyleEvents(this.button);
 		
-		let eventName:string = null;
-		
-		const dialogListener = (data:DiffDialogMessage) => {
-			
-			if (data.fsPath) this.viewmodel.value = data.fsPath;
-			
-			msg.removeMessageListener(eventName, dialogListener);
-			
-			eventName = null;
-			
-		}
-		
 		this.button.addEventListener('click', (event:MouseEvent) => {
 			
-			if (!eventName) {
-				eventName = `dialog:${event.altKey ? 'file' : 'folder'}`;
-				
-				msg.on(eventName, dialogListener);
-				msg.send(eventName);
-			}
+			this.viewmodel.pick(event.altKey);
 			
 		});
 		

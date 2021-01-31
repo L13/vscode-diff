@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { L13Component, L13Element, L13Query, setLabel } from '../../@l13/core';
+import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
 import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 
-import { addButtonActiveStyleEvents, parseIcons } from '../common';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
 
@@ -53,7 +53,7 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		setLabel(this.selectDeleted, 'Select all deleted files');
 		setLabel(this.selectModified, 'Select all modfied files');
 		setLabel(this.selectUntracked, 'Select all created files');
-		setLabel(this.selectAll, 'Select all files', { key: 'Ctrl+A', mac: 'Cmd+A' });
+		setLabel(this.selectAll, 'Select all files');
 		setLabel(this.copyLeft, 'Copy selection to the right folder');
 		
 		addButtonActiveStyleEvents(this.copyRight);

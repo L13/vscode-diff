@@ -5,8 +5,8 @@ import * as vscode from 'vscode';
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Favorite, FavoriteGroup, FavoriteTreeItems, InitialState } from '../../types';
 
-import * as dialogs from '../../common/dialogs';
-import * as settings from '../../common/settings';
+import * as dialogs from '../common/dialogs';
+import * as settings from '../common/settings';
 
 import { FavoriteGroupTreeItem } from './trees/FavoriteGroupTreeItem';
 import { FavoriteTreeItem } from './trees/FavoriteTreeItem';

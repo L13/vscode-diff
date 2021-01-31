@@ -18,16 +18,11 @@
 				border: none;
 			}
 			
-			&::before {
-				color: var(--vscode-pickerGroup-foreground);
-				content: attr(data-text);
-				float: right;
-				padding: 4px 10px 5px 10px;
-			}
-			
 			> li {
 				color: var(--vscode-foreground);
 				cursor: pointer;
+				display: flex;
+				justify-content: space-between;
 				margin: 0 0 0 0;
 				padding: 4px 10px 5px 10px;
 				user-select: none;
@@ -41,6 +36,19 @@
 				&:hover {
 					background: var(--vscode-list-hoverBackground);
 					color: var(--vscode-list-hoverForeground);
+				}
+				
+				div.-path {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+				
+				div.-info {
+					color: var(--vscode-pickerGroup-foreground);
+					padding-left: 10px;
+					text-align: right;
+					white-space: nowrap;
 				}
 			}
 		}

@@ -1,14 +1,17 @@
 :host {
 	box-sizing: border-box;
-	height: calc(100% - 2px);
-	padding: 2px 7px 0 2px;
+	line-height: 1px;
+	padding: 1px 0 0 10px;
+	vertical-align: sub;
+	white-space: nowrap;
 	
 	button {
 		background: transparent;
 		border: none;
 		cursor: pointer;
+		display: inline-block;
 		height: 16px;
-		margin: 0 0 0 5px;
+		margin: 0 0 -1px 5px;
 		position: relative;
 		transition: transform 0.1s;
 		width: 16px;

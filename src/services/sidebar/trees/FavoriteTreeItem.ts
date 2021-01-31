@@ -23,7 +23,7 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 	
 	public command = {
 		arguments: [this],
-		command: 'l13Diff.openFavorite',
+		command: 'l13Diff.action.favorite.open',
 		title: 'Open Favorite',
 	};
 	
@@ -37,11 +37,7 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 		
 		if (favorite.groupId !== undefined) this.contextValue = `sub${this.contextValue}`;
 		
-	}
-	
-	public get tooltip () :string {
-		
-		return `${this.favorite.fileA} ↔ ${this.favorite.fileB}`;
+		this.tooltip = `${this.favorite.fileA} ↔ ${this.favorite.fileB}`;
 		
 	}
 	

@@ -57,14 +57,14 @@ gulp.task('icons:fix', (done) => {
 
 gulp.task('icons:common', () => {
 	
-	return gulp.src('src/views/icons/**/*.svg')
+	return gulp.src('src/views/icons/panel/**/*.svg')
 		.pipe(gulp.dest('media/icons'));
 	
 });
 
 gulp.task('icons:json', () => {
 	
-	return gulp.src('src/views/components/icons/**/*.svg')
+	return gulp.src('src/views/components/icons/components/**/*.svg')
 		.pipe(file2json({
 			path: 'icons.ts',
 			indent: '\t',
@@ -147,7 +147,7 @@ gulp.task('script:view', () => {
 gulp.task('script:services', () => {
 	
 	return rollup.rollup({
-		input: 'src/extension.ts',
+		input: 'src/services/main.ts',
 		onwarn,
 		external: [
 			'child_process',
@@ -163,7 +163,6 @@ gulp.task('script:services', () => {
 					'src/commands/**/!(.test).ts',
 					'src/common/**/!(.test).ts',
 					'src/services/**/!(.test).ts',
-					'src/extension.ts',
 					'src/types.ts',
 				],
 			}),

@@ -173,13 +173,14 @@ l13-diff-list-row {
 	
 l13-diff-list-file {
 	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
 	overflow: hidden;
-	padding: 2px 0 4px 36px;
+	padding: 2px 7px 4px 36px;
 	position: relative;
 	width: calc(50% - 22px);
 	
 	&:first-child {
-		padding-right: 49px;
 		padding-left: 31px;
 		width: calc(50% + 22px);
 		
@@ -267,6 +268,12 @@ l13-diff-list-file {
 		}
 	}
 	
+	div.-path {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	
 	span {
 		
 		&.-exists {
@@ -286,20 +293,5 @@ l13-diff-list-file {
 			opacity: 0.5;
 			padding-left: 5px;
 		}
-	}
-}
-
-l13-diff-context {
-	position: absolute;
-	top: 1px;
-	right: 0;
-	
-	&::before {
-		content: '';
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: -16px;
-		width: 16px;
 	}
 }

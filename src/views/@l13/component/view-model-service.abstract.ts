@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { L13Element } from './component.abstract';
-import { ViewModelConstructor } from './types';
+import { ViewModelConstructor } from '../../@types/components';
 import { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________

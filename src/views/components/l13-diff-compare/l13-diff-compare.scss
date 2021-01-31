@@ -21,6 +21,11 @@ button {
 		background: var(--vscode-button-hoverBackground);
 	}
 	
+	&:focus {
+		outline: solid 1px var(--vscode-focusBorder, transparent);
+		outline-offset: 1px;
+	}
+	
 	&[disabled] {
 		opacity: 0.3;
 		cursor: default;

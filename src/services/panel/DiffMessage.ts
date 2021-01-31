@@ -41,7 +41,7 @@ export class DiffMessage {
 		
 	}
 	
-	public send (command:string, data:any = null) :void {
+	public send <T> (command:string, data:T = null) :void {
 		
 		this.panel.webview.postMessage({ command, data });
 		
