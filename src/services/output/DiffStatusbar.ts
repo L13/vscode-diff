@@ -14,28 +14,28 @@ import { remove } from '../../@l13/arrays';
 
 //	Exports ____________________________________________________________________
 
-export class DiffStatusbar {
+export class DiffStatusBar {
 	
 	private static statusBarItem:vscode.StatusBarItem|undefined;
 	
-	public static currentStatus:DiffStatusbar|undefined;
+	public static currentStatusBar:DiffStatusBar|undefined;
 	
-	private static status:DiffStatusbar[] = [];
+	private static activeStatusBars:DiffStatusBar[] = [];
 	
 	private currentText = '';
 	
 	public constructor (context:vscode.ExtensionContext) {
 		
-		if (!DiffStatusbar.statusBarItem) {
-			DiffStatusbar.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-			DiffStatusbar.statusBarItem.command = 'l13Diff.action.output.show';
-			DiffStatusbar.statusBarItem.tooltip = 'Diff Folders Output';
-			DiffStatusbar.statusBarItem.show();
-			context.subscriptions.push(DiffStatusbar.statusBarItem);
+		if (!DiffStatusBar.statusBarItem) {
+			DiffStatusBar.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+			DiffStatusBar.statusBarItem.command = 'l13Diff.action.output.show';
+			DiffStatusBar.statusBarItem.tooltip = 'Diff Folders Output';
+			DiffStatusBar.statusBarItem.show();
+			context.subscriptions.push(DiffStatusBar.statusBarItem);
 		}
 		
-		DiffStatusbar.currentStatus = this;
-		DiffStatusbar.status.push(this);
+		DiffStatusBar.currentStatusBar = this;
+		DiffStatusBar.activeStatusBars.push(this);
 		
 		this.update();
 		
@@ -43,9 +43,9 @@ export class DiffStatusbar {
 	
 	public activate () {
 		
-		if (DiffStatusbar.currentStatus !== this) {
-			DiffStatusbar.currentStatus = this;
-			DiffStatusbar.statusBarItem.text = this.currentText;
+		if (DiffStatusBar.currentStatusBar !== this) {
+			DiffStatusBar.currentStatusBar = this;
+			DiffStatusBar.statusBarItem.text = this.currentText;
 		}
 		
 	}
@@ -54,17 +54,17 @@ export class DiffStatusbar {
 		
 		this.currentText = '$(file-submodule) ' + (text || 'Diff Folders');
 		
-		if (DiffStatusbar.currentStatus === this) DiffStatusbar.statusBarItem.text = this.currentText;
+		if (DiffStatusBar.currentStatusBar === this) DiffStatusBar.statusBarItem.text = this.currentText;
 		
 	}
 	
 	public dispose () :void {
 		
-		remove(DiffStatusbar.status, this);
+		remove(DiffStatusBar.activeStatusBars, this);
 		
-		if (!DiffStatusbar.status.length && DiffStatusbar.statusBarItem) {
-			DiffStatusbar.statusBarItem.dispose();
-			DiffStatusbar.statusBarItem = undefined;
+		if (!DiffStatusBar.activeStatusBars.length && DiffStatusBar.statusBarItem) {
+			DiffStatusBar.statusBarItem.dispose();
+			DiffStatusBar.statusBarItem = undefined;
 		}
 		
 	}

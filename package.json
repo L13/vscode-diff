@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.31.0",
+	"version": "0.31.1",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -432,7 +432,8 @@
 			{
 				"mac": "meta+l meta+o",
 				"win": "ctrl+l ctrl+o",
-				"command": "l13Diff.action.output.show"
+				"command": "l13Diff.action.output.show",
+				"when": "l13DiffFocus"
 			},
 			{
 				"mac": "meta+c",
@@ -1093,6 +1094,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Should only the file size be compared and not the contents?"
+				},
+				"l13Diff.maxFileSize": {
+					"type": "number",
+					"default": 0,
+					"description": "Indicates the maximum file size in MB for a comparison. If the value is 0 no limit is used instead."
 				},
 				"l13Diff.useCaseSensitiveFileName": {
 					"type": "string",

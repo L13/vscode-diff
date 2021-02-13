@@ -150,6 +150,7 @@ gulp.task('script:services', () => {
 		input: 'src/services/main.ts',
 		onwarn,
 		external: [
+			'buffer',
 			'child_process',
 			'fs',
 			'path',

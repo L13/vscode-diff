@@ -4,12 +4,11 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.31.0
+## What's new in Diff Folders 0.31.1
 
-- Added support for custom keyboard shortcuts.
-- Added `l13Diff.enableTrash` which supports `default` (uses `files.enableTrash`), `on` or `off`.
-- Added `l13Diff.ignoreContents` for comparing files.
-- Added `l13Diff.labelFormat` for different labels formats in the editor tab.
+- Added `l13Diff.maxFileSize` to ignore files for a comparison that exceed this file size.
+- Added file size check for text file comparison. If the file size exceeds the maximum buffer length the files will be treated as binary files.
+- Fixed comparing binary files if the file size exceeded the maximum buffer length.
 
 ## Index
 
@@ -74,7 +73,6 @@ Compare two folders in Visual Studio Code.
 ## Available Commands
 
 * `Diff Folders` - Open the diff panel.
-* `Open in Diff Folders` - Open the diff panel with selected files or folders in the Visual Studio Code Explorer by dialog or context menu.
 * `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `Diff Folders: Delete All Favorites` - Delete all favorites.
 * `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
@@ -101,7 +99,12 @@ Compare two folders in Visual Studio Code.
 	* `Remember` - (default) Remember the collpased and expanded state of each group.
 	* `Collapsed` - Show all groups collapsed at start.
 	* `Expanded` - Show all groups expanded at start.
+* `l13Diff.labelFormat` - Indicates how the label of a tab should be formatted.
+	* `complete` - (default) Show relative paths including the common path.
+	* `relative` - Show only the relative paths.
+	* `filename` - Show only the filenames.
 * `l13Diff.ignoreContents` - If true files will only be compared by size and the contents will be ignored.
+* `l13Diff.maxFileSize` - Indicates the maximum file size in MB for a comparison. If the value is 0 no limit is used instead.
 * `l13Diff.ignoreEndOfLine` [1] - Set true if a comparison for text files should ignore line endings (CR/LF).
 * `l13Diff.ignoreTrimWhitespace` [1] - Ignores leading and trailing whitespace in text files.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
@@ -112,7 +115,7 @@ Compare two folders in Visual Studio Code.
 	* `on` - Moves files and folders to the OS trash.
 	* `off` - Deletes files and folders permanently.
 
-[1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`.
+[1] Supports only ASCII based and UTF-16 BE/LE encoded files. The text file detection uses the extension name definitions of all installed extensions or the property `files.associations` in the user settings. If a file isn't detected as a text file the extension name has to be added to `files.associations` like `"*.extname": "language"`. If the file size exceeds the maximum buffer length the file will be treated as a binary file.
 
 ## Predefined Variables
 
