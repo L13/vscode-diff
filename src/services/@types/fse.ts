@@ -16,6 +16,7 @@ export type WalkTreeOptions = {
 	abortOnError:boolean,
 	excludes?:string[],
 	useCaseSensitive?:boolean,
+	maxFileSize?:number,
 };
 
 export type StatsMap = {
@@ -28,6 +29,7 @@ export type WalkTreeJob = {
 	ignore:null|RegExp,
 	tasks:number,
 	result:StatsMap,
+	maxSize:number,
 	done:(error?:Error) => void,
 };
 

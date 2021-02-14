@@ -38,7 +38,7 @@ export function copyFile (sourcePath:string, destPath:string) {
 		source.pipe(dest);
 		
 		source.on('error', (error:Error) => reject(error));
-		source.on('end', () => resolve());
+		source.on('end', () => resolve(undefined));
 		
 	});
 	
@@ -57,7 +57,7 @@ export function copySymbolicLink (sourcePath:string, destPath:string) {
 		fs.symlink(fs.readlinkSync(sourcePath), destPath, (error:Error) => {
 						
 			if (error) reject(error);
-			else resolve();
+			else resolve(undefined);
 			
 		});
 		
@@ -74,6 +74,7 @@ export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap
 			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes, options.useCaseSensitive) : null,
 			result: {},
 			tasks: 1,
+			maxSize: options.maxFileSize || 0,
 			abort: options.abortOnError ?? true,
 			done: (error?:Error) => {
 				
@@ -205,7 +206,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 				
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
-				const ignore = job.ignore?.test(currentRelative);
+				let ignore = job.ignore?.test(currentRelative);
 				
 				currentDirname = currentDirname === '.' ? '' : currentDirname + path.sep;
 				
@@ -215,8 +216,11 @@ function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
 					if (stat.isDirectory()) {
 						addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 						if (!ignore) return _walktree(job, cwd, currentRelative);
-					} else if (stat.isFile()) addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-					else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					} else if (stat.isFile()) {
+						const maxSize = job.maxSize;
+						if (maxSize && stat.size > maxSize) ignore = true;
+						addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					} else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 					else addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
 				}
 				

@@ -15,7 +15,7 @@ import { DiffCopy } from '../actions/DiffCopy';
 import { DiffDelete } from '../actions/DiffDelete';
 
 import { DiffOutput } from '../output/DiffOutput';
-import { DiffStatusbar } from '../output/DiffStatusbar';
+import { DiffStatusBar } from '../output/DiffStatusBar';
 
 import { DiffHistory } from '../sidebar/DiffHistory';
 
@@ -48,7 +48,7 @@ export class DiffPanel {
 	public readonly copy:DiffCopy;
 	public readonly delete:DiffDelete;
 	
-	public readonly status:DiffStatusbar;
+	public readonly status:DiffStatusBar;
 	public readonly output:DiffOutput;
 	
 	public readonly panel:vscode.WebviewPanel;
@@ -73,7 +73,7 @@ export class DiffPanel {
 		
 		this.msg = new DiffMessage(panel, this.disposables);
 		
-		this.status = new DiffStatusbar(context);
+		this.status = new DiffStatusBar(context);
 		this.output = new DiffOutput();
 		
 		this.copy = new DiffCopy();

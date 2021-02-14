@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
-import { formatFileSize, formatDate } from '../../../@l13/formats';
+import { formatDate, formatFileSize } from '../../../@l13/formats';
 import { DiffOpenMessage } from '../../../@types/messages';
 import { Diff, DiffFile, DiffStatus } from '../../../types';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';

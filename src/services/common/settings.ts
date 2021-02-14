@@ -11,6 +11,9 @@ import { parse } from '../@l13/jsonc';
 
 export const hasCaseSensitiveFileSystem:boolean = !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
 
+const MB = 1048576;
+const MAX_FILE_SIZE = Number.MAX_SAFE_INTEGER / MB;
+
 //	Initialize _________________________________________________________________
 
 
@@ -56,6 +59,14 @@ export function enableTrash () {
 	const enableTrash = get('enableTrash', 'default');
 	
 	return enableTrash === 'default' ? vscode.workspace.getConfiguration('files').get('enableTrash', true) : enableTrash === 'on';
+	
+}
+
+export function maxFileSize () {
+	
+	const maxFileSize = parseInt(`${get('maxFileSize', 0)}`, 10);
+	
+	return maxFileSize > 0 && maxFileSize < MAX_FILE_SIZE ? maxFileSize * MB : 0;
 	
 }
 

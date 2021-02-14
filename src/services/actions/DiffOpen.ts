@@ -114,8 +114,6 @@ async function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:
 	
 }
 
-
-
 async function openFile (uri:vscode.Uri, openToSide:boolean) {
 	
 	await vscode.commands.executeCommand('vscode.open', uri, {
