@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.31.1] - 2021-02-14
+
+### Added
+- Added `l13Diff.maxFileSize` to ignore files for a comparison that exceed this file size.
+- Added file size check for text file comparison. If the file size exceeds the maximum buffer length the files will be treated as binary files.
+
+### Fixed
+- Fixed comparing binary files if the file size exceeded the maximum buffer length. [Issue #72](https://github.com/L13/vscode-diff/issues/72)
+
 ## [0.31.0] - 2021-01-31
 
 ### Added

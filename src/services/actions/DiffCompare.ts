@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { constants } from 'buffer';
 import * as fs from 'fs';
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
@@ -22,6 +23,9 @@ const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
 const findEscapedEndingBrace = /\\\}/g;
 
 const COMPARE_DONT_SHOW_AGAIN = 'Compare, don\'t show again';
+
+const BUFFER_MAX_LENGTH = constants.MAX_LENGTH;
+const MAX_CACHE_BUFFER_LENGTH = 33554432; // 32 MB
 
 //	Initialize _________________________________________________________________
 
@@ -93,8 +97,8 @@ export class DiffCompare {
 	
 	public updateDiffs (data:DiffResult) :void {
 		
-		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 		const ignoreContents = settings.get('ignoreContents', false);
+		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 		const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 		
 		data.diffs.forEach((diff:Diff) => {
@@ -102,7 +106,7 @@ export class DiffCompare {
 			diff.fileA.stat = lstatSync(diff.fileA.fsPath);
 			diff.fileB.stat = lstatSync(diff.fileB.fsPath);
 			
-			compareDiff(diff, diff.fileA, diff.fileB, ignoreEndOfLine, ignoreTrimWhitespace, ignoreContents);
+			compareDiff(diff, ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace);
 			
 			this._onDidUpdateDiff.fire(diff);
 			
@@ -149,11 +153,11 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, abortOnError:boolean, excludes:string[], useCaseSensitive:boolean) {
+	public async scanFolder (dirname:string, abortOnError:boolean, excludes:string[], useCaseSensitive:boolean, maxFileSize:number) {
 		
 		this._onStartScanFolder.fire(dirname);
 		
-		const result = await walkTree(dirname, { abortOnError, excludes, useCaseSensitive });
+		const result = await walkTree(dirname, { abortOnError, excludes, useCaseSensitive, maxFileSize });
 		
 		this._onEndScanFolder.fire(result);
 		
@@ -166,6 +170,7 @@ export class DiffCompare {
 		const abortOnError = settings.get('abortOnError', true);
 		const exludes = settings.getExcludes(dirnameA, dirnameB);
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
+		const maxFileSize = settings.maxFileSize();
 		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
 		
 		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
@@ -177,8 +182,8 @@ export class DiffCompare {
 			}
 		}
 		
-		const resultA:StatsMap = await this.scanFolder(dirnameA, abortOnError, exludes, useCaseSensitive);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, abortOnError, exludes, useCaseSensitive);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, abortOnError, exludes, useCaseSensitive, maxFileSize);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, abortOnError, exludes, useCaseSensitive, maxFileSize);
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
 		const diffs:Dictionary<Diff> = {};
 		
@@ -210,8 +215,8 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 
 function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
 	
-	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 	const ignoreContents = settings.get('ignoreContents', false);
+	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
 	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
 	
 	Object.keys(result).forEach((pathname) => {
@@ -221,66 +226,87 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 		const diff = diffs[id];
 		
 		if (diff) {
-			if (!diff.fileB) compareDiff(diff, <DiffFile>diff.fileA, diff.fileB = file, ignoreEndOfLine, ignoreTrimWhitespace, ignoreContents);
-			else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
+			if (!diff.fileB) {
+				diff.fileB = file;
+				if (file.ignore) diff.status = 'ignored';
+				compareDiff(diff, ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace);
+			} else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
 		} else addFile(diffs, id, null, file);
 		
 	});
 	
 }
 
-function compareDiff (diff:Diff, fileA:DiffFile, fileB:DiffFile, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean, ignoreContents:boolean) {
+function compareDiff (diff:Diff, ignoreContents:boolean, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
 	
-	const statA = <fs.Stats>fileA.stat;
-	const statB = <fs.Stats>fileB.stat;
+	const fileA = diff.fileA;
+	const fileB = diff.fileB;
+	const typeA = fileA.type;
 	
-	if (diff.status === 'ignored') {
-		if (fileA.type !== fileB.type) diff.type = 'mixed';
+	if (typeA !== fileB.type) {
+		diff.type = 'mixed';
+		if (diff.status === 'ignored') return;
+		diff.status = 'conflicting';
 		return;
-	}
+	} else if (diff.status === 'ignored') return;
 	
 	diff.status = 'unchanged';
+		
+	const sizeA = (<fs.Stats>fileA.stat).size;
+	const sizeB = (<fs.Stats>fileB.stat).size;
 	
-	if (fileA.type !== fileB.type) {
-		diff.status = 'conflicting';
-		diff.type = 'mixed';
-	} else if (fileA.type === 'file' && fileB.type === 'file') {
+	if (typeA === 'file') {
+		
 		if (ignoreContents) {
-			if (statA.size !== statB.size) diff.status = 'modified';
+			if (sizeA !== sizeB) diff.status = 'modified';
 		} else if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
+			sizeA <= BUFFER_MAX_LENGTH &&
+			sizeB <= BUFFER_MAX_LENGTH &&
 			(textfiles.extensions.includes(fileA.extname) ||
 			textfiles.filenames.includes(fileA.basename) ||
 			textfiles.glob && textfiles.glob.test(fileA.basename))) {
+				
 			let bufferA = fs.readFileSync(fileA.fsPath);
 			let bufferB = fs.readFileSync(fileB.fsPath);
+			
 		//	If files are equal normalizing is not necessary
-			if (statA.size === statB.size && bufferA.equals(bufferB)) return;
+			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
+			
 			if (ignoreTrimWhitespace) {
 				bufferA = trimWhitespace(bufferA);
 				bufferB = trimWhitespace(bufferB);
 				diff.ignoredWhitespace = true;
 			}
+			
 			if (ignoreEndOfLine) {
 				bufferA = normalizeLineEnding(bufferA);
 				bufferB = normalizeLineEnding(bufferB);
 				diff.ignoredEOL = true;
 			}
+			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
+			
 		} else {
-			if (statA.size === statB.size) {
-				const bufferA = fs.readFileSync(fileA.fsPath);
-				const bufferB = fs.readFileSync(fileB.fsPath);
-				if (!bufferA.equals(bufferB)) diff.status = 'modified';
+			
+			if (sizeA === sizeB) {
+				if (sizeA <= MAX_CACHE_BUFFER_LENGTH) {
+					const bufferA = fs.readFileSync(fileA.fsPath);
+					const bufferB = fs.readFileSync(fileB.fsPath);
+					if (!bufferA.equals(bufferB)) diff.status = 'modified';
+				} else if (!hasSameContents(fileA.fsPath, fileB.fsPath)) diff.status = 'modified';
 			} else diff.status = 'modified';
+			
 		}
-	} else if (fileA.type === 'symlink' && fileB.type === 'symlink') {
-		if (ignoreContents) {
-			if (statA.size !== statB.size) diff.status = 'modified';
-		} else {
-			const linkA = fs.readlinkSync(fileA.fsPath);
-			const linkB = fs.readlinkSync(fileB.fsPath);
-			if (linkA !== linkB) diff.status = 'modified';
-		}
+	} else if (typeA === 'symlink') {
+		
+		if (sizeA === sizeB) {
+			if (!ignoreContents) {
+				const linkA = fs.readlinkSync(fileA.fsPath);
+				const linkB = fs.readlinkSync(fileB.fsPath);
+				if (linkA !== linkB) diff.status = 'modified';
+			}
+		} else diff.status = 'modified';
+		
 	}
 	
 }
@@ -326,5 +352,38 @@ function addFile (diffs:Dictionary<Diff>, id:string, fileA:DiffFile, fileB:DiffF
 		fileA,
 		fileB,
 	};
+	
+}
+
+function hasSameContents (pathA:string, pathB:string) {
+	
+	let fdA;
+	let fdB;
+	
+	try {
+		fdA = fs.openSync(pathA, 'r');
+		fdB = fs.openSync(pathB, 'r');
+		
+		const bufferA = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
+		const bufferB = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
+		
+		while (true) {
+			const sizeA = fs.readSync(fdA, bufferA, 0, MAX_CACHE_BUFFER_LENGTH, null);
+			if (!sizeA) break;
+			
+			const sizeB = fs.readSync(fdB, bufferB, 0, MAX_CACHE_BUFFER_LENGTH, null);
+			if (!sizeB) break;
+			
+			if (!bufferA.equals(bufferB)) return false;
+			
+			if (sizeA < MAX_CACHE_BUFFER_LENGTH || sizeB < MAX_CACHE_BUFFER_LENGTH) break;
+		}
+		return true;
+	} catch (error) {
+		throw error;
+	} finally {
+		fs.closeSync(fdA);
+		fs.closeSync(fdB);
+	}
 	
 }

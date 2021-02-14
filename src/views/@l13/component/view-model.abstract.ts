@@ -64,7 +64,7 @@ export abstract class ViewModel extends EventDispatcher {
 					
 					this.dispatchEvent('update');
 					
-					resolve();
+					resolve(undefined);
 					
 				});
 				
