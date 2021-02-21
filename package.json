@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.31.1",
+	"version": "0.31.2",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -1025,12 +1025,14 @@
 					"default": "complete",
 					"enum": [
 						"complete",
+						"compact",
 						"relative",
 						"filename"
 					],
 					"description": "Indicates if the title of a tab should be only the filenames, the relative paths or relative paths including the common path.",
 					"enumDescriptions": [
 						"Show relative paths including the common path.",
+						"Show relative paths including base folders.",
 						"Show only the relative paths.",
 						"Show only the filenames."
 					]

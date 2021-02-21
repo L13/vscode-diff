@@ -2,7 +2,7 @@
 
 import { Uri } from '../types';
 
-import { Diff, DiffFile } from './diffs';
+import { Diff, DiffFile, DiffSettings } from './diffs';
 
 //	Variables __________________________________________________________________
 
@@ -84,6 +84,7 @@ export type DiffResultMessage = {
 	diffs:Diff[],
 	pathA:string,
 	pathB:string,
+	settings:DiffSettings,
 };
 
 export type DiffUpdatePathsMessage = {

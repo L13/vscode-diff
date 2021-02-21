@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff } from '../../types';
+import { Diff, DiffSettings } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -16,7 +16,7 @@ export class DiffResult {
 	
 	public diffs:Diff[] = [];
 	
-	public constructor (public pathA:string, public pathB:string) {
+	public constructor (public pathA:string, public pathB:string, public settings:DiffSettings) {
 		
 		
 		

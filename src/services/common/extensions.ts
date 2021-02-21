@@ -2,19 +2,16 @@
 
 import * as vscode from 'vscode';
 
-import { TextFiles } from '../../types';
-
 const { push } = Array.prototype;
 
 //	Variables __________________________________________________________________
 
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
+const findStartDot = /^\./;
 
-export const textfiles:TextFiles = {
-	extensions: [],
-	filenames: [],
-	glob: null,
-};
+let findExtensions:RegExp = null;
+let filenames:string[] = [];
+let findAssociations:RegExp = null;
 
 //	Initialize _________________________________________________________________
 
@@ -22,12 +19,20 @@ export const textfiles:TextFiles = {
 
 //	Exports ____________________________________________________________________
 
+export function isTextFile (basename:string) {
+	
+	return findExtensions.test(basename) ||
+		filenames.includes(basename) ||
+		findAssociations && findAssociations.test(basename);
+	
+}
+
 export function buildWhitelistForTextFiles () {
 	
 	const config = vscode.workspace.getConfiguration();
+	const extensions = ['*.txt'];
 	
-	textfiles.extensions = ['.txt'];
-	textfiles.filenames = [];
+	filenames = [];
 	
 	vscode.extensions.all.forEach((extension) => {
 		
@@ -36,20 +41,28 @@ export function buildWhitelistForTextFiles () {
 		if (packageJSON.contributes && packageJSON.contributes.languages) {
 			packageJSON.contributes.languages.forEach((language:any) => {
 				
-				if (language.extensions) push.apply(textfiles.extensions, language.extensions);
-				if (language.filenames) push.apply(textfiles.filenames, language.filenames);
+				if (language.extensions) {
+					language.extensions.forEach((extname:string) => {
+						
+						extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
+						
+					});
+				}
+				
+				if (language.filenames) push.apply(filenames, language.filenames);
 				
 			});
 		}
 		
 	});
 	
-	if (config.has('files.associations')) {
-		textfiles.glob = createFindGlob(Object.keys(config.get<object>('files.associations', {})));
-	} else textfiles.glob = null;
+	extensions.sort();
+	findExtensions = createFindGlob(extensions);
+	filenames.sort();
 	
-	textfiles.extensions.sort();
-	textfiles.filenames.sort();
+	if (config.has('files.associations')) {
+		findAssociations = createFindGlob(Object.keys(config.get<object>('files.associations', {})));
+	} else findAssociations = null;
 	
 }
 
@@ -57,7 +70,7 @@ export function buildWhitelistForTextFiles () {
 
 function createFindGlob (ignore:string[]) {
 	
-	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`);
+	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`, 'i');
 	
 }
 
@@ -65,8 +78,8 @@ function escapeForRegExp (text:string) {
 	
 	return ('' + text).replace(findRegExpChars, (match) => {
 		
-		if (match === '*') return '.+';
-		if (match === '?') return '?';
+		if (match === '*') return '.*';
+		if (match === '?') return '.';
 		
 		return '\\' + match;
 		
