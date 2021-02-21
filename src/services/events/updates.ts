@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff } from '../../types';
+import { Diff, DiffResultMessage } from '../../types';
 
 import { DiffResult } from '../output/DiffResult';
 
@@ -18,7 +18,7 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('update:diffs', (data:DiffResult) => currentDiffPanel.compare.updateDiffs(data));
+	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => currentDiffPanel.compare.updateDiffs(data));
 	
 	currentDiffPanel.compare.onDidUpdateDiff((diff:Diff) => {
 		

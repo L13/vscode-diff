@@ -40,7 +40,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 		if (error instanceof Error) currentDiffPanel.output.msg(`${error.stack}`);
 		
-		currentDiffPanel.msg.send('create:diffs', new DiffResult(pathA, pathB));
+		currentDiffPanel.msg.send('create:diffs', new DiffResult(pathA, pathB, null));
 		
 	}, null, currentDiffPanel.disposables);
 	

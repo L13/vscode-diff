@@ -46,11 +46,11 @@ export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 		
 		super();
 		
-		setLabel(this.unchanged, 'Show all unchanged files');
-		setLabel(this.deleted, 'Show all deleted files');
-		setLabel(this.modified, 'Show all modified files');
-		setLabel(this.untracked, 'Show all created files');
-		setLabel(this.ignored, 'Show all ignored files');
+		setLabel(this.unchanged, 'Show All Unchanged Files');
+		setLabel(this.deleted, 'Show All Deleted Files');
+		setLabel(this.modified, 'Show All Modified Files');
+		setLabel(this.untracked, 'Show All Created Files');
+		setLabel(this.ignored, 'Show All Ignored Files');
 		
 		addButtonActiveStyleEvents(this.unchanged);
 		addButtonActiveStyleEvents(this.deleted);

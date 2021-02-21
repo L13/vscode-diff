@@ -49,12 +49,12 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		
 		super();
 		
-		setLabel(this.copyRight, 'Copy selection to the left folder');
-		setLabel(this.selectDeleted, 'Select all deleted files');
-		setLabel(this.selectModified, 'Select all modfied files');
-		setLabel(this.selectUntracked, 'Select all created files');
-		setLabel(this.selectAll, 'Select all files');
-		setLabel(this.copyLeft, 'Copy selection to the right folder');
+		setLabel(this.copyRight, 'Copy Selection to the Left Folder');
+		setLabel(this.selectDeleted, 'Select All Deleted Files');
+		setLabel(this.selectModified, 'Select All Modfied Files');
+		setLabel(this.selectUntracked, 'Select All Created Files');
+		setLabel(this.selectAll, 'Select All Files');
+		setLabel(this.copyLeft, 'Copy Selection to the Right Folder');
 		
 		addButtonActiveStyleEvents(this.copyRight);
 		addButtonActiveStyleEvents(this.selectDeleted);
