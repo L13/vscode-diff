@@ -4,11 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.31.2
+## What's new in Diff Folders 0.32.0
 
-- Fixed text file detection if a file starts with `.` or has multiple extnames.
-- Added value `compact` to `l13Diff.labelFormat`.
-- Added diff settings to output. Same settings are also used for updates.
+- Fixed updating list view if a file or folder has been deleted in current workspace.
 
 ## Index
 

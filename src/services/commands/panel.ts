@@ -55,6 +55,15 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
+	context.subscriptions.push(vscode.workspace.onDidDeleteFiles(({ files }) => {
+		
+		if (files.length && DiffPanel.currentPanel) {
+			const fsPaths = files.map((uri) => uri.fsPath);
+			DiffPanel.sendAll('remove:files', { files: fsPaths });
+		}
+		
+	}));
+	
 }
 
 //	Functions __________________________________________________________________

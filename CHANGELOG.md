@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.32.0] - 2021-02-28
+
+### Fixed
+- Fixed updating list view if a file or folder has been deleted in current workspace.
+
 ## [0.31.2] - 2021-02-21
 
 ### Added
