@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.31.2] - 2021-02-21
+
+### Added
+- Added value `compact` to `l13Diff.labelFormat`.
+- Added diff settings to output. Same settings are also used for updates.
+
+### Fixed
+- Fixed text file detection if a file starts with `.` or has multiple extnames.
+
 ## [0.31.1] - 2021-02-14
 
 ### Added

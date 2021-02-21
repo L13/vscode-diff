@@ -72,20 +72,37 @@ export class DiffStats {
 	
 	public report () :string {
 		
-		return `INFO
+		const diffs = this.result.diffs;
+		const settings = this.result.settings;
+		const pathA = this.pathA;
+		const pathB = this.pathB;
+		
+		return `SETTINGS
 
-Compared:    ${formatFileStats(`${this.pathA.pathname}" ↔ "${this.pathB.pathname}`, this.all)}
+Abort on Error: ${settings.abortOnError}
+Excludes: "${settings.excludes.join('", "')}"
+Ignore Contents: ${settings.ignoreContents}
+Ignore End of Line: ${settings.ignoreEndOfLine}
+Ignore Trim Whitespace: ${settings.ignoreTrimWhitespace}
+Max File Size: ${settings.maxFileSize ? settings.maxFileSize + ' MB' : '0'}
+Use Case Sensitive: ${settings.useCaseSensitive}
 
-Left Path:   ${formatFileStats(this.pathA.pathname, this.pathA)}
 
-Right Path:  ${formatFileStats(this.pathB.pathname, this.pathB)}
+
+INFO
+
+Compared:    ${formatFileStats(`${pathA.pathname}" ↔ "${pathB.pathname}`, this.all)}
+
+Left Path:   ${formatFileStats(pathA.pathname, pathA)}
+
+Right Path:  ${formatFileStats(pathB.pathname, pathB)}
 
 
 
 RESULT
 
-Comparisons: ${this.result.diffs.length - this.ignored.total}
-Diffs:       ${this.result.diffs.length - this.ignored.total - this.unchanged.total}
+Comparisons: ${diffs.length - this.ignored.total}
+Diffs:       ${diffs.length - this.ignored.total - this.unchanged.total}
 Conflicts:   ${this.conflicting.total}
 Created:     ${formatTotal(this.untracked)}
 Deleted:     ${formatTotal(this.deleted)}

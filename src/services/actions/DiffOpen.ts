@@ -51,7 +51,8 @@ export class DiffOpen {
 			if (statA.isFile() && statB.isFile()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
-				await openDiff(fileA, fileB, left, right, openToSide);
+				const title = formatLabel(fileA, fileB);
+				await openDiff(left, right, title, openToSide);
 			} else if (statA.isDirectory() && statB.isDirectory()) {
 				const left = vscode.Uri.file(fileA.fsPath);
 				const right = vscode.Uri.file(fileB.fsPath);
@@ -59,7 +60,8 @@ export class DiffOpen {
 			} else if (statA.isSymbolicLink() && statB.isSymbolicLink()) {
 				const left = SymlinkContentProvider.parse(fileA.fsPath);
 				const right = SymlinkContentProvider.parse(fileB.fsPath);
-				await openDiff(fileA, fileB, left, right, openToSide);
+				const title = formatLabel(fileA, fileB);
+				await openDiff(left, right, title, openToSide);
 			}
 		} catch (error) {
 			vscode.window.showErrorMessage(error.message);
@@ -90,22 +92,31 @@ export class DiffOpen {
 
 //	Functions __________________________________________________________________
 
-async function openDiff (fileA:DiffFile, fileB:DiffFile, left:vscode.Uri, right:vscode.Uri, openToSide:boolean) {
+function formatLabel (fileA:DiffFile, fileB:DiffFile) {
 	
-	const labelFormat = settings.get('labelFormat');
-	let title = '';
+	const labelFormat = settings.get('labelFormat', 'complete');
+	let label = '';
 	
 	if (fileA.name !== fileB.name) {
-		if (labelFormat === 'complete') {
-			const [label, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
-			title = root ? `${label} (${root})` : label;
-		} else if (labelFormat === 'relative') title = `${fileA.name} ↔ ${fileB.name}`;
-		else title = formatName(fileA.fsPath, fileB.fsPath);
+		if (labelFormat === 'complete' || labelFormat === 'compact') {
+			const [name, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
+			label = labelFormat === 'complete' && root ? `${name} (${root})` : name;
+		} else if (labelFormat === 'relative') label = formatName(fileA.name, fileB.name);
+		else label = formatName(fileA.fsPath, fileB.fsPath);
 	} else {
-		if (labelFormat === 'complete') title = `${fileA.name} (${fileA.root} ↔ ${fileB.root})`;
-		else if (labelFormat === 'relative') title = fileA.name;
-		else title = basename(fileA.name);
+		if (labelFormat === 'complete') label = `${fileA.name} (${formatName(fileA.root, fileB.root)})`;
+		else if (labelFormat === 'compact') {
+			const [name] = formatNameAndDesc(fileA.root, fileB.root);
+			label = `${fileA.name} (${name})`;
+		} else if (labelFormat === 'relative') label = fileA.name;
+		else label = basename(fileA.name);
 	}
+	
+	return label;
+	
+}
+
+async function openDiff (left:vscode.Uri, right:vscode.Uri, title:string, openToSide:boolean) {
 	
 	await vscode.commands.executeCommand('vscode.diff', left, right, title, {
 		preview: false,

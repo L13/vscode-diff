@@ -4,11 +4,11 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.31.1
+## What's new in Diff Folders 0.31.2
 
-- Added `l13Diff.maxFileSize` to ignore files for a comparison that exceed this file size.
-- Added file size check for text file comparison. If the file size exceeds the maximum buffer length the files will be treated as binary files.
-- Fixed comparing binary files if the file size exceeded the maximum buffer length.
+- Fixed text file detection if a file starts with `.` or has multiple extnames.
+- Added value `compact` to `l13Diff.labelFormat`.
+- Added diff settings to output. Same settings are also used for updates.
 
 ## Index
 
@@ -54,19 +54,19 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders Favorites](images/previews/preview-favorites.png)
 
-### Search, filter or select
+### Search, Filter or Select
 
 ![Diff Folders Search](images/previews/preview-search.png)
 
-### List and navigator
+### List and Navigator
 
 ![Diff Folders Selection](images/previews/preview-select.png)
 
-### Logging and stats
+### Logging and Stats
 
 ![Diff Folders Stats](images/previews/preview-stats.png)
 
-### Supports the extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+### Supports the Extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ![Projects](images/previews/preview-projects.png)
 
@@ -101,6 +101,7 @@ Compare two folders in Visual Studio Code.
 	* `Expanded` - Show all groups expanded at start.
 * `l13Diff.labelFormat` - Indicates how the label of a tab should be formatted.
 	* `complete` - (default) Show relative paths including the common path.
+	* `compact` - Show relative paths including base folders.
 	* `relative` - Show only the relative paths.
 	* `filename` - Show only the filenames.
 * `l13Diff.ignoreContents` - If true files will only be compared by size and the contents will be ignored.
@@ -176,7 +177,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### Compare Button
 
-#### All platforms
+#### All Platforms
 
 * `Click` - Start a comparison.
 * `Alt + Click` - Start a comparison in all diff panels.
@@ -200,7 +201,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### List
 
-#### All platforms
+#### All Platforms
 
 * `Click` - Select a file or folder in the list view.
 * `Shift + Click` - Add files and folders from the last selected item to the current selected item in the list view.
@@ -236,7 +237,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### List Context Menu
 
-#### All platforms
+#### All Platforms
 
 * `Copy` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be copied to the other folder. If the icon will be clicked and the list item isn't seleted only the current file will be copied. This button supports copying files to multiple folders at once with `Alt + Click`, too. Please read the description for `Copy files to the left/right folder` to see how it works.
 * `Go to File` - If one or more list items are selected and the icon will be clicked on one of those items all selected files will be opened. If the icon will be clicked and the list item isn't seleted only the current file will be opened.
@@ -264,7 +265,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### Search Widget
 
-#### All platforms
+#### All Platforms
 
 * `Escape` - Hide search widget.
 

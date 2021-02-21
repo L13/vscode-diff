@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { WalkTreeJob, WalkTreeOptions } from '../../types';
-import { StatsMap } from '../@types/fse';
+import { DiffFileTypes, StatsMap } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -151,7 +151,7 @@ function escapeGlobForRegExp (text:any) :string {
 	
 }
 
-function addFile (result:any, type:string, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean) {
+function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean) {
 	
 	const sep = type === 'folder' ? path.sep : '';
 	

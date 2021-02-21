@@ -22,6 +22,12 @@ export function activate (context:vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.extensions.onDidChange(() => extensions.buildWhitelistForTextFiles()));
 	
+	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((event) => {
+		
+		if (event.affectsConfiguration('files.associations')) extensions.buildWhitelistForTextFiles();
+		
+	}));
+	
 	commands.register(context, {
 		
 		'l13Diff.action.settings.compareWhitespace': () => {

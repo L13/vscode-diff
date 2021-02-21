@@ -45,7 +45,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		super();
 		
-		setLabel(this.button, 'Open dialog to pick a file or folder');
+		setLabel(this.button, 'Open Dialog to pick a File or Folder');
 		
 		this.input.addEventListener('focus', async () => {
 			

@@ -9,10 +9,10 @@ import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, walkTree } from '../@l13/fse';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, StartEvent, StatsMap } from '../../types';
+import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, StartEvent, StatsMap } from '../../types';
 
 import * as dialogs from '../common/dialogs';
-import { textfiles } from '../common/extensions';
+import { isTextFile } from '../common/extensions';
 import * as settings from '../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
@@ -97,16 +97,12 @@ export class DiffCompare {
 	
 	public updateDiffs (data:DiffResult) :void {
 		
-		const ignoreContents = settings.get('ignoreContents', false);
-		const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
-		const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
-		
 		data.diffs.forEach((diff:Diff) => {
 			
 			diff.fileA.stat = lstatSync(diff.fileA.fsPath);
 			diff.fileB.stat = lstatSync(diff.fileB.fsPath);
 			
-			compareDiff(diff, ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace);
+			compareDiff(diff, data.settings);
 			
 			this._onDidUpdateDiff.fire(diff);
 			
@@ -129,7 +125,7 @@ export class DiffCompare {
 			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
 		});
 		
-		this._onDidCompareFiles.fire(new DiffResult(pathA, pathB));
+		this._onDidCompareFiles.fire(new DiffResult(pathA, pathB, null));
 		
 	}
 	
@@ -153,7 +149,7 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, abortOnError:boolean, excludes:string[], useCaseSensitive:boolean, maxFileSize:number) {
+	public async scanFolder (dirname:string, { abortOnError, excludes, useCaseSensitive, maxFileSize }:DiffSettings) {
 		
 		this._onStartScanFolder.fire(dirname);
 		
@@ -167,10 +163,7 @@ export class DiffCompare {
 	
 	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
 		
-		const abortOnError = settings.get('abortOnError', true);
-		const exludes = settings.getExcludes(dirnameA, dirnameB);
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
-		const maxFileSize = settings.maxFileSize();
 		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
 		
 		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
@@ -182,13 +175,22 @@ export class DiffCompare {
 			}
 		}
 		
-		const resultA:StatsMap = await this.scanFolder(dirnameA, abortOnError, exludes, useCaseSensitive, maxFileSize);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, abortOnError, exludes, useCaseSensitive, maxFileSize);
-		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB);
+		const diffSettings:DiffSettings = {
+			abortOnError: settings.get('abortOnError', true),
+			excludes: settings.getExcludes(dirnameA, dirnameB),
+			ignoreContents: settings.get('ignoreContents', false),
+			ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
+			ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
+			maxFileSize: settings.maxFileSize(),
+			useCaseSensitive,
+		};
+		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB, diffSettings);
+		const resultA:StatsMap = await this.scanFolder(dirnameA, diffSettings);
+		const resultB:StatsMap = await this.scanFolder(dirnameB, diffSettings);
 		const diffs:Dictionary<Diff> = {};
 		
-		createListA(diffs, resultA, useCaseSensitive);
-		compareWithListB(diffs, resultB, useCaseSensitive);
+		createListA(diffs, resultA, diffSettings);
+		compareWithListB(diffs, resultB, diffSettings);
 		diffResult.diffs = Object.keys(diffs).sort(sortCaseInsensitive).map((relative) => diffs[relative]);
 		
 		return diffResult;
@@ -199,7 +201,9 @@ export class DiffCompare {
 
 //	Functions __________________________________________________________________
 
-function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
+function createListA (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:DiffSettings) {
+	
+	const useCaseSensitive = diffSettings.useCaseSensitive;
 	
 	Object.keys(result).forEach((pathname) => {
 		
@@ -213,11 +217,9 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:
 	
 }
 
-function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensitive:boolean) {
+function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:DiffSettings) {
 	
-	const ignoreContents = settings.get('ignoreContents', false);
-	const ignoreEndOfLine = settings.get('ignoreEndOfLine', false);
-	const ignoreTrimWhitespace = settings.ignoreTrimWhitespace();
+	const useCaseSensitive = diffSettings.useCaseSensitive;
 	
 	Object.keys(result).forEach((pathname) => {
 		
@@ -229,7 +231,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 			if (!diff.fileB) {
 				diff.fileB = file;
 				if (file.ignore) diff.status = 'ignored';
-				compareDiff(diff, ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace);
+				compareDiff(diff, diffSettings);
 			} else throw new URIError(`File "${file.fsPath}" exists! Please enable case sensitive file names.`);
 		} else addFile(diffs, id, null, file);
 		
@@ -237,7 +239,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, useCaseSensi
 	
 }
 
-function compareDiff (diff:Diff, ignoreContents:boolean, ignoreEndOfLine:boolean, ignoreTrimWhitespace:boolean) {
+function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace }:DiffSettings) {
 	
 	const fileA = diff.fileA;
 	const fileB = diff.fileB;
@@ -260,11 +262,11 @@ function compareDiff (diff:Diff, ignoreContents:boolean, ignoreEndOfLine:boolean
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
 		} else if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
+			isTextFile(fileA.basename) &&
 			sizeA <= BUFFER_MAX_LENGTH &&
-			sizeB <= BUFFER_MAX_LENGTH &&
-			(textfiles.extensions.includes(fileA.extname) ||
-			textfiles.filenames.includes(fileA.basename) ||
-			textfiles.glob && textfiles.glob.test(fileA.basename))) {
+			sizeB <= BUFFER_MAX_LENGTH) {
+				
+			// if (sizeA === sizeB && sizeA > MAX_CACHE_BUFFER_LENGTH && hasSameContents(fileA.fsPath, fileB.fsPath)) return;
 				
 			let bufferA = fs.readFileSync(fileA.fsPath);
 			let bufferB = fs.readFileSync(fileB.fsPath);

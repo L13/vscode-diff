@@ -29,9 +29,10 @@ export class L13DiffListViewModel extends ViewModel {
 	public filteredItems:Diff[] = [];
 	
 	public diffResult:DiffResultMessage = {
+		diffs: [],
 		pathA: '',
 		pathB: '',
-		diffs: [],
+		settings: null,
 	};
 	
 	public disabled:boolean = false;
@@ -163,9 +164,10 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		if (diffs.length) {
 			msg.send<DiffResultMessage>('update:diffs', {
+				diffs,
 				pathA: this.diffResult.pathA,
 				pathB: this.diffResult.pathB,
-				diffs,
+				settings: this.diffResult.settings,
 			});
 		}
 		
@@ -270,12 +272,13 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	private getDiffsByIds (ids:string[]) :DiffResultMessage {
 		
-		const items = ids.map((id) => this.map[id]);
+		const diffs = ids.map((id) => this.map[id]);
 		
 		return {
+			diffs,
 			pathA: this.diffResult.pathA,
 			pathB: this.diffResult.pathB,
-			diffs: items,
+			settings: this.diffResult.settings,
 		};
 		
 	}
