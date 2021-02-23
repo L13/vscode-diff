@@ -71,7 +71,7 @@ export class DiffFavorites implements vscode.TreeDataProvider<FavoriteTreeItems>
 		
 	}
 	
-	public getTreeItem (element:FavoriteTreeItems) :vscode.TreeItem {
+	public getTreeItem (element:FavoriteTreeItems) :FavoriteTreeItems {
 		
 		return element;
 		
