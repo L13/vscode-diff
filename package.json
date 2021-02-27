@@ -950,22 +950,22 @@
 				{
 					"command": "l13Diff.action.projects.compareWithSelected",
 					"group": "3_compare@1",
-					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite)-(folder|git|vscode)$/"
+					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.selectForCompare",
 					"group": "3_compare@2",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite)-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.compareWithWorkspace",
 					"group": "3_compare@3",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite)-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.open",
 					"group": "3_compare@4",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite)-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				}
 			],
 			"editor/title": [
