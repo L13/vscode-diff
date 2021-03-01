@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
+
 import { Favorite, FavoriteGroup, FavoriteTreeItems, InitialState } from '../../types';
 
 import * as dialogs from '../common/dialogs';
