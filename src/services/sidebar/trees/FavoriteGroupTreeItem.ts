@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import * as vscode from 'vscode';
+import { TreeItemCollapsibleState, TreeItem } from 'vscode';
 
 import { FavoriteGroup } from '../../../types';
 
@@ -14,13 +14,13 @@ import { FavoriteGroup } from '../../../types';
 
 //	Exports ____________________________________________________________________
 
-export class FavoriteGroupTreeItem extends vscode.TreeItem {
+export class FavoriteGroupTreeItem extends TreeItem {
 	
 	public contextValue = 'favoriteGroup';
 	
 	public constructor (public readonly favoriteGroup:FavoriteGroup) {
 		
-		super(favoriteGroup.label, favoriteGroup.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded);
+		super(favoriteGroup.label, favoriteGroup.collapsed ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.Expanded);
 		
 		this.id = `${favoriteGroup.id}`;
 		
