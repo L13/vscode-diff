@@ -5,9 +5,12 @@ import * as vscode from 'vscode';
 import * as commands from '../common/commands';
 import * as dialogs from '../common/dialogs';
 
-import { DiffMenu } from '../panel/DiffMenu';
 import { DiffPanel } from '../panel/DiffPanel';
-import { DiffHistory } from '../sidebar/DiffHistory';
+
+import { HistoryProvider } from '../sidebar/HistoryProvider';
+
+import { HistoryState } from '../states/HistoryState';
+import { MenuState } from '../states/MenuState';
 
 //	Variables __________________________________________________________________
 
@@ -21,9 +24,42 @@ import { DiffHistory } from '../sidebar/DiffHistory';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	const diffHistoryProvider = DiffHistory.createProvider(context);
+	const subscriptions = context.subscriptions;
 	
-	vscode.window.registerTreeDataProvider('l13DiffHistory', diffHistoryProvider);
+	const historyState = HistoryState.createHistoryState(context);
+	const menuState = MenuState.createMenuState(context);
+	
+	const historyProvider = HistoryProvider.createProvider({
+		comparisons: historyState.getComparisons(),
+	});
+	
+	vscode.window.registerTreeDataProvider('l13DiffHistory', historyProvider);
+	
+	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
+		
+		if (focused) { // Update data if changes in another workspace have been done
+			historyProvider.refresh({
+				comparisons: historyState.getComparisons(),
+			});
+		}
+		
+	}));
+	
+	subscriptions.push(historyState.onDidChangeComparisons((comparisons) => {
+		
+		historyProvider.refresh({
+			comparisons,
+		});
+		
+	}));
+	
+	subscriptions.push(historyState.onDidDeleteComparison(() => {
+		
+		historyProvider.refresh({
+			comparisons: historyState.getComparisons(),
+		});
+		
+	}));
 	
 	commands.register(context, {
 		
@@ -51,15 +87,13 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.history.remove': ({ comparison }) => DiffHistory.removeComparison(context, comparison),
+		'l13Diff.action.history.remove': ({ comparison }) => historyState.removeComparison(comparison),
 		
 		'l13Diff.action.history.clear': async () => {
 			
-			const value = await dialogs.confirm('Delete the complete history?', 'Delete');
-			
-			if (value) {
-				DiffMenu.clearHistory(context);
-				DiffHistory.clearComparisons(context);
+			if (await dialogs.confirm('Delete the complete history?', 'Delete')) {
+				menuState.clearHistory();
+				historyState.clearComparisons();
 			}
 			
 		},

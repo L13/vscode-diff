@@ -16,7 +16,11 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('save:panelstate', (data:DiffPanelStateMessage) => currentDiffPanel.savePanelState(data));
+	currentDiffPanel.msg.on('save:panelstate', (data:DiffPanelStateMessage) => {
+		
+		currentDiffPanel.savePanelState(data);
+		
+	});
 	
 }
 

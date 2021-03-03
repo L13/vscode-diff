@@ -11,6 +11,8 @@ import { DiffResult } from '../output/DiffResult';
 import { DiffStats } from '../output/DiffStats';
 
 import { DiffPanel } from '../panel/DiffPanel';
+import { HistoryState } from '../states/HistoryState';
+import { MenuState } from '../states/MenuState';
 
 //	Variables __________________________________________________________________
 
@@ -24,7 +26,14 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('create:diffs', (data:DiffResult) => currentDiffPanel.compare.initCompare(data));
+	const historyState = HistoryState.createHistoryState(currentDiffPanel.context);
+	const menuState = MenuState.createMenuState(currentDiffPanel.context);
+	
+	currentDiffPanel.msg.on('create:diffs', (data:DiffResult) => {
+		
+		currentDiffPanel.compare.initCompare(data);
+		
+	});
 	
 	currentDiffPanel.compare.onInitCompare(() => {
 		
@@ -48,7 +57,8 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
 		
-		currentDiffPanel.saveHistory(data, pathA, pathB);
+		historyState.addComparison(pathA, pathB);
+		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
@@ -64,7 +74,8 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
 		
-		currentDiffPanel.saveHistory(data, pathA, pathB);
+		historyState.addComparison(pathA, pathB);
+		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);
 		

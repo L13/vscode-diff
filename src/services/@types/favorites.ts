@@ -30,5 +30,15 @@ export type FavoriteGroup = {
 
 export type InitialState = 'Collapsed'|'Expanded'|'Remember';
 
+export type FavoritesStates = {
+	favorites:Favorite[],
+	favoriteGroups:FavoriteGroup[],
+};
+
+export type RefreshFavoritesStates = {
+	favorites?:Favorite[],
+	favoriteGroups?:FavoriteGroup[],
+};
+
 //	Functions __________________________________________________________________
 

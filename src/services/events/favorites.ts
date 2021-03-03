@@ -3,7 +3,8 @@
 import { DiffFavoriteMessage } from '../../types';
 
 import { DiffPanel } from '../panel/DiffPanel';
-import { DiffFavorites } from '../sidebar/DiffFavorites';
+
+import { FavoritesState } from '../states/FavoritesState';
 
 //	Variables __________________________________________________________________
 
@@ -17,7 +18,13 @@ import { DiffFavorites } from '../sidebar/DiffFavorites';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('save:favorite', (data:DiffFavoriteMessage) => DiffFavorites.addFavorite(currentDiffPanel.context, data.pathA, data.pathB));
+	const favoritesState = FavoritesState.createFavoritesState(currentDiffPanel.context);
+	
+	currentDiffPanel.msg.on('save:favorite', (data:DiffFavoriteMessage) => {
+		
+		favoritesState.addFavorite(data.pathA, data.pathB);
+		
+	});
 	
 }
 

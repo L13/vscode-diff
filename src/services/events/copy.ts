@@ -16,13 +16,35 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('copy:left', (data:DiffCopyMessage) => currentDiffPanel.copy.showCopyFromToDialog(data, 'A', 'B'));
-	currentDiffPanel.msg.on('copy:right', (data:DiffCopyMessage) => currentDiffPanel.copy.showCopyFromToDialog(data, 'B', 'A'));
+	currentDiffPanel.msg.on('copy:left', (data:DiffCopyMessage) => {
+		
+		currentDiffPanel.copy.showCopyFromToDialog(data, 'A', 'B');
+		
+	});
 	
-	currentDiffPanel.msg.on('multi-copy:left', (data:DiffMultiCopyMessage) => currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'left'));
-	currentDiffPanel.msg.on('multi-copy:right', (data:DiffMultiCopyMessage) => currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'right'));
+	currentDiffPanel.msg.on('copy:right', (data:DiffCopyMessage) => {
+		
+		currentDiffPanel.copy.showCopyFromToDialog(data, 'B', 'A');
+		
+	});
 	
-	currentDiffPanel.copy.onDidCancel(() => currentDiffPanel.msg.send('cancel'), null, currentDiffPanel.disposables);
+	currentDiffPanel.msg.on('multi-copy:left', (data:DiffMultiCopyMessage) => {
+		
+		currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'left');
+		
+	});
+	
+	currentDiffPanel.msg.on('multi-copy:right', (data:DiffMultiCopyMessage) => {
+		
+		currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'right');
+		
+	});
+	
+	currentDiffPanel.copy.onDidCancel(() => {
+		
+		currentDiffPanel.msg.send('cancel');
+		
+	}, null, currentDiffPanel.disposables);
 	
 	currentDiffPanel.copy.onDidCopyFile(({ from, to }) => {
 		

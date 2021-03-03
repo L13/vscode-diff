@@ -14,7 +14,11 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('context', ({ name, value }) => currentDiffPanel.setContext(name, value));
+	currentDiffPanel.msg.on('context', ({ name, value }) => {
+		
+		currentDiffPanel.setContext(name, value);
+		
+	});
 	
 }
 

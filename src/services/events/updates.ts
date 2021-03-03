@@ -18,7 +18,11 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => currentDiffPanel.compare.updateDiffs(data));
+	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => {
+		
+		currentDiffPanel.compare.updateDiffs(data);
+		
+	});
 	
 	currentDiffPanel.compare.onDidUpdateDiff((diff:Diff) => {
 		
