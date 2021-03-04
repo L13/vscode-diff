@@ -384,8 +384,8 @@ function hasSameContents (pathA:string, pathB:string) {
 	} catch (error) {
 		throw error;
 	} finally {
-		fs.closeSync(fdA);
-		fs.closeSync(fdB);
+		if (fdA) fs.closeSync(fdA);
+		if (fdB) fs.closeSync(fdB);
 	}
 	
 }

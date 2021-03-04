@@ -3,8 +3,12 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ## [0.32.0] - 2021-02-28
 
-### Fixed
-- Fixed updating list view if a file or folder has been deleted in current workspace.
+### Added
+- Added updating list view if a file or folder has been deleted in current workspace.
+- Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+
+### Changed
+- Refactored favorites and history view.
 
 ## [0.31.2] - 2021-02-21
 

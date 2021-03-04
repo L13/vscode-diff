@@ -6,7 +6,8 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 0.32.0
 
-- Fixed updating list view if a file or folder has been deleted in current workspace.
+- Added updating list view if a file or folder has been deleted in current workspace.
+- Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
 
 ## Index
 

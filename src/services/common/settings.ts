@@ -42,7 +42,7 @@ export function getExcludes (pathA:string, pathB:string) :string[] {
 	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
 	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
 	
-	return [].concat(excludesA, excludesB).filter((value, index, values) => values.indexOf(value) === index);
+	return [...excludesA, ...excludesB].filter((value, index, values) => values.indexOf(value) === index);
 	
 }
 
