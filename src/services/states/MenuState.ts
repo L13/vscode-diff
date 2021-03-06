@@ -19,51 +19,47 @@ import * as states from '../common/states';
 
 export class MenuState {
 	
-	private static currentMenuState:MenuState = null;
+	private static current:MenuState = null;
 	
-	public static createMenuState (context:vscode.ExtensionContext) {
+	public static create (context:vscode.ExtensionContext) {
 		
-		return MenuState.currentMenuState || (MenuState.currentMenuState = new MenuState(context));
+		return MenuState.current || (MenuState.current = new MenuState(context));
 		
 	}
 	
 	public constructor (private readonly context:vscode.ExtensionContext) {}
 	
-	// private _onDidUpdateHistory:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
-	// public readonly onDidUpdateHistory:vscode.Event<string> = Menu._onDidUpdateHistory.event;
-	
-	// private _onDidDeleteHistory:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
-	// public readonly onDidDeleteHistory:vscode.Event<string> = Menu._onDidDeleteHistory.event;
-	
 	private _onDidChangeHistory:vscode.EventEmitter<string[]> = new vscode.EventEmitter<string[]>();
 	public readonly onDidChangeHistory:vscode.Event<string[]> = this._onDidChangeHistory.event;
 	
-	public getHistory () {
+	public get () {
 		
 		return states.getHistory(this.context);
 		
 	}
 	
-	public saveRecentlyUsed (pathA:string, pathB:string) {
-		
-		const maxRecentlyUsedLength:number = <number>settings.get('maxRecentlyUsed', 10);
-		let history:string[] = states.getHistory(this.context);
-		
-		addToRecentlyUsed(history, pathB);
-		addToRecentlyUsed(history, pathA);
-		
-		history = history.slice(0, maxRecentlyUsedLength);
+	private save (history:string[]) {
 		
 		states.updateHistory(this.context, history);
 		
+	}
+	
+	public saveRecentlyUsed (pathA:string, pathB:string) {
+		
+		let history = states.getHistory(this.context);
+		
+		history = history.filter((path) => path !== pathB && path !== pathB);
+		history.push(pathB, pathA);
+		history = history.slice(0, settings.maxRecentlyUsed());
+		
+		this.save(history);
 		this._onDidChangeHistory.fire(history);
 		
 	}
 	
-	public clearHistory () {
+	public clear () {
 		
-		states.updateHistory(this.context, []);
-		
+		this.save([]);
 		this._onDidChangeHistory.fire([]);
 		
 	}
@@ -72,9 +68,3 @@ export class MenuState {
 
 //	Functions __________________________________________________________________
 
-function addToRecentlyUsed (history:string[], path:string) {
-	
-	remove(history, path);
-	history.unshift(path);
-	
-}

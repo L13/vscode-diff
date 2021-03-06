@@ -2,11 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import { sortCaseInsensitive } from '../../@l13/arrays';
+import { remove, sortCaseInsensitive } from '../../@l13/arrays';
 
-import { Favorite } from '../@types/favorites';
+import { Favorite, FavoriteGroup } from '../@types/favorites';
 
-import * as dialogs from '../common/dialogs';
 import * as states from '../common/states';
 
 //	Variables __________________________________________________________________
@@ -21,115 +20,129 @@ import * as states from '../common/states';
 
 export class FavoritesState {
 	
-	private static currentFavoritesState:FavoritesState = null;
+	private static current:FavoritesState = null;
 	
-	public static createFavoritesState (context:vscode.ExtensionContext) {
+	public static create (context:vscode.ExtensionContext) {
 		
-		return FavoritesState.currentFavoritesState || (FavoritesState.currentFavoritesState = new FavoritesState(context));
+		return FavoritesState.current || (FavoritesState.current = new FavoritesState(context));
 		
 	}
 	
 	public constructor (private readonly context:vscode.ExtensionContext) {}
 	
-	private _onDidUpdateFavorite:vscode.EventEmitter<Favorite> = new vscode.EventEmitter<Favorite>();
-	public readonly onDidUpdateFavorite:vscode.Event<Favorite> = this._onDidUpdateFavorite.event;
-	
-	private _onDidDeleteFavorite:vscode.EventEmitter<Favorite> = new vscode.EventEmitter<Favorite>();
-	public readonly onDidDeleteFavorite:vscode.Event<Favorite> = this._onDidDeleteFavorite.event;
-	
 	private _onDidChangeFavorites:vscode.EventEmitter<Favorite[]> = new vscode.EventEmitter<Favorite[]>();
 	public readonly onDidChangeFavorites:vscode.Event<Favorite[]> = this._onDidChangeFavorites.event;
 	
-	public getFavorites () {
+	public get () {
 		
 		return states.getFavorites(this.context);
 		
 	}
 	
-	public async addFavorite (fileA:string, fileB:string) {
+	public getByName (label:string) {
 		
-		const label = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a name for the diff.',
-			value: `${fileA} ↔ ${fileB}`,
-		});
+		return this.get().find((favorite) => favorite.label === label) || null;
 		
-		if (!label) return;
+	}
+	
+	private save (favorites:Favorite[]) {
 		
-		const favorites = states.getFavorites(this.context);
-		let replacedFavorite = false;
+		states.updateFavorites(this.context, favorites);
 		
-		for (const favorite of favorites) {
-			if (favorite.label === label) {
-				if (!await dialogs.confirm(`Overwrite favorite "${favorite.label}"?`, 'Ok')) return;
-				favorite.fileA = fileA;
-				favorite.fileB = fileB;
-				replacedFavorite = true;
-			}
-		}
+	}
+	
+	public add (label:string, fileA:string, fileB:string) {
 		
-		if (!replacedFavorite) favorites.push({ label, fileA, fileB });
+		const favorites = this.get();
+		const previousFavorite = this.getByName(label);
+		
+		if (previousFavorite) remove(favorites, previousFavorite);
+		
+		favorites.push({ label, fileA, fileB });
 		
 		favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
 		
-		states.updateFavorites(this.context, favorites);
+		this.save(favorites);
 		this._onDidChangeFavorites.fire(favorites);
 		
 	}
 	
-	public async renameFavorite (favorite:Favorite) {
+	public rename (favorite:Favorite, label:string) {
 		
-		const value = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a new name for the diff.',
-			value: favorite.label,
-		});
-		
-		if (favorite.label === value || value === undefined) return;
-		
-		if (!value) {
-			vscode.window.showErrorMessage(`Favorite with no name is not valid!`);
-			return;
-		}
-		
-		const favorites = states.getFavorites(this.context);
+		const favorites = this.get();
 		
 		for (const fav of favorites) {
 			if (fav.label === favorite.label) {
-				if (!favorites.some(({ label }) => label === value)) {
-					fav.label = value;
-					favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
-					states.updateFavorites(this.context, favorites);
-					this._onDidUpdateFavorite.fire(favorite);
-				} else vscode.window.showErrorMessage(`Favorite "${value}" exists!`);
+				fav.label = label;
+				favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				this.save(favorites);
+				this._onDidChangeFavorites.fire(favorites);
 				break;
 			}
 		}
 		
 	}
 	
-	public async removeFavorite (favorite:Favorite) {
+	public addFavoriteToGroup (favorite:Favorite, groupId:number) {
 		
-		if (await dialogs.confirm(`Delete favorite "${favorite.label}"?`, 'Delete')) {
-			const favorites = states.getFavorites(this.context);
-			
-			for (let i = 0; i < favorites.length; i++) {
-				if (favorites[i].label === favorite.label) {
-					const fav = favorites.splice(i, 1)[0];
-					states.updateFavorites(this.context, favorites);
-					this._onDidDeleteFavorite.fire(fav);
-					break;
-				}
+		const favorites = this.get();
+		
+		for (const fav of favorites) {
+			if (fav.label === favorite.label) {
+				fav.groupId = groupId;
+				break;
+			}
+		}
+		
+		this.save(favorites);
+		this._onDidChangeFavorites.fire(favorites);
+		
+	}
+	
+	public getFavoritesByGroup (favoriteGroup:FavoriteGroup) {
+		
+		const groupId = favoriteGroup.id;
+		
+		return this.get().filter((favorite) => favorite.groupId === groupId);
+		
+	}
+	
+	public removeFromFavoriteGroup (favorite:Favorite) {
+		
+		const favorites = this.get();
+		
+		for (const fav of favorites) {
+			if (fav.label === favorite.label) {
+				delete fav.groupId;
+				break;
+			}
+		}
+		
+		this.save(favorites);
+		this._onDidChangeFavorites.fire(favorites);
+		
+	}
+	
+	public remove (favorite:Favorite) {
+		
+		const favorites = this.get();
+		
+		for (let i = 0; i < favorites.length; i++) {
+			if (favorites[i].label === favorite.label) {
+				favorites.splice(i, 1);
+				this.save(favorites);
+				this._onDidChangeFavorites.fire(favorites);
+				break;
 			}
 		}
 		
 	}
 	
-	public async clearFavorites () {
+	public clear () {
 		
-		if (await dialogs.confirm(`Delete all favorites and groups?'`, 'Delete')) {
-			states.updateFavorites(this.context, []);
-			states.updateFavoriteGroups(this.context, []);
-			this._onDidChangeFavorites.fire([]);
-		}
+		this.save([]);
+		states.updateFavoriteGroups(this.context, []);
+		this._onDidChangeFavorites.fire([]);
 		
 	}
 	

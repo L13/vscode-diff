@@ -32,6 +32,18 @@ export function update (key:string, value:any, global:boolean = true) {
 	
 }
 
+export function maxHistoryEntries () :number {
+	
+	return get('maxHistoryEntries', 10);
+	
+}
+
+export function maxRecentlyUsed () :number {
+	
+	return get('maxRecentlyUsed', 10);
+	
+}
+
 export function getExcludes (pathA:string, pathB:string) :string[] {
 	
 	let ignore = get('ignore');

@@ -140,7 +140,7 @@
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.add",
+				"command": "l13Diff.action.favoriteGroups.add",
 				"title": "New Group",
 				"icon": {
 					"light": "images/favorites/new-group-light.svg",
@@ -156,7 +156,7 @@
 				"title": "Remove from Group"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.open",
+				"command": "l13Diff.action.favoriteGroups.open",
 				"title": "Open All",
 				"icon": {
 					"light": "images/favorites/open-group-light.svg",
@@ -164,19 +164,19 @@
 				}
 			},
 			{
-				"command": "l13Diff.action.favorites.group.openOnly",
+				"command": "l13Diff.action.favoriteGroups.openOnly",
 				"title": "Open All"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.openAndCompare",
+				"command": "l13Diff.action.favoriteGroups.openAndCompare",
 				"title": "Open All & Compare"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.rename",
+				"command": "l13Diff.action.favoriteGroups.rename",
 				"title": "Rename"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.remove",
+				"command": "l13Diff.action.favoriteGroups.remove",
 				"title": "Delete"
 			},
 			{
@@ -640,23 +640,23 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.open",
+					"command": "l13Diff.action.favoriteGroups.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openOnly",
+					"command": "l13Diff.action.favoriteGroups.openOnly",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.openAndCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.rename",
+					"command": "l13Diff.action.favoriteGroups.rename",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.remove",
+					"command": "l13Diff.action.favoriteGroups.remove",
 					"when": "false"
 				},
 				{
@@ -856,7 +856,7 @@
 					"group": "navigation@1"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.add",
+					"command": "l13Diff.action.favoriteGroups.add",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@2"
 				},
@@ -903,27 +903,27 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.open",
+					"command": "l13Diff.action.favoriteGroups.open",
 					"group": "inline",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openOnly",
+					"command": "l13Diff.action.favoriteGroups.openOnly",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.openAndCompare",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.rename",
+					"command": "l13Diff.action.favoriteGroups.rename",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.remove",
+					"command": "l13Diff.action.favoriteGroups.remove",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},

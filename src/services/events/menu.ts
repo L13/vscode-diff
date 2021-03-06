@@ -20,12 +20,12 @@ import { MenuState } from '../states/MenuState';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	const menuState = MenuState.createMenuState(currentDiffPanel.context);
+	const menuState = MenuState.create(currentDiffPanel.context);
 	
 	currentDiffPanel.msg.on('update:menu', () => {
 			
 		currentDiffPanel.msg.send('update:menu', {
-			history: menuState.getHistory(),
+			history: menuState.get(),
 			workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 		});
 		

@@ -2,8 +2,11 @@
 
 import * as vscode from 'vscode';
 
+import { Comparison } from '../../types';
+
 import * as commands from '../common/commands';
-import * as dialogs from '../common/dialogs';
+
+import { HistoryDialog } from '../dialogs/HistoryDialog';
 
 import { DiffPanel } from '../panel/DiffPanel';
 
@@ -26,11 +29,12 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	const subscriptions = context.subscriptions;
 	
-	const historyState = HistoryState.createHistoryState(context);
-	const menuState = MenuState.createMenuState(context);
+	const historyState = HistoryState.create(context);
+	const menuState = MenuState.create(context);
+	const historyDialog = HistoryDialog.create(historyState, menuState);
 	
-	const historyProvider = HistoryProvider.createProvider({
-		comparisons: historyState.getComparisons(),
+	const historyProvider = HistoryProvider.create({
+		comparisons: historyState.get(),
 	});
 	
 	vscode.window.registerTreeDataProvider('l13DiffHistory', historyProvider);
@@ -39,7 +43,7 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		if (focused) { // Update data if changes in another workspace have been done
 			historyProvider.refresh({
-				comparisons: historyState.getComparisons(),
+				comparisons: historyState.get(),
 			});
 		}
 		
@@ -53,31 +57,23 @@ export function activate (context:vscode.ExtensionContext) {
 		
 	}));
 	
-	subscriptions.push(historyState.onDidDeleteComparison(() => {
-		
-		historyProvider.refresh({
-			comparisons: historyState.getComparisons(),
-		});
-		
-	}));
-	
 	commands.register(context, {
 		
 		'l13Diff.action.history.open': ({ comparison }) => {
 			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+			openComparison(context, comparison, true);
 			
 		},
 		
 		'l13Diff.action.history.openOnly': ({ comparison }) => {
 			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], false);
+			openComparison(context, comparison, false);
 			
 		},
 		
 		'l13Diff.action.history.openAndCompare': ({ comparison }) => {
 			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+			openComparison(context, comparison, true);
 			
 		},
 		
@@ -87,19 +83,18 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.history.remove': ({ comparison }) => historyState.removeComparison(comparison),
+		'l13Diff.action.history.remove': ({ comparison }) => historyDialog.remove(comparison),
 		
-		'l13Diff.action.history.clear': async () => {
-			
-			if (await dialogs.confirm('Delete the complete history?', 'Delete')) {
-				menuState.clearHistory();
-				historyState.clearComparisons();
-			}
-			
-		},
+		'l13Diff.action.history.clear': async () => historyDialog.clear(),
+		
 	});
 	
 }
 
 //	Functions __________________________________________________________________
 
+function openComparison (context:vscode.ExtensionContext, comparison:Comparison, compare:boolean) {
+	
+	DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], compare);
+	
+}

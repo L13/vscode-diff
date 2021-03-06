@@ -27,13 +27,11 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 	public favorites:Favorite[] = [];
 	public favoriteGroups:FavoriteGroup[] = [];
 	
-	public disposables:vscode.Disposable[] = [];
+	private static current:FavoritesProvider = null;
 	
-	public static currentProvider:FavoritesProvider|undefined;
-	
-	public static createProvider (states:FavoritesStates) {
+	public static create (states:FavoritesStates) {
 		
-		return FavoritesProvider.currentProvider || (FavoritesProvider.currentProvider = new FavoritesProvider(states));
+		return FavoritesProvider.current || (FavoritesProvider.current = new FavoritesProvider(states));
 		
 	}
 	
@@ -52,7 +50,7 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 	
 	public dispose () :void {
 		
-		FavoritesProvider.currentProvider = undefined;
+		FavoritesProvider.current = null;
 		
 	}
 	
