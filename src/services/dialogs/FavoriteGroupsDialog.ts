@@ -56,6 +56,8 @@ export class FavoriteGroupsDialog {
 		if (!favoriteGroups.length) {
 			await this.add();
 			favoriteGroup = this.favoriteGroupsState.get()[0];
+		} else if (favoriteGroups.length === 1) {
+			favoriteGroup = favoriteGroups[0];
 		} else {
 			favoriteGroup = await vscode.window.showQuickPick(favoriteGroups, {
 				placeHolder: 'Select a favorite group',
