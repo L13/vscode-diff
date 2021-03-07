@@ -410,6 +410,22 @@
 			{
 				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 				"title": "Toggle Find Symbolic Links"
+			},
+			{
+				"command": "l13Diff.action.developer.backup",
+				"title": "Developer: Backup Diff Folders Data"
+			},
+			{
+				"command": "l13Diff.action.developer.remove",
+				"title": "Developer: Delete Diff Folders Backup"
+			},
+			{
+				"command": "l13Diff.action.developer.restore",
+				"title": "Developer: Restore Diff Folders Data"
+			},
+			{
+				"command": "l13Diff.action.developer.clear",
+				"title": "Developer: Clear Diff Folders Data"
 			}
 		],
 		"keybindings": [
@@ -830,6 +846,22 @@
 				{
 					"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.developer.backup",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.remove",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.restore",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.clear",
+					"when": "isDevelopment"
 				}
 			],
 			"explorer/context": [
