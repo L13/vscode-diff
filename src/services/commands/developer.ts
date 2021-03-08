@@ -13,6 +13,8 @@ import * as states from '../common/states';
 
 //	Variables __________________________________________________________________
 
+const findBackupFileName = /\d{4}(\-\d{2}){5}(?:\-auto)?.json/;
+
 type Backup = {
 	favorites:Favorite[],
 	favoriteGroups:FavoriteGroup[],
@@ -32,6 +34,13 @@ export function activate (context:vscode.ExtensionContext) {
 		'l13Diff.action.developer.backup': () => {
 			
 			createBackup(context, dirname, `${formatDate(new Date())}.json`);
+			
+		},
+		
+		'l13Diff.action.developer.reveal': () => {
+			
+			if (fs.existsSync(dirname)) files.reveal(dirname);
+			else vscode.window.showInformationMessage('No backups available');
 			
 		},
 		
@@ -106,7 +115,7 @@ async function selectBackup (dirname:string) {
 	}
 	
 	const filenames = fs.readdirSync(dirname);
-	const items = filenames.map((label) => ({ label }));
+	const items = filenames.filter((name) => findBackupFileName.test(name)).map((label) => ({ label }));
 	
 	if (!items.length) {
 		vscode.window.showInformationMessage(`No backups available`);

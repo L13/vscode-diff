@@ -416,6 +416,10 @@
 				"title": "Developer: Backup Diff Folders Data"
 			},
 			{
+				"command": "l13Diff.action.developer.reveal",
+				"title": "Developer: Reveal Diff Folders Backups"
+			},
+			{
 				"command": "l13Diff.action.developer.remove",
 				"title": "Developer: Delete Diff Folders Backup"
 			},
@@ -849,6 +853,10 @@
 				},
 				{
 					"command": "l13Diff.action.developer.backup",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.reveal",
 					"when": "isDevelopment"
 				},
 				{
