@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { remove, sortCaseInsensitive } from '../../@l13/arrays';
+import { sortCaseInsensitive } from '../../@l13/arrays';
 
 import { Favorite, FavoriteGroup } from '../@types/favorites';
 
@@ -53,10 +53,9 @@ export class FavoritesState {
 	
 	public add (label:string, fileA:string, fileB:string) {
 		
-		const favorites = this.get();
-		const previousFavorite = this.getByName(label);
+		if (this.getByName(label)) return;
 		
-		if (previousFavorite) remove(favorites, previousFavorite);
+		const favorites = this.get();
 		
 		favorites.push({ label, fileA, fileB });
 		
@@ -68,6 +67,8 @@ export class FavoritesState {
 	}
 	
 	public rename (favorite:Favorite, label:string) {
+		
+		if (this.getByName(label)) return;
 		
 		const favorites = this.get();
 		
@@ -107,7 +108,7 @@ export class FavoritesState {
 		
 	}
 	
-	public removeFromFavoriteGroup (favorite:Favorite) {
+	public removeFavoriteFromGroup (favorite:Favorite) {
 		
 		const favorites = this.get();
 		

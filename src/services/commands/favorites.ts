@@ -128,7 +128,7 @@ export function activate (context:vscode.ExtensionContext) {
 		},
 		
 		'l13Diff.action.favorite.addToGroup': ({ favorite }) => favoriteGroupsDialog.addFavoriteToGroup(favorite),
-		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => favoritesState.removeFromFavoriteGroup(favorite),
+		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => favoritesState.removeFavoriteFromGroup(favorite),
 		
 		'l13Diff.action.favoriteGroups.rename': ({ favoriteGroup }) => favoriteGroupsDialog.rename(favoriteGroup),
 		'l13Diff.action.favoriteGroups.remove': ({ favoriteGroup }) => favoriteGroupsDialog.remove(favoriteGroup),

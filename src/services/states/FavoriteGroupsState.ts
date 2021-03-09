@@ -82,7 +82,7 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public remove (favoriteGroup:FavoriteGroup, removeAll:boolean) {
+	public remove (favoriteGroup:FavoriteGroup, removeItems:boolean) {
 		
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
@@ -92,7 +92,7 @@ export class FavoriteGroupsState {
 				favoriteGroups.splice(i, 1);
 				this.save(favoriteGroups);
 				let favorites = states.getFavorites(this.context);
-				if (removeAll) {
+				if (removeItems) {
 					favorites = favorites.filter((favorite) => favorite.groupId !== groupId);
 				} else {
 					for (const favorite of favorites) {
