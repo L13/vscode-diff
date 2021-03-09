@@ -4,12 +4,13 @@ import { DisplayShortcut, Keybinding } from '../../../types';
 
 import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
-import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
+import { parseIcons } from '../../common';
 
-import { parseIcons } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
+import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
 //	Variables __________________________________________________________________
 

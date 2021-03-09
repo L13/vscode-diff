@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { DiffPanelStateMessage } from '../../../types';
+
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -14,9 +16,9 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('context', ({ name, value }) => {
+	currentDiffPanel.msg.on('save:panelstate', (data:DiffPanelStateMessage) => {
 		
-		currentDiffPanel.setContext(name, value);
+		currentDiffPanel.savePanelState(data);
 		
 	});
 	

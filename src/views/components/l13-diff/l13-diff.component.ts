@@ -27,15 +27,15 @@ import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.s
 import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
 import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 
-import { msg } from '../common';
+import * as commands from '../../commands';
+import { msg } from '../../common';
+import * as events from '../../events';
+
 import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffViewModelService } from './l13-diff.service';
 import { L13DiffViewModel } from './l13-diff.viewmodel';
-
-import * as commands from './commands';
-import * as events from './events';
 
 //	Variables __________________________________________________________________
 

@@ -2,11 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { workspacePaths } from '../common/paths';
+import { workspacePaths } from '../../common/paths';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { MenuState } from '../../states/MenuState';
 
-import { MenuState } from '../states/MenuState';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

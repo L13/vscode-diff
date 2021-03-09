@@ -1,9 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../components/common';
+import { msg } from '../common';
 
 import { L13DiffCompareComponent } from '../components/l13-diff-compare/l13-diff-compare.component';
-
 import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Variables __________________________________________________________________

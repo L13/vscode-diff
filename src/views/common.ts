@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { detectLanguage, detectPlatform, isMacOs, Message } from '../@l13/core';
+import { detectLanguage, detectPlatform, isMacOs, Message } from './@l13/core';
 
-import icons from './icons';
+import icons from './components/icons';
 
 //	Variables __________________________________________________________________
 

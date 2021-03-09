@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffCopyMessage, DiffMultiCopyMessage } from '../../types';
+import { DiffCopyMessage, DiffMultiCopyMessage } from '../../../types';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

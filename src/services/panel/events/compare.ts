@@ -2,17 +2,18 @@
 
 import * as vscode from 'vscode';
 
-import { StatsMap } from '../../types';
+import { StatsMap } from '../../../types';
 
-import { formatAmount } from '../../@l13/formats';
-import { pluralEntries } from '../../@l13/units/files';
+import { formatAmount } from '../../../@l13/formats';
+import { pluralEntries } from '../../../@l13/units/files';
 
-import { DiffResult } from '../output/DiffResult';
-import { DiffStats } from '../output/DiffStats';
+import { DiffResult } from '../../output/DiffResult';
+import { DiffStats } from '../../output/DiffStats';
 
-import { DiffPanel } from '../panel/DiffPanel';
-import { HistoryState } from '../states/HistoryState';
-import { MenuState } from '../states/MenuState';
+import { HistoryState } from '../../states/HistoryState';
+import { MenuState } from '../../states/MenuState';
+
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

@@ -1,12 +1,12 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFavoriteMessage } from '../../types';
+import { DiffFavoriteMessage } from '../../../types';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { FavoritesDialog } from '../../dialogs/FavoritesDialog';
 
-import { FavoritesDialog } from '../dialogs/FavoritesDialog';
+import { FavoritesState } from '../../states/FavoritesState';
 
-import { FavoritesState } from '../states/FavoritesState';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
