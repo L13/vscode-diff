@@ -48,8 +48,9 @@ export class MenuState {
 		
 		let history = states.getHistory(this.context);
 		
-		history = history.filter((path) => path !== pathB && path !== pathB);
-		history.push(pathB, pathA);
+		history = history.filter((path) => path !== pathA && path !== pathB);
+		history.unshift(pathA, pathB);
+		
 		history = history.slice(0, settings.maxRecentlyUsed());
 		
 		this.save(history);
