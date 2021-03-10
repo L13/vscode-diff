@@ -204,6 +204,10 @@
 				}
 			},
 			{
+				"command": "l13Diff.action.history.addToFavorites",
+				"title": "Add to Favorites"
+			},
+			{
 				"command": "l13Diff.action.history.remove",
 				"title": "Delete"
 			},
@@ -696,6 +700,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.action.history.addToFavorites",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.action.history.remove",
 					"when": "false"
 				},
@@ -975,6 +983,11 @@
 				{
 					"command": "l13Diff.action.history.openAndCompare",
 					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.addToFavorites",
+					"group": "navigation@3",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
