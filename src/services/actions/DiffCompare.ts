@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
-import { lstatSync, walkTree } from '../@l13/fse';
+import { lstatSync, sanatize, walkTree } from '../@l13/fse';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, StartEvent, StatsMap } from '../../types';
@@ -74,6 +74,9 @@ export class DiffCompare {
 		
 		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
 		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
+		
+		pathA = sanatize(pathA);
+		pathB = sanatize(pathB);
 		
 		if (!isAbsolute(pathA)) return this.onError(`The left path is not absolute.`, pathA, pathB);
 		if (!isAbsolute(pathB)) return this.onError(`The right path is not absolute.`, pathA, pathB);
