@@ -6,6 +6,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Added
 - Added updating list view if a file or folder has been deleted in current workspace.
 - Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Added `Add to Favorites` to history context menu.
 
 ### Changed
 - Refactored favorites and history view.

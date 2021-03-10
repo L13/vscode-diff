@@ -8,6 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added updating list view if a file or folder has been deleted in current workspace.
 - Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Added `Add to Favorites` to history context menu.
 
 ## Index
 
@@ -311,6 +312,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Open` - Open the previous comparison without starting a comparison immediately.
 * `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Add to Favorites` - Add a previous comparison to favorites.
 * `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar
