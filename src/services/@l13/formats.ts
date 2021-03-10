@@ -16,6 +16,7 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 	
 	const namesA:string[] = normalize(pathA).split(sep);
 	const namesB:string[] = normalize(pathB).split(sep);
+	
 	const desc:string[] = [];
 	
 //	Remove last entry if path has a slash/backslash at the end
@@ -37,6 +38,9 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 		});
 		desc.splice(0, desc.length);
 	}
+	
+	if (pathA === sep) namesA.push('');
+	if (pathB === sep) namesB.push('');
 	
 	return [`${namesA.join(sep)} ↔ ${namesB.join(sep)}`, desc.join(sep)];
 	
