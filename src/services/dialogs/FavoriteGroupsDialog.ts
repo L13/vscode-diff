@@ -46,6 +46,8 @@ export class FavoriteGroupsDialog {
 		
 		this.favoriteGroupsState.add(label);
 		
+		return this.favoriteGroupsState.getByName(label);
+		
 	}
 	
 	public async addFavoriteToGroup (favorite:Favorite) {
@@ -53,16 +55,19 @@ export class FavoriteGroupsDialog {
 		const favoriteGroups = this.favoriteGroupsState.get();
 		let favoriteGroup:FavoriteGroup = null;
 		
-		if (!favoriteGroups.length) {
-			await this.add();
-			favoriteGroup = this.favoriteGroupsState.get()[0];
-		} else if (favoriteGroups.length === 1) {
-			favoriteGroup = favoriteGroups[0];
-		} else {
-			favoriteGroup = await vscode.window.showQuickPick(favoriteGroups, {
+		if (favoriteGroups.length) {
+			const newFavoriteGroupItem = { label: 'New Group ...' };
+			const items = [
+				newFavoriteGroupItem,
+				...favoriteGroups
+			];
+			const selectedItem = await vscode.window.showQuickPick(items, {
 				placeHolder: 'Select a favorite group',
 			});
-		}
+			if (selectedItem === newFavoriteGroupItem) {
+				favoriteGroup = await this.add();
+			} else favoriteGroup = <FavoriteGroup>selectedItem;
+		} else favoriteGroup = await this.add();
 		
 		if (!favoriteGroup) return;
 		
