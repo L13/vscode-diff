@@ -136,7 +136,7 @@ export function createFindGlob (ignore:string[], useCaseSensitive:boolean) {
 	
 }
 
-export function sanatize (pathname:string) {
+export function sanitize (pathname:string) {
 	
 	let name = `${pathname}`.replace(findIllegalAndControlChars, '');
 	
