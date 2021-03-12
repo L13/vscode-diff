@@ -73,12 +73,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
 				"when": "isMac"
 			},
 			{
@@ -89,7 +89,7 @@
 		"commands": [
 			{
 				"command": "l13Diff.action.panel.open",
-				"title": "Diff Folders",
+				"title": "New Diff Panel",
 				"icon": {
 					"light": "images/favorites/open-diff-light.svg",
 					"dark": "images/favorites/open-diff-dark.svg"
@@ -141,7 +141,7 @@
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.add",
-				"title": "New Group",
+				"title": "New Favorite Group",
 				"icon": {
 					"light": "images/favorites/new-group-light.svg",
 					"dark": "images/favorites/new-group-dark.svg"

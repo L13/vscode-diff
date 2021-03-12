@@ -56,7 +56,7 @@ export class FavoriteGroupsDialog {
 		let favoriteGroup:FavoriteGroup = null;
 		
 		if (favoriteGroups.length) {
-			const newFavoriteGroupItem = { label: 'New Group ...' };
+			const newFavoriteGroupItem = { label: '$(add) New Group...' };
 			const items = [
 				newFavoriteGroupItem,
 				...favoriteGroups

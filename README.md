@@ -72,7 +72,7 @@ Compare two folders in Visual Studio Code.
 
 ## Available Commands
 
-* `Diff Folders` - Open the diff panel.
+* `New Diff Panel` - Open the diff panel.
 * `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `Diff Folders: Delete All Favorites` - Delete all favorites.
 * `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
@@ -287,7 +287,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Context Icons
 
-* `Diff Folders` - Open a new panel.
+* `New Diff Panel` - Open a new panel.
 * `New Group` - Add a new group.
 * `Collapse All` - Collapse all groups.
 
