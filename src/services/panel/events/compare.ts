@@ -36,7 +36,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	});
 	
-	currentDiffPanel.compare.onInitCompare(() => {
+	currentDiffPanel.compare.onWillCompare(() => {
 		
 		currentDiffPanel.status.update();
 		currentDiffPanel.output.clear();
@@ -56,7 +56,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 // compare files
 	
-	currentDiffPanel.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
+	currentDiffPanel.compare.onWillCompareFiles(({ data, pathA, pathB }) => {
 		
 		historyState.add(pathA, pathB);
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
@@ -73,7 +73,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 //	compare folders
 	
-	currentDiffPanel.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
+	currentDiffPanel.compare.onWillCompareFolders(({ data, pathA, pathB }) => {
 		
 		historyState.add(pathA, pathB);
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
@@ -82,13 +82,13 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onStartScanFolder((pathname:string) => {
+	currentDiffPanel.compare.onWillScanFolder((pathname:string) => {
 		
 		currentDiffPanel.output.log(`Scanning "${pathname}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onEndScanFolder((result:StatsMap) => {
+	currentDiffPanel.compare.onDidScanFolder((result:StatsMap) => {
 		
 		const total = Object.entries(result).length;
 		
