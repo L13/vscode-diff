@@ -40,9 +40,8 @@ Compare two folders in Visual Studio Code.
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
 * Provides a context menu for list items to copy, delete or reveal a file.
-* Ignores line endings in text files for a comparison.
-* Ignores leading and trailing whitespace in text files.
-* Auto updates the list view if a file has been saved in the same window as the comparison.
+* Ignores line endings and/or leading and trailing whitespace in text files.
+* Auto updates the list view if a file has been saved or deleted in the same window as the comparison.
 * Open multiple panels by click on the icon in the favorites view.
 * Copy the same files from the same location to multiple folders at once.
 
