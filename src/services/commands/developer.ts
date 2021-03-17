@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Favorite, FavoriteGroup } from '../@types/favorites';
+import { Comparison } from '../@types/history';
 
 import * as commands from '../common/commands';
 import * as dialogs from '../common/dialogs';
@@ -16,8 +17,10 @@ import * as states from '../common/states';
 const findBackupFileName = /\d{4}(\-\d{2}){5}(?:\-auto)?.json/;
 
 type Backup = {
+	comparisons:Comparison[],
 	favorites:Favorite[],
 	favoriteGroups:FavoriteGroup[],
+	history:string[],
 };
 
 //	Initialize _________________________________________________________________
@@ -59,8 +62,10 @@ export function activate (context:vscode.ExtensionContext) {
 			if (item) {
 				const content = <Backup>JSON.parse(fs.readFileSync(path.join(dirname, item.label), 'utf-8'));
 				
+				states.updateComparisons(context, content.comparisons);
 				states.updateFavorites(context, content.favorites);
 				states.updateFavoriteGroups(context, content.favoriteGroups);
+				states.updateHistory(context, content.history);
 				
 				showMessageReload(`Restored backup "${item.label}"`);
 			}
@@ -95,8 +100,10 @@ async function createBackup (context:vscode.ExtensionContext, dirname:string, ba
 	const filename = path.join(dirname, basename);
 			
 	const content:Backup = {
+		comparisons: states.getComparisons(context),
 		favorites: states.getFavorites(context),
 		favoriteGroups: states.getFavoriteGroups(context),
+		history: states.getHistory(context),
 	};
 	
 	fs.writeFileSync(filename, JSON.stringify(content, null, '\t'), 'utf-8');
