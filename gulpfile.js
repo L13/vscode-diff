@@ -15,8 +15,6 @@ const typescript = require('@rollup/plugin-typescript');
 
 const findPattern = /width="100%" height="100%" viewBox="0 0 (\d+) (\d+)"/;
 
-let developerMode = false;
-
 //	Initialize _________________________________________________________________
 
 
@@ -149,7 +147,7 @@ gulp.task('script:view', () => {
 gulp.task('script:services', () => {
 	
 	return rollup.rollup({
-		input: `src/services/main${developerMode ? '.dev' : ''}.ts`,
+		input: 'src/services/main.ts',
 		onwarn,
 		external: [
 			'buffer',
@@ -252,13 +250,6 @@ gulp.task('script', gulp.series('script:view', 'script:services', 'script:tests'
 
 gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'test'));
 
-gulp.task('developer mode', gulp.series(function init (done) {
-	
-	developerMode = true;
-	done();
-	
-}, 'build'));
-
 gulp.task('watch', () => {
 	
 	gulp.watch('src/views/**/*.svg', gulp.parallel('icons'));
@@ -296,7 +287,7 @@ gulp.task('watch', () => {
 	
 });
 
-gulp.task('build & watch (developer mode)', gulp.series('developer mode', 'watch'));
+gulp.task('build & watch', gulp.series('build', 'watch'));
 
 //	Functions __________________________________________________________________
 

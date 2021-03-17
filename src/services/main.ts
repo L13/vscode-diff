@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import * as developer from './commands/developer';
 import * as favorites from './commands/favorites';
 import * as history from './commands/history';
 import * as list from './commands/list';
@@ -33,6 +34,8 @@ export function activate (context:vscode.ExtensionContext) {
 	settings.activate(context);
 	shortcuts.activate(context);
 	symlinks.activate(context);
+	
+	if (context.extensionMode === vscode.ExtensionMode.Development) developer.activate(context);
 	
 }
 
