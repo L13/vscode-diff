@@ -149,7 +149,7 @@
 			},
 			{
 				"command": "l13Diff.action.favorite.addToGroup",
-				"title": "Add to Group"
+				"title": "Add to Group..."
 			},
 			{
 				"command": "l13Diff.action.favorite.removeFromGroup",
