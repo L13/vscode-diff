@@ -1,10 +1,12 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage } from '../../../types';
-import { ViewModel } from '../../@l13/component/view-model.abstract';
-import { L13DiffListPipe } from './l13-diff-list.interface';
+import { DeletedFilesMessage, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage, UpdatedFilesMessage } from '../../../types';
 
-import { msg } from '../common';
+import { ViewModel } from '../../@l13/component/view-model.abstract';
+
+import { msg } from '../../common';
+
+import { L13DiffListPipe } from './l13-diff-list.interface';
 
 //	Variables __________________________________________________________________
 
@@ -61,8 +63,9 @@ export class L13DiffListViewModel extends ViewModel {
 		msg.on('copy:right', (data:DiffCopyMessage) => this.updateCopiedList(data));
 		
 		msg.on('delete:files', (data:DiffResultMessage) => this.updateDeletedList(data));
+		msg.on('remove:files', (data:DeletedFilesMessage) => this.removeFiles(data.files));
 		
-		msg.on('update:files', (data) => this.updateFiles(data.files));
+		msg.on('update:files', (data:UpdatedFilesMessage) => this.updateFiles(data.files));
 		msg.on('update:diffs', (data:DiffResultMessage) => this.updateDiffList(data));
 		msg.on('update:multi', (data:DiffCopyMessage|DiffResultMessage) => this.updateMultiList(data));
 		
@@ -101,13 +104,12 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public updateCopiedList (diffResult:DiffCopyMessage) {
+	private updateItems (diffs:Diff[]) {
 		
-		const diffs = diffResult.diffs;
-		const items = this.items = this.items.slice(); // Refreshs the view
+		const items = this.items = this.items.slice();
 		const map = this.map;
 		
-		diffs.forEach((diff:Diff) => { // Update original diff with new diff
+		diffs.forEach((diff:Diff) => {
 			
 			const originalDiff = map[diff.id];
 			
@@ -116,25 +118,33 @@ export class L13DiffListViewModel extends ViewModel {
 			
 		});
 		
+	}
+	
+	public updateCopiedList (diffResult:DiffCopyMessage) {
+		
+		const diffs = diffResult.diffs;
+		
+		this.updateItems(diffs);
+		
 		updateCopiedParentFolders(this.items, diffs);
 		
 		this.dispatchEvent('copied');
 		
 	}
 	
-	public updateDeletedList (diffResult:DiffResultMessage) {
+	private updateStatus (items:Diff[], diffs:Diff[]) {
 		
-		const diffs = diffResult.diffs;
-		const items = this.items = this.items.slice(); // Refreshs the view
 		const map = this.map;
 		
-		diffs.forEach((diff:Diff) => { // Update original diff with new diff
+		diffs.forEach((diff:Diff) => {
 			
 			const originalDiff = map[diff.id];
 			
 			if (diff.fileA || diff.fileB) {
-				items.splice(items.indexOf(originalDiff), 1, diff);
-				map[diff.id] = diff;
+				if (originalDiff !== diff) {
+					items.splice(items.indexOf(originalDiff), 1, diff);
+					map[diff.id] = diff;
+				}
 				if (diff.status !== 'ignored') {
 					if (!diff.fileA) diff.status = 'untracked';
 					if (!diff.fileB) diff.status = 'deleted';
@@ -146,7 +156,45 @@ export class L13DiffListViewModel extends ViewModel {
 			
 		});
 		
-		updateDeletedSubfiles(this.items, diffs);
+	}
+	
+	private removeFiles (files:string[]) {
+		
+		const items = this.items = this.items.slice();
+		const diffs = items.filter((diff:Diff) => {
+			
+			if (files.includes(diff.fileA?.fsPath)) {
+				diff.fileA = null;
+				return true;
+			}
+			
+			if (files.includes(diff.fileB?.fsPath)) {
+				diff.fileB = null;
+				return true;
+			}
+			
+			return false;
+			
+		});
+		
+		this.updateStatus(items, diffs);
+		
+		updateDeletedSubfiles(items, diffs);
+		
+		this.filter();
+		
+		this.dispatchEvent('removed');
+		
+	}
+	
+	public updateDeletedList (diffResult:DiffResultMessage) {
+		
+		const items = this.items = this.items.slice();
+		const diffs = diffResult.diffs;
+		
+		this.updateStatus(items, diffs);
+		
+		updateDeletedSubfiles(items, diffs);
 		
 		this.dispatchEvent('deleted');
 		
@@ -175,19 +223,8 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	public updateDiffList (diffResult:DiffResultMessage) {
 		
-		const diffs = diffResult.diffs;
-		const items = this.items = this.items.slice(); // Refreshs the view
-		const map = this.map;
-		
-		diffs.forEach((diff:Diff) => { // Update original diff with new diff
-			
-			const originalDiff = map[diff.id];
-			
-			items.splice(items.indexOf(originalDiff), 1, diff);
-			map[diff.id] = diff;
-			
-		});
-		
+		this.updateItems(diffResult.diffs);
+		this.filter();
 		this.dispatchEvent('updated');
 		
 	}
@@ -200,15 +237,14 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	public swapList () {
 		
+		const items = this.items = this.items.slice();
 		const diffResult = this.diffResult;
 		const pathA = diffResult.pathA;
-		
-		this.items = this.items.slice(); // Refreshs the view
 		
 		diffResult.pathA = diffResult.pathB;
 		diffResult.pathB = pathA;
 		
-		this.items.forEach((diff:Diff) => {
+		items.forEach((diff:Diff) => {
 			
 			const fileA = diff.fileA;
 			
@@ -228,11 +264,11 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	public filter () :void {
 		
-		let items = this.items;
+		let filteredItems = this.items;
 		
-		this[FILTERS].forEach((pipe) => items = pipe.transform(items));
+		this[FILTERS].forEach((pipe) => filteredItems = pipe.transform(filteredItems));
 		
-		this.filteredItems = items;
+		this.filteredItems = filteredItems;
 		
 		this.requestUpdate();
 		

@@ -9,8 +9,6 @@ import { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-s
 
 import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
-
-
 //	Variables __________________________________________________________________
 
 
@@ -37,8 +35,11 @@ export function init (
 	listVM.on('compared', () => diff.enable());
 	listVM.on('copied', () => diff.enable());
 	listVM.on('deleted', () => diff.enable());
-	listVM.on('updated', () => diff.enable());
+	
 	listVM.on('multicopy', () => diff.disable());
+	
+	listVM.on('updated', () => list.update());
+	listVM.on('removed', () => list.update());
 	
 	listVM.on('filtered', () => {
 		

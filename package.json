@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.31.2",
+	"version": "0.32.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -73,12 +73,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[Diff Folders](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
 				"when": "isMac"
 			},
 			{
@@ -89,7 +89,7 @@
 		"commands": [
 			{
 				"command": "l13Diff.action.panel.open",
-				"title": "Diff Folders",
+				"title": "New Diff Panel",
 				"icon": {
 					"light": "images/favorites/open-diff-light.svg",
 					"dark": "images/favorites/open-diff-dark.svg"
@@ -140,8 +140,8 @@
 				"title": "Delete"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.add",
-				"title": "New Group",
+				"command": "l13Diff.action.favoriteGroups.add",
+				"title": "New Favorite Group",
 				"icon": {
 					"light": "images/favorites/new-group-light.svg",
 					"dark": "images/favorites/new-group-dark.svg"
@@ -149,14 +149,14 @@
 			},
 			{
 				"command": "l13Diff.action.favorite.addToGroup",
-				"title": "Add to Group"
+				"title": "Add to Group..."
 			},
 			{
 				"command": "l13Diff.action.favorite.removeFromGroup",
 				"title": "Remove from Group"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.open",
+				"command": "l13Diff.action.favoriteGroups.open",
 				"title": "Open All",
 				"icon": {
 					"light": "images/favorites/open-group-light.svg",
@@ -164,19 +164,19 @@
 				}
 			},
 			{
-				"command": "l13Diff.action.favorites.group.openOnly",
+				"command": "l13Diff.action.favoriteGroups.openOnly",
 				"title": "Open All"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.openAndCompare",
+				"command": "l13Diff.action.favoriteGroups.openAndCompare",
 				"title": "Open All & Compare"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.rename",
+				"command": "l13Diff.action.favoriteGroups.rename",
 				"title": "Rename"
 			},
 			{
-				"command": "l13Diff.action.favorites.group.remove",
+				"command": "l13Diff.action.favoriteGroups.remove",
 				"title": "Delete"
 			},
 			{
@@ -202,6 +202,10 @@
 					"light": "images/favorites/open-diff-light.svg",
 					"dark": "images/favorites/open-diff-dark.svg"
 				}
+			},
+			{
+				"command": "l13Diff.action.history.addToFavorites",
+				"title": "Add to Favorites"
 			},
 			{
 				"command": "l13Diff.action.history.remove",
@@ -410,6 +414,26 @@
 			{
 				"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 				"title": "Toggle Find Symbolic Links"
+			},
+			{
+				"command": "l13Diff.action.developer.backup",
+				"title": "Developer: Backup Diff Folders Data"
+			},
+			{
+				"command": "l13Diff.action.developer.reveal",
+				"title": "Developer: Reveal Diff Folders Backups"
+			},
+			{
+				"command": "l13Diff.action.developer.remove",
+				"title": "Developer: Delete Diff Folders Backup"
+			},
+			{
+				"command": "l13Diff.action.developer.restore",
+				"title": "Developer: Restore Diff Folders Data"
+			},
+			{
+				"command": "l13Diff.action.developer.clear",
+				"title": "Developer: Clear Diff Folders Data"
 			}
 		],
 		"keybindings": [
@@ -640,23 +664,23 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.open",
+					"command": "l13Diff.action.favoriteGroups.open",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openOnly",
+					"command": "l13Diff.action.favoriteGroups.openOnly",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.openAndCompare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.rename",
+					"command": "l13Diff.action.favoriteGroups.rename",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.remove",
+					"command": "l13Diff.action.favoriteGroups.remove",
 					"when": "false"
 				},
 				{
@@ -673,6 +697,10 @@
 				},
 				{
 					"command": "l13Diff.action.history.openInNewPanel",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.addToFavorites",
 					"when": "false"
 				},
 				{
@@ -830,6 +858,26 @@
 				{
 					"command": "l13Diff.action.search.toggleFindSymbolicLinks",
 					"when": "l13DiffFocus"
+				},
+				{
+					"command": "l13Diff.action.developer.backup",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.reveal",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.remove",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.restore",
+					"when": "isDevelopment"
+				},
+				{
+					"command": "l13Diff.action.developer.clear",
+					"when": "isDevelopment"
 				}
 			],
 			"explorer/context": [
@@ -856,7 +904,7 @@
 					"group": "navigation@1"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.add",
+					"command": "l13Diff.action.favoriteGroups.add",
 					"when": "view == l13DiffFavorites",
 					"group": "navigation@2"
 				},
@@ -903,27 +951,27 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.open",
+					"command": "l13Diff.action.favoriteGroups.open",
 					"group": "inline",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openOnly",
+					"command": "l13Diff.action.favoriteGroups.openOnly",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.openAndCompare",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.rename",
+					"command": "l13Diff.action.favoriteGroups.rename",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.favorites.group.remove",
+					"command": "l13Diff.action.favoriteGroups.remove",
 					"group": "7_modification@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
@@ -935,6 +983,11 @@
 				{
 					"command": "l13Diff.action.history.openAndCompare",
 					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.addToFavorites",
+					"group": "navigation@3",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
@@ -950,22 +1003,22 @@
 				{
 					"command": "l13Diff.action.projects.compareWithSelected",
 					"group": "3_compare@1",
-					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.selectForCompare",
 					"group": "3_compare@2",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.compareWithWorkspace",
 					"group": "3_compare@3",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.open",
 					"group": "3_compare@4",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^project-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				}
 			],
 			"editor/title": [
@@ -1150,27 +1203,27 @@
 				"l13Diff.confirmCaseInsensitiveCompare": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the comparsion should ask for confirmation to be case insensitive even if the file system is case sensitive."
+					"description": "Controls whether the comparsion should ask for confirmation to be case insensitive even if the file system is case sensitive."
 				},
 				"l13Diff.confirmCaseInsensitiveCopy": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the diff should ask for confirmation when copying the content to existing files of a case sensitive comparison on a case insensitive file system."
+					"description": "Controls whether the diff should ask for confirmation when copying the content to existing files of a case sensitive comparison on a case insensitive file system."
 				},
 				"l13Diff.confirmCopy": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the diff should ask for confirmation when copying files."
+					"description": "Controls whether the diff should ask for confirmation when copying files."
 				},
 				"l13Diff.confirmDelete": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the diff should ask for confirmation when deleting files."
+					"description": "Controls whether the diff should ask for confirmation when deleting files."
 				},
 				"l13Diff.abortOnError": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls weather the scan process should abort if an error occurs."
+					"description": "Controls whether the scan process should abort if an error occurs."
 				}
 			}
 		}

@@ -1,13 +1,14 @@
 //	Imports ____________________________________________________________________
 
-import * as actions from '../../events/actions';
-import * as compare from '../../events/compare';
-import * as diff from '../../events/diff';
-import * as input from '../../events/input';
-import * as list from '../../events/list';
-import * as navigator from '../../events/navigator';
-import * as search from '../../events/search';
-import * as swap from '../../events/swap';
+import * as actions from './commands/actions';
+import * as compare from './commands/compare';
+import * as favorites from './commands/favorites';
+import * as input from './commands/input';
+import * as list from './commands/list';
+import * as menu from './commands/menu';
+import * as search from './commands/search';
+import * as swap from './commands/swap';
+import * as views from './commands/views';
 
 //	Variables __________________________________________________________________
 
@@ -22,12 +23,13 @@ import * as swap from '../../events/swap';
 export {
 	actions,
 	compare,
-	diff,
+	favorites,
 	input,
 	list,
-	navigator,
+	menu,
 	search,
 	swap,
+	views,
 };
 
 //	Functions __________________________________________________________________

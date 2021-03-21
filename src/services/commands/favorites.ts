@@ -2,12 +2,21 @@
 
 import * as vscode from 'vscode';
 
+import { Favorite } from '../@types/favorites';
+
 import * as commands from '../common/commands';
 import * as settings from '../common/settings';
 
+import { FavoriteGroupsDialog } from '../dialogs/FavoriteGroupsDialog';
+import { FavoritesDialog } from '../dialogs/FavoritesDialog';
+
 import { DiffPanel } from '../panel/DiffPanel';
-import { DiffFavorites } from '../sidebar/DiffFavorites';
+
+import { FavoritesProvider } from '../sidebar/FavoritesProvider';
 import { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
+
+import { FavoriteGroupsState } from '../states/FavoriteGroupsState';
+import { FavoritesState } from '../states/FavoritesState';
 
 //	Variables __________________________________________________________________
 
@@ -22,37 +31,72 @@ import { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
 export function activate (context:vscode.ExtensionContext) {
 	
 	const subscriptions = context.subscriptions;
-	const diffFavoritesProvider = DiffFavorites.createProvider(context);
+	
+	const favoritesState = FavoritesState.create(context);
+	const favoriteGroupsState = FavoriteGroupsState.create(context);
+	const favoritesDialog = FavoritesDialog.create(favoritesState);
+	const favoriteGroupsDialog = FavoriteGroupsDialog.create(favoriteGroupsState, favoritesState);
+	const favoritesProvider = FavoritesProvider.create({
+		favorites: favoritesState.get(),
+		favoriteGroups: favoriteGroupsState.get(),
+	});
 	const treeView = vscode.window.createTreeView('l13DiffFavorites', {
-		treeDataProvider: diffFavoritesProvider,
+		treeDataProvider: favoritesProvider,
 		showCollapseAll: true,
 	});
 	
-	subscriptions.push(treeView.onDidCollapseElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, true)));
-	subscriptions.push(treeView.onDidExpandElement(({ element }) => DiffFavorites.saveCollapseState(context, <FavoriteGroupTreeItem>element, false)));
+	subscriptions.push(treeView.onDidCollapseElement(({ element }) => {
+		
+		favoriteGroupsState.saveCollapseState((<FavoriteGroupTreeItem>element).favoriteGroup, true);
+		
+	}));
+	
+	subscriptions.push(treeView.onDidExpandElement(({ element }) => {
+		
+		favoriteGroupsState.saveCollapseState((<FavoriteGroupTreeItem>element).favoriteGroup, false);
+		
+	}));
+	
 	subscriptions.push(treeView);
+	
+	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
+		
+		if (focused) { // Update data if changes in another workspace have been done
+			favoritesProvider.refresh({
+				favorites: favoritesState.get(),
+				favoriteGroups: favoriteGroupsState.get(),
+			});
+		}
+		
+	}));
+	
+	subscriptions.push(favoritesState.onDidChangeFavorites((favorites) => {
+		
+		favoritesProvider.refresh({
+			favorites,
+		});
+		
+	}));
+	
+	subscriptions.push(favoriteGroupsState.onDidChangeFavoriteGroups((favoriteGroups) => {
+		
+		favoritesProvider.refresh({
+			favorites: favoritesState.get(),
+			favoriteGroups,
+		});
+		
+	}));
 	
 	commands.register(context, {
 	
 		'l13Diff.action.favorite.open': ({ favorite }) => {
 			
-			const compare = settings.get('openFavoriteAndCompare', false);
-			
-			DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+			openFavorite(context, favorite, settings.get('openFavoriteAndCompare', false));
 			
 		},
 		
-		'l13Diff.action.favorite.openOnly': ({ favorite }) => {
-			
-			DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], false);
-			
-		},
-		
-		'l13Diff.action.favorite.openAndCompare': ({ favorite }) => {
-			
-			DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
-			
-		},
+		'l13Diff.action.favorite.openOnly': ({ favorite }) => openFavorite(context, favorite, false),
+		'l13Diff.action.favorite.openAndCompare': ({ favorite }) => openFavorite(context, favorite, true),
 		
 		'l13Diff.action.favorite.openInNewPanel': ({ favorite }) => {
 			
@@ -60,46 +104,36 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.favorite.rename': ({ favorite }) => DiffFavorites.renameFavorite(context, favorite),
-		'l13Diff.action.favorite.remove': ({ favorite }) => DiffFavorites.removeFavorite(context, favorite),
-		'l13Diff.action.favorites.group.add': () => DiffFavorites.addFavoriteGroup(context),
+		'l13Diff.action.favorite.rename': ({ favorite }) => favoritesDialog.rename(favorite),
+		'l13Diff.action.favorite.remove': ({ favorite }) => favoritesDialog.remove(favorite),
 		
-		'l13Diff.action.favorites.group.open': async ({ favoriteGroup }) => {
+		'l13Diff.action.favoriteGroups.add': () => favoriteGroupsDialog.add(),
+		
+		'l13Diff.action.favoriteGroups.open': ({ favoriteGroup }) => {
 			
-			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
-			const compare = settings.get('openFavoriteAndCompare', false);
-			
-			for (const favorite of favorites) {
-				await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
-			}
+			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), settings.get('openFavoriteAndCompare', false));
 			
 		},
 		
-		'l13Diff.action.favorites.group.openOnly': async ({ favoriteGroup }) => {
+		'l13Diff.action.favoriteGroups.openOnly': ({ favoriteGroup }) => {
 			
-			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
-			
-			for (const favorite of favorites) {
-				await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }]);
-			}
+			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), false);
 			
 		},
 		
-		'l13Diff.action.favorites.group.openAndCompare': async ({ favoriteGroup }) => {
+		'l13Diff.action.favoriteGroups.openAndCompare': ({ favoriteGroup }) => {
 			
-			const favorites = DiffFavorites.getFavoritesByGroup(context, favoriteGroup);
-			
-			for (const favorite of favorites) {
-				await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
-			}
+			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), true);
 			
 		},
 		
-		'l13Diff.action.favorite.addToGroup': ({ favorite }) => DiffFavorites.addToFavoriteGroup(context, favorite),
-		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => DiffFavorites.removeFromFavoriteGroup(context, favorite),
-		'l13Diff.action.favorites.group.rename': ({ favoriteGroup }) => DiffFavorites.renameFavoriteGroup(context, favoriteGroup),
-		'l13Diff.action.favorites.group.remove': ({ favoriteGroup }) => DiffFavorites.removeFavoriteGroup(context, favoriteGroup),
-		'l13Diff.action.favorites.clear': () => DiffFavorites.clearFavorites(context),
+		'l13Diff.action.favorite.addToGroup': ({ favorite }) => favoriteGroupsDialog.addFavoriteToGroup(favorite),
+		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => favoritesState.removeFavoriteFromGroup(favorite),
+		
+		'l13Diff.action.favoriteGroups.rename': ({ favoriteGroup }) => favoriteGroupsDialog.rename(favoriteGroup),
+		'l13Diff.action.favoriteGroups.remove': ({ favoriteGroup }) => favoriteGroupsDialog.remove(favoriteGroup),
+		
+		'l13Diff.action.favorites.clear': () => favoritesDialog.clear(),
 		
 	});
 	
@@ -107,3 +141,16 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
+function openFavorite (context:vscode.ExtensionContext, favorite:Favorite, compare:boolean) {
+	
+	DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+	
+}
+
+async function openFavorites (context:vscode.ExtensionContext, favorites:Favorite[], compare:boolean) {
+	
+	for (const favorite of favorites) {
+		await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+	}
+	
+}

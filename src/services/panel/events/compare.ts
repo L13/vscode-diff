@@ -2,15 +2,18 @@
 
 import * as vscode from 'vscode';
 
-import { StatsMap } from '../../types';
+import { StatsMap } from '../../../types';
 
-import { formatAmount } from '../../@l13/formats';
-import { pluralEntries } from '../../@l13/units/files';
+import { formatAmount } from '../../../@l13/formats';
+import { pluralEntries } from '../../../@l13/units/files';
 
-import { DiffResult } from '../output/DiffResult';
-import { DiffStats } from '../output/DiffStats';
+import { DiffResult } from '../../output/DiffResult';
+import { DiffStats } from '../../output/DiffStats';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { HistoryState } from '../../states/HistoryState';
+import { MenuState } from '../../states/MenuState';
+
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -24,9 +27,16 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('create:diffs', (data:DiffResult) => currentDiffPanel.compare.initCompare(data));
+	const historyState = HistoryState.create(currentDiffPanel.context);
+	const menuState = MenuState.create(currentDiffPanel.context);
 	
-	currentDiffPanel.compare.onInitCompare(() => {
+	currentDiffPanel.msg.on('create:diffs', (data:DiffResult) => {
+		
+		currentDiffPanel.compare.initCompare(data);
+		
+	});
+	
+	currentDiffPanel.compare.onWillCompare(() => {
 		
 		currentDiffPanel.status.update();
 		currentDiffPanel.output.clear();
@@ -46,9 +56,10 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 // compare files
 	
-	currentDiffPanel.compare.onStartCompareFiles(({ data, pathA, pathB }) => {
+	currentDiffPanel.compare.onWillCompareFiles(({ data, pathA, pathB }) => {
 		
-		currentDiffPanel.saveHistory(data, pathA, pathB);
+		historyState.add(pathA, pathB);
+		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
 		
@@ -62,21 +73,22 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 //	compare folders
 	
-	currentDiffPanel.compare.onStartCompareFolders(({ data, pathA, pathB }) => {
+	currentDiffPanel.compare.onWillCompareFolders(({ data, pathA, pathB }) => {
 		
-		currentDiffPanel.saveHistory(data, pathA, pathB);
+		historyState.add(pathA, pathB);
+		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onStartScanFolder((pathname:string) => {
+	currentDiffPanel.compare.onWillScanFolder((pathname:string) => {
 		
 		currentDiffPanel.output.log(`Scanning "${pathname}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onEndScanFolder((result:StatsMap) => {
+	currentDiffPanel.compare.onDidScanFolder((result:StatsMap) => {
 		
 		const total = Object.entries(result).length;
 		

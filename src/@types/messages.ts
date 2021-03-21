@@ -14,6 +14,10 @@ import { Diff, DiffFile, DiffSettings } from './diffs';
 
 //	Exports ____________________________________________________________________
 
+export type DeletedFilesMessage = {
+	files:string[],
+};
+
 export type DiffCopyMessage = {
 	diffs:Diff[],
 	multi:boolean,
@@ -93,6 +97,10 @@ export type DiffUpdatePathsMessage = {
 };
 
 export type MessageListener = (...args:any[]) => void;
+
+export type UpdatedFilesMessage = {
+	files:string[],
+};
 
 //	Functions __________________________________________________________________
 

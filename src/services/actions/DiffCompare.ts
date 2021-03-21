@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
-import { lstatSync, walkTree } from '../@l13/fse';
+import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
 import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, StartEvent, StatsMap } from '../../types';
@@ -35,20 +35,20 @@ const MAX_CACHE_BUFFER_LENGTH = 33554432; // 32 MB
 
 export class DiffCompare {
 	
-	private _onInitCompare:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onInitCompare:vscode.Event<undefined> = this._onInitCompare.event;
+	private _onWillCompare:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onWillCompare:vscode.Event<undefined> = this._onWillCompare.event;
 	
 	private _onDidNotCompare:vscode.EventEmitter<DiffError> = new vscode.EventEmitter<DiffError>();
 	public readonly onDidNotCompare:vscode.Event<DiffError> = this._onDidNotCompare.event;
 	
-	private _onStartCompareFiles:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
-	public readonly onStartCompareFiles:vscode.Event<StartEvent> = this._onStartCompareFiles.event;
+	private _onWillCompareFiles:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onWillCompareFiles:vscode.Event<StartEvent> = this._onWillCompareFiles.event;
 	
 	private _onDidCompareFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidCompareFiles:vscode.Event<DiffResult> = this._onDidCompareFiles.event;
 	
-	private _onStartCompareFolders:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
-	public readonly onStartCompareFolders:vscode.Event<StartEvent> = this._onStartCompareFolders.event;
+	private _onWillCompareFolders:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onWillCompareFolders:vscode.Event<StartEvent> = this._onWillCompareFolders.event;
 	
 	private _onDidCompareFolders:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidCompareFolders:vscode.Event<DiffResult> = this._onDidCompareFolders.event;
@@ -59,21 +59,24 @@ export class DiffCompare {
 	private _onDidUpdateAllDiffs:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
 	public readonly onDidUpdateAllDiffs:vscode.Event<DiffResult> = this._onDidUpdateAllDiffs.event;
 	
-	private _onStartScanFolder:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
-	public readonly onStartScanFolder:vscode.Event<string> = this._onStartScanFolder.event;
+	private _onWillScanFolder:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
+	public readonly onWillScanFolder:vscode.Event<string> = this._onWillScanFolder.event;
 	
-	private _onEndScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
-	public readonly onEndScanFolder:vscode.Event<StatsMap> = this._onEndScanFolder.event;
+	private _onDidScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
+	public readonly onDidScanFolder:vscode.Event<StatsMap> = this._onDidScanFolder.event;
 	
 	public initCompare (data:DiffInitMessage) :void {
 		
-		this._onInitCompare.fire(undefined);
+		this._onWillCompare.fire(undefined);
 		
 		let pathA = parsePredefinedVariable(data.pathA);
 		let pathB = parsePredefinedVariable(data.pathB);
 		
 		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
 		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
+		
+		pathA = sanitize(pathA);
+		pathB = sanitize(pathB);
 		
 		if (!isAbsolute(pathA)) return this.onError(`The left path is not absolute.`, pathA, pathB);
 		if (!isAbsolute(pathB)) return this.onError(`The right path is not absolute.`, pathA, pathB);
@@ -118,7 +121,7 @@ export class DiffCompare {
 		const right = vscode.Uri.file(pathB);
 		const openToSide = settings.get('openToSide', false);
 		
-		this._onStartCompareFiles.fire({ data, pathA, pathB });
+		this._onWillCompareFiles.fire({ data, pathA, pathB });
 		
 		vscode.commands.executeCommand('vscode.diff', left, right, `${pathA} ↔ ${pathB}`, {
 			preview: false,
@@ -131,7 +134,7 @@ export class DiffCompare {
 	
 	private async compareFolders (data:DiffInitMessage, pathA:string, pathB:string) {
 		
-		this._onStartCompareFolders.fire({ data, pathA, pathB });
+		this._onWillCompareFolders.fire({ data, pathA, pathB });
 		
 		try {
 			this._onDidCompareFolders.fire(await this.createDiffs(pathA, pathB));
@@ -151,11 +154,11 @@ export class DiffCompare {
 	
 	public async scanFolder (dirname:string, { abortOnError, excludes, useCaseSensitive, maxFileSize }:DiffSettings) {
 		
-		this._onStartScanFolder.fire(dirname);
+		this._onWillScanFolder.fire(dirname);
 		
 		const result = await walkTree(dirname, { abortOnError, excludes, useCaseSensitive, maxFileSize });
 		
-		this._onEndScanFolder.fire(result);
+		this._onDidScanFolder.fire(result);
 		
 		return result;
 		
@@ -384,8 +387,8 @@ function hasSameContents (pathA:string, pathB:string) {
 	} catch (error) {
 		throw error;
 	} finally {
-		fs.closeSync(fdA);
-		fs.closeSync(fdB);
+		if (fdA) fs.closeSync(fdA);
+		if (fdB) fs.closeSync(fdB);
 	}
 	
 }

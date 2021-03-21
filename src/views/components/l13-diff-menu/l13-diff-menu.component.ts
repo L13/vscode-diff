@@ -1,14 +1,16 @@
 //	Imports ____________________________________________________________________
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
+
+import { removeChildren, scrollElementIntoView, setLabel } from '../../common';
+
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+
+import styles from '../styles';
+import templates from '../templates';
 
 import { L13DiffMenuViewModelService } from './l13-diff-menu.service';
 import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
-
-import { removeChildren, scrollElementIntoView, setLabel } from '../common';
-import styles from '../styles';
-import templates from '../templates';
 
 const { indexOf } = Array.prototype;
 

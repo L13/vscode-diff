@@ -2,12 +2,13 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
-import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffActionsViewModelService } from './l13-diff-actions.service';
+import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 
 //	Variables __________________________________________________________________
 

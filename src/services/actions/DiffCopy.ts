@@ -15,7 +15,7 @@ import * as settings from '../common/settings';
 
 //	Variables __________________________________________________________________
 
-const BUTTON_COPY_DONT_SHOW_AGAIN = 'Copy, don\'t show again';
+
 
 //	Initialize _________________________________________________________________
 
@@ -66,6 +66,7 @@ export class DiffCopy {
 	
 	public async showCopyFromToDialog (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
+		const BUTTON_COPY_DONT_SHOW_AGAIN = `Copy, don't show again`;
 		const confirmCopy = settings.get('confirmCopy', true);
 		const length = data.diffs.length;
 		
@@ -205,6 +206,7 @@ async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string,
 		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;
 		const realRelative = getRealRelative(folderTo, relative);
 		if (relative !== realRelative) {
+			const BUTTON_COPY_DONT_SHOW_AGAIN = `Copy, don't show again`;
 			// tslint:disable-next-line: max-line-length
 			const copy = await dialogs.confirm(`Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
 			if (copy === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCopy', false);

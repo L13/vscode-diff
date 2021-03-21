@@ -2,12 +2,13 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffSwapViewModelService } from './l13-diff-swap.service';
-import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffSwapViewModelService } from './l13-diff-swap.service';
+import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 
 //	Variables __________________________________________________________________
 

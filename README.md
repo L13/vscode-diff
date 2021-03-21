@@ -4,11 +4,11 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.31.2
+## What's new in Diff Folders 0.32.0
 
-- Fixed text file detection if a file starts with `.` or has multiple extnames.
-- Added value `compact` to `l13Diff.labelFormat`.
-- Added diff settings to output. Same settings are also used for updates.
+- Added updating list view if a file or folder has been deleted in current workspace.
+- Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
+- Added `Add to Favorites` to history context menu.
 
 ## Index
 
@@ -40,9 +40,8 @@ Compare two folders in Visual Studio Code.
 * Get a quick overview with the navigator of the current diff.
 * Delete files and folders in the list view.
 * Provides a context menu for list items to copy, delete or reveal a file.
-* Ignores line endings in text files for a comparison.
-* Ignores leading and trailing whitespace in text files.
-* Auto updates the list view if a file has been saved in the same window as the comparison.
+* Ignores line endings and/or leading and trailing whitespace in text files.
+* Auto updates the list view if a file has been saved or deleted in the same window as the comparison.
 * Open multiple panels by click on the icon in the favorites view.
 * Copy the same files from the same location to multiple folders at once.
 
@@ -72,7 +71,7 @@ Compare two folders in Visual Studio Code.
 
 ## Available Commands
 
-* `Diff Folders` - Open the diff panel.
+* `New Diff Panel` - Open the diff panel.
 * `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `Diff Folders: Delete All Favorites` - Delete all favorites.
 * `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
@@ -287,7 +286,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Context Icons
 
-* `Diff Folders` - Open a new panel.
+* `New Diff Panel` - Open a new panel.
 * `New Group` - Add a new group.
 * `Collapse All` - Collapse all groups.
 
@@ -312,6 +311,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Open` - Open the previous comparison without starting a comparison immediately.
 * `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Add to Favorites` - Add a previous comparison to favorites.
 * `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar
