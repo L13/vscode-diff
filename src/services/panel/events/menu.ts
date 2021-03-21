@@ -2,10 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { workspacePaths } from '../common/paths';
+import { workspacePaths } from '../../common/paths';
 
-import { DiffMenu } from '../panel/DiffMenu';
-import { DiffPanel } from '../panel/DiffPanel';
+import { MenuState } from '../../states/MenuState';
+
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -19,10 +20,12 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
+	const menuState = MenuState.create(currentDiffPanel.context);
+	
 	currentDiffPanel.msg.on('update:menu', () => {
 			
 		currentDiffPanel.msg.send('update:menu', {
-			history: DiffMenu.getHistory(currentDiffPanel.context),
+			history: menuState.get(),
 			workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 		});
 		

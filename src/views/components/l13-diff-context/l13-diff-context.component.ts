@@ -2,12 +2,13 @@
 
 import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffContextViewModelService } from './l13-diff-context.service';
-import { L13DiffContextViewModel } from './l13-diff-context.viewmodel';
+import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffContextViewModelService } from './l13-diff-context.service';
+import { L13DiffContextViewModel } from './l13-diff-context.viewmodel';
 
 //	Variables __________________________________________________________________
 

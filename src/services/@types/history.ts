@@ -19,5 +19,13 @@ export type Comparison = {
 	desc:string,
 };
 
+export type HistoryStates = {
+	comparisons:Comparison[],
+};
+
+export type RefreshHistoryStates = {
+	comparisons?:Comparison[],
+};
+
 //	Functions __________________________________________________________________
 

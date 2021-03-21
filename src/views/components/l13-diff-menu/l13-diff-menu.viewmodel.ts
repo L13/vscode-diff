@@ -2,7 +2,7 @@
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
-import { msg } from '../common';
+import { msg } from '../../common';
 
 //	Variables __________________________________________________________________
 
@@ -20,7 +20,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 	
 	public workspaces:string[] = [];
 	
-	public async update () {
+	public update () {
 			
 		const self = this;
 			
@@ -31,7 +31,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 				self.updateHistory(data.history);
 				self.updateWorkspaces(data.workspaces);
 				msg.removeMessageListener('update:menu', this.update);
-				resolve();
+				resolve(undefined);
 				
 			});
 			

@@ -1,13 +1,13 @@
 //	Imports ____________________________________________________________________
 
-import * as files from '../common/files';
-import * as settings from '../common/settings';
+import { DiffGoToMessage, DiffOpenMessage } from '../../../types';
 
-import { DiffGoToMessage, DiffOpenMessage } from '../../types';
+import { DiffOpen } from '../../actions/DiffOpen';
 
-import { DiffOpen } from '../actions/DiffOpen';
+import * as files from '../../common/files';
+import * as settings from '../../common/settings';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

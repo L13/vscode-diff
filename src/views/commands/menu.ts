@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../components/common';
+import { msg } from '../common';
 
 import { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
 

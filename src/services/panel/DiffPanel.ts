@@ -3,10 +3,9 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { ContextStates, DiffInitMessage, DiffInitViewMessage, DiffPanelStateMessage, DiffUpdatePathsMessage, Uri } from '../../types';
+import { ContextStates, DiffInitViewMessage, DiffPanelStateMessage, DiffUpdatePathsMessage, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
-
 import { formatName, formatNameAndDesc } from '../@l13/formats';
 import { isMacOs, isWindows } from '../@l13/platforms';
 
@@ -14,16 +13,14 @@ import { DiffCompare } from '../actions/DiffCompare';
 import { DiffCopy } from '../actions/DiffCopy';
 import { DiffDelete } from '../actions/DiffDelete';
 
+import { workspacePaths } from '../common/paths';
+import * as settings from '../common/settings';
+
 import { DiffOutput } from '../output/DiffOutput';
 import { DiffStatusBar } from '../output/DiffStatusBar';
 
-import { DiffHistory } from '../sidebar/DiffHistory';
-
-import { workspacePaths } from '../common/paths';
-import * as settings from '../common/settings';
 import * as events from './events';
 
-import { DiffMenu } from './DiffMenu';
 import { DiffMessage } from './DiffMessage';
 
 //	Variables __________________________________________________________________
@@ -185,15 +182,6 @@ export class DiffPanel {
 		}
 		
 		this.panel.title = title;
-		
-	}
-	
-	public saveHistory (data:DiffInitMessage, pathA:string, pathB:string) {
-		
-		DiffMenu.saveRecentlyUsed(this.context, data.pathA, data.pathB);
-		
-		DiffHistory.saveComparison(this.context, pathA, pathB);
-		DiffHistory.currentProvider?.refresh();
 		
 	}
 	

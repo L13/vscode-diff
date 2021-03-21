@@ -4,12 +4,13 @@ import { DiffFile } from '../../../types';
 
 import { L13Class, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffSearchViewModelService } from './l13-diff-search.service';
-import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
+import { msg, parseIcons, setLabel } from '../../common';
 
-import { msg, parseIcons, setLabel } from '../common';
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffSearchViewModelService } from './l13-diff-search.service';
+import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 //	Variables __________________________________________________________________
 

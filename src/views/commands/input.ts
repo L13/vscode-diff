@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../components/common';
+import { msg } from '../common';
 
 import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
 

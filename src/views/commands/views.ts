@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../components/common';
+import { msg } from '../common';
 
 import { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-views.viewmodel';
 

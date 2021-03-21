@@ -1,9 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFavoriteMessage } from '../../types';
+import * as dialogs from '../../common/dialogs';
 
-import { DiffPanel } from '../panel/DiffPanel';
-import { DiffFavorites } from '../sidebar/DiffFavorites';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -17,7 +16,21 @@ import { DiffFavorites } from '../sidebar/DiffFavorites';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('save:favorite', (data:DiffFavoriteMessage) => DiffFavorites.addFavorite(currentDiffPanel.context, data.pathA, data.pathB));
+	currentDiffPanel.msg.on('dialog:file', async () => {
+		
+		const fsPath = await dialogs.openFile();
+		
+		currentDiffPanel.msg.send('dialog:file', { fsPath });
+		
+	});
+	
+	currentDiffPanel.msg.on('dialog:folder', async () => {
+		
+		const fsPath = await dialogs.openFolder();
+		
+		currentDiffPanel.msg.send('dialog:folder', { fsPath });
+		
+	});
 	
 }
 

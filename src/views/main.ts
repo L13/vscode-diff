@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import './components/common';
+import './common';
 
 import './components/l13-diff/l13-diff.component';
 import './components/l13-diff/l13-diff.service';

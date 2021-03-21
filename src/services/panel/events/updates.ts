@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffResultMessage } from '../../types';
+import { Diff, DiffResultMessage } from '../../../types';
 
-import { DiffResult } from '../output/DiffResult';
+import { DiffResult } from '../../output/DiffResult';
 
-import { DiffPanel } from '../panel/DiffPanel';
+import { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
@@ -18,7 +18,11 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => currentDiffPanel.compare.updateDiffs(data));
+	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => {
+		
+		currentDiffPanel.compare.updateDiffs(data);
+		
+	});
 	
 	currentDiffPanel.compare.onDidUpdateDiff((diff:Diff) => {
 		

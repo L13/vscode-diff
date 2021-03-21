@@ -6,9 +6,14 @@ import * as path from 'path';
 import { WalkTreeJob, WalkTreeOptions } from '../../types';
 import { DiffFileTypes, StatsMap } from '../../types';
 
+import { isWindows } from './platforms';
+
 //	Variables __________________________________________________________________
 
 const findRegExpChars:RegExp = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+
+const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
+const findColon = /:/g;
 
 //	Initialize _________________________________________________________________
 
@@ -128,6 +133,16 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 export function createFindGlob (ignore:string[], useCaseSensitive:boolean) {
 	
 	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`, useCaseSensitive ? '' : 'i');
+	
+}
+
+export function sanitize (pathname:string) {
+	
+	let name = `${pathname}`.replace(findIllegalAndControlChars, '');
+	
+	if (!isWindows) name = name.replace(findColon, '');
+	
+	return name;
 	
 }
 

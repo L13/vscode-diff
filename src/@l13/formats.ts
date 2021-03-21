@@ -1,7 +1,5 @@
 //	Imports ____________________________________________________________________
 
-import { normalize, sep } from 'path';
-
 import { Plural } from '../@types/formats';
 import { pluralBytes } from './units/files';
 

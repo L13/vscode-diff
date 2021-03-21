@@ -1,10 +1,9 @@
 //	Imports ____________________________________________________________________
 
-import { isMetaKey } from '../components/common';
+import { isMetaKey } from '../common';
 
 import { L13DiffActionsComponent } from '../components/l13-diff-actions/l13-diff-actions.component';
 import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
-
 import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Variables __________________________________________________________________

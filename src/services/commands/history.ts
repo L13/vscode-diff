@@ -2,12 +2,21 @@
 
 import * as vscode from 'vscode';
 
-import * as commands from '../common/commands';
-import * as dialogs from '../common/dialogs';
+import { Comparison } from '../../types';
 
-import { DiffMenu } from '../panel/DiffMenu';
+import * as commands from '../common/commands';
+
+import { FavoritesDialog } from '../dialogs/FavoritesDialog';
+import { HistoryDialog } from '../dialogs/HistoryDialog';
+
 import { DiffPanel } from '../panel/DiffPanel';
-import { DiffHistory } from '../sidebar/DiffHistory';
+
+import { HistoryProvider } from '../sidebar/HistoryProvider';
+import { HistoryTreeItem } from '../sidebar/trees/HistoryTreeItem';
+
+import { FavoritesState } from '../states/FavoritesState';
+import { HistoryState } from '../states/HistoryState';
+import { MenuState } from '../states/MenuState';
 
 //	Variables __________________________________________________________________
 
@@ -21,51 +30,68 @@ import { DiffHistory } from '../sidebar/DiffHistory';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	const diffHistoryProvider = DiffHistory.createProvider(context);
+	const subscriptions = context.subscriptions;
 	
-	vscode.window.registerTreeDataProvider('l13DiffHistory', diffHistoryProvider);
+	const favoritesState = FavoritesState.create(context);
+	const historyState = HistoryState.create(context);
+	const menuState = MenuState.create(context);
+	
+	const favoritesDialog = FavoritesDialog.create(favoritesState);
+	const historyDialog = HistoryDialog.create(historyState, menuState);
+	
+	const historyProvider = HistoryProvider.create({
+		comparisons: historyState.get(),
+	});
+	
+	vscode.window.registerTreeDataProvider('l13DiffHistory', historyProvider);
+	
+	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
+		
+		if (focused) { // Update data if changes in another workspace have been done
+			historyProvider.refresh({
+				comparisons: historyState.get(),
+			});
+		}
+		
+	}));
+	
+	subscriptions.push(historyState.onDidChangeComparisons((comparisons) => {
+		
+		historyProvider.refresh({
+			comparisons,
+		});
+		
+	}));
 	
 	commands.register(context, {
 		
-		'l13Diff.action.history.open': ({ comparison }) => {
-			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
-			
-		},
-		
-		'l13Diff.action.history.openOnly': ({ comparison }) => {
-			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], false);
-			
-		},
-		
-		'l13Diff.action.history.openAndCompare': ({ comparison }) => {
-			
-			DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
-			
-		},
-		
-		'l13Diff.action.history.openInNewPanel': ({ comparison }) => {
+		'l13Diff.action.history.open': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
+		'l13Diff.action.history.openOnly': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
+		'l13Diff.action.history.openAndCompare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
+		'l13Diff.action.history.openInNewPanel': ({ comparison }:HistoryTreeItem) => {
 			
 			DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 			
 		},
 		
-		'l13Diff.action.history.remove': ({ comparison }) => DiffHistory.removeComparison(context, comparison),
-		
-		'l13Diff.action.history.clear': async () => {
+		'l13Diff.action.history.addToFavorites': ({ comparison }:HistoryTreeItem) => {
 			
-			const value = await dialogs.confirm('Delete the complete history?', 'Delete');
-			
-			if (value) {
-				DiffMenu.clearHistory(context);
-				DiffHistory.clearComparisons(context);
-			}
+			favoritesDialog.add(comparison.fileA, comparison.fileB);
 			
 		},
+		
+		'l13Diff.action.history.remove': ({ comparison }:HistoryTreeItem) => historyDialog.remove(comparison),
+		
+		'l13Diff.action.history.clear': async () => historyDialog.clear(),
+		
 	});
 	
 }
 
 //	Functions __________________________________________________________________
 
+function openComparison (context:vscode.ExtensionContext, comparison:Comparison, compare:boolean) {
+	
+	DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], compare);
+	
+}
