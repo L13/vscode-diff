@@ -80,6 +80,9 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
+		'l13Diff.action.history.copyLeftPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileA),
+		'l13Diff.action.history.copyRightPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileB),
+		
 		'l13Diff.action.history.remove': ({ comparison }:HistoryTreeItem) => historyDialog.remove(comparison),
 		
 		'l13Diff.action.history.clear': async () => historyDialog.clear(),

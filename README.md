@@ -295,7 +295,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Add to Group` - Add a favorite diff to a group.
-* `Remove` - Remove a favorite diff from a group.
+* `Remove from Group` - Remove a favorite diff from a group.
 * `Rename` - Change the name of a favorite or a group.
 * `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
 

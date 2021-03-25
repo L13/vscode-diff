@@ -3,9 +3,9 @@
 import * as vscode from 'vscode';
 
 import * as developer from './commands/developer';
+import * as explorer from './commands/explorer';
 import * as favorites from './commands/favorites';
 import * as history from './commands/history';
-import * as list from './commands/list';
 import * as output from './commands/output';
 import * as panel from './commands/panel';
 import * as projects from './commands/projects';
@@ -25,9 +25,9 @@ import * as symlinks from './commands/symlinks';
 
 export function activate (context:vscode.ExtensionContext) {
 	
+	explorer.activate(context);
 	favorites.activate(context);
 	history.activate(context);
-	list.activate(context);
 	output.activate(context);
 	panel.activate(context);
 	projects.activate(context);

@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { ProjectTreeItem } from '../@types/projects';
+
 import * as commands from '../common/commands';
 import * as settings from '../common/settings';
 
@@ -21,7 +23,7 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.projects.compareWithWorkspace': async ({ project }) => {
+		'l13Diff.action.projects.compareWithWorkspace': async ({ project }:ProjectTreeItem) => {
 			
 			const compare = settings.get('openFavoriteAndCompare', false);
 			const workspaces = workspaceFoldersQuickPickItems();
@@ -35,7 +37,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.projects.open': ({ project }) => {
+		'l13Diff.action.projects.open': ({ project }:ProjectTreeItem) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: project.path }, { fsPath: '' }]);
 			

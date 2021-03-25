@@ -33,7 +33,7 @@ export class FavoritesDialog {
 	public async add (fileA:string, fileB:string) {
 		
 		const label = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a name for the diff.',
+			placeHolder: 'Please enter a name for the diff',
 			value: `${fileA} ↔ ${fileB}`,
 		});
 		
@@ -50,7 +50,7 @@ export class FavoritesDialog {
 	public async rename (favorite:Favorite) {
 		
 		const label = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a new name for the diff.',
+			placeHolder: 'Please enter a new name for the diff',
 			value: favorite.label,
 		});
 		

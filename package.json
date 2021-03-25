@@ -132,6 +132,14 @@
 				}
 			},
 			{
+				"command": "l13Diff.action.favorite.copyLeftPath",
+				"title": "Copy Left Path"
+			},
+			{
+				"command": "l13Diff.action.favorite.copyRightPath",
+				"title": "Copy Right Path"
+			},
+			{
 				"command": "l13Diff.action.favorite.rename",
 				"title": "Rename"
 			},
@@ -205,7 +213,15 @@
 			},
 			{
 				"command": "l13Diff.action.history.addToFavorites",
-				"title": "Add to Favorites"
+				"title": "Add to Favorites..."
+			},
+			{
+				"command": "l13Diff.action.history.copyLeftPath",
+				"title": "Copy Left Path"
+			},
+			{
+				"command": "l13Diff.action.history.copyRightPath",
+				"title": "Copy Right Path"
 			},
 			{
 				"command": "l13Diff.action.history.remove",
@@ -648,6 +664,14 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.action.favorite.copyLeftPath",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.favorite.copyRightPath",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.action.favorite.rename",
 					"when": "false"
 				},
@@ -701,6 +725,14 @@
 				},
 				{
 					"command": "l13Diff.action.history.addToFavorites",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.copyLeftPath",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.copyRightPath",
 					"when": "false"
 				},
 				{
@@ -936,6 +968,16 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
+					"command": "l13Diff.action.favorite.copyLeftPath",
+					"group": "6_copypath@1",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.copyRightPath",
+					"group": "6_copypath@2",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
 					"command": "l13Diff.action.favorite.removeFromGroup",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == subfavorite"
@@ -993,6 +1035,16 @@
 				{
 					"command": "l13Diff.action.history.openInNewPanel",
 					"group": "inline",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.copyLeftPath",
+					"group": "6_copypath@1",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.copyRightPath",
+					"group": "6_copypath@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
