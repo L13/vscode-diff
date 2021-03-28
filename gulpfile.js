@@ -161,9 +161,8 @@ gulp.task('script:services', () => {
 				include: [
 					'src/@l13/**/!(.test).ts',
 					'src/@types/**/!(.test).ts',
-					'src/commands/**/!(.test).ts',
-					'src/common/**/!(.test).ts',
 					'src/services/**/!(.test).ts',
+					'src/views/vscode.d.ts',
 					'src/types.ts',
 				],
 			}),
@@ -209,6 +208,7 @@ gulp.task('script:tests', () => {
 					include: [
 						'src/@l13/**/*.ts',
 						'src/services/@l13/**/*.ts',
+						'src/views/vscode.d.ts',
 						'src/test/index.ts',
 					],
 				}),
