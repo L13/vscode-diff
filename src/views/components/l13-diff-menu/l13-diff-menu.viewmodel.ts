@@ -22,14 +22,12 @@ export class L13DiffMenuViewModel extends ViewModel {
 	
 	public update () {
 			
-		const self = this;
-			
 		return new Promise((resolve, reject) => {
 			
 			msg.on('update:menu', (data) => {
 				
-				self.updateHistory(data.history);
-				self.updateWorkspaces(data.workspaces);
+				this.updateHistory(data.history);
+				this.updateWorkspaces(data.workspaces);
 				msg.removeMessageListener('update:menu', this.update);
 				resolve(undefined);
 				

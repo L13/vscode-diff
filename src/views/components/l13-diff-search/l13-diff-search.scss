@@ -35,12 +35,12 @@ div.l13-message {
 	box-sizing: border-box;
 	border: solid 1px var(--vscode-inputValidation-errorBorder);
 	color: var(--vscode-inputValidation-errorForeground);
-    font-size: 12px;
-    line-height: 17px;
-    margin: -1px 0 0 0;
-    padding: .4em .4em .4em .4em;
-    width: 100%;
-    // word-wrap: break-word;
+	font-size: 12px;
+	line-height: 17px;
+	margin: -1px 0 0 0;
+	padding: .4em .4em .4em .4em;
+	width: 100%;
+	// word-wrap: break-word;
 }
 
 input[type="text"] {
@@ -57,7 +57,7 @@ input[type="text"] {
 	padding: 4px 46px 5px 7px;
 	width: 100%;
 	z-index: 0;
-
+	
 	&::selection {
 		background: var(--vscode-selection-background, var(--l13-selection-background));
 	}
@@ -223,7 +223,7 @@ button {
 		top: 0;
 		width: 100%;
 	}
-
+	
 	&:focus {
 		outline: solid 1px var(--vscode-focusBorder, transparent);
 	}

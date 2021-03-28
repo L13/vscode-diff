@@ -18,7 +18,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 export function init (diff:L13DiffComponent, compare:L13DiffCompareComponent) {
 	
 	compare.addEventListener('compare', (event) => {
-			
+		
 		if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
 		else diff.initCompare();
 		

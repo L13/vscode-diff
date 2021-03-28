@@ -1177,13 +1177,13 @@
 					"default": true,
 					"description": "Should click on favorite start a compare?"
 				},
-				"l13Diff.initialFavoriteGroupState": {
+				"l13Diff.initialFavoriteGroupsState": {
 					"type": "string",
-					"default": "Remember",
+					"default": "remember",
 					"enum": [
-						"Remember",
-						"Collapsed",
-						"Expanded"
+						"remember",
+						"collapsed",
+						"expanded"
 					],
 					"description": "Indicates if a favorite group should be collapsed, expanded or remembered in its initial state.",
 					"enumDescriptions": [

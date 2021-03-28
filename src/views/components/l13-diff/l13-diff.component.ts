@@ -136,7 +136,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	public enable () :void {
 		
 		panelVM.loading = false;
-	
+		
 		if (listVM.items.length) {
 			actionsVM.enable();
 			if (!this.list.content.querySelector('.-selected')) actionsVM.disableCopy();
@@ -250,7 +250,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 //	Functions __________________________________________________________________
 
 function savePanelState () :void {
-		
+	
 	msg.send<DiffPanelStateMessage>('save:panelstate', {
 		views: viewsVM.getState(),
 		search: searchVM.getState(),

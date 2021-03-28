@@ -40,10 +40,10 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		this.favorites = states.favorites;
 		this.favoriteGroups = states.favoriteGroups;
 		
-		const initialState:InitialState = settings.get('initialFavoriteGroupState', 'Remember');
+		const initialState:InitialState = settings.get('initialFavoriteGroupsState', 'remember');
 		
-		if (initialState !== 'Remember') {
-			this.favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = initialState === 'Collapsed');
+		if (initialState !== 'remember') {
+			this.favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = initialState === 'collapsed');
 		}
 		
 	}

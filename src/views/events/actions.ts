@@ -19,7 +19,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 export function init (diff:L13DiffComponent, actions:L13DiffActionsComponent, list:L13DiffListComponent) {
 	
 	actions.addEventListener('select', (event) => {
-			
+		
 		const { metaKey, ctrlKey, status } = (<any>event).detail;
 		
 		if (status) list.selectByStatus(status, isMetaKey(ctrlKey, metaKey));

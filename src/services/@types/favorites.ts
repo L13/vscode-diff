@@ -28,7 +28,7 @@ export type FavoriteGroup = {
 	collapsed:boolean;
 };
 
-export type InitialState = 'Collapsed'|'Expanded'|'Remember';
+export type InitialState = 'collapsed'|'expanded'|'remember';
 
 export type FavoritesStates = {
 	favorites:Favorite[],

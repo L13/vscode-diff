@@ -94,10 +94,10 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmCaseInsensitiveCopy` - If false confirm dialog for copying case sensitive on a case insensitive file system does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
-* `l13Diff.initialFavoriteGroupState` - Set the initial state of a group.
-	* `Remember` - (default) Remember the collpased and expanded state of each group.
-	* `Collapsed` - Show all groups collapsed at start.
-	* `Expanded` - Show all groups expanded at start.
+* `l13Diff.initialFavoriteGroupsState` - Set the initial state of a group.
+	* `remember` - (default) Remember the collpased and expanded state of each group.
+	* `collapsed` - Show all groups collapsed at start.
+	* `expanded` - Show all groups expanded at start.
 * `l13Diff.labelFormat` - Indicates how the label of a tab should be formatted.
 	* `complete` - (default) Show relative paths including the common path.
 	* `compact` - Show relative paths including base folders.

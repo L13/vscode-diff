@@ -33,7 +33,7 @@
 		&:focus {
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
-	
+		
 		&::before {
 			background-color: var(--l13-icon-background);
 			content: '';

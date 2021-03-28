@@ -44,7 +44,7 @@ export function parseIcons (text:string) {
 		if (image) match = `url("data:image/svg+xml;base64,${btoa(image)}")`;
 		
 		return match;
-	
+		
 	});
 	
 }
@@ -58,7 +58,7 @@ export function removeChildren (node:Node) {
 }
 
 export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) {
-		
+	
 	const offsetTop = element.offsetTop;
 	const offsetHeight = parent.offsetHeight;
 	const scrollTop = parent.scrollTop;

@@ -17,7 +17,7 @@ import { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-vie
 export function init (viewsVM:L13DiffViewsViewModel) {
 	
 	msg.on('l13Diff.action.views.toggleShowAllCreated', () => {
-			
+		
 		viewsVM.untrackedChecked = !viewsVM.untrackedChecked;
 		viewsVM.requestUpdate();
 		

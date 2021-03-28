@@ -79,7 +79,7 @@ export function L13Class (classNames:object) {
 export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
 	private [BINDINGS]:Map<Element, Map<string, string>> = new Map();
-			
+	
 	private [CONDITIONALS]:Map<Element, { cmd:string, comment:Comment }> = new Map();
 	
 	private [CLASSNAMES]:Map<string, object>;
@@ -164,7 +164,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	public update () :void {
 		
 		const viewmodel = this[VIEWMODEL];
-	
+		
 		for (const [element, { cmd, comment }] of this[CONDITIONALS]) {
 			const value = !!get(viewmodel, cmd);
 			if (value) {
@@ -192,7 +192,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	}
 	
 	public dispatchCustomEvent (type:string, detail?:any) {
-	
+		
 		this.dispatchEvent(new CustomEvent(type, { detail, bubbles: false }));
 		
 	}
@@ -214,7 +214,7 @@ function hasParentClass (child:any, parent:any) :boolean {
 }
 
 function getAttributes (element:Element) {
-
+	
 	if (!element.attributes.length) return null;
 	
 	const attributes = element.attributes;
@@ -236,15 +236,15 @@ function getAllTextNodes (root:Element|ShadowRoot) {
 	const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
 	const textNodes = [];
 	let node;
-		
-	while (node = walk.nextNode()) textNodes.push(node);
-		
-	return textNodes.length ? textNodes : null;
-		
-}
 	
+	while (node = walk.nextNode()) textNodes.push(node);
+	
+	return textNodes.length ? textNodes : null;
+	
+}
+
 function initViewModel<T extends ViewModel> (component:L13Element<T>) {
-		
+	
 	component[VIEWMODEL] = component[SERVICE].model(component.vmId || component);
 	component[VIEWMODEL].connect(component);
 	component[VIEWMODEL].requestUpdate();
@@ -448,7 +448,7 @@ function createStyles (styles:string[]) :DocumentFragment {
 }
 
 function createTemplate (template:string) :HTMLTemplateElement {
-		
+	
 	const templateElement = <HTMLTemplateElement>document.createElement('TEMPLATE');
 	
 	templateElement.innerHTML = template;

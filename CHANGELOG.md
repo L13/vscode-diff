@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.33.0] - 2021-03-28
+
+### Changed
+
+- Changed `l13Projects.initialFavoriteGroupState` to `l13Projects.initialFavoriteGroupsState`.
+- Changed values for `l13Projects.initialFavoriteGroupsState` to lower case.
+
 ## [0.32.0] - 2021-03-21
 
 ### Added
