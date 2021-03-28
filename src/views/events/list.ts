@@ -1,13 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13DiffActionsViewModel } from '../components/l13-diff-actions/l13-diff-actions.viewmodel';
-import { L13DiffInputComponent } from '../components/l13-diff-input/l13-diff-input.component';
-import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
-import { L13DiffListViewModel } from '../components/l13-diff-list/l13-diff-list.viewmodel';
-import { L13DiffNavigatorComponent } from '../components/l13-diff-navigator/l13-diff-navigator.component';
-import { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
-
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { ListEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -19,17 +12,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (
-	diff:L13DiffComponent,
-	list:L13DiffListComponent,
-	listVM:L13DiffListViewModel,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	search:L13DiffSearchComponent,
-	navigator:L13DiffNavigatorComponent,
-	actionsVM:L13DiffActionsViewModel,
-	result:HTMLElement,
-	intro:HTMLElement) {
+export function init ({ diff, list, listVM, left, right, search, navigator, actionsVM, result, intro }:ListEventsInit) {
 	
 	listVM.on('cancel', () => diff.enable());
 	listVM.on('compared', () => diff.enable());

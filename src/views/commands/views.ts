@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { ViewsCommandsInit } from '../../types';
 
-import { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-views.viewmodel';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,7 +14,7 @@ import { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-vie
 
 //	Exports ____________________________________________________________________
 
-export function init (viewsVM:L13DiffViewsViewModel) {
+export function init ({ viewsVM }:ViewsCommandsInit) {
 	
 	msg.on('l13Diff.action.views.toggleShowAllCreated', () => {
 		

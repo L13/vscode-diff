@@ -1,10 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { SearchCommandsInit } from '../../types';
 
-import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
-import { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
-import { L13DiffSearchViewModel } from '../components/l13-diff-search/l13-diff-search.viewmodel';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -16,7 +14,7 @@ import { L13DiffSearchViewModel } from '../components/l13-diff-search/l13-diff-s
 
 //	Exports ____________________________________________________________________
 
-export function init (search:L13DiffSearchComponent, searchVM:L13DiffSearchViewModel, list:L13DiffListComponent, widgets:HTMLElement) {
+export function init ({ search, searchVM, widgets }:SearchCommandsInit) {
 	
 	msg.on('l13Diff.action.search.open', async () => {
 		

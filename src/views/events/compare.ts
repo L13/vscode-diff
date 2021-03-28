@@ -1,9 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { CompareEventsInit } from '../../types';
 
-import { L13DiffCompareComponent } from '../components/l13-diff-compare/l13-diff-compare.component';
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -15,7 +14,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent, compare:L13DiffCompareComponent) {
+export function init ({ diff, compare }:CompareEventsInit) {
 	
 	compare.addEventListener('compare', (event) => {
 		

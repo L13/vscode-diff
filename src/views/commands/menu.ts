@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { MenuCommandsInit } from '../../types';
 
-import { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,7 +14,7 @@ import { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.
 
 //	Exports ____________________________________________________________________
 
-export function init (menu:L13DiffMenuComponent) {
+export function init ({ menu }:MenuCommandsInit) {
 	
 	msg.on('l13Diff.action.menu.close', () => {
 		
