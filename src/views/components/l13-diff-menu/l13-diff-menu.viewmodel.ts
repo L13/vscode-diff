@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import { DiffMenuMessage } from '../../../types';
+
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 import { msg } from '../../common';
@@ -24,7 +26,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 			
 		return new Promise((resolve, reject) => {
 			
-			msg.on('update:menu', (data) => {
+			msg.on('update:menu', (data:DiffMenuMessage) => {
 				
 				this.updateHistory(data.history);
 				this.updateWorkspaces(data.workspaces);

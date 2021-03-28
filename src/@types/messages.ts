@@ -51,6 +51,11 @@ export type DiffInitViewMessage = {
 	compare:boolean,
 };
 
+export type DiffMenuMessage = {
+	history:string[],
+	workspaces:string[],
+};
+
 export type DiffMultiCopyMessage = {
 	ids:string[],
 	pathA:string,

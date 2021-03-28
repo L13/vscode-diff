@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { DiffMenuMessage } from '../../../types';
+
 import { workspacePaths } from '../../common/paths';
 
 import { MenuState } from '../../states/MenuState';
@@ -24,7 +26,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.msg.on('update:menu', () => {
 			
-		currentDiffPanel.msg.send('update:menu', {
+		currentDiffPanel.msg.send<DiffMenuMessage>('update:menu', {
 			history: menuState.get(),
 			workspaces: workspacePaths(vscode.workspace.workspaceFolders),
 		});
