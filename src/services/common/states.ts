@@ -84,6 +84,12 @@ export function updateComparisons (context:vscode.ExtensionContext, comparisons:
 	
 }
 
+export function updateCollapseState (context:vscode.ExtensionContext, favoriteGroups:FavoriteGroup[]) {
+	
+	context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
+	
+}
+
 //	Functions __________________________________________________________________
 
 function updateStateInfo (context:vscode.ExtensionContext) {

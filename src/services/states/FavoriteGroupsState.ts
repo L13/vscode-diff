@@ -114,7 +114,7 @@ export class FavoriteGroupsState {
 		
 		favoriteGroups.some((group) => group.id === groupId ? (group.collapsed = collapsed) || true : false);
 		
-		this.save(favoriteGroups);
+		states.updateCollapseState(this.context, favoriteGroups);
 		
 	}
 	
