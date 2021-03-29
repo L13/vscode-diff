@@ -3,6 +3,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ## [0.33.0] - 2021-03-28
 
+### Added
+
+- Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history.
+
 ### Changed
 
 - Changed `l13Projects.initialFavoriteGroupState` to `l13Projects.initialFavoriteGroupsState`.

@@ -45,16 +45,6 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	vscode.window.registerTreeDataProvider('l13DiffHistory', historyProvider);
 	
-	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
-		
-		if (focused) { // Update data if changes in another workspace have been done
-			historyProvider.refresh({
-				comparisons: historyState.get(),
-			});
-		}
-		
-	}));
-	
 	subscriptions.push(historyState.onDidChangeComparisons((comparisons) => {
 		
 		historyProvider.refresh({

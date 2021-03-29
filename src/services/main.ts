@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 
+import * as common from './commands/common';
 import * as developer from './commands/developer';
 import * as explorer from './commands/explorer';
 import * as favorites from './commands/favorites';
@@ -25,6 +26,7 @@ import * as symlinks from './commands/symlinks';
 
 export function activate (context:vscode.ExtensionContext) {
 	
+	common.activate(context);
 	explorer.activate(context);
 	favorites.activate(context);
 	history.activate(context);

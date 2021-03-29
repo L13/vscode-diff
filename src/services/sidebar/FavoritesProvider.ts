@@ -27,7 +27,7 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 	public favorites:Favorite[] = [];
 	public favoriteGroups:FavoriteGroup[] = [];
 	
-	private static current:FavoritesProvider = null;
+	public static current:FavoritesProvider = null;
 	
 	public static create (states:FavoritesStates) {
 		

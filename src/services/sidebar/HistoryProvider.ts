@@ -24,7 +24,7 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 	
 	public comparisons:Comparison[] = [];
 	
-	private static current:HistoryProvider|undefined;
+	public static current:HistoryProvider|undefined;
 	
 	public static create (states:HistoryStates) {
 		

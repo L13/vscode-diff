@@ -4,11 +4,11 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.32.0
+## What's new in Diff Folders 0.33.0
 
-- Added updating list view if a file or folder has been deleted in current workspace.
-- Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- Added `Add to Favorites` to history context menu.
+- Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history.
+- Changed `l13Projects.initialFavoriteGroupState` to `l13Projects.initialFavoriteGroupsState`.
+- Changed values for `l13Projects.initialFavoriteGroupsState` to lower case.
 
 ## Index
 
@@ -295,6 +295,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Add to Group` - Add a favorite diff to a group.
+* `Copy Left Path` - Copy the left path of the favorite diff to the clipboard.
+* `Copy Right Path` - Copy the right path of the favorite diff to the clipboard.
 * `Remove from Group` - Remove a favorite diff from a group.
 * `Rename` - Change the name of a favorite or a group.
 * `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
@@ -312,6 +314,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Open` - Open the previous comparison without starting a comparison immediately.
 * `Open & Compare` - Open the previous comparison and start a comparison immediately.
 * `Add to Favorites` - Add a previous comparison to favorites.
+* `Copy Left Path` - Copy the left path of the previous comparison to the clipboard.
+* `Copy Right Path` - Copy the right path of the previous comparison to the clipboard.
 * `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar

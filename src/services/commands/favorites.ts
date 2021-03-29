@@ -60,17 +60,6 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	subscriptions.push(treeView);
 	
-	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
-		
-		if (focused) { // Update data if changes in another workspace have been done
-			favoritesProvider.refresh({
-				favorites: favoritesState.get(),
-				favoriteGroups: favoriteGroupsState.get(),
-			});
-		}
-		
-	}));
-	
 	subscriptions.push(favoritesState.onDidChangeFavorites((favorites) => {
 		
 		favoritesProvider.refresh({
