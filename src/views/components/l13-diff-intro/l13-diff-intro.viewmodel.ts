@@ -14,7 +14,7 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffIntroViewModel extends ViewModel {
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
 	public disable () :void {
 		

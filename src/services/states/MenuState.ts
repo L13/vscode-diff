@@ -25,7 +25,7 @@ export class MenuState {
 		
 	}
 	
-	public constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context:vscode.ExtensionContext) {}
 	
 	private _onDidChangeHistory:vscode.EventEmitter<string[]> = new vscode.EventEmitter<string[]>();
 	public readonly onDidChangeHistory:vscode.Event<string[]> = this._onDidChangeHistory.event;

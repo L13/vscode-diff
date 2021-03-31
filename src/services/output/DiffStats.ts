@@ -70,7 +70,7 @@ export class DiffStats {
 		
 	}
 	
-	public report () :string {
+	public report () {
 		
 		const diffs = this.result.diffs;
 		const settings = this.result.settings;
@@ -84,7 +84,7 @@ Excludes: "${settings.excludes.join('", "')}"
 Ignore Contents: ${settings.ignoreContents}
 Ignore End of Line: ${settings.ignoreEndOfLine}
 Ignore Trim Whitespace: ${settings.ignoreTrimWhitespace}
-Max File Size: ${settings.maxFileSize ? settings.maxFileSize + ' MB' : '0'}
+Max File Size: ${settings.maxFileSize ? `${settings.maxFileSize} MB` : '0'}
 Use Case Sensitive: ${settings.useCaseSensitive}
 
 
@@ -171,8 +171,8 @@ function formatTotal (stats:DetailStats) {
 	
 	const ignored:string[] = [];
 	
-	if ((<DetailStats>stats).ignoredEOL) ignored.push('eol');
-	if ((<DetailStats>stats).ignoredWhitespace) ignored.push('whitespace');
+	if (stats.ignoredEOL) ignored.push('eol');
+	if (stats.ignoredWhitespace) ignored.push('whitespace');
 	
 	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
 	const entries:string[] = formatDetails(stats, info);
@@ -189,7 +189,7 @@ function formatEntries (stats:DetailStats|FolderStats) {
 	
 }
 
-function formatDetails (stats:DetailStats|FolderStats, info:string = '') {
+function formatDetails (stats:DetailStats|FolderStats, info = '') {
 	
 	const entries:string[] = [];
 	

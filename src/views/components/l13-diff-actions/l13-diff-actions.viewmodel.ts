@@ -14,9 +14,9 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffActionsViewModel extends ViewModel {
 	
-	public selectDisabled:boolean = true;
+	public selectDisabled = true;
 	
-	public copyDisabled:boolean = true;
+	public copyDisabled = true;
 	
 	public disable () :void {
 		

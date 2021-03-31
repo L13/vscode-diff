@@ -48,7 +48,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 			&& vm.modifiedChecked === cache.modifiedChecked
 			&& vm.untrackedChecked === cache.untrackedChecked
 			&& vm.ignoredChecked === cache.ignoredChecked
-			) {
+		) {
 			return cache.filteredItems;
 		}
 		

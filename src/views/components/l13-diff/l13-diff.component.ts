@@ -121,6 +121,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	private initCommandsAndEvents () {
 		
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const diff = this;
 		
 		const actions = this.actions;
@@ -192,7 +193,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public swapInputs (altKey:boolean = false) :void {
+	public swapInputs (altKey = false) :void {
 		
 		if (altKey) {
 			if (listVM.items.length) {
@@ -242,7 +243,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public updateNavigator (updateMap:boolean = true, updateSelection:boolean = true) {
+	public updateNavigator (updateMap = true, updateSelection = true) {
 			
 		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
 		const values:ListItemInfo[] = [];
@@ -260,7 +261,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		if (updateMap) {
 			this.navigator.build(values, listHeight);
-			this.navigator.style.top = this.panel.offsetHeight + 'px';
+			this.navigator.style.top = `${this.panel.offsetHeight}px`;
 			this.setScrollbarPosition();
 		}
 		

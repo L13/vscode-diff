@@ -37,7 +37,7 @@ export class L13DiffListViewModel extends ViewModel {
 		settings: null,
 	};
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
 	public disable () :void {
 		
@@ -229,6 +229,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public updateMultiList (data:DiffCopyMessage|DiffResultMessage) {
 		
 		//

@@ -37,7 +37,7 @@ export class DiffCopy {
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	private async copy (file:DiffFile, dest:string) :Promise<any> {
+	private async copy (file:DiffFile, dest:string) :Promise<undefined|Error>  {
 		
 		const stat = await lstat(file.fsPath);
 		
@@ -48,7 +48,7 @@ export class DiffCopy {
 		if (stat.isDirectory()) {
 			if (!statDest || statDest.isDirectory()) {
 				if (!statDest) createDirectory(dest);
-				return Promise.resolve();
+				return Promise.resolve(undefined);
 			}
 			return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 		} else if (stat.isFile()) {
@@ -72,7 +72,7 @@ export class DiffCopy {
 		if (!length) return;
 		
 		if (confirmCopy && !data.multi) {
-			const buttonCopyDontShowAgain = `Copy, don't show again`;
+			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
 			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)['path' + to]}"?`;
 			const value = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
 				
@@ -183,7 +183,7 @@ function getRealRelative (root:string, relative:string) {
 	const names = relative.split(path.sep);
 	let cwd = root;
 	
-	return path.join.apply(path, names.map((name) => {
+	return path.join(...names.map((name) => {
 		
 		const cwdNames = fs.readdirSync(cwd);
 		
@@ -206,7 +206,7 @@ async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string,
 		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;
 		const realRelative = getRealRelative(folderTo, relative);
 		if (relative !== realRelative) {
-			const buttonCopyDontShowAgain = `Copy, don't show again`;
+			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
 			const text = `Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`;
 			const copy = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
 			if (copy === buttonCopyDontShowAgain) settings.update('confirmCaseInsensitiveCopy', false);

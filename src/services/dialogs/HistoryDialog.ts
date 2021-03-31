@@ -27,7 +27,7 @@ export class HistoryDialog {
 		
 	}
 	
-	public constructor (private readonly historyState:HistoryState, private readonly menuState:MenuState) {}
+	private constructor (private readonly historyState:HistoryState, private readonly menuState:MenuState) {}
 	
 	public async remove (comparison:Comparison) {
 		

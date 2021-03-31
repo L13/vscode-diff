@@ -88,9 +88,9 @@ export class DiffDelete {
 		let selectSide = false;
 		
 		for (const diff of diffs) {
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if (diff.fileA) sides |= 1;
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if (diff.fileB) sides |= 2;
 			if (sides === 3) {
 				selectSide = true;

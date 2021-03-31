@@ -36,6 +36,7 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		vscode.window.registerWebviewPanelSerializer(DiffPanel.viewType, {
 			
+			// eslint-disable-next-line @typescript-eslint/require-await
 			async deserializeWebviewPanel (webviewPanel:vscode.WebviewPanel) {
 				
 				DiffPanel.revive(webviewPanel, context);

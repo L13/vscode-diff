@@ -10,7 +10,7 @@ import { isWindows } from './platforms';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+const findRegExpChars = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
 const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
 const findColon = /:/g;
@@ -27,7 +27,7 @@ export function createDirectory (pathname:string) {
 	
 }
 
-export function copyFile (sourcePath:string, destPath:string) {
+export function copyFile (sourcePath:string, destPath:string) :Promise<undefined|Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -49,7 +49,7 @@ export function copyFile (sourcePath:string, destPath:string) {
 	
 }
 
-export function copySymbolicLink (sourcePath:string, destPath:string) {
+export function copySymbolicLink (sourcePath:string, destPath:string) :Promise<undefined|Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -150,7 +150,7 @@ export function sanitize (pathname:string) {
 
 function escapeGlobForRegExp (text:any) :string {
 	
-	return ('' + text).replace(findRegExpChars, (match) => {
+	return `${text}`.replace(findRegExpChars, (match) => {
 		
 		if (match === '\\*' || match === '\\?') return match;
 		
@@ -187,7 +187,7 @@ function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:str
 	
 }
 
-function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
+function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
 	
 	if (job.abort && job.error) return; // If error no further actions
 	

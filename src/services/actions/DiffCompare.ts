@@ -72,19 +72,19 @@ export class DiffCompare {
 		let pathA = parsePredefinedVariable(data.pathA);
 		let pathB = parsePredefinedVariable(data.pathB);
 		
-		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
-		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
+		if (!pathA) return this.onError('The left path is empty.', pathA, pathB);
+		if (!pathB) return this.onError('The right path is empty.', pathA, pathB);
 		
 		pathA = sanitize(pathA);
 		pathB = sanitize(pathB);
 		
-		if (!isAbsolute(pathA)) return this.onError(`The left path is not absolute.`, pathA, pathB);
-		if (!isAbsolute(pathB)) return this.onError(`The right path is not absolute.`, pathA, pathB);
+		if (!isAbsolute(pathA)) return this.onError('The left path is not absolute.', pathA, pathB);
+		if (!isAbsolute(pathB)) return this.onError('The right path is not absolute.', pathA, pathB);
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
 		pathB = vscode.Uri.file(pathB).fsPath;
 		
-		if (pathA === pathB) return this.onError(`The left and right path is the same.`, pathA, pathB);
+		if (pathA === pathB) return this.onError('The left and right path is the same.', pathA, pathB);
 		
 		const statA = lstatSync(pathA);
 		if (!statA) return this.onError(`The left path "${pathA}" does not exist.`, pathA, pathB);
@@ -94,7 +94,7 @@ export class DiffCompare {
 		
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
-		else this.onError(`The left and right path can't be compared!`, pathA, pathB);
+		else this.onError('The left and right path can\'t be compared!', pathA, pathB);
 		
 	}
 	
@@ -171,7 +171,8 @@ export class DiffCompare {
 		
 		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
 			if (settings.get('confirmCaseInsensitiveCompare', true)) {
-				const value = await dialogs.confirm(`The file system is case sensitive. Are you sure to compare case insensitive?`, 'Compare', COMPARE_DONT_SHOW_AGAIN);
+				const text = 'The file system is case sensitive. Are you sure to compare case insensitive?';
+				const value = await dialogs.confirm(text, 'Compare', COMPARE_DONT_SHOW_AGAIN);
 				if (value) {
 					if (value === COMPARE_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCompare', false);
 				} else useCaseSensitive = true;
@@ -257,8 +258,8 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	
 	diff.status = 'unchanged';
 		
-	const sizeA = (<fs.Stats>fileA.stat).size;
-	const sizeB = (<fs.Stats>fileB.stat).size;
+	const sizeA = fileA.stat.size;
+	const sizeB = fileB.stat.size;
 	
 	if (typeA === 'file') {
 		
@@ -274,7 +275,7 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 			let bufferA = fs.readFileSync(fileA.fsPath);
 			let bufferB = fs.readFileSync(fileB.fsPath);
 			
-		//	If files are equal normalizing is not necessary
+			//	If files are equal normalizing is not necessary
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
 			
 			if (ignoreTrimWhitespace) {
@@ -318,8 +319,7 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 
 function parsePredefinedVariable (pathname:string) {
 	
-	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholder, function (match, name) {
+	return pathname.replace(findPlaceholder, function (match, name:string) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		

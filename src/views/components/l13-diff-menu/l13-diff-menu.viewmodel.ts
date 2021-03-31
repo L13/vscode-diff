@@ -24,12 +24,13 @@ export class L13DiffMenuViewModel extends ViewModel {
 	
 	public update () {
 			
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			
 			msg.on('update:menu', (data:DiffMenuMessage) => {
 				
 				this.updateHistory(data.history);
 				this.updateWorkspaces(data.workspaces);
+				// eslint-disable-next-line @typescript-eslint/unbound-method
 				msg.removeMessageListener('update:menu', this.update);
 				resolve(undefined);
 				
@@ -44,7 +45,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 	private updateHistory (history:string[]) {
 		
 		if (history) {
-			if (('' + history) !== '' + this.history) {
+			if (`${history}` !== `${this.history}`) {
 				this.history = history;
 				this.requestUpdate();
 			}
@@ -55,7 +56,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 	private updateWorkspaces (workspaces:string[]) {
 		
 		if (workspaces) {
-			if (('' + workspaces) !== '' + this.workspaces) {
+			if (`${workspaces}` !== `${this.workspaces}`) {
 				this.workspaces = workspaces;
 				this.requestUpdate();
 			}

@@ -9,7 +9,7 @@ import { parse } from '../@l13/jsonc';
 
 //	Variables __________________________________________________________________
 
-export const hasCaseSensitiveFileSystem:boolean = !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
+export const hasCaseSensitiveFileSystem = !fs.existsSync(path.join(__dirname, path.basename(__filename).toUpperCase()));
 
 const MB = 1048576;
 const MAX_FILE_SIZE = Number.MAX_SAFE_INTEGER / MB;
@@ -26,7 +26,7 @@ export function get (key:string, value?:any) {
 	
 }
 
-export function update (key:string, value:any, global:boolean = true) {
+export function update (key:string, value:any, global = true) {
 	
 	return vscode.workspace.getConfiguration('l13Diff').update(key, value, global);
 	
@@ -68,17 +68,17 @@ export function ignoreTrimWhitespace () {
 
 export function enableTrash () {
 	
-	const enableTrash = get('enableTrash', 'default');
+	const enableTrashValue = get('enableTrash', 'default');
 	
-	return enableTrash === 'default' ? vscode.workspace.getConfiguration('files').get('enableTrash', true) : enableTrash === 'on';
+	return enableTrashValue === 'default' ? vscode.workspace.getConfiguration('files').get('enableTrash', true) : enableTrashValue === 'on';
 	
 }
 
 export function maxFileSize () {
 	
-	const maxFileSize = parseInt(`${get('maxFileSize', 0)}`, 10);
+	const maxFileSizeValue = parseInt(`${get('maxFileSize', 0)}`, 10);
 	
-	return maxFileSize > 0 && maxFileSize < MAX_FILE_SIZE ? maxFileSize * MB : 0;
+	return maxFileSizeValue > 0 && maxFileSizeValue < MAX_FILE_SIZE ? maxFileSizeValue * MB : 0;
 	
 }
 
@@ -119,6 +119,7 @@ function useWorkspaceSettings (pathname:string) :boolean {
 
 function showDepricated (ignore:string[], pathname?:string) {
 	
+	// eslint-disable-next-line max-len
 	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`);
 	
 	return ignore.map((pattern) => `**/${pattern}`);

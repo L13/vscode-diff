@@ -2,8 +2,6 @@
 
 import * as vscode from 'vscode';
 
-const { push } = Array.prototype;
-
 //	Variables __________________________________________________________________
 
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
@@ -38,21 +36,19 @@ export function buildWhitelistForTextFiles () {
 		
 		const packageJSON = extension.packageJSON;
 		
-		if (packageJSON.contributes && packageJSON.contributes.languages) {
-			packageJSON.contributes.languages.forEach((language:any) => {
-				
-				if (language.extensions) {
-					language.extensions.forEach((extname:string) => {
-						
-						extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
-						
-					});
-				}
-				
-				if (language.filenames) push.apply(filenames, language.filenames);
-				
-			});
-		}
+		(<{ extensions:string[], filenames:string[] }[]>packageJSON.contributes.languages)?.forEach((language) => {
+			
+			if (language.extensions) {
+				language.extensions.forEach((extname:string) => {
+					
+					extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
+					
+				});
+			}
+			
+			if (language.filenames) filenames.push(...language.filenames);
+			
+		});
 		
 	});
 	
@@ -61,7 +57,7 @@ export function buildWhitelistForTextFiles () {
 	filenames.sort();
 	
 	if (config.has('files.associations')) {
-		findAssociations = createFindGlob(Object.keys(config.get<object>('files.associations', {})));
+		findAssociations = createFindGlob(Object.keys(config.get('files.associations', {})));
 	} else findAssociations = null;
 	
 }

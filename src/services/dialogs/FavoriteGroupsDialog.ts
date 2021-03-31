@@ -29,7 +29,7 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public constructor (private readonly favoriteGroupsState:FavoriteGroupsState, private readonly favoritesState:FavoritesState) {}
+	private constructor (private readonly favoriteGroupsState:FavoriteGroupsState, private readonly favoritesState:FavoritesState) {}
 	
 	public async add () {
 		

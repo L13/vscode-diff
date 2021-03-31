@@ -1,17 +1,17 @@
 //	Imports ____________________________________________________________________
 
+import { Diff, SearchCache } from '../../../types';
+
 import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 
 import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
-import { Diff, SearchCache } from '../../../types';
-
 //	Variables __________________________________________________________________
 
 
 
-const findRegExpChars:RegExp = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
+const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 //	Initialize _________________________________________________________________
 
@@ -68,7 +68,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			&& cache.useSymlinks === useSymlinks
 			&& cache.useConflicts === useConflicts
 			&& cache.useOthers === useOthers
-			) {
+		) {
 			return cache.filteredItems;
 		}
 		
@@ -117,6 +117,6 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 
 function escapeForRegExp (text:any) :string {
 	
-	return ('' + text).replace(findRegExpChars, '\\$1');
+	return `${text}`.replace(findRegExpChars, '\\$1');
 	
 }

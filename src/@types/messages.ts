@@ -101,6 +101,11 @@ export type DiffUpdatePathsMessage = {
 	compare:boolean,
 };
 
+export type Message = {
+	command:string,
+	data:any,
+};
+
 export type MessageListener = (...args:any[]) => void;
 
 export type UpdatedFilesMessage = {

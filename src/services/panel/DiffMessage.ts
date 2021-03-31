@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { remove } from '../../@l13/arrays';
-import { MessageListener } from '../../types';
+import { Message, MessageListener } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -21,7 +21,7 @@ export class DiffMessage {
 	
 	public constructor (private panel:vscode.WebviewPanel, disposables:vscode.Disposable[]) {
 		
-		panel.webview.onDidReceiveMessage((message) => {
+		panel.webview.onDidReceiveMessage((message:Message) => {
 			
 			const command = message.command;
 			const data = message.data;

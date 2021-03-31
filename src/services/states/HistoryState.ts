@@ -29,7 +29,7 @@ export class HistoryState {
 		
 	}
 	
-	public constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context:vscode.ExtensionContext) {}
 	
 	private _onDidChangeComparisons:vscode.EventEmitter<Comparison[]> = new vscode.EventEmitter<Comparison[]>();
 	public readonly onDidChangeComparisons:vscode.Event<Comparison[]> = this._onDidChangeComparisons.event;

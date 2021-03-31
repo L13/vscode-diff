@@ -28,7 +28,7 @@ export class FavoritesDialog {
 		
 	}
 	
-	public constructor (private readonly favoriteState:FavoritesState) {}
+	private constructor (private readonly favoriteState:FavoritesState) {}
 	
 	public async add (fileA:string, fileB:string) {
 		
@@ -75,7 +75,7 @@ export class FavoritesDialog {
 	
 	public async clear () {
 		
-		if (await dialogs.confirm(`Delete all favorites and groups?'`, 'Delete')) {
+		if (await dialogs.confirm('Delete all favorites and groups?', 'Delete')) {
 			this.favoriteState.clear();
 		}
 		

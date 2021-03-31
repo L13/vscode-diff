@@ -17,23 +17,23 @@ const ERROR = Symbol.for('error');
 
 export class L13DiffSearchViewModel extends ViewModel {
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
-	public useRegExp:boolean = false;
+	public useRegExp = false;
 	
-	public useCaseSensitive:boolean = false;
+	public useCaseSensitive = false;
 	
-	public useFiles:boolean = true;
+	public useFiles = true;
 	
-	public useFolders:boolean = true;
+	public useFolders = true;
 	
-	public useSymlinks:boolean = true;
+	public useSymlinks = true;
 	
-	public useConflicts:boolean = true;
+	public useConflicts = true;
 	
-	public useOthers:boolean = true;
+	public useOthers = true;
 	
-	private [SEARCHTERM]:string = '';
+	private [SEARCHTERM] = '';
 	
 	public get searchterm () {
 		
@@ -70,7 +70,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public disable () :Promise<any> {
+	public disable () :Promise<undefined> {
 		
 		this.disabled = true;
 		
@@ -78,7 +78,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public enable () :Promise<any> {
+	public enable () :Promise<undefined> {
 		
 		this.disabled = false;
 		

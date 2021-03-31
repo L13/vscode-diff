@@ -64,11 +64,11 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function createDiffPanelLinks (commands:string[]) {
+function createDiffPanelLinks (diffPanelCommands:string[]) {
 	
-	const map:{ [command:string]: () => void } = {};
+	const map:{ [command:string]:() => void } = {};
 	
-	commands.forEach((command) => {
+	diffPanelCommands.forEach((command) => {
 		
 		map[command] = () => DiffPanel.send(command);
 		

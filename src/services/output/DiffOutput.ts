@@ -53,7 +53,7 @@ export class DiffOutput {
 		
 	}
 	
-	public msg (line:string = '') :void {
+	public msg (line = '') :void {
 		
 		this.lines.push(line);
 		
@@ -100,9 +100,9 @@ export class DiffOutput {
 function createTimestamp () {
 	
 	const now = new Date();
-	const hours = '' + now.getHours();
-	const minutes = '' + now.getMinutes();
-	const seconds = '' + now.getSeconds();
+	const hours = `${now.getHours()}`;
+	const minutes = `${now.getMinutes()}`;
+	const seconds = `${now.getSeconds()}`;
 	
 	return `${padStart(hours, 2, '0')}:${padStart(minutes, 2, '0')}:${padStart(seconds, 2, '0')}`;
 	

@@ -50,7 +50,7 @@ export class DiffStatusBar {
 		
 	}
 	
-	public update (text:string = '') :void {
+	public update (text = '') :void {
 		
 		this.currentText = '$(file-submodule) ' + (text || 'Diff Folders');
 		

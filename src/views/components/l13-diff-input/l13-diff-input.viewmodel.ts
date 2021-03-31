@@ -18,7 +18,7 @@ const VALUE = Symbol.for('value');
 
 export class L13DiffInputViewModel extends ViewModel {
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
 	public disable () :void {
 		
@@ -34,7 +34,7 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	private [VALUE]:string = '';
+	private [VALUE] = '';
 	
 	public get value () {
 		
@@ -62,7 +62,7 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	public pick (file:boolean = false) {
+	public pick (file = false) {
 		
 		this.eventName = `dialog:${file ? 'file' : 'folder'}`;
 		
