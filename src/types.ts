@@ -24,6 +24,7 @@ export * from './services/@types/events';
 export * from './services/@types/favorites';
 export * from './services/@types/fse';
 export * from './services/@types/history';
+export * from './services/@types/packages';
 export * from './services/@types/panel';
 
 export * from './views/@types/events';

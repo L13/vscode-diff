@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { PackageLanguage } from '../../types';
+
 //	Variables __________________________________________________________________
 
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
@@ -36,15 +38,13 @@ export function buildWhitelistForTextFiles () {
 		
 		const packageJSON = extension.packageJSON;
 		
-		(<{ extensions:string[], filenames:string[] }[]>packageJSON.contributes.languages)?.forEach((language) => {
+		(<PackageLanguage[]>packageJSON.contributes?.languages)?.forEach((language) => {
 			
-			if (language.extensions) {
-				language.extensions.forEach((extname:string) => {
-					
-					extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
-					
-				});
-			}
+			language.extensions?.forEach((extname:string) => {
+				
+				extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
+				
+			});
 			
 			if (language.filenames) filenames.push(...language.filenames);
 			
