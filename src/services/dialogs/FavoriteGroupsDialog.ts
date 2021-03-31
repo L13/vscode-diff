@@ -95,17 +95,17 @@ export class FavoriteGroupsDialog {
 	
 	public async remove (favoriteGroup:FavoriteGroup) {
 		
-		const BUTTON_DELETE_GROUP_AND_FAVORITES = 'Delete Group and Favorites';
+		const buttonDeleteGroupAndFavorites = 'Delete Group and Favorites';
 		const buttons = ['Delete'];
 		const favorites = this.favoritesState.getFavoritesByGroup(favoriteGroup);
 		
-		if (favorites.length) buttons.push(BUTTON_DELETE_GROUP_AND_FAVORITES);
+		if (favorites.length) buttons.push(buttonDeleteGroupAndFavorites);
 		
 		const value = await dialogs.confirm(`Delete favorite group "${favoriteGroup.label}"?`, ...buttons);
 		
 		if (!value) return;
 		
-		this.favoriteGroupsState.remove(favoriteGroup, value === BUTTON_DELETE_GROUP_AND_FAVORITES);
+		this.favoriteGroupsState.remove(favoriteGroup, value === buttonDeleteGroupAndFavorites);
 		
 	}
 	
