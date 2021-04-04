@@ -13,16 +13,12 @@ import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, S
 
 import * as dialogs from '../common/dialogs';
 import { isTextFile } from '../common/extensions';
+import { parsePredefinedVariable } from '../common/paths';
 import * as settings from '../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
-
-const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
-const findEscapedEndingBrace = /\\\}/g;
-
-const COMPARE_DONT_SHOW_AGAIN = 'Compare, don\'t show again';
 
 const BUFFER_MAX_LENGTH = constants.MAX_LENGTH;
 const MAX_CACHE_BUFFER_LENGTH = 33554432; // 32 MB
@@ -171,10 +167,11 @@ export class DiffCompare {
 		
 		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
 			if (settings.get('confirmCaseInsensitiveCompare', true)) {
+				const buttonCompareDontShowAgain = 'Compare, don\'t show again';
 				const text = 'The file system is case sensitive. Are you sure to compare case insensitive?';
-				const value = await dialogs.confirm(text, 'Compare', COMPARE_DONT_SHOW_AGAIN);
+				const value = await dialogs.confirm(text, 'Compare', buttonCompareDontShowAgain);
 				if (value) {
-					if (value === COMPARE_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCompare', false);
+					if (value === buttonCompareDontShowAgain) settings.update('confirmCaseInsensitiveCompare', false);
 				} else useCaseSensitive = true;
 			}
 		}
@@ -314,33 +311,6 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 		} else diff.status = 'modified';
 		
 	}
-	
-}
-
-function parsePredefinedVariable (pathname:string) {
-	
-	return pathname.replace(findPlaceholder, function (match, name:string) {
-		
-		const workspaceFolders = vscode.workspace.workspaceFolders;
-		
-		if (!workspaceFolders) {
-			vscode.window.showErrorMessage('No workspace folder available!');
-			return match;
-		}
-		
-		if (!name) return workspaceFolders[0].uri.fsPath;
-		
-		name = name.replace(findEscapedEndingBrace, '}');
-		
-		for (const workspaceFolder of workspaceFolders) {
-			if (workspaceFolder.name === name) return workspaceFolder.uri.fsPath;
-		}
-		
-		vscode.window.showErrorMessage(`No workspace folder with name "${name}" available!`);
-		
-		return match;
-		
-	});
 	
 }
 

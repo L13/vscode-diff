@@ -132,6 +132,26 @@
 				}
 			},
 			{
+				"command": "l13Diff.action.favorite.revealInFinder",
+				"title": "Reveal in Finder..."
+			},
+			{
+				"command": "l13Diff.action.favorite.revealInExplorer",
+				"title": "Reveal in Explorer..."
+			},
+			{
+				"command": "l13Diff.action.favorite.openContainingFolder",
+				"title": "Open Containing Folder..."
+			},
+			{
+				"command": "l13Diff.action.favorite.openInTerminal",
+				"title": "Open in Integrated Terminal..."
+			},
+			{
+				"command": "l13Diff.action.favorite.addToGroup",
+				"title": "Add to Group..."
+			},
+			{
 				"command": "l13Diff.action.favorite.copyLeftPath",
 				"title": "Copy Left Path"
 			},
@@ -154,10 +174,6 @@
 					"light": "images/favorites/new-group-light.svg",
 					"dark": "images/favorites/new-group-dark.svg"
 				}
-			},
-			{
-				"command": "l13Diff.action.favorite.addToGroup",
-				"title": "Add to Group..."
 			},
 			{
 				"command": "l13Diff.action.favorite.removeFromGroup",
@@ -210,6 +226,22 @@
 					"light": "images/favorites/open-diff-light.svg",
 					"dark": "images/favorites/open-diff-dark.svg"
 				}
+			},
+			{
+				"command": "l13Diff.action.history.revealInFinder",
+				"title": "Reveal in Finder..."
+			},
+			{
+				"command": "l13Diff.action.history.revealInExplorer",
+				"title": "Reveal in Explorer..."
+			},
+			{
+				"command": "l13Diff.action.history.openContainingFolder",
+				"title": "Open Containing Folder..."
+			},
+			{
+				"command": "l13Diff.action.history.openInTerminal",
+				"title": "Open in Integrated Terminal..."
 			},
 			{
 				"command": "l13Diff.action.history.addToFavorites",
@@ -664,6 +696,22 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.action.favorite.revealInFinder",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.favorite.revealInExplorer",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.favorite.openContainingFolder",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.favorite.openInTerminal",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.action.favorite.copyLeftPath",
 					"when": "false"
 				},
@@ -721,6 +769,22 @@
 				},
 				{
 					"command": "l13Diff.action.history.openInNewPanel",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.revealInFinder",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.revealInExplorer",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.openContainingFolder",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.openInTerminal",
 					"when": "false"
 				},
 				{
@@ -958,8 +1022,28 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorite.addToGroup",
+					"command": "l13Diff.action.favorite.revealInFinder",
 					"group": "navigation@3",
+					"when": "isMac && view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.revealInExplorer",
+					"group": "navigation@3",
+					"when": "isWindows && view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.openContainingFolder",
+					"group": "navigation@3",
+					"when": "isLinux && view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.openInTerminal",
+					"group": "navigation@4",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.addToGroup",
+					"group": "navigation@5",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
@@ -1025,6 +1109,26 @@
 				{
 					"command": "l13Diff.action.history.openAndCompare",
 					"group": "navigation@2",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.revealInFinder",
+					"group": "navigation@3",
+					"when": "isMac && view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.revealInExplorer",
+					"group": "navigation@3",
+					"when": "isWindows && view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.openContainingFolder",
+					"group": "navigation@3",
+					"when": "isLinux && view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.openInTerminal",
+					"group": "navigation@4",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
