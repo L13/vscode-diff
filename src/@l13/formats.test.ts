@@ -203,7 +203,7 @@ describe('formats', () => {
 					expect: 1125899906842624,
 					toBe: '1 PB (1125899906842624 Bytes)',
 				},
-				//	Number.MAX_SAFE_INTEGER 9007199254740991
+			//	Number.MAX_SAFE_INTEGER 9007199254740991
 				{
 					desc: '1024 PB (1152921504606847000 Bytes)',
 					expect: 1152921504606846999,

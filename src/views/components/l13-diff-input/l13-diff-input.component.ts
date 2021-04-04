@@ -56,8 +56,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			msg.send('context', { name: 'l13DiffInputFocus', value: true });
 			this.appendChild(menu);
 			
-			//	Weird focus blur switch if click is outside of panel view.
-			//	Update of menu is async and should be done right after. Fixes it.
+		//	Weird focus blur switch if click is outside of panel view.
+		//	Update of menu is async and should be done right after. Fixes it.
 			await menu.viewmodel.update();
 			
 		});
@@ -71,8 +71,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			this.focused = true;
 			this.appendChild(menu);
 			
-			//	Weird focus blur switch if click is outside of panel view.
-			//	Update of menu is async and should be done right after. Fixes it.
+		//	Weird focus blur switch if click is outside of panel view.
+		//	Update of menu is async and should be done right after. Fixes it.
 			await menu.viewmodel.update();
 			
 		});

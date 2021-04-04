@@ -59,7 +59,11 @@
 		"@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/indent": [
             "error",
-            "tab"
+            "tab",
+			{
+				"ignoreComments": true,
+				"SwitchCase": 1
+			}
         ],
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/naming-convention": "error",

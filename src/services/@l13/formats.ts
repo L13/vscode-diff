@@ -19,7 +19,7 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 	
 	const desc:string[] = [];
 	
-	//	Remove last entry if path has a slash/backslash at the end
+//	Remove last entry if path has a slash/backslash at the end
 	if (!namesA[namesA.length - 1]) namesA.pop();
 	if (!namesB[namesB.length - 1]) namesB.pop();
 	
@@ -28,7 +28,7 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 		namesB.shift();
 	}
 	
-	//	Fix for absolute and network paths if folders are part of the root
+//	Fix for absolute and network paths if folders are part of the root
 	if (desc.length && desc.join('') === '') {
 		desc.forEach((value, index) => {
 			
