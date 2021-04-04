@@ -121,7 +121,7 @@
 			},
 			{
 				"command": "l13Diff.action.favorite.openAndCompare",
-				"title": "Open & Compare"
+				"title": "Open and Compare"
 			},
 			{
 				"command": "l13Diff.action.favorite.openInNewPanel",
@@ -177,7 +177,7 @@
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.openAndCompare",
-				"title": "Open All & Compare"
+				"title": "Open All and Compare"
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.rename",
@@ -201,7 +201,7 @@
 			},
 			{
 				"command": "l13Diff.action.history.openAndCompare",
-				"title": "Open & Compare"
+				"title": "Open and Compare"
 			},
 			{
 				"command": "l13Diff.action.history.openInNewPanel",

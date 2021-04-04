@@ -284,22 +284,29 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-#### Context Icons
+#### Favorites Context Icons
 
 * `New Diff Panel` - Open a new panel.
 * `New Group` - Add a new group.
 * `Collapse All` - Collapse all groups.
 
-#### Context Menu
+#### Favorites Context Menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open and Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Add to Group` - Add a favorite diff to a group.
 * `Copy Left Path` - Copy the left path of the favorite diff to the clipboard.
 * `Copy Right Path` - Copy the right path of the favorite diff to the clipboard.
 * `Remove from Group` - Remove a favorite diff from a group.
-* `Rename` - Change the name of a favorite or a group.
-* `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
+* `Rename` - Change the name of a favorite diff.
+* `Delete` - Delete a favorite diff.
+
+#### Favorite Groups Context Menu
+
+* `Open All ` - Open all favorite diffs of a group without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open All and Compare` - Open all favorite diffs of a group and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Rename` - Change the name of a favorite group.
+* `Delete` - Delete a favorite group. Optionally you can delete also all favorites in the group.
 
 ### History
 
@@ -312,7 +319,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### Context Menu
 
 * `Open` - Open the previous comparison without starting a comparison immediately.
-* `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Open and Compare` - Open the previous comparison and start a comparison immediately.
 * `Add to Favorites` - Add a previous comparison to favorites.
 * `Copy Left Path` - Copy the left path of the previous comparison to the clipboard.
 * `Copy Right Path` - Copy the right path of the previous comparison to the clipboard.
