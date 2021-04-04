@@ -43,7 +43,6 @@ export function activate (context:vscode.ExtensionContext) {
 					comparisons: historyState.get(),
 				});
 			}
-			
 		}
 		
 	}));
