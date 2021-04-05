@@ -112,24 +112,16 @@
 				}
 			},
 			{
-				"command": "l13Diff.action.favorite.open",
-				"title": "Open"
+				"command": "l13Diff.action.favorite.compare",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.favorite.openOnly",
-				"title": "Open"
+				"command": "l13Diff.action.favorite.compareInCurrentPanel",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.favorite.openAndCompare",
-				"title": "Open and Compare"
-			},
-			{
-				"command": "l13Diff.action.favorite.openInNewPanel",
-				"title": "Open in New Panel",
-				"icon": {
-					"light": "images/favorites/open-diff-light.svg",
-					"dark": "images/favorites/open-diff-dark.svg"
-				}
+				"command": "l13Diff.action.favorite.compareInNewPanel",
+				"title": "Compare in New Panel"
 			},
 			{
 				"command": "l13Diff.action.favorite.revealInFinder",
@@ -180,20 +172,8 @@
 				"title": "Remove from Group"
 			},
 			{
-				"command": "l13Diff.action.favoriteGroups.open",
-				"title": "Open All",
-				"icon": {
-					"light": "images/favorites/open-group-light.svg",
-					"dark": "images/favorites/open-group-dark.svg"
-				}
-			},
-			{
-				"command": "l13Diff.action.favoriteGroups.openOnly",
-				"title": "Open All"
-			},
-			{
-				"command": "l13Diff.action.favoriteGroups.openAndCompare",
-				"title": "Open All and Compare"
+				"command": "l13Diff.action.favoriteGroups.compareAll",
+				"title": "Compare All"
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.rename",
@@ -208,24 +188,16 @@
 				"title": "Diff Folders: Delete All Favorites"
 			},
 			{
-				"command": "l13Diff.action.history.open",
-				"title": "Open"
+				"command": "l13Diff.action.history.compare",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.history.openOnly",
-				"title": "Open"
+				"command": "l13Diff.action.history.compareInCurrentPanel",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.history.openAndCompare",
-				"title": "Open and Compare"
-			},
-			{
-				"command": "l13Diff.action.history.openInNewPanel",
-				"title": "Open in New Panel",
-				"icon": {
-					"light": "images/favorites/open-diff-light.svg",
-					"dark": "images/favorites/open-diff-dark.svg"
-				}
+				"command": "l13Diff.action.history.compareInNewPanel",
+				"title": "Compare in New Panel"
 			},
 			{
 				"command": "l13Diff.action.history.revealInFinder",
@@ -680,19 +652,15 @@
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'"
 				},
 				{
-					"command": "l13Diff.action.favorite.open",
+					"command": "l13Diff.action.favorite.compare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorite.openOnly",
+					"command": "l13Diff.action.favorite.compareInCurrentPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorite.openAndCompare",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.favorite.openInNewPanel",
+					"command": "l13Diff.action.favorite.compareInNewPanel",
 					"when": "false"
 				},
 				{
@@ -736,15 +704,7 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favoriteGroups.open",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openOnly",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.compareAll",
 					"when": "false"
 				},
 				{
@@ -756,19 +716,15 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.open",
+					"command": "l13Diff.action.history.compare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.openOnly",
+					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.openAndCompare",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.history.openInNewPanel",
+					"command": "l13Diff.action.history.compareInNewPanel",
 					"when": "false"
 				},
 				{
@@ -1012,12 +968,12 @@
 			],
 			"view/item/context": [
 				{
-					"command": "l13Diff.action.favorite.openOnly",
+					"command": "l13Diff.action.favorite.compareInCurrentPanel",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorite.openAndCompare",
+					"command": "l13Diff.action.favorite.compareInNewPanel",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
@@ -1047,11 +1003,6 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorite.openInNewPanel",
-					"group": "inline",
-					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
-				},
-				{
 					"command": "l13Diff.action.favorite.copyLeftPath",
 					"group": "6_copypath@1",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
@@ -1077,18 +1028,8 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favoriteGroups.open",
-					"group": "inline",
-					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openOnly",
+					"command": "l13Diff.action.favoriteGroups.compareAll",
 					"group": "navigation@1",
-					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openAndCompare",
-					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
@@ -1102,12 +1043,12 @@
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.history.openOnly",
+					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"group": "navigation@1",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.action.history.openAndCompare",
+					"command": "l13Diff.action.history.compareInNewPanel",
 					"group": "navigation@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
@@ -1134,11 +1075,6 @@
 				{
 					"command": "l13Diff.action.history.addToFavorites",
 					"group": "navigation@3",
-					"when": "view == l13DiffHistory && viewItem == history"
-				},
-				{
-					"command": "l13Diff.action.history.openInNewPanel",
-					"group": "inline",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
@@ -1276,10 +1212,10 @@
 					},
 					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},
-				"l13Diff.openFavoriteAndCompare": {
+				"l13Diff.openInNewDiffPanel": {
 					"type": "boolean",
-					"default": true,
-					"description": "Should click on favorite start a compare?"
+					"default": false,
+					"description": "Controls whether a click on a favorite diff or a previous comparison should open in a new diff panel."
 				},
 				"l13Diff.initialFavoriteGroupsState": {
 					"type": "string",

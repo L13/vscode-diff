@@ -23,8 +23,8 @@ export class HistoryTreeItem extends vscode.TreeItem {
 	
 	public command = {
 		arguments: [this],
-		command: 'l13Diff.action.history.open',
-		title: 'Open Comparison',
+		command: 'l13Diff.action.history.compare',
+		title: 'Compare',
 	};
 	
 	public iconPath = iconPath;

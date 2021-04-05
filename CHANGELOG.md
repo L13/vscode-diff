@@ -1,16 +1,25 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [0.33.0] - 2021-03-28
+## [0.33.0] - 2021-04-18
 
 ### Added
 
+- Added `Compare` and `Compare in New Panel` to context menu in favorites and history.
+- Added `Reveal in Finder/Explorer` and `Open in Integrated Terminal` to context menu in favorites and history.
 - Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history.
+- Added `l13Diff.openInNewDiffPanel`.
+- Supports `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 
 ### Changed
 
-- Changed `l13Projects.initialFavoriteGroupState` to `l13Projects.initialFavoriteGroupsState`.
-- Changed values for `l13Projects.initialFavoriteGroupsState` to lower case.
+- Changed `l13Diff.initialFavoriteGroupState` to `l13Diff.initialFavoriteGroupsState`.
+- Changed values for `l13Diff.initialFavoriteGroupsState` to lower case.
+
+### Removed
+
+- Removed `Open` and `Open & Compare` from context menu in favorites and history.
+- Removed `l13Diff.openFavoriteAndCompare`.
 
 ## [0.32.0] - 2021-03-21
 

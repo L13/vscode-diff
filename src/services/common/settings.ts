@@ -82,6 +82,12 @@ export function maxFileSize () {
 	
 }
 
+export function openInNewPanel () {
+	
+	return get('openInNewDiffPanel', false);
+	
+}
+
 //	Functions __________________________________________________________________
 
 function loadSettingsExclude (pathname:string) :string[] {

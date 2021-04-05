@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { Comparison } from '../../types';
 
 import * as commands from '../common/commands';
+import * as settings from '../common/settings';
 
 import { FavoritesDialog } from '../dialogs/FavoritesDialog';
 import { HistoryDialog } from '../dialogs/HistoryDialog';
@@ -55,14 +56,9 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.history.open': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
-		'l13Diff.action.history.openOnly': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
-		'l13Diff.action.history.openAndCompare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
-		'l13Diff.action.history.openInNewPanel': ({ comparison }:HistoryTreeItem) => {
-			
-			DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
-			
-		},
+		'l13Diff.action.history.compare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel()),
+		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
+		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
 		
 		'l13Diff.action.history.revealInFinder': ({ comparison }:HistoryTreeItem) => {
 			
@@ -107,8 +103,9 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function openComparison (context:vscode.ExtensionContext, comparison:Comparison, compare:boolean) {
+function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean) {
 	
-	DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], compare);
+	if (openInNewPanel) DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+	else DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 	
 }
