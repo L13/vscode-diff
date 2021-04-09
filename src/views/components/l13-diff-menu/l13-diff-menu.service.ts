@@ -17,6 +17,8 @@ import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 
 export class L13DiffMenuViewModelService extends ViewModelService<L13DiffMenuViewModel> {
 	
+	public name = 'l13-diff-menu';
+	
 	public vmc:ViewModelConstructor<L13DiffMenuViewModel> = L13DiffMenuViewModel;
 	
 }

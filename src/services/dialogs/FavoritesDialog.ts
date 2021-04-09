@@ -1,15 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import * as fs from 'fs';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
 import { Favorite } from '../@types/favorites';
 
 import * as dialogs from '../common/dialogs';
-import * as files from '../common/files';
-import { parsePredefinedVariable } from '../common/paths';
-import * as terminal from '../common/terminal';
 
 import { FavoritesState } from '../states/FavoritesState';
 
@@ -49,63 +44,6 @@ export class FavoritesDialog {
 		}
 		
 		this.favoriteState.add(label, fileA, fileB);
-		
-	}
-	
-	public async reveal (paths:string[]) {
-		
-		const items = this.createQuickPickItems(paths);
-		
-		if (!items.length) return;
-		
-		if (items.length > 1) {
-			const selectedItem = await vscode.window.showQuickPick(items, {
-				placeHolder: 'Please select a workspace',
-			});
-			
-			if (selectedItem) files.reveal(selectedItem.path);
-		} else files.reveal(items[0].path);
-		
-	}
-	
-	public async openInTerminal (paths:string[]) {
-		
-		const items = this.createQuickPickItems(paths);
-		
-		if (!items.length) return;
-		
-		if (items.length > 1) {
-			const selectedItem = await vscode.window.showQuickPick(items, {
-				placeHolder: 'Please select a workspace',
-			});
-			
-			if (selectedItem) terminal.open(selectedItem.path);
-		} else terminal.open(items[0].path);
-		
-	}
-	
-	private createQuickPickItems (paths:string[]) {
-		
-		return paths
-			.map((fsPath) => {
-			
-				return fsPath = parsePredefinedVariable(fsPath, true);
-			
-			})
-			.filter((fsPath) => {
-				
-				return fs.existsSync(fsPath);
-				
-			})
-			.map((fsPath) => {
-				
-				return {
-					label: path.basename(fsPath),
-					description: fsPath,
-					path: fsPath,
-				};
-				
-			});
 		
 	}
 	

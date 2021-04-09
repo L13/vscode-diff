@@ -60,30 +60,6 @@ export function activate (context:vscode.ExtensionContext) {
 		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
 		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
 		
-		'l13Diff.action.history.revealInFinder': ({ comparison }:HistoryTreeItem) => {
-			
-			historyDialog.reveal([comparison.fileA, comparison.fileB]);
-			
-		},
-		
-		'l13Diff.action.history.revealInExplorer': ({ comparison }:HistoryTreeItem) => {
-			
-			historyDialog.reveal([comparison.fileA, comparison.fileB]);
-			
-		},
-		
-		'l13Diff.action.history.openContainingFolder': ({ comparison }:HistoryTreeItem) => {
-			
-			historyDialog.reveal([comparison.fileA, comparison.fileB]);
-			
-		},
-		
-		'l13Diff.action.history.openInTerminal': ({ comparison }:HistoryTreeItem) => {
-			
-			historyDialog.openInTerminal([comparison.fileA, comparison.fileB]);
-			
-		},
-		
 		'l13Diff.action.history.addToFavorites': ({ comparison }:HistoryTreeItem) => {
 			
 			favoritesDialog.add(comparison.fileA, comparison.fileB);

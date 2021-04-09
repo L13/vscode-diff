@@ -46,7 +46,7 @@ export class HistoryState {
 		
 	}
 	
-	public add (pathA:string, pathB:string) :void {
+	public add (pathA:string, pathB:string) {
 		
 		let comparisons = states.getComparisons(this.context);
 		const [label, desc] = formatNameAndDesc(pathA, pathB);

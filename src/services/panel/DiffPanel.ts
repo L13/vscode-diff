@@ -132,7 +132,7 @@ export class DiffPanel {
 		
 	}
 	
-	public dispose (){
+	public dispose () {
 		
 		const currentPanels = DiffPanel.currentPanels;
 		
@@ -185,7 +185,7 @@ export class DiffPanel {
 		
 	}
 	
-	public getPanelState () :DiffPanelStateMessage {
+	public getPanelState ():DiffPanelStateMessage {
 		
 		return this.context.globalState.get(PANEL_STATE);
 		

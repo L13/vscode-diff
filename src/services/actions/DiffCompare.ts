@@ -61,7 +61,7 @@ export class DiffCompare {
 	private _onDidScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
 	public readonly onDidScanFolder:vscode.Event<StatsMap> = this._onDidScanFolder.event;
 	
-	public initCompare (data:DiffInitMessage) :void {
+	public initCompare (data:DiffInitMessage) {
 		
 		this._onWillCompare.fire(undefined);
 		
@@ -94,7 +94,7 @@ export class DiffCompare {
 		
 	}
 	
-	public updateDiffs (data:DiffResult) :void {
+	public updateDiffs (data:DiffResult) {
 		
 		data.diffs.forEach((diff:Diff) => {
 			
@@ -160,7 +160,7 @@ export class DiffCompare {
 		
 	}
 	
-	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
+	private async createDiffs (dirnameA:string, dirnameB:string):Promise<DiffResult> {
 		
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
 		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';

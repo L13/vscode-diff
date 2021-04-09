@@ -73,7 +73,7 @@ export class FavoriteGroupsState {
 		for (const group of favoriteGroups) {
 			if (group.id === groupId) {
 				group.label = label;
-				favoriteGroups.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				favoriteGroups.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
 				this.save(favoriteGroups);
 				this._onDidChangeFavoriteGroups.fire(favoriteGroups);
 				break;

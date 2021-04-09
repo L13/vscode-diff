@@ -48,13 +48,13 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		FavoritesProvider.current = null;
 		
 	}
 	
-	public refresh (states?:RefreshFavoritesStates) :void {
+	public refresh (states?:RefreshFavoritesStates) {
 		
 		if (states?.favorites) this.favorites = states.favorites;
 		if (states?.favoriteGroups) this.favoriteGroups = states.favoriteGroups;
@@ -63,13 +63,13 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		
 	}
 	
-	public getTreeItem (element:FavoriteTreeItems) :FavoriteTreeItems {
+	public getTreeItem (element:FavoriteTreeItems):FavoriteTreeItems {
 		
 		return element;
 		
 	}
 	
-	public getChildren (element?:FavoriteTreeItems) :Thenable<FavoriteTreeItems[]> {
+	public getChildren (element?:FavoriteTreeItems):Thenable<FavoriteTreeItems[]> {
 		
 		const list:FavoriteTreeItems[] = [];
 		

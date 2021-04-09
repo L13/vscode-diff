@@ -45,7 +45,7 @@ export class DiffStats {
 		
 	}
 	
-	private createStats () :void {
+	private createStats () {
 		
 		const result = this.result;
 		

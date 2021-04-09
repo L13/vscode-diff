@@ -202,7 +202,7 @@ function removeSubfiles (folders:string[], files:string[]) {
 		let i = 0;
 		let file;
 		while ((file = files[i++])) {
-			if (file !== folder && file.startsWith(folder)) files.splice(--i , 1);
+			if (file !== folder && file.startsWith(folder)) files.splice(--i, 1);
 		}
 	}
 	

@@ -20,14 +20,14 @@ export class L13DiffInputViewModel extends ViewModel {
 	
 	public disabled = false;
 	
-	public disable () :void {
+	public disable () {
 		
 		this.disabled = true;
 		this.requestUpdate();
 		
 	}
 	
-	public enable () :void {
+	public enable () {
 		
 		this.disabled = false;
 		this.requestUpdate();

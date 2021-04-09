@@ -1,12 +1,12 @@
 //	Imports ____________________________________________________________________
 
-import { L13Element } from './component.abstract';
 import { ViewModelConstructor } from '../../@types/components';
+
 import { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________
 
-const viewmodels = new Map();
+const viewmodels = new Map<ViewModelConstructor<any>, { counter:number, vms:Map<string, ViewModel> }>();
 
 //	Initialize _________________________________________________________________
 
@@ -16,42 +16,42 @@ const viewmodels = new Map();
 
 export abstract class ViewModelService<T extends ViewModel> {
 	
+	public abstract name:string;
+	
 	public abstract vmc:ViewModelConstructor<T>;
 	
-	public model (vmId:string|L13Element<T>) :T {
-		
-		if ((<L13Element<T>>vmId).viewmodel) return (<L13Element<T>>vmId).viewmodel;
+	public model (vmId:string):T {
 		
 		let collection = viewmodels.get(this.vmc);
 		
 		if (!collection) {
-			collection = new Map();
+			collection = { counter: 1, vms: new Map<string, ViewModel>() };
 			viewmodels.set(this.vmc, collection);
 		}
 		
-		let viewmodel = collection.get(vmId);
+		let viewmodel = collection.vms.get(vmId);
 		
-		if (viewmodel) return viewmodel;
+		if (viewmodel) return <T>viewmodel;
 		
 		viewmodel = new this.vmc();
-		viewmodel.id = vmId;
+		viewmodel.id = vmId || `${this.name}-${collection.counter++}`;
 		
-		collection.set(vmId, viewmodel);
+		collection.vms.set(vmId, viewmodel);
 		
-		return viewmodel;
+		return <T>viewmodel;
 		
 	}
 	
-	public static requestUpdate (vmc?:new () => any) :void {
+	public static requestUpdate (vmc?:new () => ViewModel) {
 		
 		if (vmc) {
 			const collection = viewmodels.get(vmc);
 			if (collection) {
-				for (const vm of collection) vm.requestUpdate();
+				for (const vm of collection.vms.values()) vm.requestUpdate();
 			}
 		} else {
-			for (const collection of viewmodels) {
-				for (const vm of collection) vm.requestUpdate();
+			for (const collection of viewmodels.values()) {
+				for (const vm of collection.vms.values()) vm.requestUpdate();
 			}
 		}
 		

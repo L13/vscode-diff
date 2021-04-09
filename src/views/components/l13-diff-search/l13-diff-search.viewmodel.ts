@@ -70,7 +70,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public disable () :Promise<undefined> {
+	public disable ():Promise<undefined> {
 		
 		this.disabled = true;
 		
@@ -78,7 +78,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public enable () :Promise<undefined> {
+	public enable ():Promise<undefined> {
 		
 		this.disabled = false;
 		
@@ -86,7 +86,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public getState () :SearchState {
+	public getState ():SearchState {
 		
 		return {
 			searchterm: this.searchterm,
@@ -101,7 +101,7 @@ export class L13DiffSearchViewModel extends ViewModel {
 		
 	}
 	
-	public setState (state:SearchState) :void {
+	public setState (state:SearchState) {
 		
 		this.searchterm = state.searchterm;
 		this.useRegExp = state.useRegExp;

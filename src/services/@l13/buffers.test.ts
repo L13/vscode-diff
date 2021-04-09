@@ -304,7 +304,7 @@ describe('buffers', () => {
 				{
 					desc: 'don\'t change multiple \\n with content',
 					expect: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
-					toBe: [255, 254, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0],
+					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
 				},
 				{
 					desc: 'change multiple \\r to \\n with content',

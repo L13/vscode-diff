@@ -151,7 +151,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 	}
 
-	public getSelection () :string {
+	public getSelection () {
 
 		const elementActive = this.lists.querySelector('.-active');
 

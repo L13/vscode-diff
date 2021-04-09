@@ -70,14 +70,14 @@ export type DiffOpenMessage = {
 };
 
 export type DiffPanelStateMessage = {
-	views: {
+	views:{
 		unchangedChecked:boolean,
 		deletedChecked:boolean,
 		modifiedChecked:boolean,
 		untrackedChecked:boolean,
 		ignoredChecked:boolean,
 	},
-	search: {
+	search:{
 		searchterm:string,
 		useRegExp:boolean,
 		useCaseSensitive:boolean,

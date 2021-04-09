@@ -59,16 +59,14 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	const focusListView = () => {
-		
-		if (!left.focused && !right.focused && !search.focused) list.focus();
-		
-	};
-	
 	window.addEventListener('focus', () => {
 		
 		if (list.content.firstElementChild && !left.focused && !right.focused && !search.focused) {
-			setTimeout(focusListView, 0);
+			setTimeout(() => {
+				
+				if (!left.focused && !right.focused && !search.focused) list.focus();
+				
+			}, 0);
 		}
 		
 	});

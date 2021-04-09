@@ -17,6 +17,8 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 export class L13DiffListViewModelService extends ViewModelService<L13DiffListViewModel> {
 	
+	public name = 'l13-diff-list';
+	
 	public vmc:ViewModelConstructor<L13DiffListViewModel> = L13DiffListViewModel;
 	
 }

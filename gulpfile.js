@@ -68,7 +68,7 @@ gulp.task('icons:json', () => {
 		.pipe(file2json({
 			path: 'icons.ts',
 			indent: '\t',
-			template: '// tslint:disable\nexport default __CONTENT__;',
+			template: '/* eslint-disable */\nexport default __CONTENT__;',
 		}))
 		.pipe(gulp.dest('src/views/components'));
 	

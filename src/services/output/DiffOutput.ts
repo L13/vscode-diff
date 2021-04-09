@@ -47,13 +47,13 @@ export class DiffOutput {
 		
 	}
 	
-	public log (text:string) :void {
+	public log (text:string) {
 		
 		this.msg(`[${createTimestamp()}] ${text}`);
 		
 	}
 	
-	public msg (line = '') :void {
+	public msg (line = '') {
 		
 		this.lines.push(line);
 		
@@ -61,19 +61,19 @@ export class DiffOutput {
 		
 	}
 	
-	public show () :void {
+	public show () {
 		
 		if (DiffOutput.currentOutput === this) DiffOutput.output.show();
 		
 	}
 	
-	public hide () :void {
+	public hide () {
 		
 		if (DiffOutput.currentOutput === this) DiffOutput.output.hide();
 		
 	}
 	
-	public clear () :void {
+	public clear () {
 		
 		this.lines = [];
 		
@@ -81,7 +81,7 @@ export class DiffOutput {
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		remove(DiffOutput.outputs, this);
 		

@@ -37,7 +37,7 @@ export class DiffCopy {
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	private async copy (file:DiffFile, dest:string) :Promise<undefined|Error>  {
+	private async copy (file:DiffFile, dest:string):Promise<undefined|Error> {
 		
 		const stat = await lstat(file.fsPath);
 		
@@ -100,14 +100,14 @@ export class DiffCopy {
 		
 	}
 	
-	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') :void {
+	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
 		const folderTo = to === 'A' ? data.pathA : data.pathB;
 		const diffs:Diff[] = data.diffs;
 		const job:CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
-			done: () => this._onDidCopyFiles.fire({ data, from ,to }),
+			done: () => this._onDidCopyFiles.fire({ data, from, to }),
 		};
 		
 		diffs.forEach(async (diff:Diff) => {

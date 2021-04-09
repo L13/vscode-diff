@@ -144,7 +144,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		commands.list.init({ diff, list, search });
 		commands.menu.init({ menu });
 		commands.search.init({ search, searchVM, widgets });
-		commands.swap.init({ diff});
+		commands.swap.init({ diff });
 		commands.views.init({ viewsVM });
 		
 		events.actions.init({ diff, actions, list });
@@ -159,7 +159,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public enable () :void {
+	public enable () {
 		
 		panelVM.loading = false;
 		
@@ -179,7 +179,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public disable () :void {
+	public disable () {
 		
 		panelVM.loading = true;
 		
@@ -193,7 +193,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public swapInputs (altKey = false) :void {
+	public swapInputs (altKey = false) {
 		
 		if (altKey) {
 			if (listVM.items.length) {
@@ -275,7 +275,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
-function savePanelState () :void {
+function savePanelState () {
 	
 	msg.send<DiffPanelStateMessage>('save:panelstate', {
 		views: viewsVM.getState(),

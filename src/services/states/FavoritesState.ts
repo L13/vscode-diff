@@ -75,7 +75,7 @@ export class FavoritesState {
 		for (const fav of favorites) {
 			if (fav.label === favorite.label) {
 				fav.label = label;
-				favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
 				this.save(favorites);
 				this._onDidChangeFavorites.fire(favorites);
 				break;

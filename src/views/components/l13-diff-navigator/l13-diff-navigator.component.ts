@@ -115,7 +115,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public clearSelection () :void {
+	public clearSelection () {
 		
 		const canvas = this.canvasRuler;
 		const context = this.contextRuler;
@@ -124,7 +124,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public buildSelection (items:any[], listHeight:number) :void {
+	public buildSelection (items:any[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasRuler;

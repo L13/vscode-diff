@@ -17,7 +17,7 @@ const LISTENERS = Symbol.for('listeners');
 
 export class DiffMessage {
 	
-	private [LISTENERS]:{ [name:string]: MessageListener[] } = Object.create(null);
+	private [LISTENERS]:{ [name:string]:MessageListener[] } = Object.create(null);
 	
 	public constructor (private panel:vscode.WebviewPanel, disposables:vscode.Disposable[]) {
 		
@@ -33,7 +33,7 @@ export class DiffMessage {
 		
 	}
 	
-	public on (name:string, listener:MessageListener) :void {
+	public on (name:string, listener:MessageListener) {
 		
 		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
@@ -41,13 +41,13 @@ export class DiffMessage {
 		
 	}
 	
-	public send <T> (command:string, data:T = null) :void {
+	public send <T> (command:string, data:T = null) {
 		
 		this.panel.webview.postMessage({ command, data });
 		
 	}
 	
-	public removeMessageListener (name:string, listener?:MessageListener) :void {
+	public removeMessageListener (name:string, listener?:MessageListener) {
 		
 		if (!listener) delete this[LISTENERS][name];
 		
@@ -60,7 +60,7 @@ export class DiffMessage {
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		const listeners = this[LISTENERS];
 		

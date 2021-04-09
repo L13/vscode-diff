@@ -268,7 +268,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						ignoredEOL: false,
 						fileA,
 						fileB,
-					}
+					},
 				],
 				openToSide: event.altKey,
 			});
@@ -653,7 +653,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private getIdsBySelection () :string[] {
+	private getIdsBySelection () {
 		
 		const elements = this.content.querySelectorAll('.-selected');
 		const ids:string[] = [];
@@ -664,19 +664,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public copy (from:'left'|'right') :void {
+	public copy (from:'left'|'right') {
 		
 		this.viewmodel.copy(this.getIdsBySelection(), from);
 		
 	}
 	
-	public multiCopy (from:'left'|'right') :void {
+	public multiCopy (from:'left'|'right') {
 		
 		this.viewmodel.multiCopy(this.getIdsBySelection(), from);
 		
 	}
 	
-	public delete () :void {
+	public delete () {
 		
 		this.viewmodel.delete(this.getIdsBySelection());
 		
@@ -691,7 +691,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createListItemViews () :void {
+	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
 		const newCacheListItemViews:{ [name:string]:HTMLElement } = {};
@@ -754,7 +754,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private restoreSelections () :void {
+	private restoreSelections () {
 		
 		const cacheCurrentSelections = this.cacheCurrentSelections;
 		

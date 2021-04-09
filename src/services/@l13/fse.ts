@@ -3,8 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { WalkTreeJob, WalkTreeOptions } from '../../types';
-import { DiffFileTypes, StatsMap } from '../../types';
+import { DiffFileTypes, StatsMap, WalkTreeJob, WalkTreeOptions } from '../../types';
 
 import { isWindows } from './platforms';
 

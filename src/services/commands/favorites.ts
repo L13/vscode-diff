@@ -97,30 +97,6 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.favorite.revealInFinder': ({ favorite }:FavoriteTreeItem) => {
-			
-			favoritesDialog.reveal([favorite.fileA, favorite.fileB]);
-			
-		},
-		
-		'l13Diff.action.favorite.revealInExplorer': ({ favorite }:FavoriteTreeItem) => {
-			
-			favoritesDialog.reveal([favorite.fileA, favorite.fileB]);
-			
-		},
-		
-		'l13Diff.action.favorite.openContainingFolder': ({ favorite }:FavoriteTreeItem) => {
-			
-			favoritesDialog.reveal([favorite.fileA, favorite.fileB]);
-			
-		},
-		
-		'l13Diff.action.favorite.openInTerminal': ({ favorite }:FavoriteTreeItem) => {
-			
-			favoritesDialog.openInTerminal([favorite.fileA, favorite.fileB]);
-			
-		},
-		
 		'l13Diff.action.favorite.rename': ({ favorite }:FavoriteTreeItem) => favoritesDialog.rename(favorite),
 		'l13Diff.action.favorite.remove': ({ favorite }:FavoriteTreeItem) => favoritesDialog.remove(favorite),
 		

@@ -26,7 +26,7 @@ export type Project = {
 
 export interface ProjectTreeItem extends TreeItem {
 	
-	command: {
+	command:{
 		arguments:any[],
 		command:string,
 		title:string,

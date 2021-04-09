@@ -4,7 +4,6 @@ import { Diff, SearchCache } from '../../../types';
 
 import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 
-import { L13DiffSearchViewModelService } from './l13-diff-search.service';
 import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 //	Variables __________________________________________________________________
@@ -21,8 +20,6 @@ const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 	
-	public vm:L13DiffSearchViewModel = null;
-	
 	private cache:SearchCache = {
 		searchterm: '',
 		useRegExp: false,
@@ -37,13 +34,9 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		filteredItems: [],
 	};
 	
-	public constructor (vmOrVmId:string|L13DiffSearchViewModel) {
-		
-		this.vm = typeof vmOrVmId === 'string' ? new L13DiffSearchViewModelService().model(vmOrVmId) : vmOrVmId;
-		
-	}
+	public constructor (public readonly vm:L13DiffSearchViewModel) {}
 	
-	public transform (items:Diff[]) :Diff[] {
+	public transform (items:Diff[]):Diff[] {
 		
 		const vm = this.vm;
 		

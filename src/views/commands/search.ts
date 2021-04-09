@@ -16,7 +16,7 @@ import { msg } from '../common';
 
 export function init ({ search, searchVM, widgets }:SearchCommandsInit) {
 	
-	msg.on('l13Diff.action.search.open', async () => {
+	msg.on('l13Diff.action.search.open', () => {
 		
 		if (!search.parentNode) {
 			search.classList.add('-movein');

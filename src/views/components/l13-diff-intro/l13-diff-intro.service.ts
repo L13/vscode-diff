@@ -17,6 +17,8 @@ import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
 export class L13DiffIntroViewModelService extends ViewModelService<L13DiffIntroViewModel> {
 	
+	public name = 'l13-diff-intro';
+	
 	public vmc:ViewModelConstructor<L13DiffIntroViewModel> = L13DiffIntroViewModel;
 	
 }

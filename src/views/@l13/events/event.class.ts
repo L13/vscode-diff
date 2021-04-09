@@ -16,7 +16,7 @@ export class Event {
 	
 	public type:string;
 	
-	private [IS_STOPPED]:boolean = false;
+	private [IS_STOPPED] = false;
 	
 	public constructor (options:{ type:string }) {
 		
@@ -24,13 +24,13 @@ export class Event {
 		
 	}
 	
-	public get isStopped () :boolean {
+	public get isStopped () {
 		
 		return this[IS_STOPPED];
 		
 	}
 	
-	public stopPropagation () :void {
+	public stopPropagation () {
 		
 		this[IS_STOPPED] = true;
 		

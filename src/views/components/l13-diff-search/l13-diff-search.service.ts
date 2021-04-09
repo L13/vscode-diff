@@ -17,6 +17,8 @@ import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 export class L13DiffSearchViewModelService extends ViewModelService<L13DiffSearchViewModel> {
 	
+	public name = 'l13-diff-search';
+	
 	public vmc:ViewModelConstructor<L13DiffSearchViewModel> = L13DiffSearchViewModel;
 	
 }
