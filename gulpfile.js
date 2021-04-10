@@ -5,6 +5,7 @@ const del = require('del');
 const fs = require('fs');
 const glob = require('glob');
 const gulp = require('gulp');
+const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
 const rollup = require('rollup');
 
@@ -98,7 +99,7 @@ gulp.task('style:json', () => {
 		.pipe(file2json({
 			path: 'styles.ts',
 			indent: '\t',
-			template: '// tslint:disable\nexport default __CONTENT__;',
+			template: '/* eslint-disable */\nexport default __CONTENT__;',
 		}))
 		.pipe(gulp.dest('src/views/components'));
 	
@@ -112,7 +113,7 @@ gulp.task('templates', () => {
 		.pipe(file2json({
 			path: 'templates.ts',
 			indent: '\t',
-			template: '// tslint:disable\nexport default __CONTENT__;',
+			template: '/* eslint-disable */\nexport default __CONTENT__;',
 		}))
 		.pipe(gulp.dest('src/views/components'));
 	
@@ -235,6 +236,14 @@ gulp.task('script:tests', () => {
 	
 });
 
+gulp.task('lint', () => {
+	
+	return gulp.src(['src/**/*.ts'])
+		.pipe(eslint())
+		.pipe(eslint.format());
+	
+});
+
 gulp.task('test', (done) => {
 	
 	const tests = child_process.spawn('npm', ['test']).on('close', () => done());
@@ -248,7 +257,7 @@ gulp.task('test', (done) => {
 
 gulp.task('script', gulp.series('script:view', 'script:services', 'script:tests'));
 
-gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'test'));
+gulp.task('build', gulp.series('clean', 'icons', 'style', 'templates', 'script', 'lint', 'test'));
 
 gulp.task('watch', () => {
 	

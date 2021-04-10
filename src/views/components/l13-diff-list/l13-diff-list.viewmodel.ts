@@ -1,6 +1,15 @@
 //	Imports ____________________________________________________________________
 
-import { DeletedFilesMessage, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage, UpdatedFilesMessage } from '../../../types';
+import {
+	DeletedFilesMessage,
+	Diff,
+	DiffCopyMessage,
+	DiffFile,
+	DiffMultiCopyMessage,
+	DiffOpenMessage,
+	DiffResultMessage,
+	UpdatedFilesMessage,
+} from '../../../types';
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 

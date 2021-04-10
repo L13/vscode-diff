@@ -67,7 +67,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		this.setScrollbarY(event.offsetY - offsetY);
 		this.scrollbarDown(event, offsetY);
 		
-	}
+	};
 	
 	private scrollbarDown = (event:MouseEvent, offsetY?:number) => {
 		
@@ -83,7 +83,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.dispatchCustomEvent('mousedownscroll');
 		
-	}
+	};
 		
 	private scrollbarMove = (event:MouseEvent) => {
 		
@@ -91,7 +91,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.setScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
 		
-	}
+	};
 		
 	private scrollbarUp = () => {
 		
@@ -102,7 +102,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.dispatchCustomEvent('mouseupscroll');
 		
-	}
+	};
 	
 	private setScrollbarY (y:number) {
 		

@@ -129,7 +129,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.addEventListener('mousemove', this.resizeMove);
 		document.addEventListener('mouseup', this.resizeUp);
 		
-	}
+	};
 	
 	private resizeMove = (event:MouseEvent) => {
 		
@@ -139,7 +139,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		this.style.width = `${width}px`;
 		
-	}
+	};
 		
 	private resizeUp = () => {
 		
@@ -149,7 +149,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.documentElement.classList.remove('-unselectable');
 		document.body.style.cursor = '';
 		
-	}
+	};
 	
 	public focus () {
 		

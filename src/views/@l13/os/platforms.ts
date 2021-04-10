@@ -46,7 +46,7 @@ export function changePlatform () {
 		platform = 'macOS';
 	}
 	
-// tslint:disable-next-line: no-console
+	// eslint-disable-next-line no-console
 	console.log(`Changed platform to '${platform}'`);
 	
 }

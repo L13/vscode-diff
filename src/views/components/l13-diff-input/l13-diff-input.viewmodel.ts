@@ -60,7 +60,7 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 		this.eventName = null;
 		
-	}
+	};
 	
 	public pick (file = false) {
 		
