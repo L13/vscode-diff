@@ -170,6 +170,10 @@
 			"error",
 			"never"
 		],
+		"arrow-parens": [
+			"error",
+			"always"
+		],
 		"arrow-spacing": [
 			"error",
 			{
@@ -262,6 +266,7 @@
 		],
 		"no-multi-spaces": "error",
 		"no-new-wrappers": "error",
+		"no-new-func": "error",
 		"no-throw-literal": "error",
 		"no-trailing-spaces": [
 			"error",
@@ -287,6 +292,7 @@
 		],
 		"prefer-const": "error",
 		"radix": "error",
+		"require-await": "error",
 		"semi": [
 			"error",
 			"always"
