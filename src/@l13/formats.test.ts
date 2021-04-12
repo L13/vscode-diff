@@ -206,6 +206,7 @@ describe('formats', () => {
 			//	Number.MAX_SAFE_INTEGER 9007199254740991
 				{
 					desc: '1024 PB (1152921504606847000 Bytes)',
+					// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
 					expect: 1152921504606846999,
 					toBe: '1024 PB (1152921504606847000 Bytes)',
 				},

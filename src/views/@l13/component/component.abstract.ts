@@ -259,7 +259,10 @@ function registerBinding<T extends ViewModel> (component:L13Element<T>, element:
 	const bindings = component[BINDINGS];
 	let elementBindings = bindings.get(element);
 	
-	if (!elementBindings) bindings.set(element, (elementBindings = new Map()));
+	if (!elementBindings) {
+		elementBindings = new Map();
+		bindings.set(element, elementBindings);
+	}
 	
 	if (name === 'model') {
 		if (element instanceof HTMLInputElement && element.getAttribute('type') === 'checkbox') name = 'checked';

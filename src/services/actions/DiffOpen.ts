@@ -30,7 +30,6 @@ export class DiffOpen {
 			const fsPath = typeof fsPathOrFile === 'string' ? fsPathOrFile : fsPathOrFile.fsPath;
 			const stat = await lstat(fsPath);
 			if (stat.isFile()) await openFile(vscode.Uri.file(fsPath), openToSide);
-			// tslint:disable-next-line: no-unused-expression
 			else if (stat.isDirectory()) void 0;
 			else if (stat.isSymbolicLink()) await openFile(SymlinkContentProvider.parse(fsPath), openToSide);
 			else vscode.window.showErrorMessage(`File can't be opened. "${fsPath}" is not a file.`);

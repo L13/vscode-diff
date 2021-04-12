@@ -179,7 +179,7 @@ function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:str
 		name: relative + sep,
 		basename: path.basename(relative) + sep,
 		dirname,
-		extname: (type === 'file' ? path.extname(relative) : ''),
+		extname: type === 'file' ? path.extname(relative) : '',
 		type,
 		ignore,
 	};

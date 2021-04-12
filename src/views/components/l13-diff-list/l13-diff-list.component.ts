@@ -165,7 +165,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			dragSrcElement = (<HTMLElement>event.target);
+			dragSrcElement = <HTMLElement>event.target;
 			
 			const columnNode = dragSrcElement.closest('l13-diff-list-file');
 			const rowNode = columnNode.closest('l13-diff-list-row');
@@ -185,7 +185,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			event.preventDefault();
 			
-			const element:HTMLElement = (<HTMLElement>event.target);
+			const element:HTMLElement = <HTMLElement>event.target;
 			
 			if (element) {
 				const dropable:HTMLElement = element.closest('l13-diff-list-file');

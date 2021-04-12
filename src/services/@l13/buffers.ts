@@ -150,7 +150,7 @@ function trimUTF16BE (buffer:Buffer) :Buffer {
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
-		if ((valueA === 0 && (valueB === 10 || valueB === 13)) || i === length) {
+		if (valueA === 0 && (valueB === 10 || valueB === 13) || i === length) {
 			if (i === length && !(valueA === 0 && (valueB === 10 || valueB === 13))) cache.push(valueA, valueB);
 			let j = 0;
 			let k = cache.length;
@@ -202,7 +202,7 @@ function trimUTF16LE (buffer:Buffer) :Buffer {
 	stream: while (i < length) {
 		const valueA = buffer[i++];
 		const valueB = buffer[i++];
-		if ((valueB === 0 && (valueA === 10 || valueA === 13)) || i === length) {
+		if (valueB === 0 && (valueA === 10 || valueA === 13) || i === length) {
 			if (i === length && !(valueB === 0 && (valueA === 10 || valueA === 13))) cache.push(valueA, valueB);
 			let j = 0;
 			let k = cache.length;

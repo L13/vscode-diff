@@ -74,12 +74,21 @@
 			"error",
 			"never"
 		],
+		"indent": "off",
 		"@typescript-eslint/indent": [
 			"error",
 			"tab",
 			{
 				"ignoreComments": true,
 				"SwitchCase": 1
+			}
+		],
+		"lines-between-class-members": "off",
+		"@typescript-eslint/lines-between-class-members": [
+			"error",
+			"always",
+			{
+				"exceptAfterSingleLine": true
 			}
 		],
 		"@typescript-eslint/member-ordering": "off",
@@ -99,11 +108,19 @@
 		"@typescript-eslint/no-empty-function": "error",
 		"@typescript-eslint/no-empty-interface": "error",
 		"@typescript-eslint/no-explicit-any": "off",
+		"no-extra-parens": "off",
+		"@typescript-eslint/no-extra-parens": [
+			"error",
+			"all",
+			{
+				"conditionalAssign": false
+			}
+		],
 		"@typescript-eslint/no-floating-promises": "off",
 		"no-invalid-this": "off",
-		"@typescript-eslint/no-invalid-this": [
-			"error"
-		],
+		"@typescript-eslint/no-invalid-this": "error",
+		"no-loss-of-precision": "off",
+		"@typescript-eslint/no-loss-of-precision": "error",
 		"@typescript-eslint/no-misused-new": "error",
 		"@typescript-eslint/no-misused-promises": "off",
 		"@typescript-eslint/no-namespace": "error",
@@ -196,6 +213,13 @@
 				}
 			}
 		],
+		"import/first": "error",
+		"import/newline-after-import": "error",
+		"import/no-dynamic-require": "error",
+		"import/order": "error",
+		"jsdoc/check-alignment": "error",
+		"jsdoc/check-indentation": "error",
+		"jsdoc/newline-after-description": "error",
 		"array-bracket-spacing": [
 			"error",
 			"never"
@@ -211,13 +235,6 @@
 				"after": true
 			}
 		],
-		"import/first": "error",
-		"import/order": "error",
-		"import/newline-after-import": "error",
-		"import/no-dynamic-require": "error",
-		"jsdoc/check-alignment": "error",
-		"jsdoc/check-indentation": "error",
-		"jsdoc/newline-after-description": "error",
 		"complexity": "off",
 		"comma-style": [
 			"error",
@@ -227,6 +244,10 @@
 		"curly": [
 			"error",
 			"multi-line"
+		],
+		"dot-location": [
+			"error",
+			"property"
 		],
 		"eol-last": [
 			"off",
@@ -240,16 +261,33 @@
 			"error",
 			"declaration"
 		],
+		"function-paren-newline": [
+			"error",
+			"never"
+		],
+		"grouped-accessor-pairs": [
+			"error",
+			"getBeforeSet"
+		],
 		"guard-for-in": "off",
 		"id-blacklist": [
 			2,
 			"any",
+			"boolean",
 			"number",
 			"string",
-			"boolean",
 			"Undefined"
 		],
 		"id-match": "error",
+		"implicit-arrow-linebreak": [
+			"error",
+			"beside"
+		],
+		"key-spacing": "error",
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
 		"max-classes-per-file": [
 			"error",
 			1
@@ -259,6 +297,10 @@
 			{
 				"code": 160
 			}
+		],
+		"multiline-ternary": [
+			"error",
+			"never"
 		],
 		"new-parens": "error",
 		"no-bitwise": "error",

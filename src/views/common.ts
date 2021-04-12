@@ -66,7 +66,7 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 	if (scrollTop > offsetTop) {
 		parent.scrollTop = offsetTop;
 	} else if (scrollTop + offsetHeight < offsetTop + element.offsetHeight) {
-		parent.scrollTop = (offsetTop + element.offsetHeight) - offsetHeight;
+		parent.scrollTop = offsetTop + element.offsetHeight - offsetHeight;
 	}
 	
 }
