@@ -5,10 +5,14 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Added
 
-- Added `Compare` and `Compare in New Panel` to context menu in favorites and history.
-- Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history.
+- Added `Compare` and `Compare in New Panel` to context menu in favorites and history view.
+- Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history view.
 - Added `l13Diff.openInNewDiffPanel`.
-- Supports `Reveal in Finder/Explorer`, `Open in Integrated Terminal`, `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+- Supports `Reveal in Finder/Explorer`, `Open in Integrated Terminal`, `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history view. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+
+### Fixed
+
+- Fixed `Reveal in Finder/Explorer` in list view for broken symbolic links. [Issue #82](https://github.com/L13/vscode-diff/issues/82)
 
 ### Changed
 

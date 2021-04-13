@@ -1,11 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { isMacOs, isWindows } from '../@l13/platforms';
+import { lstatSync } from '../@l13/fse';
 
 //	Variables __________________________________________________________________
 
@@ -16,26 +13,12 @@ import { isMacOs, isWindows } from '../@l13/platforms';
 
 
 //	Exports ____________________________________________________________________
-
+	
 export function reveal (pathname:string) {
 	
-	if (!fs.existsSync(pathname)) {
-		vscode.window.showErrorMessage(`File "${pathname}" does not exit!`);
-		return;
-	}
-	
-	let process:ChildProcessWithoutNullStreams = null;
-	
-	if (isMacOs) process = spawn('open', ['-R', pathname || '/']);
-	else if (isWindows) process = spawn('explorer', ['/select,', pathname || 'c:\\']);
-	else process = spawn('xdg-open', [path.dirname(pathname) || '/']);
-	
-	process.on('error', (error:Error) => {
-		
-		process.kill();
-		vscode.window.showErrorMessage(error.message);
-		
-	});
+	if (lstatSync(pathname)) {
+		vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(pathname));
+	} else vscode.window.showErrorMessage(`Path "${pathname}" doesn't exist!`);
 	
 }
 

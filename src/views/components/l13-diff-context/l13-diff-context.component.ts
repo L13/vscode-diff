@@ -46,7 +46,7 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 		
 		setLabel(this.buttonCopy, 'Copy');
 		setLabel(this.buttonGoto, 'Go to File');
-		setLabel(this.buttonReveal, isMacOs ? 'Reveal in Finder' : isWindows ? 'Reveal in Explorer' : 'Open Containing Folder');
+		setLabel(this.buttonReveal, isMacOs ? 'Reveal in Finder' : isWindows ? 'Reveal in File Explorer' : 'Open Containing Folder');
 		setLabel(this.buttonDelete, 'Delete');
 		
 		addButtonActiveStyleEvents(this.buttonCopy);
