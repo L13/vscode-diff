@@ -9,7 +9,7 @@ Compare two folders in Visual Studio Code.
 - Added `Compare` and `Compare in New Panel` to context menu in favorites and history view.
 - Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history view view.
 - Added `l13Diff.openInNewDiffPanel`.
-- Supports `Reveal in Finder/Explorer`, `Open in Integrated Terminal`, `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history view. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+- Enhanced context menu with `Reveal in Finder/Explorer`, `Open in Integrated Terminal`, `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history view. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 - Fixed `Reveal in Finder/Explorer` in list view for broken symbolic links. [Issue #82](https://github.com/L13/vscode-diff/issues/82)
 - Changed `l13Diff.initialFavoriteGroupState` to `l13Diff.initialFavoriteGroupsState`.
 - Changed values for `l13Diff.initialFavoriteGroupsState` to lower case.
