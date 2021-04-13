@@ -20,7 +20,6 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 
-
 const { PREVIOUS, NEXT } = Direction;
 
 //	Initialize _________________________________________________________________

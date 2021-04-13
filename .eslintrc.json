@@ -141,10 +141,13 @@
 		"@typescript-eslint/no-unsafe-return": "off",
 		"@typescript-eslint/no-unused-expressions": "error",
 		"@typescript-eslint/no-use-before-define": "off",
+		"no-useless-constructor": "off",
+		"@typescript-eslint/no-useless-constructor": "error",
 		"@typescript-eslint/no-var-requires": "error",
 		"@typescript-eslint/prefer-for-of": "error",
 		"@typescript-eslint/prefer-function-type": "error",
 		"@typescript-eslint/prefer-namespace-keyword": "error",
+		"quotes": "off",
 		"@typescript-eslint/quotes": [
 			"error",
 			"single"
@@ -326,6 +329,10 @@
 		"no-multi-spaces": "error",
 		"no-new-wrappers": "error",
 		"no-new-func": "error",
+		"no-restricted-syntax": [
+			"error",
+			"WithStatement"
+		],
 		"no-trailing-spaces": [
 			"error",
 			{
@@ -335,10 +342,15 @@
 		],
 		"no-undef-init": "error",
 		"no-underscore-dangle": "off",
+		"no-unneeded-ternary": "error",
 		"no-unsafe-finally": "error",
 		"no-unused-labels": "error",
 		"no-var": "error",
 		"no-whitespace-before-property": "error",
+		"nonblock-statement-body-position": [
+			"error",
+			"beside"
+		],
 		"object-curly-spacing": [
 			"error",
 			"always"
@@ -348,12 +360,35 @@
 			"error",
 			"never"
 		],
+		"operator-assignment": [
+			"error",
+			"always"
+		],
+		"operator-linebreak": [
+			"error",
+			"before"
+		],
+		"padded-blocks": [
+			"error",
+			{
+				"classes": "always",
+				"switches": "never"
+			}
+		],
 		"prefer-const": "error",
 		"radix": "error",
+		"semi-spacing": [
+			"error",
+			{
+				"before": false,
+				"after": true
+			}
+		],
 		"semi-style": [
 			"error",
 			"last"
 		],
+		"space-before-blocks": "error",
 		"space-in-parens": [
 			"error",
 			"never"
@@ -365,6 +400,7 @@
 				"nonwords": false
 			}
 		],
+		"template-tag-spacing": "error",
 		"use-isnan": "error",
 		"valid-typeof": [
 			"error",

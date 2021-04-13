@@ -21,12 +21,11 @@ let findAssociations:RegExp = null;
 
 export function isTextFile (basename:string) {
 	
-	return findExtensions.test(basename) ||
-		filenames.includes(basename) ||
-		findAssociations && findAssociations.test(basename);
+	return findExtensions.test(basename)
+	|| filenames.includes(basename)
+	|| findAssociations && findAssociations.test(basename);
 	
 }
-
 export function buildWhitelistForTextFiles () {
 	
 	const config = vscode.workspace.getConfiguration();

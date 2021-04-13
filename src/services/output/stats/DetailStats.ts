@@ -13,6 +13,7 @@
 //	Exports ____________________________________________________________________
 
 export class DetailStats {
+	
 	public total = 0;
 	public entries = 0;
 	public files = 0;
@@ -23,6 +24,7 @@ export class DetailStats {
 	public size = 0;
 	public ignoredEOL = 0;
 	public ignoredWhitespace = 0;
+	
 }
 
 //	Functions __________________________________________________________________
