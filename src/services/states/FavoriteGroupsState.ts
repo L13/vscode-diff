@@ -112,7 +112,7 @@ export class FavoriteGroupsState {
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
 		
-		favoriteGroups.some((group) => group.id === groupId ? (group.collapsed = collapsed) || true : false);
+		favoriteGroups.some((group) => group.id === groupId ? (group.collapsed = collapsed) || true : false);
 		
 		states.updateCollapseState(this.context, favoriteGroups);
 		

@@ -47,7 +47,7 @@ export class EventDispatcher {
 		
 		let event:null|Event = nameOrEvent instanceof Event ? nameOrEvent : null;
 		const name = <string>(event ? event.type : nameOrEvent);
-		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
+		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 		//	Copy listeners to prevent stuttering if a listener will be deleted

@@ -82,7 +82,7 @@ export class FavoriteGroupsDialog {
 			value: favoriteGroup.label,
 		});
 		
-		if (!label || favoriteGroup.label === label) return;
+		if (!label || favoriteGroup.label === label) return;
 		
 		if (this.favoriteGroupsState.getByName(label)) {
 			vscode.window.showInformationMessage(`Favorite group with name "${label}" exists!`);

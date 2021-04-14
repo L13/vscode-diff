@@ -6,6 +6,7 @@ import { PackageLanguage } from '../../types';
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 const findStartDot = /^\./;
 

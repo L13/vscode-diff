@@ -8,8 +8,7 @@ import { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 
 //	Variables __________________________________________________________________
 
-
-
+// eslint-disable-next-line no-useless-escape
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 //	Initialize _________________________________________________________________

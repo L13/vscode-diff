@@ -5,7 +5,7 @@ const del = require('del');
 const fs = require('fs');
 const glob = require('glob');
 const gulp = require('gulp');
-const eslint = require('gulp-eslint');
+const { ESLint } = require('eslint');
 const sass = require('gulp-sass');
 const rollup = require('rollup');
 
@@ -236,11 +236,17 @@ gulp.task('script:tests', () => {
 	
 });
 
-gulp.task('lint', () => {
+gulp.task('lint', async (done) => {
 	
-	return gulp.src(['src/**/*.ts'])
-		.pipe(eslint())
-		.pipe(eslint.format());
+	const eslint = new ESLint();
+	const results = await eslint.lintFiles(["src/**/*.ts"]);
+	
+	const formatter = await eslint.loadFormatter("stylish");
+	const resultText = formatter.format(results);
+	
+	if (resultText) console.log(resultText);
+	
+	done();
 	
 });
 

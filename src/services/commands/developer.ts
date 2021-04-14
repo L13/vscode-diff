@@ -14,6 +14,7 @@ import * as states from '../common/states';
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findBackupFileName = /\d{4}(\-\d{2}){5}(?:\-auto)?.json/;
 
 type Backup = {

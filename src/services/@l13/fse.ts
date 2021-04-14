@@ -9,8 +9,10 @@ import { isWindows } from './platforms';
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findRegExpChars = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
+// eslint-disable-next-line no-control-regex, no-useless-escape 
 const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
 const findColon = /:/g;
 

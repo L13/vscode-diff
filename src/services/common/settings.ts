@@ -51,8 +51,8 @@ export function getExcludes (pathA:string, pathB:string) :string[] {
 	if (ignore) ignore = showDepricated(ignore, 'Settings');
 	
 	const excludes = get('exclude', []) || ignore;
-	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
-	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
+	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
+	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
 	
 	return [...excludesA, ...excludesB].filter((value, index, values) => values.indexOf(value) === index);
 	

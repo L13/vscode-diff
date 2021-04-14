@@ -4,6 +4,7 @@
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findLanguageClassName = /^language\-/;
 
 //	Initialize _________________________________________________________________

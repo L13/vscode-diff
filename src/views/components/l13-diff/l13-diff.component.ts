@@ -6,14 +6,14 @@ import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
 import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
-import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
 import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
-import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
-import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
+import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
+import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
@@ -150,7 +150,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		events.actions.init({ diff, actions, list });
 		events.compare.init({ diff, compare });
 		events.input.init({ diff, left, menu, right });
-		events.list.init({ diff, actionsVM, intro, list, listVM, left, navigator, result, right, search });
+		events.list.init({ diff, actionsVM, intro, list, listVM, left, navigator, result, right, search });
 		events.navigator.init({ diff, list, navigator });
 		events.search.init({ diff, search, list, navigator });
 		events.swap.init({ diff, swap });
@@ -245,7 +245,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	public updateNavigator (updateMap = true, updateSelection = true) {
 			
-		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
+		let element:HTMLElement = <HTMLElement> this.list.content.firstElementChild;
 		const values:ListItemInfo[] = [];
 		
 		while (element) {

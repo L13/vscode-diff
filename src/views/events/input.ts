@@ -12,7 +12,7 @@ import { InputEventsInit } from '../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, left, right, menu }:InputEventsInit) {
+export function init ({ diff, left, right, menu }:InputEventsInit) {
 	
 	left.menu = menu;
 	right.menu = menu;

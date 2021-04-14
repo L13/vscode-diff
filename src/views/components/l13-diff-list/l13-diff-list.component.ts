@@ -108,7 +108,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			if (this.content.firstChild && offsetX > (<HTMLElement>this.content.firstChild).offsetWidth) return;
+			if (this.content.firstChild && offsetX > (<HTMLElement> this.content.firstChild).offsetWidth) return;
 			
 			if (target === this.content) {
 				this.unselect();
@@ -457,13 +457,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getFirstItem () {
 		
-		return <HTMLElement>this.content.firstElementChild;
+		return <HTMLElement> this.content.firstElementChild;
 		
 	}
 	
 	private getLastItem () {
 		
-		return <HTMLElement>this.content.lastElementChild;
+		return <HTMLElement> this.content.lastElementChild;
 		
 	}
 	
@@ -797,8 +797,8 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		}
 		
 		if (file.ignore) {
-			 if (!diff.fileA) column.classList.add('-untracked');
-			 if (!diff.fileB) column.classList.add('-deleted');
+			if (!diff.fileA) column.classList.add('-untracked');
+			if (!diff.fileB) column.classList.add('-deleted');
 		}
 		
 		const path = document.createElement('DIV');

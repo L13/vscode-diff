@@ -54,7 +54,7 @@ export class FavoritesDialog {
 			value: favorite.label,
 		});
 		
-		if (!label || favorite.label === label) return;
+		if (!label || favorite.label === label) return;
 		
 		if (this.favoriteState.getByName(label)) {
 			vscode.window.showErrorMessage(`Favorite diff with the name "${label}" exists!`);

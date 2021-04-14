@@ -342,6 +342,7 @@ function hasSameContents (pathA:string, pathB:string) {
 		const bufferA = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
 		const bufferB = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
 		
+		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const sizeA = fs.readSync(fdA, bufferA, 0, MAX_CACHE_BUFFER_LENGTH, null);
 			if (!sizeA) break;
@@ -354,6 +355,7 @@ function hasSameContents (pathA:string, pathB:string) {
 			if (sizeA < MAX_CACHE_BUFFER_LENGTH || sizeB < MAX_CACHE_BUFFER_LENGTH) break;
 		}
 		return true;
+	// eslint-disable-next-line no-useless-catch
 	} catch (error) {
 		throw error;
 	} finally {

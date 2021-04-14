@@ -52,7 +52,7 @@ export class DiffCopy {
 			}
 			return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 		} else if (stat.isFile()) {
-			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
+			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
 			return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
 		} else if (stat.isSymbolicLink()) {
 			if (!statDest || statDest.isSymbolicLink()) {

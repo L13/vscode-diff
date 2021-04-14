@@ -41,7 +41,7 @@ export class FavoritesState {
 	
 	public getByName (label:string) {
 		
-		return this.get().find((favorite) => favorite.label === label) || null;
+		return this.get().find((favorite) => favorite.label === label) || null;
 		
 	}
 	

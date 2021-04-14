@@ -367,6 +367,6 @@ function getHTMLforDiffPanel (context:vscode.ExtensionContext, webview:vscode.We
 
 function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
-	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
+	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
 	
 }

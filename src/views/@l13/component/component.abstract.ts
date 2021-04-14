@@ -147,7 +147,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		if (this[TEMPLATE]) {
 			shadowRoot.appendChild(this[TEMPLATE].content.cloneNode(true));
 			if (this[QUERIES]) {
-				for (const [name, query] of this[QUERIES]) (<any>this)[name] = shadowRoot.querySelector(query);
+				for (const [name, query] of this[QUERIES]) (<any> this)[name] = shadowRoot.querySelector(query);
 			}
 		}
 		
@@ -181,7 +181,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 		if (this[CLASSNAMES]) {
 			for (const [name, classNames] of this[CLASSNAMES]) {
-				const element:HTMLElement = (<any>this)[name];
+				const element:HTMLElement = (<any> this)[name];
 				for (const [className, path] of Object.entries(classNames)) {
 					if (get(viewmodel, path)) element.classList.add(className);
 					else element.classList.remove(className);
@@ -342,7 +342,7 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) {
 					if (name === 'if') registerCondition(component, element, value);
 					else registerBinding(component, element, name, value);
 				}
-				if (bindon || on) registerEvent(component, element, name, value);
+				if (bindon || on) registerEvent(component, element, name, value);
 			}
 			
 		});
