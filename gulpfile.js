@@ -239,9 +239,8 @@ gulp.task('script:tests', () => {
 gulp.task('lint', async (done) => {
 	
 	const eslint = new ESLint();
-	const results = await eslint.lintFiles(["src/**/*.ts"]);
-	
-	const formatter = await eslint.loadFormatter("stylish");
+	const results = await eslint.lintFiles(['src/**/*.ts']);
+	const formatter = await eslint.loadFormatter('stylish');
 	const resultText = formatter.format(results);
 	
 	if (resultText) console.log(resultText);

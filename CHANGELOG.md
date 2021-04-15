@@ -21,7 +21,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Removed
 
-- Removed `Open` and `Open & Compare` from context menu in favorites and history.
+- Removed `Open` and `Open & Compare` from context menu in favorites and history view.
 - Removed `l13Diff.openFavoriteAndCompare`.
 
 ## [0.32.0] - 2021-03-21
