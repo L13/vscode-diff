@@ -1221,7 +1221,8 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"update": "rm -rf node_modules && rm package-lock.json && npm install"
+		"update": "rm -rf node_modules && rm package-lock.json && npm install",
+		"check-lint-rules": "node ./plugins/check-lint-rules"
 	},
 	"devDependencies": {
 		"@rollup/plugin-typescript": "^8.2.1",

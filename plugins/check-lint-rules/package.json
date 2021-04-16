@@ -1,0 +1,11 @@
+{
+	"name": "check-lint-rules",
+	"version": "0.13.0",
+	"description": "Check local and extended ESLint and TSLint rules against each other",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "L13RARY",
+	"license": "SEE LICENCE IN LICENCE.md"
+}
