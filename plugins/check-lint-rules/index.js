@@ -1,5 +1,9 @@
+//	Imports ____________________________________________________________________
+
 const fs = require('fs');
 const path = require('path');
+
+//	Variables __________________________________________________________________
 
 process.chdir(path.dirname(path.dirname(__dirname)));
 
@@ -21,6 +25,8 @@ const allRecommendedRules = {
 	...tslintRecommendedTypeCheckingRules,
 };
 const allRules = { ...allRecommendedRules, ...localRules};
+
+//	Initialize _________________________________________________________________
 
 for (const rule in allRecommendedRules) {
 	if (rule in localRules) {
@@ -45,6 +51,12 @@ commonESLintRules.forEach((rule) => {
 	}
 	
 });
+
+//	Exports ____________________________________________________________________
+
+
+
+//	Functions __________________________________________________________________
 
 function getAllRules (dirname) {
 	
