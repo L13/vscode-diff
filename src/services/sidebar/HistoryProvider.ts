@@ -24,7 +24,7 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 	
 	public comparisons:Comparison[] = [];
 	
-	private static current:HistoryProvider|undefined;
+	public static current:HistoryProvider|undefined;
 	
 	public static create (states:HistoryStates) {
 		
@@ -38,13 +38,13 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		HistoryProvider.current = null;
 		
 	}
 	
-	public refresh (states?:RefreshHistoryStates) :void {
+	public refresh (states?:RefreshHistoryStates) {
 		
 		if (states?.comparisons) this.comparisons = states.comparisons;
 		
@@ -52,15 +52,15 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 		
 	}
 	
-	public getTreeItem (element:HistoryTreeItem) :vscode.TreeItem {
+	public getTreeItem (element:HistoryTreeItem):vscode.TreeItem {
 		
 		return element;
 		
 	}
 	
-	public getChildren () :Thenable<HistoryTreeItem[]> {
+	public getChildren ():Thenable<HistoryTreeItem[]> {
 		
-		const list:(HistoryTreeItem)[] = [];
+		const list:HistoryTreeItem[] = [];
 		
 		this.comparisons.forEach((comparison) => list.push(new HistoryTreeItem(comparison)));
 		

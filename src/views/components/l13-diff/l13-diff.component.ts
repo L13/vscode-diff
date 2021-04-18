@@ -6,14 +6,14 @@ import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
 import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
-import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
 import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
 import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
-import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
-import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
+import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
+import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
@@ -99,44 +99,70 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	@L13Query('l13-diff-widgets')
 	private widgets:HTMLElement;
 	
+	private search:L13DiffSearchComponent;
+	
+	private menu:L13DiffMenuComponent;
+	
 	public constructor () {
 		
 		super();
 		
-		const menuComponent = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
-		menuComponent.vmId = 'menu';
+		this.menu = <L13DiffMenuComponent>document.createElement('l13-diff-menu');
+		this.menu.vmId = 'menu';
 		
-		const searchComponent = <L13DiffSearchComponent>document.createElement('l13-diff-search');
-		searchComponent.vmId = 'search';
+		this.search = <L13DiffSearchComponent>document.createElement('l13-diff-search');
+		this.search.vmId = 'search';
 		
 		searchVM.disable();
 		
-		commands.actions.init(this.list);
-		commands.compare.init(this, this.left, this.right, searchComponent);
-		commands.favorites.init(leftVM, rightVM);
-		commands.input.init(leftVM, rightVM);
-		commands.list.init(this, this.list, searchComponent);
-		commands.menu.init(menuComponent);
-		commands.search.init(searchComponent, searchVM, this.list, this.widgets);
-		commands.swap.init(this);
-		commands.views.init(viewsVM);
-		
-		events.actions.init(this, this.actions, this.list);
-		events.compare.init(this, this.compare);
-		events.input.init(this, this.left, this.right, menuComponent);
-		events.list.init(this, this.list, listVM, this.left, this.right, searchComponent, this.navigator, actionsVM, this.result, this.intro);
-		events.navigator.init(this, this.navigator, this.list);
-		events.search.init(this, searchComponent, this.list, this.navigator);
-		events.swap.init(this, this.swap);
-		
-		events.diff.init(this, leftVM, rightVM);
+		this.initCommandsAndEvents();
 		
 	}
 	
-	public enable () :void {
+	private initCommandsAndEvents () {
+		
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const diff = this;
+		
+		const actions = this.actions;
+		const compare = this.compare;
+		const intro = this.intro;
+		const left = this.left;
+		const list = this.list;
+		const menu = this.menu;
+		const navigator = this.navigator;
+		const result = this.result;
+		const right = this.right;
+		const search = this.search;
+		const swap = this.swap;
+		const widgets = this.widgets;
+		
+		commands.actions.init({ list });
+		commands.compare.init({ diff, left, right, search });
+		commands.favorites.init({ leftVM, rightVM });
+		commands.input.init({ leftVM, rightVM });
+		commands.list.init({ diff, list, search });
+		commands.menu.init({ menu });
+		commands.search.init({ search, searchVM, widgets });
+		commands.swap.init({ diff });
+		commands.views.init({ viewsVM });
+		
+		events.actions.init({ diff, actions, list });
+		events.compare.init({ diff, compare });
+		events.input.init({ diff, left, menu, right });
+		events.list.init({ diff, actionsVM, intro, list, listVM, left, navigator, result, right, search });
+		events.navigator.init({ diff, list, navigator });
+		events.search.init({ diff, search, list, navigator });
+		events.swap.init({ diff, swap });
+		
+		events.diff.init({ diff, leftVM, rightVM });
+		
+	}
+	
+	public enable () {
 		
 		panelVM.loading = false;
-	
+		
 		if (listVM.items.length) {
 			actionsVM.enable();
 			if (!this.list.content.querySelector('.-selected')) actionsVM.disableCopy();
@@ -153,7 +179,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public disable () :void {
+	public disable () {
 		
 		panelVM.loading = true;
 		
@@ -167,7 +193,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public swapInputs (altKey:boolean = false) :void {
+	public swapInputs (altKey = false) {
 		
 		if (altKey) {
 			if (listVM.items.length) {
@@ -217,9 +243,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public updateNavigator (updateMap:boolean = true, updateSelection:boolean = true) {
+	public updateNavigator (updateMap = true, updateSelection = true) {
 			
-		let element:HTMLElement = <HTMLElement>this.list.content.firstElementChild;
+		let element:HTMLElement = <HTMLElement> this.list.content.firstElementChild;
 		const values:ListItemInfo[] = [];
 		
 		while (element) {
@@ -235,7 +261,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		if (updateMap) {
 			this.navigator.build(values, listHeight);
-			this.navigator.style.top = this.panel.offsetHeight + 'px';
+			this.navigator.style.top = `${this.panel.offsetHeight}px`;
 			this.setScrollbarPosition();
 		}
 		
@@ -249,8 +275,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 
 //	Functions __________________________________________________________________
 
-function savePanelState () :void {
-		
+function savePanelState () {
+	
 	msg.send<DiffPanelStateMessage>('save:panelstate', {
 		views: viewsVM.getState(),
 		search: searchVM.getState(),

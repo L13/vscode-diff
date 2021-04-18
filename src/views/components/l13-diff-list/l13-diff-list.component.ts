@@ -8,6 +8,7 @@ import { formatDate, formatFileSize } from '../../../@l13/formats';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
+import { Direction } from '../../enums';
 
 import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
@@ -19,7 +20,6 @@ import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 
-enum Direction { PREVIOUS, NEXT }
 const { PREVIOUS, NEXT } = Direction;
 
 //	Initialize _________________________________________________________________
@@ -41,7 +41,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private context:L13DiffContextComponent;
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
 	public tabIndex = 0;
 	
@@ -108,22 +108,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			if (this.content.firstChild && offsetX > (<HTMLElement>this.content.firstChild).offsetWidth) return;
+			if (this.content.firstChild && offsetX > (<HTMLElement> this.content.firstChild).offsetWidth) return;
 			
 			if (target === this.content) {
 				this.unselect();
 				return;
 			}
 			
-			const listRow = <HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row');
+			const listRow:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
 			if (this.cacheSelectionHistory.length) {
-			//	On macOS metaKey overrides shiftKey if both keys are pressed
+		//	On macOS metaKey overrides shiftKey if both keys are pressed
 				if (isMacOs && shiftKey && !metaKey || !isMacOs && shiftKey) {
 					const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 					if (lastSelection) {
-					//	On Windows selection works exactly like macOS if shiftKey and ctrlKey is pressed
-					//	Otherwise Windows removes previous selection
+				//	On Windows selection works exactly like macOS if shiftKey and ctrlKey is pressed
+				//	Otherwise Windows removes previous selection
 						if (isWindows && !ctrlKey || isLinux) {
 							this.unselect();
 						//	On Windows previous selection will be remembered
@@ -152,7 +152,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			const id = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row')).getAttribute('data-id');
+			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
 			
 			this.viewmodel.open([id], altKey);
 			
@@ -164,10 +164,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			dragSrcElement = (<HTMLElement>event.target);
+			dragSrcElement = <HTMLElement>event.target;
 			
-			const columnNode = (<HTMLElement>dragSrcElement.closest('l13-diff-list-file'));
-			const rowNode = (<HTMLElement>columnNode.closest('l13-diff-list-row'));
+			const columnNode = dragSrcElement.closest('l13-diff-list-file');
+			const rowNode = columnNode.closest('l13-diff-list-row');
 			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
 			const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
 			
@@ -184,7 +184,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			event.preventDefault();
 			
-			const element:HTMLElement = (<HTMLElement>event.target);
+			const element:HTMLElement = <HTMLElement>event.target;
 			
 			if (element) {
 				const dropable:HTMLElement = element.closest('l13-diff-list-file');
@@ -246,8 +246,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			event.preventDefault();
 			
-			const target = (<HTMLElement>(<HTMLElement>event.target).closest('l13-diff-list-file'));
-			const rowNode = (<HTMLElement>target.closest('l13-diff-list-row'));
+			const target = (<HTMLElement>event.target).closest('l13-diff-list-file');
+			const rowNode = target.closest('l13-diff-list-row');
 			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
 			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
 			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
@@ -267,7 +267,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						ignoredEOL: false,
 						fileA,
 						fileB,
-					}
+					},
 				],
 				openToSide: event.altKey,
 			});
@@ -334,7 +334,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 			const isSelected = rowNode.classList.contains('-selected');
 			const selections = this.getIdsBySelection();
 			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
@@ -353,7 +353,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 			const isSelected = rowNode.classList.contains('-selected');
 			const selections = this.getIdsBySelection();
 			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
@@ -369,7 +369,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			const pathname = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-file')).getAttribute('data-fs-path');
+			const pathname = (<HTMLElement>target).closest('l13-diff-list-file').getAttribute('data-fs-path');
 			
 			msg.send<string>('reveal:file', pathname);
 			
@@ -380,7 +380,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			if (this.disabled) return;
 			
 			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>(<HTMLElement>target).closest('l13-diff-list-row'));
+			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 			const isSelected = rowNode.classList.contains('-selected');
 			const selections = this.getIdsBySelection();
 			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
@@ -432,7 +432,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectItem (element:HTMLElement, dispatchEvent:boolean = true) {
+	private selectItem (element:HTMLElement, dispatchEvent = true) {
 		
 		element.classList.add('-selected');
 		this.cacheSelectionHistory.push(element);
@@ -457,13 +457,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getFirstItem () {
 		
-		return <HTMLElement>this.content.firstElementChild;
+		return <HTMLElement> this.content.firstElementChild;
 		
 	}
 	
 	private getLastItem () {
 		
-		return <HTMLElement>this.content.lastElementChild;
+		return <HTMLElement> this.content.lastElementChild;
 		
 	}
 	
@@ -614,7 +614,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public selectByStatus (typeOrTypes:DiffStatus|DiffStatus[], addToSelection:boolean = false) {
+	public selectByStatus (typeOrTypes:DiffStatus|DiffStatus[], addToSelection = false) {
 		
 		if (!addToSelection) this.unselect();
 		
@@ -652,7 +652,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private getIdsBySelection () :string[] {
+	private getIdsBySelection () {
 		
 		const elements = this.content.querySelectorAll('.-selected');
 		const ids:string[] = [];
@@ -663,19 +663,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public copy (from:'left'|'right') :void {
+	public copy (from:'left'|'right') {
 		
 		this.viewmodel.copy(this.getIdsBySelection(), from);
 		
 	}
 	
-	public multiCopy (from:'left'|'right') :void {
+	public multiCopy (from:'left'|'right') {
 		
 		this.viewmodel.multiCopy(this.getIdsBySelection(), from);
 		
 	}
 	
-	public delete () :void {
+	public delete () {
 		
 		this.viewmodel.delete(this.getIdsBySelection());
 		
@@ -690,7 +690,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createListItemViews () :void {
+	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
 		const newCacheListItemViews:{ [name:string]:HTMLElement } = {};
@@ -753,7 +753,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private restoreSelections () :void {
+	private restoreSelections () {
 		
 		const cacheCurrentSelections = this.cacheCurrentSelections;
 		
@@ -797,8 +797,8 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		}
 		
 		if (file.ignore) {
-			 if (!diff.fileA) column.classList.add('-untracked');
-			 if (!diff.fileB) column.classList.add('-deleted');
+			if (!diff.fileA) column.classList.add('-untracked');
+			if (!diff.fileB) column.classList.add('-deleted');
 		}
 		
 		const path = document.createElement('DIV');

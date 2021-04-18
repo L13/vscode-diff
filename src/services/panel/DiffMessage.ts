@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 
 import { remove } from '../../@l13/arrays';
-import { MessageListener } from '../../types';
+import { Message, MessageListener } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -17,11 +17,11 @@ const LISTENERS = Symbol.for('listeners');
 
 export class DiffMessage {
 	
-	private [LISTENERS]:{ [name:string]: MessageListener[] } = Object.create(null);
+	private [LISTENERS]:{ [name:string]:MessageListener[] } = Object.create(null);
 	
 	public constructor (private panel:vscode.WebviewPanel, disposables:vscode.Disposable[]) {
 		
-		panel.webview.onDidReceiveMessage((message) => {
+		panel.webview.onDidReceiveMessage((message:Message) => {
 			
 			const command = message.command;
 			const data = message.data;
@@ -33,7 +33,7 @@ export class DiffMessage {
 		
 	}
 	
-	public on (name:string, listener:MessageListener) :void {
+	public on (name:string, listener:MessageListener) {
 		
 		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
@@ -41,13 +41,13 @@ export class DiffMessage {
 		
 	}
 	
-	public send <T> (command:string, data:T = null) :void {
+	public send <T> (command:string, data:T = null) {
 		
 		this.panel.webview.postMessage({ command, data });
 		
 	}
 	
-	public removeMessageListener (name:string, listener?:MessageListener) :void {
+	public removeMessageListener (name:string, listener?:MessageListener) {
 		
 		if (!listener) delete this[LISTENERS][name];
 		
@@ -60,7 +60,7 @@ export class DiffMessage {
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		const listeners = this[LISTENERS];
 		

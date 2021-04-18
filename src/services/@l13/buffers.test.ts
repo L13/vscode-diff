@@ -2,9 +2,9 @@
 
 import * as assert from 'assert';
 
-import { normalizeLineEnding, trimWhitespace } from './buffers';
-
 import { Test } from '../../types';
+
+import { normalizeLineEnding, trimWhitespace } from './buffers';
 
 //	Variables __________________________________________________________________
 
@@ -243,7 +243,9 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
-						if (!(i === 0 && (j === 10 || j === 13))) assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, i, j])), Buffer.from([254, 255, i, j]));
+						if (!(i === 0 && (j === 10 || j === 13))) {
+							assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, i, j])), Buffer.from([254, 255, i, j]));
+						}
 					}
 				}
 				
@@ -302,7 +304,7 @@ describe('buffers', () => {
 				{
 					desc: 'don\'t change multiple \\n with content',
 					expect: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
-					toBe: [255, 254, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0 , 10, 0, 65, 0],
+					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
 				},
 				{
 					desc: 'change multiple \\r to \\n with content',
@@ -320,7 +322,9 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
-						if (!(j === 0 && (i === 10 || i === 13))) assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, i, j])), Buffer.from([255, 254, i, j]));
+						if (!(j === 0 && (i === 10 || i === 13))) {
+							assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, i, j])), Buffer.from([255, 254, i, j]));
+						}
 					}
 				}
 				

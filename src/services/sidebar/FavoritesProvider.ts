@@ -27,7 +27,7 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 	public favorites:Favorite[] = [];
 	public favoriteGroups:FavoriteGroup[] = [];
 	
-	private static current:FavoritesProvider = null;
+	public static current:FavoritesProvider = null;
 	
 	public static create (states:FavoritesStates) {
 		
@@ -40,21 +40,21 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		this.favorites = states.favorites;
 		this.favoriteGroups = states.favoriteGroups;
 		
-		const initialState:InitialState = settings.get('initialFavoriteGroupState', 'Remember');
+		const initialState:InitialState = settings.get('initialFavoriteGroupsState', 'remember');
 		
-		if (initialState !== 'Remember') {
-			this.favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = initialState === 'Collapsed');
+		if (initialState !== 'remember') {
+			this.favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = initialState === 'collapsed');
 		}
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		FavoritesProvider.current = null;
 		
 	}
 	
-	public refresh (states?:RefreshFavoritesStates) :void {
+	public refresh (states?:RefreshFavoritesStates) {
 		
 		if (states?.favorites) this.favorites = states.favorites;
 		if (states?.favoriteGroups) this.favoriteGroups = states.favoriteGroups;
@@ -63,13 +63,13 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		
 	}
 	
-	public getTreeItem (element:FavoriteTreeItems) :FavoriteTreeItems {
+	public getTreeItem (element:FavoriteTreeItems):FavoriteTreeItems {
 		
 		return element;
 		
 	}
 	
-	public getChildren (element?:FavoriteTreeItems) :Thenable<FavoriteTreeItems[]> {
+	public getChildren (element?:FavoriteTreeItems):Thenable<FavoriteTreeItems[]> {
 		
 		const list:FavoriteTreeItems[] = [];
 		

@@ -4,11 +4,17 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.32.0
+## What's new in Diff Folders 0.33.0
 
-- Added updating list view if a file or folder has been deleted in current workspace.
-- Supports new version 0.18.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-- Added `Add to Favorites` to history context menu.
+- Added `Compare` and `Compare in New Panel` to context menu in favorites and history view.
+- Added `Copy Left Path` and `Copy Right Path` to context menu in favorites and history view.
+- Added `l13Diff.openInNewDiffPanel`.
+- Enhanced context menu with `Reveal in Finder/Explorer`, `Open in Integrated Terminal`, `Open Workspace`, `Open as Workspace` and `Add Folders to Workspace` in favorites and history view. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+- Fixed `Reveal in Finder/Explorer` in list view for broken symbolic links. [Issue #82](https://github.com/L13/vscode-diff/issues/82)
+- Changed `l13Diff.initialFavoriteGroupState` to `l13Diff.initialFavoriteGroupsState`.
+- Changed values for `l13Diff.initialFavoriteGroupsState` to lower case.
+- Removed `Open` and `Open & Compare` from context menu in favorites and history view.
+- Removed `l13Diff.openFavoriteAndCompare`.
 
 ## Index
 
@@ -89,15 +95,15 @@ Compare two folders in Visual Studio Code.
 	* `*` matches zero or more characters in a path segment e.g. `*.txt`.
 	* `?` matches on one character in a path segment.
 	* `**` matches any number of path segments including none e.g. `**/node_modules`.
-* `l13Diff.openFavoriteAndCompare` - Set true if a click on a favorite diff should start a comparison.
+* `l13Diff.openInNewDiffPanel` - If true a click on a favorite diff or a previous comparison opens in a new diff panel.
 * `l13Diff.confirmCaseInsensitiveCompare` - If false confirm dialog for comparing case insensitive on a case sensitive file system does not appear.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmCaseInsensitiveCopy` - If false confirm dialog for copying case sensitive on a case insensitive file system does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
-* `l13Diff.initialFavoriteGroupState` - Set the initial state of a group.
-	* `Remember` - (default) Remember the collpased and expanded state of each group.
-	* `Collapsed` - Show all groups collapsed at start.
-	* `Expanded` - Show all groups expanded at start.
+* `l13Diff.initialFavoriteGroupsState` - Set the initial state of a group.
+	* `remember` - (default) Remember the collpased and expanded state of each group.
+	* `collapsed` - Show all groups collapsed at start.
+	* `expanded` - Show all groups expanded at start.
 * `l13Diff.labelFormat` - Indicates how the label of a tab should be formatted.
 	* `complete` - (default) Show relative paths including the common path.
 	* `compact` - Show relative paths including base folders.
@@ -248,7 +254,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Windows
 
-* `Reveal in Explorer` - Shows the current file in the explorer.
+* `Reveal in File Explorer` - Shows the current file in the explorer.
 
 #### Linux
 
@@ -284,20 +290,29 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
 
-#### Context Icons
+#### Favorites Context Icons
 
 * `New Diff Panel` - Open a new panel.
 * `New Group` - Add a new group.
 * `Collapse All` - Collapse all groups.
 
-#### Context Menu
+#### Favorites Context Menu
 
 * `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Open & Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open and Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
 * `Add to Group` - Add a favorite diff to a group.
-* `Remove` - Remove a favorite diff from a group.
-* `Rename` - Change the name of a favorite or a group.
-* `Delete` - Delete a favorite diff or a group. If you delete a group you can optionally delete all favorites in the group.
+* `Copy Left Path` - Copy the left path of the favorite diff to the clipboard.
+* `Copy Right Path` - Copy the right path of the favorite diff to the clipboard.
+* `Remove from Group` - Remove a favorite diff from a group.
+* `Rename` - Change the name of a favorite diff.
+* `Delete` - Delete a favorite diff.
+
+#### Favorite Groups Context Menu
+
+* `Open All ` - Open all favorite diffs of a group without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Open All and Compare` - Open all favorite diffs of a group and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Rename` - Change the name of a favorite group.
+* `Delete` - Delete a favorite group. Optionally you can delete also all favorites in the group.
 
 ### History
 
@@ -310,8 +325,10 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### Context Menu
 
 * `Open` - Open the previous comparison without starting a comparison immediately.
-* `Open & Compare` - Open the previous comparison and start a comparison immediately.
+* `Open and Compare` - Open the previous comparison and start a comparison immediately.
 * `Add to Favorites` - Add a previous comparison to favorites.
+* `Copy Left Path` - Copy the left path of the previous comparison to the clipboard.
+* `Copy Right Path` - Copy the right path of the previous comparison to the clipboard.
 * `Delete` - Delete the previous comparison from the history.
 
 ### Statusbar

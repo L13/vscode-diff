@@ -88,9 +88,9 @@ export class DiffDelete {
 		let selectSide = false;
 		
 		for (const diff of diffs) {
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if (diff.fileA) sides |= 1;
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if (diff.fileB) sides |= 2;
 			if (sides === 3) {
 				selectSide = true;
@@ -202,7 +202,7 @@ function removeSubfiles (folders:string[], files:string[]) {
 		let i = 0;
 		let file;
 		while ((file = files[i++])) {
-			if (file !== folder && file.startsWith(folder)) files.splice(--i , 1);
+			if (file !== folder && file.startsWith(folder)) files.splice(--i, 1);
 		}
 	}
 	

@@ -10,11 +10,6 @@
 		},
 		{
 			"type": "gulp",
-			"task": "script",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
 			"task": "clean",
 			"problemMatcher": []
 		},
@@ -26,26 +21,6 @@
 		{
 			"type": "npm",
 			"script": "compile",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "icons",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "style",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "templates",
-			"problemMatcher": []
-		},
-		{
-			"type": "npm",
-			"script": "test-files",
 			"problemMatcher": []
 		},
 		{

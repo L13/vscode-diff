@@ -28,7 +28,6 @@ const findScope = /\{\{\s*(.+?)\s*\}\}/;
 
 export function L13Component (options:Options) {
 	
-// tslint:disable-next-line: only-arrow-functions
 	return function (target:new () => any) {
 		
 		if (!hasParentClass(target, L13Element)) {
@@ -52,25 +51,23 @@ export function L13Component (options:Options) {
 
 export function L13Query (rule:string) {
 	
-	// tslint:disable-next-line: only-arrow-functions tslint:disable-next-line: ban-types
 	return function (prototype:any, name:string) {
 		
-		if (!prototype[QUERIES]) prototype[QUERIES] = new Map();
+		if (!prototype[QUERIES]) prototype[QUERIES] = new Map<string, string>();
 		
-		prototype[QUERIES].set(name, rule);
+		(<Map<string, string>>prototype[QUERIES]).set(name, rule);
 		
 	};
 	
 }
 
-export function L13Class (classNames:object) {
+export function L13Class (classNames:{ [name:string]:string }) {
 	
-	// tslint:disable-next-line: only-arrow-functions tslint:disable-next-line: ban-types
 	return function (prototype:any, name:string) {
 		
-		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map();
+		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map<string, { [name:string]:string }>();
 		
-		prototype[CLASSNAMES].set(name, classNames);
+		(<Map<string, { [name:string]:string }>>prototype[CLASSNAMES]).set(name, classNames);
 		
 	};
 	
@@ -78,11 +75,11 @@ export function L13Class (classNames:object) {
 
 export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
-	private [BINDINGS]:Map<Element, Map<string, string>> = new Map();
-			
+	private [BINDINGS]:Map<Element|Text, Map<string, string>> = new Map();
+	
 	private [CONDITIONALS]:Map<Element, { cmd:string, comment:Comment }> = new Map();
 	
-	private [CLASSNAMES]:Map<string, object>;
+	private [CLASSNAMES]:Map<string, { [name:string]:string }>;
 	
 	private [QUERIES]:Map<string, string>;
 	
@@ -96,22 +93,24 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
 	private [VIEWMODEL]:T;
 	
-	public get vmId () :null|string {
+	public get vmId ():string {
 		
 		return this.getAttribute('vmId');
 		
 	}
 	
-	public set vmId (value:null|string) {
+	public set vmId (id:string) {
 		
 		if (this[VIEWMODEL]) this[VIEWMODEL].dispose(this);
 		
-		if (value) this.setAttribute('vmId', value);
-		else this.removeAttribute('vmId');
+		const vm = this[SERVICE].model(id);
 		
-		this[VIEWMODEL] = this[SERVICE].model(value || this);
-		this[VIEWMODEL].connect(this);
-		this[VIEWMODEL].requestUpdate();
+		vm.connect(this);
+		vm.requestUpdate();
+		
+		this.setAttribute('vmId', vm.id);
+		
+		this[VIEWMODEL] = vm;
 		
 	}
 	
@@ -129,11 +128,12 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 		if (this[VIEWMODEL]) this[VIEWMODEL].dispose(this);
 		
-		if (typeof vm.vmId === 'string') this.setAttribute('vmId', vm.vmId);
+		this.setAttribute('vmId', vm.id);
+		
+		vm.connect(this);
+		vm.requestUpdate();
 		
 		this[VIEWMODEL] = vm;
-		this[VIEWMODEL].connect(this);
-		this[VIEWMODEL].requestUpdate();
 		
 	}
 	
@@ -147,7 +147,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		if (this[TEMPLATE]) {
 			shadowRoot.appendChild(this[TEMPLATE].content.cloneNode(true));
 			if (this[QUERIES]) {
-				for (const [name, query] of this[QUERIES]) (<any>this)[name] = shadowRoot.querySelector(query);
+				for (const [name, query] of this[QUERIES]) (<any> this)[name] = shadowRoot.querySelector(query);
 			}
 		}
 		
@@ -161,10 +161,10 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 	}
 	
-	public update () :void {
+	public update () {
 		
 		const viewmodel = this[VIEWMODEL];
-	
+		
 		for (const [element, { cmd, comment }] of this[CONDITIONALS]) {
 			const value = !!get(viewmodel, cmd);
 			if (value) {
@@ -181,7 +181,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 		if (this[CLASSNAMES]) {
 			for (const [name, classNames] of this[CLASSNAMES]) {
-				const element = (<any>this)[name];
+				const element:HTMLElement = (<any> this)[name];
 				for (const [className, path] of Object.entries(classNames)) {
 					if (get(viewmodel, path)) element.classList.add(className);
 					else element.classList.remove(className);
@@ -192,7 +192,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	}
 	
 	public dispatchCustomEvent (type:string, detail?:any) {
-	
+		
 		this.dispatchEvent(new CustomEvent(type, { detail, bubbles: false }));
 		
 	}
@@ -214,7 +214,7 @@ function hasParentClass (child:any, parent:any) :boolean {
 }
 
 function getAttributes (element:Element) {
-
+	
 	if (!element.attributes.length) return null;
 	
 	const attributes = element.attributes;
@@ -224,7 +224,7 @@ function getAttributes (element:Element) {
 	let name;
 	
 	while (i < length && (name = attributes[i++].nodeName)) {
-		map[name] = <string>element.getAttribute(name);
+		map[name] = element.getAttribute(name);
 	}
 	
 	return map;
@@ -236,27 +236,33 @@ function getAllTextNodes (root:Element|ShadowRoot) {
 	const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
 	const textNodes = [];
 	let node;
-		
-	while (node = walk.nextNode()) textNodes.push(node);
-		
-	return textNodes.length ? textNodes : null;
-		
-}
 	
-function initViewModel<T extends ViewModel> (component:L13Element<T>) {
-		
-	component[VIEWMODEL] = component[SERVICE].model(component.vmId || component);
-	component[VIEWMODEL].connect(component);
-	component[VIEWMODEL].requestUpdate();
+	while ((node = walk.nextNode())) textNodes.push(node);
+	
+	return textNodes.length ? textNodes : null;
 	
 }
 
-function registerBinding (component:any, element:Element|Text, name:string, cmd:string) {
+function initViewModel<T extends ViewModel> (component:L13Element<T>) {
+	
+	const vm = component[SERVICE].model(component.vmId);
+	
+	vm.connect(component);
+	vm.requestUpdate();
+	
+	component[VIEWMODEL] = vm;
+	
+}
+
+function registerBinding<T extends ViewModel> (component:L13Element<T>, element:Element|Text, name:string, cmd:string) {
 	
 	const bindings = component[BINDINGS];
 	let elementBindings = bindings.get(element);
 	
-	if (!elementBindings) bindings.set(element, (elementBindings = new Map()));
+	if (!elementBindings) {
+		elementBindings = new Map();
+		bindings.set(element, elementBindings);
+	}
 	
 	if (name === 'model') {
 		if (element instanceof HTMLInputElement && element.getAttribute('type') === 'checkbox') name = 'checked';
@@ -267,7 +273,7 @@ function registerBinding (component:any, element:Element|Text, name:string, cmd:
 	
 }
 
-function registerEvent (component:any, element:Element, name:string, cmd:string) {
+function registerEvent<T extends ViewModel> (component:L13Element<T>, element:Element, name:string, cmd:string) {
 	
 	if (name === 'model') {
 		if (element instanceof HTMLInputElement && element.getAttribute('type') === 'checkbox') {
@@ -275,7 +281,7 @@ function registerEvent (component:any, element:Element, name:string, cmd:string)
 				
 				const viewmodel = component[VIEWMODEL];
 				
-				set(viewmodel, cmd, (<HTMLInputElement>element).checked);
+				set(viewmodel, cmd, element.checked);
 				
 				viewmodel.requestUpdate();
 				
@@ -305,7 +311,7 @@ function registerEvent (component:any, element:Element, name:string, cmd:string)
 	
 }
 
-function registerCondition (component:any, element:Element, cmd:string) {
+function registerCondition<T extends ViewModel> (component:L13Element<T>, element:Element, cmd:string) {
 	
 	const comment = document.createComment(`[if]=${cmd}`);
 	
@@ -313,7 +319,7 @@ function registerCondition (component:any, element:Element, cmd:string) {
 	
 }
 
-function bindElements<T extends ViewModel> (component:L13Element<T>) :void {
+function bindElements<T extends ViewModel> (component:L13Element<T>) {
 	
 	const elements = component[SHADOW_ROOT].querySelectorAll('*');
 	
@@ -329,14 +335,14 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) :void {
 				
 				if (!matches) continue;
 				
-				const [match, bindon, bind, on] = matches;
+				const [, bindon, bind, on] = matches;
 				const name = bindon || bind || on;
 				
 				if (bindon || bind) {
 					if (name === 'if') registerCondition(component, element, value);
 					else registerBinding(component, element, name, value);
 				}
-				if (bindon || on) registerEvent(component, element, name, value);
+				if (bindon || on) registerEvent(component, element, name, value);
 			}
 			
 		});
@@ -392,7 +398,7 @@ function get (context:any, path:string) :any {
 	
 }
 
-function set (context:any, path:string, value:any) :void {
+function set (context:any, path:string, value:any) {
 	
 	const names:string[] = path.split('.');
 	let name:undefined|string = names.shift();
@@ -410,7 +416,7 @@ function set (context:any, path:string, value:any) :void {
 	
 }
 
-function run (context:any, path:string) :void {
+function run (context:any, path:string) {
 	
 	const names:string[] = path.split('.');
 	let name:undefined|string = names.shift();
@@ -418,6 +424,7 @@ function run (context:any, path:string) :void {
 	while (name && context != null) {
 		if (!names.length) {
 			name = name.replace(findParathensis, '');
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			if (typeof context[name] === 'function') context[name]();
 			return;
 		} else {
@@ -448,7 +455,7 @@ function createStyles (styles:string[]) :DocumentFragment {
 }
 
 function createTemplate (template:string) :HTMLTemplateElement {
-		
+	
 	const templateElement = <HTMLTemplateElement>document.createElement('TEMPLATE');
 	
 	templateElement.innerHTML = template;

@@ -20,13 +20,21 @@ const CTRL = '⌃';
 const SHIFT = '⇧';
 
 const macOSSymbols = {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Alt: ALT,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Cmd: CMD,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Command: CMD,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Control: CTRL,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Ctrl: CTRL,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Meta: CMD,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Option: ALT,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Shift: SHIFT,
 };
 

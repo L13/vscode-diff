@@ -17,6 +17,8 @@ import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
 export class L13DiffInputViewModelService extends ViewModelService<L13DiffInputViewModel> {
 	
+	public name = 'l13-diff-input';
+	
 	public vmc:ViewModelConstructor<L13DiffInputViewModel> = L13DiffInputViewModel;
 	
 }

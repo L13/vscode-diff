@@ -2,10 +2,11 @@
 
 import * as vscode from 'vscode';
 
-const { push } = Array.prototype;
+import { PackageLanguage } from '../../types';
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 const findStartDot = /^\./;
 
@@ -21,12 +22,11 @@ let findAssociations:RegExp = null;
 
 export function isTextFile (basename:string) {
 	
-	return findExtensions.test(basename) ||
-		filenames.includes(basename) ||
-		findAssociations && findAssociations.test(basename);
+	return findExtensions.test(basename)
+	|| filenames.includes(basename)
+	|| findAssociations && findAssociations.test(basename);
 	
 }
-
 export function buildWhitelistForTextFiles () {
 	
 	const config = vscode.workspace.getConfiguration();
@@ -38,21 +38,17 @@ export function buildWhitelistForTextFiles () {
 		
 		const packageJSON = extension.packageJSON;
 		
-		if (packageJSON.contributes && packageJSON.contributes.languages) {
-			packageJSON.contributes.languages.forEach((language:any) => {
+		(<PackageLanguage[]>packageJSON.contributes?.languages)?.forEach((language) => {
+			
+			language.extensions?.forEach((extname:string) => {
 				
-				if (language.extensions) {
-					language.extensions.forEach((extname:string) => {
-						
-						extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
-						
-					});
-				}
-				
-				if (language.filenames) push.apply(filenames, language.filenames);
+				extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
 				
 			});
-		}
+			
+			if (language.filenames) filenames.push(...language.filenames);
+			
+		});
 		
 	});
 	
@@ -61,7 +57,7 @@ export function buildWhitelistForTextFiles () {
 	filenames.sort();
 	
 	if (config.has('files.associations')) {
-		findAssociations = createFindGlob(Object.keys(config.get<object>('files.associations', {})));
+		findAssociations = createFindGlob(Object.keys(config.get('files.associations', {})));
 	} else findAssociations = null;
 	
 }

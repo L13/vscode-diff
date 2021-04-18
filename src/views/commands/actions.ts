@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { ActionsCommandsInit } from '../../types';
 
-import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,11 +14,11 @@ import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.
 
 //	Exports ____________________________________________________________________
 
-export function init (list:L13DiffListComponent) {
+export function init ({ list }:ActionsCommandsInit) {
 	
 	msg.on('l13Diff.action.actions.copyToLeftFolder', () => list.copy('right'));
 	msg.on('l13Diff.action.actions.copyToRightFolder', () => list.copy('left'));
-		
+	
 	msg.on('l13Diff.action.actions.selectAllEntries', () => {
 		
 		list.selectAll();

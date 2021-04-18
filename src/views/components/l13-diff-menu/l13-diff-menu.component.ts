@@ -12,8 +12,6 @@ import templates from '../templates';
 import { L13DiffMenuViewModelService } from './l13-diff-menu.service';
 import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 
-const { indexOf } = Array.prototype;
-
 //	Variables __________________________________________________________________
 
 
@@ -122,7 +120,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		if (elementActive) {
 			if (listElements.length === 1) return;
 
-			const index = indexOf.call(listElements, elementActive);
+			const index = Array.prototype.indexOf.call(listElements, elementActive);
 			const elementPrevious = listElements[index - 1] || listElements[listElements.length - 1];
 
 			scrollElementIntoView(this, elementPrevious);
@@ -143,7 +141,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		if (elementActive) {
 			if (listElements.length === 1) return;
 
-			const index = indexOf.call(listElements, elementActive);
+			const index = Array.prototype.indexOf.call(listElements, elementActive);
 			const elementNext = listElements[index + 1] || listElements[0];
 
 			scrollElementIntoView(this, elementNext);
@@ -153,7 +151,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 	}
 
-	public getSelection () :string {
+	public getSelection () {
 
 		const elementActive = this.lists.querySelector('.-active');
 

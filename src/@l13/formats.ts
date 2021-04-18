@@ -8,8 +8,8 @@ const { floor, log, pow } = Math;
 //	Variables __________________________________________________________________
 
 const byteUnits = [pluralBytes.size, 'KB', 'MB', 'GB', 'TB', 'PB'];
-const KB:number = 1024;
-const logKB:number = log(KB);
+const KB = 1024;
+const logKB = log(KB);
 
 //	Initialize _________________________________________________________________
 
@@ -39,6 +39,7 @@ export function formatFileSize (size:number) {
 
 export function formatDate (date:Date) {
 	
+	// eslint-disable-next-line max-len
 	return `${date.getFullYear()}-${formatDigit(date.getMonth() + 1)}-${formatDigit(date.getDate())} ${date.getHours()}:${formatDigit(date.getMinutes())}:${formatDigit(date.getSeconds())}`;
 	
 }

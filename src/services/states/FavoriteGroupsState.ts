@@ -28,7 +28,7 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context:vscode.ExtensionContext) {}
 	
 	private _onDidChangeFavoriteGroups:vscode.EventEmitter<FavoriteGroup[]> = new vscode.EventEmitter<FavoriteGroup[]>();
 	public readonly onDidChangeFavoriteGroups:vscode.Event<FavoriteGroup[]> = this._onDidChangeFavoriteGroups.event;
@@ -51,14 +51,14 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public async add (label:string) {
+	public add (label:string) {
 		
 		const favoriteGroups = this.get();
 		
 		if (favoriteGroups.some((favoriteGroup) => favoriteGroup.label === label)) return;
 		
 		favoriteGroups.push({ label, id: getNextGroupId(favoriteGroups), collapsed: false });
-		favoriteGroups.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
+		favoriteGroups.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
 		
 		this.save(favoriteGroups);
 		this._onDidChangeFavoriteGroups.fire(favoriteGroups);
@@ -73,7 +73,7 @@ export class FavoriteGroupsState {
 		for (const group of favoriteGroups) {
 			if (group.id === groupId) {
 				group.label = label;
-				favoriteGroups.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				favoriteGroups.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
 				this.save(favoriteGroups);
 				this._onDidChangeFavoriteGroups.fire(favoriteGroups);
 				break;
@@ -112,9 +112,9 @@ export class FavoriteGroupsState {
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
 		
-		favoriteGroups.some((group) => group.id === groupId ? (group.collapsed = collapsed) || true : false);
+		favoriteGroups.some((group) => group.id === groupId ? (group.collapsed = collapsed) || true : false);
 		
-		this.save(favoriteGroups);
+		states.updateCollapseState(this.context, favoriteGroups);
 		
 	}
 	

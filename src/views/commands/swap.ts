@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { SwapCommandsInit } from '../../types';
 
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,7 +14,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent) {
+export function init ({ diff }:SwapCommandsInit) {
 	
 	msg.on('l13Diff.action.inputs.swap', () => diff.swapInputs());
 	

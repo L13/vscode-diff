@@ -1,14 +1,14 @@
 //	Imports ____________________________________________________________________
 
+import * as path from 'path';
 import * as glob from 'glob';
 import Mocha from 'mocha';
-import * as path from 'path';
 
 //	Variables __________________________________________________________________
 
 const mocha = new Mocha({
 	ui: 'tdd',
-	color: true
+	color: true,
 });
 
 const files = glob.sync('**/*.test.js', {
@@ -19,7 +19,7 @@ const files = glob.sync('**/*.test.js', {
 
 files.forEach((file) => mocha.addFile(path.resolve(__dirname, file)));
 
-mocha.run((failures) => {
+mocha.run(() => {
 	
 	//
 	

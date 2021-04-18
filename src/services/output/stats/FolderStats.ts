@@ -13,14 +13,16 @@
 //	Exports ____________________________________________________________________
 
 export class FolderStats {
-	public pathname:string = '';
-	public entries:number = 0;
-	public files:number = 0;
-	public folders:number = 0;
-	public symlinks:number = 0;
-	public errors:number = 0;
-	public others:number = 0;
-	public size:number = 0;
+	
+	public pathname = '';
+	public entries = 0;
+	public files = 0;
+	public folders = 0;
+	public symlinks = 0;
+	public errors = 0;
+	public others = 0;
+	public size = 0;
+	
 }
 
 //	Functions __________________________________________________________________

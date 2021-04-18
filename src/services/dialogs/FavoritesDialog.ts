@@ -28,12 +28,12 @@ export class FavoritesDialog {
 		
 	}
 	
-	public constructor (private readonly favoriteState:FavoritesState) {}
+	private constructor (private readonly favoriteState:FavoritesState) {}
 	
 	public async add (fileA:string, fileB:string) {
 		
 		const label = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a name for the diff.',
+			placeHolder: 'Please enter a name for the diff',
 			value: `${fileA} ↔ ${fileB}`,
 		});
 		
@@ -50,11 +50,11 @@ export class FavoritesDialog {
 	public async rename (favorite:Favorite) {
 		
 		const label = await vscode.window.showInputBox({
-			placeHolder: 'Please enter a new name for the diff.',
+			placeHolder: 'Please enter a new name for the diff',
 			value: favorite.label,
 		});
 		
-		if (!label || favorite.label === label) return;
+		if (!label || favorite.label === label) return;
 		
 		if (this.favoriteState.getByName(label)) {
 			vscode.window.showErrorMessage(`Favorite diff with the name "${label}" exists!`);
@@ -75,7 +75,7 @@ export class FavoritesDialog {
 	
 	public async clear () {
 		
-		if (await dialogs.confirm(`Delete all favorites and groups?'`, 'Delete')) {
+		if (await dialogs.confirm('Delete all favorites and groups?', 'Delete')) {
 			this.favoriteState.clear();
 		}
 		

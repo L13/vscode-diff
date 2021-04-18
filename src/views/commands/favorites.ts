@@ -1,10 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFavoriteMessage } from '../../types';
+import { DiffFavoriteMessage, FavoritesCommandsInit } from '../../types';
 
 import { msg } from '../common';
-
-import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -16,7 +14,7 @@ import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-inp
 
 //	Exports ____________________________________________________________________
 
-export function init (leftVM:L13DiffInputViewModel, rightVM:L13DiffInputViewModel) {
+export function init ({ leftVM, rightVM }:FavoritesCommandsInit) {
 	
 	msg.on('l13Diff.action.panel.addToFavorites', () => {
 		

@@ -14,6 +14,7 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 import { FavoritesProvider } from '../sidebar/FavoritesProvider';
 import { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
+import { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
 
 import { FavoriteGroupsState } from '../states/FavoriteGroupsState';
 import { FavoritesState } from '../states/FavoritesState';
@@ -59,17 +60,6 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	subscriptions.push(treeView);
 	
-	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
-		
-		if (focused) { // Update data if changes in another workspace have been done
-			favoritesProvider.refresh({
-				favorites: favoritesState.get(),
-				favoriteGroups: favoriteGroupsState.get(),
-			});
-		}
-		
-	}));
-	
 	subscriptions.push(favoritesState.onDidChangeFavorites((favorites) => {
 		
 		favoritesProvider.refresh({
@@ -89,49 +79,43 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 	
-		'l13Diff.action.favorite.open': ({ favorite }) => {
+		'l13Diff.action.favorite.compare': ({ favorite }:FavoriteTreeItem) => {
 			
-			openFavorite(context, favorite, settings.get('openFavoriteAndCompare', false));
-			
-		},
-		
-		'l13Diff.action.favorite.openOnly': ({ favorite }) => openFavorite(context, favorite, false),
-		'l13Diff.action.favorite.openAndCompare': ({ favorite }) => openFavorite(context, favorite, true),
-		
-		'l13Diff.action.favorite.openInNewPanel': ({ favorite }) => {
-			
-			DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
+			openFavorite(context, favorite, settings.openInNewPanel());
 			
 		},
 		
-		'l13Diff.action.favorite.rename': ({ favorite }) => favoritesDialog.rename(favorite),
-		'l13Diff.action.favorite.remove': ({ favorite }) => favoritesDialog.remove(favorite),
+		'l13Diff.action.favorite.compareInCurrentPanel': ({ favorite }:FavoriteTreeItem) => {
+			
+			openFavorite(context, favorite, false);
+			
+		},
+		
+		'l13Diff.action.favorite.compareInNewPanel': ({ favorite }:FavoriteTreeItem) => {
+			
+			openFavorite(context, favorite, true);
+			
+		},
+		
+		'l13Diff.action.favorite.rename': ({ favorite }:FavoriteTreeItem) => favoritesDialog.rename(favorite),
+		'l13Diff.action.favorite.remove': ({ favorite }:FavoriteTreeItem) => favoritesDialog.remove(favorite),
 		
 		'l13Diff.action.favoriteGroups.add': () => favoriteGroupsDialog.add(),
 		
-		'l13Diff.action.favoriteGroups.open': ({ favoriteGroup }) => {
+		'l13Diff.action.favoriteGroups.compareAll': ({ favoriteGroup }:FavoriteGroupTreeItem) => {
 			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), settings.get('openFavoriteAndCompare', false));
-			
-		},
-		
-		'l13Diff.action.favoriteGroups.openOnly': ({ favoriteGroup }) => {
-			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), false);
+			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup));
 			
 		},
 		
-		'l13Diff.action.favoriteGroups.openAndCompare': ({ favoriteGroup }) => {
-			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), true);
-			
-		},
+		'l13Diff.action.favorite.addToGroup': ({ favorite }:FavoriteTreeItem) => favoriteGroupsDialog.addFavoriteToGroup(favorite),
+		'l13Diff.action.favorite.removeFromGroup': ({ favorite }:FavoriteTreeItem) => favoritesState.removeFavoriteFromGroup(favorite),
 		
-		'l13Diff.action.favorite.addToGroup': ({ favorite }) => favoriteGroupsDialog.addFavoriteToGroup(favorite),
-		'l13Diff.action.favorite.removeFromGroup': ({ favorite }) => favoritesState.removeFavoriteFromGroup(favorite),
+		'l13Diff.action.favorite.copyLeftPath': ({ favorite }:FavoriteTreeItem) => vscode.env.clipboard.writeText(favorite.fileA),
+		'l13Diff.action.favorite.copyRightPath': ({ favorite }:FavoriteTreeItem) => vscode.env.clipboard.writeText(favorite.fileB),
 		
-		'l13Diff.action.favoriteGroups.rename': ({ favoriteGroup }) => favoriteGroupsDialog.rename(favoriteGroup),
-		'l13Diff.action.favoriteGroups.remove': ({ favoriteGroup }) => favoriteGroupsDialog.remove(favoriteGroup),
+		'l13Diff.action.favoriteGroups.rename': ({ favoriteGroup }:FavoriteGroupTreeItem) => favoriteGroupsDialog.rename(favoriteGroup),
+		'l13Diff.action.favoriteGroups.remove': ({ favoriteGroup }:FavoriteGroupTreeItem) => favoriteGroupsDialog.remove(favoriteGroup),
 		
 		'l13Diff.action.favorites.clear': () => favoritesDialog.clear(),
 		
@@ -141,16 +125,17 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function openFavorite (context:vscode.ExtensionContext, favorite:Favorite, compare:boolean) {
+function openFavorite (context:vscode.ExtensionContext, favorite:Favorite, openInNewPanel:boolean) {
 	
-	DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+	if (openInNewPanel) DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
+	else DiffPanel.createOrShow(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
 	
 }
 
-async function openFavorites (context:vscode.ExtensionContext, favorites:Favorite[], compare:boolean) {
+async function openFavorites (context:vscode.ExtensionContext, favorites:Favorite[]) {
 	
 	for (const favorite of favorites) {
-		await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], compare);
+		await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
 	}
 	
 }

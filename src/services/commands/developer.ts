@@ -14,6 +14,7 @@ import * as states from '../common/states';
 
 //	Variables __________________________________________________________________
 
+// eslint-disable-next-line no-useless-escape
 const findBackupFileName = /\d{4}(\-\d{2}){5}(?:\-auto)?.json/;
 
 type Backup = {
@@ -117,7 +118,7 @@ async function createBackup (context:vscode.ExtensionContext, dirname:string, ba
 async function selectBackup (dirname:string) {
 	
 	if (!fs.existsSync(dirname)) {
-		vscode.window.showInformationMessage(`No backups available`);
+		vscode.window.showInformationMessage('No backups available');
 		return;
 	}
 	
@@ -125,7 +126,7 @@ async function selectBackup (dirname:string) {
 	const items = filenames.filter((name) => findBackupFileName.test(name)).map((label) => ({ label }));
 	
 	if (!items.length) {
-		vscode.window.showInformationMessage(`No backups available`);
+		vscode.window.showInformationMessage('No backups available');
 		return;
 	}
 	
@@ -137,6 +138,7 @@ async function selectBackup (dirname:string) {
 
 function formatDate (date:Date) {
 	
+	// eslint-disable-next-line max-len
 	return `${date.getFullYear()}-${formatDigit(date.getMonth() + 1)}-${formatDigit(date.getDate())}-${formatDigit(date.getHours())}-${formatDigit(date.getMinutes())}-${formatDigit(date.getSeconds())}`;
 	
 }

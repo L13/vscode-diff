@@ -132,7 +132,7 @@ export class DiffPanel {
 		
 	}
 	
-	public dispose (){
+	public dispose () {
 		
 		const currentPanels = DiffPanel.currentPanels;
 		
@@ -185,7 +185,7 @@ export class DiffPanel {
 		
 	}
 	
-	public getPanelState () :DiffPanelStateMessage {
+	public getPanelState ():DiffPanelStateMessage {
 		
 		return this.context.globalState.get(PANEL_STATE);
 		
@@ -367,6 +367,6 @@ function getHTMLforDiffPanel (context:vscode.ExtensionContext, webview:vscode.We
 
 function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
 	
-	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
+	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
 	
 }

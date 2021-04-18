@@ -28,7 +28,7 @@ export class FavoritesState {
 		
 	}
 	
-	public constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context:vscode.ExtensionContext) {}
 	
 	private _onDidChangeFavorites:vscode.EventEmitter<Favorite[]> = new vscode.EventEmitter<Favorite[]>();
 	public readonly onDidChangeFavorites:vscode.Event<Favorite[]> = this._onDidChangeFavorites.event;
@@ -41,7 +41,7 @@ export class FavoritesState {
 	
 	public getByName (label:string) {
 		
-		return this.get().find((favorite) => favorite.label === label) || null;
+		return this.get().find((favorite) => favorite.label === label) || null;
 		
 	}
 	
@@ -59,7 +59,7 @@ export class FavoritesState {
 		
 		favorites.push({ label, fileA, fileB });
 		
-		favorites.sort(({ label:a }, { label:b }) => sortCaseInsensitive(a, b));
+		favorites.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
 		
 		this.save(favorites);
 		this._onDidChangeFavorites.fire(favorites);
@@ -75,7 +75,7 @@ export class FavoritesState {
 		for (const fav of favorites) {
 			if (fav.label === favorite.label) {
 				fav.label = label;
-				favorites.sort(({ label:a}, { label:b }) => sortCaseInsensitive(a, b));
+				favorites.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
 				this.save(favorites);
 				this._onDidChangeFavorites.fire(favorites);
 				break;

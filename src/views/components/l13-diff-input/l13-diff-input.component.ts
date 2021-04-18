@@ -40,7 +40,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 	
 	public menu:L13DiffMenuComponent;
 	
-	public focused:boolean = false;
+	public focused = false;
 	
 	public constructor () {
 		
@@ -77,11 +77,12 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 			
 		});
 			
-		this.input.addEventListener('blur', async () => {
+		this.input.addEventListener('blur', () => {
 			
 			const menu = this.menu;
 			
 			this.focused = false;
+			
 			msg.send('context', { name: 'l13DiffInputFocus', value: false });
 			
 			if (!menu.isCursorInMenu && menu.parentNode === this) menu.remove();

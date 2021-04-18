@@ -14,9 +14,9 @@ const LOADING = Symbol.for('loading');
 
 export class L13DiffPanelViewModel extends ViewModel {
 	
-	private [LOADING]:boolean = false;
+	private [LOADING] = false;
 	
-	public get loading () :boolean {
+	public get loading () {
 		
 		return this[LOADING];
 		

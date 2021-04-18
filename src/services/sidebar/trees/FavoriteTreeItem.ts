@@ -23,8 +23,8 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 	
 	public command = {
 		arguments: [this],
-		command: 'l13Diff.action.favorite.open',
-		title: 'Open Favorite',
+		command: 'l13Diff.action.favorite.compare',
+		title: 'Compare',
 	};
 	
 	public iconPath = iconPath;

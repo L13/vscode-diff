@@ -61,11 +61,11 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	@L13Query('button')
 	private button:HTMLButtonElement;
 		
-	private right:number = 0;
+	private right = 0;
 	
-	private resizerOffsetX:number = 0;
+	private resizerOffsetX = 0;
 	
-	public focused:boolean = false;
+	public focused = false;
 	
 	public constructor () {
 		
@@ -129,7 +129,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.addEventListener('mousemove', this.resizeMove);
 		document.addEventListener('mouseup', this.resizeUp);
 		
-	}
+	};
 	
 	private resizeMove = (event:MouseEvent) => {
 		
@@ -137,9 +137,9 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		const width = this.right + this.resizerOffsetX - event.clientX;
 		
-		this.style.width = width + 'px';
+		this.style.width = `${width}px`;
 		
-	}
+	};
 		
 	private resizeUp = () => {
 		
@@ -149,7 +149,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		document.documentElement.classList.remove('-unselectable');
 		document.body.style.cursor = '';
 		
-	}
+	};
 	
 	public focus () {
 		

@@ -2,9 +2,9 @@
 
 import * as assert from 'assert';
 
-import { parse } from './jsonc';
-
 import { Test } from '../../types';
+
+import { parse } from './jsonc';
 
 //	Variables __________________________________________________________________
 

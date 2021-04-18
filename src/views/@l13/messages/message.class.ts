@@ -3,6 +3,8 @@
 import { remove } from '../../../@l13/arrays';
 import { MessageListener } from '../../../types';
 
+import { vscode } from '../../common';
+
 //	Variables __________________________________________________________________
 
 const LISTENERS = Symbol.for('listeners');
@@ -15,9 +17,9 @@ const LISTENERS = Symbol.for('listeners');
 
 export class Message {
 	
-	private [LISTENERS]:{ [name:string]: MessageListener[] } = Object.create(null);
+	private [LISTENERS]:{ [name:string]:MessageListener[] } = Object.create(null);
 	
-	public constructor (private root:any) {
+	public constructor (private readonly root:typeof vscode) {
 		
 		window.addEventListener('message', (event) => {
 			
@@ -32,7 +34,7 @@ export class Message {
 		
 	}
 	
-	public on (name:string, listener:MessageListener) :void {
+	public on (name:string, listener:MessageListener) {
 		
 		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
@@ -40,7 +42,7 @@ export class Message {
 		
 	}
 	
-	public send <T> (command:string, data:T = null) :void {
+	public send <T> (command:string, data:T = null) {
 		
 		this.root.postMessage({ command, data });
 		

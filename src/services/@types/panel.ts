@@ -13,7 +13,7 @@
 //	Exports ____________________________________________________________________
 
 export type ContextStates = {
-	[name:string]: boolean,
+	[name:string]:boolean,
 };
 
 export type Uri = {
