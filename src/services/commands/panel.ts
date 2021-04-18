@@ -33,7 +33,6 @@ export function activate (context:vscode.ExtensionContext) {
 	});
 	
 	if (vscode.window.registerWebviewPanelSerializer) {
-		
 		vscode.window.registerWebviewPanelSerializer(DiffPanel.viewType, {
 			
 			// eslint-disable-next-line @typescript-eslint/require-await

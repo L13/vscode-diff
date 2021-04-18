@@ -259,14 +259,12 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	const sizeB = fileB.stat.size;
 	
 	if (typeA === 'file') {
-		
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
 		} else if ((ignoreEndOfLine || ignoreTrimWhitespace)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
-				
 			// if (sizeA === sizeB && sizeA > MAX_CACHE_BUFFER_LENGTH && hasSameContents(fileA.fsPath, fileB.fsPath)) return;
 				
 			let bufferA = fs.readFileSync(fileA.fsPath);
@@ -288,9 +286,7 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
-			
 		} else {
-			
 			if (sizeA === sizeB) {
 				if (sizeA <= MAX_CACHE_BUFFER_LENGTH) {
 					const bufferA = fs.readFileSync(fileA.fsPath);
@@ -298,10 +294,8 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 					if (!bufferA.equals(bufferB)) diff.status = 'modified';
 				} else if (!hasSameContents(fileA.fsPath, fileB.fsPath)) diff.status = 'modified';
 			} else diff.status = 'modified';
-			
 		}
 	} else if (typeA === 'symlink') {
-		
 		if (sizeA === sizeB) {
 			if (!ignoreContents) {
 				const linkA = fs.readlinkSync(fileA.fsPath);
@@ -309,7 +303,6 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 				if (linkA !== linkB) diff.status = 'modified';
 			}
 		} else diff.status = 'modified';
-		
 	}
 	
 }

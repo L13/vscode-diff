@@ -417,7 +417,6 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 	diffs.forEach((diff) => {
 		
 		if (diff.type === 'folder' && (!diff.fileA || !diff.fileB)) {
-			
 			copiedDiffs.some((copiedDiff:Diff) => {
 				
 				if (diff.id !== copiedDiff.id && (copiedDiff.status === 'unchanged' || copiedDiff.status === 'ignored')) {
@@ -428,7 +427,6 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 				return false;
 				
 			});
-			
 		}
 		
 	});

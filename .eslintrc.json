@@ -17,6 +17,7 @@
 	"plugins": [
 		"eslint-plugin-import",
 		"eslint-plugin-jsdoc",
+		"eslint-plugin-l13",
 		"@typescript-eslint"
 	],
 	"rules": {
@@ -213,6 +214,15 @@
 		"jsdoc/check-alignment": "error",
 		"jsdoc/check-indentation": "error",
 		"jsdoc/newline-after-description": "error",
+		"l13/padded-blocks-extended": [
+			"error",
+			{
+				"blocks": "never",
+				"classes": "always",
+				"functions": "always",
+				"switches": "never"
+			}
+		],
 		"array-bracket-spacing": "error",
 		"arrow-parens": "error",
 		"arrow-spacing": "error",

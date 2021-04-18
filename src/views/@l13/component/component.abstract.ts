@@ -350,36 +350,33 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) {
 	
 	const textNodes = getAllTextNodes(component[SHADOW_ROOT]);
 	
-	if (textNodes) {
+	textNodes?.forEach((textNode) => {
 		
-		textNodes.forEach((textNode) => {
-			
-			if (!textNode.parentNode || textNode.parentNode.nodeName === 'STYLE' || textNode.parentNode.nodeName === 'SCRIPT') return;
-			
-			let text = textNode.nodeValue;
-			
-			if (!text) return;
-			
-			let match = findScope.exec(text);
-			
-			if (!match) return;
-			
-			const fragment = document.createDocumentFragment();
-			
-			do {
-				fragment.appendChild(document.createTextNode(text.slice(0, match.index)));
-				const scope = document.createTextNode('');
-				registerBinding(component, scope, 'nodeValue', match[1]);
-				fragment.appendChild(scope);
-				text = text.slice(match.index + match[0].length);
-			} while ((match = findScope.exec(text)));
-			
-			if (text) fragment.appendChild(document.createTextNode(text));
-			
-			textNode.parentNode.replaceChild(fragment, textNode);
-			
-		});
-	}
+		if (!textNode.parentNode || textNode.parentNode.nodeName === 'STYLE' || textNode.parentNode.nodeName === 'SCRIPT') return;
+		
+		let text = textNode.nodeValue;
+		
+		if (!text) return;
+		
+		let match = findScope.exec(text);
+		
+		if (!match) return;
+		
+		const fragment = document.createDocumentFragment();
+		
+		do {
+			fragment.appendChild(document.createTextNode(text.slice(0, match.index)));
+			const scope = document.createTextNode('');
+			registerBinding(component, scope, 'nodeValue', match[1]);
+			fragment.appendChild(scope);
+			text = text.slice(match.index + match[0].length);
+		} while ((match = findScope.exec(text)));
+		
+		if (text) fragment.appendChild(document.createTextNode(text));
+		
+		textNode.parentNode.replaceChild(fragment, textNode);
+		
+	});
 	
 }
 

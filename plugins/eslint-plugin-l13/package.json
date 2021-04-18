@@ -1,0 +1,15 @@
+{
+	"name": "eslint-plugin-l13",
+	"main": "lib/index.js",
+	"version": "0.13.0",
+	"scripts": {
+		"test": "node tests/lib"
+	},
+	"devDependencies": {
+		"eslint": "^7.24.0"
+	},
+	"license": "SEE LICENCE",
+	"engines": {
+		"node": "^10.12.0 || >=12.0.0"
+	}
+}
