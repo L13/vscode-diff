@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.34.0] - 2021-05-02
+
+### Added
+
+- Added virtual scrolling in list view.
+
 ## [0.33.0] - 2021-04-18
 
 ### Added
