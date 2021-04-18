@@ -3,7 +3,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { ContextStates, DiffInitViewMessage, DiffPanelStateMessage, DiffUpdatePathsMessage, Uri } from '../../types';
+import type { ContextStates, DiffInitViewMessage, DiffPanelStateMessage, DiffUpdatePathsMessage, Uri } from '../../types';
 
 import { remove } from '../../@l13/arrays';
 import { formatName, formatNameAndDesc } from '../@l13/formats';

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { SwapCommandsInit } from '../../types';
+import type { SwapCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

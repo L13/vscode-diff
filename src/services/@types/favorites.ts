@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
-import { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
+import type { FavoriteGroupTreeItem } from '../sidebar/trees/FavoriteGroupTreeItem';
+import type { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
 
 //	Variables __________________________________________________________________
 

@@ -2,7 +2,7 @@
 
 import * as assert from 'assert';
 
-import { Test } from '../../types';
+import type { Test } from '../../types';
 
 import { parse } from './jsonc';
 

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFavoriteMessage, FavoritesCommandsInit } from '../../types';
+import type { DiffFavoriteMessage, FavoritesCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

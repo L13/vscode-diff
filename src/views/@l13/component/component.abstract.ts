@@ -1,8 +1,9 @@
 //	Imports ____________________________________________________________________
 
-import { Options } from '../../@types/components';
+import type { Options } from '../../@types/components';
+
 import { ViewModelService } from './view-model-service.abstract';
-import { ViewModel } from './view-model.abstract';
+import type { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________
 

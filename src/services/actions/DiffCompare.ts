@@ -5,11 +5,20 @@ import * as fs from 'fs';
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
+import { sortCaseInsensitive } from '../../@l13/arrays';
 import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
-import { sortCaseInsensitive } from '../../@l13/arrays';
-import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, StartEvent, StatsMap } from '../../types';
+import type {
+	Dictionary,
+	Diff,
+	DiffError,
+	DiffFile,
+	DiffInitMessage,
+	DiffSettings,
+	StartEvent,
+	StatsMap,
+} from '../../types';
 
 import * as dialogs from '../common/dialogs';
 import { isTextFile } from '../common/extensions';

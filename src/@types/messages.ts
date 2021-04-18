@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { Uri } from '../types';
+import type { Uri } from '../types';
 
-import { Diff, DiffFile, DiffSettings } from './diffs';
+import type { Diff, DiffFile, DiffSettings } from './diffs';
 
 //	Variables __________________________________________________________________
 

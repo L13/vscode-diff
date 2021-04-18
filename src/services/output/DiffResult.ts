@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffSettings } from '../../types';
+import type { Diff, DiffSettings } from '../../types';
 
 //	Variables __________________________________________________________________
 

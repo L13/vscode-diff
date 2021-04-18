@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffEventsInit, DiffInitViewMessage, DiffUpdatePathsMessage } from '../../types';
+import type { DiffEventsInit, DiffInitViewMessage, DiffUpdatePathsMessage } from '../../types';
 
 import { msg } from '../common';
 

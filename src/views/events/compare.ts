@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { CompareEventsInit } from '../../types';
+import type { CompareEventsInit } from '../../types';
 
 import { msg } from '../common';
 

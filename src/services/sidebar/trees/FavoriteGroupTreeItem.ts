@@ -2,7 +2,7 @@
 
 import { TreeItemCollapsibleState, TreeItem } from 'vscode';
 
-import { FavoriteGroup } from '../../../types';
+import type { FavoriteGroup } from '../../../types';
 
 //	Variables __________________________________________________________________
 

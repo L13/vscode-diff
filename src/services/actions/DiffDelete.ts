@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { DeleteDialog, Diff, DiffFile } from '../../types';
+import type { DeleteDialog, Diff, DiffFile } from '../../types';
 
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';

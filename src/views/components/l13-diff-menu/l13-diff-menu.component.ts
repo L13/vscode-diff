@@ -10,7 +10,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffMenuViewModelService } from './l13-diff-menu.service';
-import { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
+import type { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 
 //	Variables __________________________________________________________________
 

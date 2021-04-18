@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ActionsCommandsInit } from '../../types';
+import type { ActionsCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

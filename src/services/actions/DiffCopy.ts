@@ -8,7 +8,16 @@ import { formatAmount } from '../../@l13/formats';
 import { pluralFiles } from '../../@l13/units/files';
 import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse';
 
-import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
+import type {
+	CopyFileEvent,
+	CopyFilesEvent,
+	CopyFilesJob,
+	Diff,
+	DiffCopyMessage,
+	DiffFile,
+	DiffMultiCopyMessage,
+	MultiCopyEvent,
+} from '../../types';
 
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';

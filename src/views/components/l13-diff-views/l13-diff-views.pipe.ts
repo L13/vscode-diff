@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, ViewsCache } from '../../../types';
+import type { Diff, ViewsCache } from '../../../types';
 
-import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
+import type { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 
-import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
+import type { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
 //	Variables __________________________________________________________________
 

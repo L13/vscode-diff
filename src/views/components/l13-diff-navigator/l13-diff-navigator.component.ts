@@ -6,7 +6,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffNavigatorViewModelService } from './l13-diff-navigator.service';
-import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
+import type { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 const { round } = Math;
 

@@ -1,19 +1,19 @@
 //	Imports ____________________________________________________________________
 
-import { DiffInitMessage, DiffPanelStateMessage, DiffStatus, ListItemInfo } from '../../../types';
+import type { DiffInitMessage, DiffPanelStateMessage, DiffStatus, ListItemInfo } from '../../../types';
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
-import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
-import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
-import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
-import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
-import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
-import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
-import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
-import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
+import type { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
+import type { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
+import type { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import type { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
+import type { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
+import type { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import type { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
+import type { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
+import type { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
+import type { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
@@ -35,7 +35,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffViewModelService } from './l13-diff.service';
-import { L13DiffViewModel } from './l13-diff.viewmodel';
+import type { L13DiffViewModel } from './l13-diff.viewmodel';
 
 //	Variables __________________________________________________________________
 

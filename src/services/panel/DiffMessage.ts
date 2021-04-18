@@ -2,8 +2,9 @@
 
 import * as vscode from 'vscode';
 
+import type { Message, MessageListener } from '../../types';
+
 import { remove } from '../../@l13/arrays';
-import { Message, MessageListener } from '../../types';
 
 //	Variables __________________________________________________________________
 

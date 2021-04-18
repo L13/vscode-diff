@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { SwapEventsInit } from '../../types';
+import type { SwapEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 

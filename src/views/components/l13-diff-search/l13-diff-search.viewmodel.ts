@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModel } from '../../@l13/component/view-model.abstract';
+import type { SearchState } from '../../../types';
 
-import { SearchState } from '../../../types';
+import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 

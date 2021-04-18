@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ListCommandsInit } from '../../types';
+import type { ListCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

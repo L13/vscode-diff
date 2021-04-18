@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { CompareCommandsInit } from '../../types';
+import type { CompareCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

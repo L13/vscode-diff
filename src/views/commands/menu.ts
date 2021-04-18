@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { MenuCommandsInit } from '../../types';
+import type { MenuCommandsInit } from '../../types';
 
 import { msg } from '../common';
 

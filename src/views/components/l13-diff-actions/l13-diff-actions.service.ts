@@ -1,7 +1,8 @@
 //	Imports ____________________________________________________________________
 
 import { ViewModelService } from '../../@l13/component/view-model-service.abstract';
-import { ViewModelConstructor } from '../../@types/components';
+
+import type { ViewModelConstructor } from '../../@types/components';
 
 import { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 

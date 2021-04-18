@@ -3,7 +3,7 @@
 import { basename } from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffFile } from '../../types';
+import type { Diff, DiffFile } from '../../types';
 
 import { formatName, formatNameAndDesc } from '../@l13/formats';
 import { lstat } from '../@l13/fse';

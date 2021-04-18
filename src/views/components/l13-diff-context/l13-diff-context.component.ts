@@ -8,7 +8,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffContextViewModelService } from './l13-diff-context.service';
-import { L13DiffContextViewModel } from './l13-diff-context.viewmodel';
+import type { L13DiffContextViewModel } from './l13-diff-context.viewmodel';
 
 //	Variables __________________________________________________________________
 

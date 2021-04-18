@@ -1,7 +1,8 @@
 //	Imports ____________________________________________________________________
 
+import type { MessageListener } from '../../../types';
+
 import { remove } from '../../../@l13/arrays';
-import { MessageListener } from '../../../types';
 
 import { vscode } from '../../common';
 

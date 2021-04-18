@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { NavigatorEventsInit } from '../../types';
+import type { NavigatorEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 

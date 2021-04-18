@@ -3,8 +3,9 @@
 import { formatAmount, formatFileSize } from '../../@l13/formats';
 import { pluralErrors, pluralFiles, pluralFolders, pluralOthers, pluralSymlinks } from '../../@l13/units/files';
 
-import { Diff, DiffFile } from '../../types';
-import { DiffResult } from './DiffResult';
+import type { Diff, DiffFile } from '../../types';
+
+import type { DiffResult } from './DiffResult';
 
 import { DetailStats } from './stats/DetailStats';
 import { FolderStats } from './stats/FolderStats';

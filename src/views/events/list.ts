@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ListEventsInit } from '../../types';
+import type { ListEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 

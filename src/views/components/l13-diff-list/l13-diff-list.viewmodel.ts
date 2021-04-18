@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import {
+import type {
 	DeletedFilesMessage,
 	Diff,
 	DiffCopyMessage,
@@ -15,7 +15,7 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 import { msg } from '../../common';
 
-import { L13DiffListPipe } from './l13-diff-list.interface';
+import type { L13DiffListPipe } from './l13-diff-list.interface';
 
 //	Variables __________________________________________________________________
 

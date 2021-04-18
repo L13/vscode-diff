@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffMenuMessage } from '../../../types';
+import type { DiffMenuMessage } from '../../../types';
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ActionsEventsInit } from '../../types';
+import type { ActionsEventsInit } from '../../types';
 
 import { isMetaKey } from '../common';
 

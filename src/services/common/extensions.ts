@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { PackageLanguage } from '../../types';
+import type { PackageLanguage } from '../../types';
 
 //	Variables __________________________________________________________________
 

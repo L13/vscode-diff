@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffFile, DiffOpenMessage, DiffStatus } from '../../../types';
+import type { Diff, DiffFile, DiffOpenMessage, DiffStatus } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 import { formatDate, formatFileSize } from '../../../@l13/formats';
@@ -10,13 +10,13 @@ import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, 
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
 import { Direction } from '../../enums';
 
-import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
+import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
 import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffListViewModelService } from './l13-diff-list.service';
-import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
+import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 

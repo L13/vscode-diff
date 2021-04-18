@@ -1,7 +1,9 @@
 //	Imports ____________________________________________________________________
 
 import { remove } from '../../../@l13/arrays';
+
 import { EventDispatcher } from '../events/event-dispatcher.class';
+
 import { L13Element } from './component.abstract';
 
 //	Variables __________________________________________________________________

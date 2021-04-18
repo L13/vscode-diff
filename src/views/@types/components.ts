@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModel } from '../@l13/component/view-model.abstract';
-import { ViewModelService } from '../@l13/core';
+import type { ViewModel } from '../@l13/component/view-model.abstract';
+import type { ViewModelService } from '../@l13/core';
 
 //	Variables __________________________________________________________________
 
@@ -21,7 +21,7 @@ export type Options = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ViewModelConstructor<T extends ViewModel> = new (options?:object) => T;
+export type ViewModelConstructor<T extends ViewModel> = new (options?:{ [name:string]:any }) => T;
 
 export type ViewModelServiceConstructor<T extends ViewModelService<ViewModel>> = new () => T;
 
