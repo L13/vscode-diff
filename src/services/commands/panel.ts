@@ -23,7 +23,7 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		'l13Diff.action.panel.open': () => DiffPanel.create(context),
 		
-		'l13Diff.action.panel.openAndCompare': (left, right, newPanel, openToSide) => {
+		'l13Diff.action.panel.openAndCompare': (left:vscode.Uri, right:vscode.Uri, newPanel:boolean, openToSide:boolean) => {
 			
 			if (newPanel) DiffPanel.create(context, [left, right], true, openToSide);
 			else DiffPanel.createOrShow(context, [left, right], true);
@@ -36,6 +36,7 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		vscode.window.registerWebviewPanelSerializer(DiffPanel.viewType, {
 			
+			// eslint-disable-next-line @typescript-eslint/require-await
 			async deserializeWebviewPanel (webviewPanel:vscode.WebviewPanel) {
 				
 				DiffPanel.revive(webviewPanel, context);

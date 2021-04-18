@@ -2,11 +2,11 @@
 
 import { L13Component, L13Element } from '../../@l13/core';
 
-import { L13DiffPanelViewModelService } from './l13-diff-panel.service';
-import { L13DiffPanelViewModel } from './l13-diff-panel.viewmodel';
-
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffPanelViewModelService } from './l13-diff-panel.service';
+import { L13DiffPanelViewModel } from './l13-diff-panel.viewmodel';
 
 //	Variables __________________________________________________________________
 

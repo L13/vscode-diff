@@ -17,21 +17,21 @@ export let isWindows = false;
 export let isLinux = false;
 
 export function detectPlatform () {
-
+	
 	const body = document.body;
-
+	
 	isMacOs = !!body.classList.contains('platform-mac');
 	isWindows = !!body.classList.contains('platform-win');
 	isLinux = !!body.classList.contains('platform-linux');
-
+	
 }
 
 // Only for testing platform features
 
 export function changePlatform () {
-
+	
 	let platform;
-
+	
 	if (isMacOs) {
 		isMacOs = false;
 		isWindows = true;
@@ -45,10 +45,10 @@ export function changePlatform () {
 		isMacOs = true;
 		platform = 'macOS';
 	}
-
-// tslint:disable-next-line: no-console
+	
+	// eslint-disable-next-line no-console
 	console.log(`Changed platform to '${platform}'`);
-
+	
 }
 
 //	Functions __________________________________________________________________

@@ -1,0 +1,7 @@
+.cache/
+.vscode/
+images/
+media/
+out/
+plugins/
+gulpfile.js

@@ -51,6 +51,11 @@ export type DiffInitViewMessage = {
 	compare:boolean,
 };
 
+export type DiffMenuMessage = {
+	history:string[],
+	workspaces:string[],
+};
+
 export type DiffMultiCopyMessage = {
 	ids:string[],
 	pathA:string,
@@ -65,14 +70,14 @@ export type DiffOpenMessage = {
 };
 
 export type DiffPanelStateMessage = {
-	views: {
+	views:{
 		unchangedChecked:boolean,
 		deletedChecked:boolean,
 		modifiedChecked:boolean,
 		untrackedChecked:boolean,
 		ignoredChecked:boolean,
 	},
-	search: {
+	search:{
 		searchterm:string,
 		useRegExp:boolean,
 		useCaseSensitive:boolean,
@@ -94,6 +99,11 @@ export type DiffResultMessage = {
 export type DiffUpdatePathsMessage = {
 	uris:Uri[],
 	compare:boolean,
+};
+
+export type Message = {
+	command:string,
+	data:any,
 };
 
 export type MessageListener = (...args:any[]) => void;

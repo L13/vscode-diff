@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.32.0",
+	"version": "0.33.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -112,24 +112,28 @@
 				}
 			},
 			{
-				"command": "l13Diff.action.favorite.open",
-				"title": "Open"
+				"command": "l13Diff.action.favorite.compare",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.favorite.openOnly",
-				"title": "Open"
+				"command": "l13Diff.action.favorite.compareInCurrentPanel",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.favorite.openAndCompare",
-				"title": "Open & Compare"
+				"command": "l13Diff.action.favorite.compareInNewPanel",
+				"title": "Compare in New Panel"
 			},
 			{
-				"command": "l13Diff.action.favorite.openInNewPanel",
-				"title": "Open in New Panel",
-				"icon": {
-					"light": "images/favorites/open-diff-light.svg",
-					"dark": "images/favorites/open-diff-dark.svg"
-				}
+				"command": "l13Diff.action.favorite.addToGroup",
+				"title": "Add to Group..."
+			},
+			{
+				"command": "l13Diff.action.favorite.copyLeftPath",
+				"title": "Copy Left Path"
+			},
+			{
+				"command": "l13Diff.action.favorite.copyRightPath",
+				"title": "Copy Right Path"
 			},
 			{
 				"command": "l13Diff.action.favorite.rename",
@@ -148,28 +152,12 @@
 				}
 			},
 			{
-				"command": "l13Diff.action.favorite.addToGroup",
-				"title": "Add to Group..."
-			},
-			{
 				"command": "l13Diff.action.favorite.removeFromGroup",
 				"title": "Remove from Group"
 			},
 			{
-				"command": "l13Diff.action.favoriteGroups.open",
-				"title": "Open All",
-				"icon": {
-					"light": "images/favorites/open-group-light.svg",
-					"dark": "images/favorites/open-group-dark.svg"
-				}
-			},
-			{
-				"command": "l13Diff.action.favoriteGroups.openOnly",
-				"title": "Open All"
-			},
-			{
-				"command": "l13Diff.action.favoriteGroups.openAndCompare",
-				"title": "Open All & Compare"
+				"command": "l13Diff.action.favoriteGroups.compareAll",
+				"title": "Compare All"
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.rename",
@@ -184,28 +172,28 @@
 				"title": "Diff Folders: Delete All Favorites"
 			},
 			{
-				"command": "l13Diff.action.history.open",
-				"title": "Open"
+				"command": "l13Diff.action.history.compare",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.history.openOnly",
-				"title": "Open"
+				"command": "l13Diff.action.history.compareInCurrentPanel",
+				"title": "Compare"
 			},
 			{
-				"command": "l13Diff.action.history.openAndCompare",
-				"title": "Open & Compare"
-			},
-			{
-				"command": "l13Diff.action.history.openInNewPanel",
-				"title": "Open in New Panel",
-				"icon": {
-					"light": "images/favorites/open-diff-light.svg",
-					"dark": "images/favorites/open-diff-dark.svg"
-				}
+				"command": "l13Diff.action.history.compareInNewPanel",
+				"title": "Compare in New Panel"
 			},
 			{
 				"command": "l13Diff.action.history.addToFavorites",
-				"title": "Add to Favorites"
+				"title": "Add to Favorites..."
+			},
+			{
+				"command": "l13Diff.action.history.copyLeftPath",
+				"title": "Copy Left Path"
+			},
+			{
+				"command": "l13Diff.action.history.copyRightPath",
+				"title": "Copy Right Path"
 			},
 			{
 				"command": "l13Diff.action.history.remove",
@@ -632,19 +620,23 @@
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'"
 				},
 				{
-					"command": "l13Diff.action.favorite.open",
+					"command": "l13Diff.action.favorite.compare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorite.openOnly",
+					"command": "l13Diff.action.favorite.compareInCurrentPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorite.openAndCompare",
+					"command": "l13Diff.action.favorite.compareInNewPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favorite.openInNewPanel",
+					"command": "l13Diff.action.favorite.copyLeftPath",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.favorite.copyRightPath",
 					"when": "false"
 				},
 				{
@@ -664,15 +656,7 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.favoriteGroups.open",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openOnly",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openAndCompare",
+					"command": "l13Diff.action.favoriteGroups.compareAll",
 					"when": "false"
 				},
 				{
@@ -684,23 +668,27 @@
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.open",
+					"command": "l13Diff.action.history.compare",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.openOnly",
+					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"when": "false"
 				},
 				{
-					"command": "l13Diff.action.history.openAndCompare",
-					"when": "false"
-				},
-				{
-					"command": "l13Diff.action.history.openInNewPanel",
+					"command": "l13Diff.action.history.compareInNewPanel",
 					"when": "false"
 				},
 				{
 					"command": "l13Diff.action.history.addToFavorites",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.copyLeftPath",
+					"when": "false"
+				},
+				{
+					"command": "l13Diff.action.history.copyRightPath",
 					"when": "false"
 				},
 				{
@@ -916,23 +904,28 @@
 			],
 			"view/item/context": [
 				{
-					"command": "l13Diff.action.favorite.openOnly",
+					"command": "l13Diff.action.favorite.compareInCurrentPanel",
 					"group": "navigation@1",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorite.openAndCompare",
+					"command": "l13Diff.action.favorite.compareInNewPanel",
 					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
 					"command": "l13Diff.action.favorite.addToGroup",
-					"group": "navigation@3",
+					"group": "navigation@5",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favorite.openInNewPanel",
-					"group": "inline",
+					"command": "l13Diff.action.favorite.copyLeftPath",
+					"group": "6_copypath@1",
+					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
+				},
+				{
+					"command": "l13Diff.action.favorite.copyRightPath",
+					"group": "6_copypath@2",
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
@@ -951,18 +944,8 @@
 					"when": "view == l13DiffFavorites && viewItem =~ /favorite$/"
 				},
 				{
-					"command": "l13Diff.action.favoriteGroups.open",
-					"group": "inline",
-					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openOnly",
+					"command": "l13Diff.action.favoriteGroups.compareAll",
 					"group": "navigation@1",
-					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
-				},
-				{
-					"command": "l13Diff.action.favoriteGroups.openAndCompare",
-					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
@@ -976,23 +959,28 @@
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
-					"command": "l13Diff.action.history.openOnly",
+					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"group": "navigation@1",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.action.history.openAndCompare",
+					"command": "l13Diff.action.history.compareInNewPanel",
 					"group": "navigation@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
 					"command": "l13Diff.action.history.addToFavorites",
-					"group": "navigation@3",
+					"group": "navigation@5",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
-					"command": "l13Diff.action.history.openInNewPanel",
-					"group": "inline",
+					"command": "l13Diff.action.history.copyLeftPath",
+					"group": "6_copypath@1",
+					"when": "view == l13DiffHistory && viewItem == history"
+				},
+				{
+					"command": "l13Diff.action.history.copyRightPath",
+					"group": "6_copypath@2",
 					"when": "view == l13DiffHistory && viewItem == history"
 				},
 				{
@@ -1003,12 +991,12 @@
 				{
 					"command": "l13Diff.action.projects.compareWithSelected",
 					"group": "3_compare@1",
-					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
+					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(current-)?(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.selectForCompare",
 					"group": "3_compare@2",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(current-)?(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
 				},
 				{
 					"command": "l13Diff.action.projects.compareWithWorkspace",
@@ -1120,18 +1108,18 @@
 					},
 					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},
-				"l13Diff.openFavoriteAndCompare": {
+				"l13Diff.openInNewDiffPanel": {
 					"type": "boolean",
-					"default": true,
-					"description": "Should click on favorite start a compare?"
+					"default": false,
+					"description": "Controls whether a click on a favorite diff or a previous comparison should open in a new diff panel."
 				},
-				"l13Diff.initialFavoriteGroupState": {
+				"l13Diff.initialFavoriteGroupsState": {
 					"type": "string",
-					"default": "Remember",
+					"default": "remember",
 					"enum": [
-						"Remember",
-						"Collapsed",
-						"Expanded"
+						"remember",
+						"collapsed",
+						"expanded"
 					],
 					"description": "Indicates if a favorite group should be collapsed, expanded or remembered in its initial state.",
 					"enumDescriptions": [
@@ -1233,22 +1221,28 @@
 		"compile": "gulp build",
 		"watch": "gulp watch",
 		"test": "mocha",
-		"update": "# rm -rf node_modules && rm package-lock.json && npm install"
+		"update": "rm -rf node_modules && rm package-lock.json && npm install",
+		"check-lint-rules": "node ./plugins/check-lint-rules"
 	},
 	"devDependencies": {
-		"@rollup/plugin-typescript": "^5.0.2",
+		"@rollup/plugin-typescript": "^8.2.1",
 		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
+		"@types/mocha": "^8.2.2",
 		"@types/node": "^12.12.35",
 		"@types/vscode": "^1.43.0",
-		"del": "^5.1.0",
+		"@typescript-eslint/eslint-plugin": "^4.22.0",
+		"@typescript-eslint/eslint-plugin-tslint": "^4.22.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"del": "^6.0.0",
+		"eslint": "^7.23.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-jsdoc": "^32.3.0",
 		"glob": "^7.1.3",
 		"gulp": "^4.0.2",
 		"gulp-sass": "^4.0.2",
-		"mocha": "^7.1.1",
-		"rollup": "^2.22.2",
-		"tslint": "^6.1.0",
-		"typescript": "^3.8.3",
+		"mocha": "^8.3.2",
+		"rollup": "^2.45.2",
+		"typescript": "^4.2.4",
 		"vscode-test": "^1.0.2"
 	}
 }

@@ -1,8 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
-import { L13DiffNavigatorComponent } from '../components/l13-diff-navigator/l13-diff-navigator.component';
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { NavigatorEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -14,7 +12,7 @@ const { round } = Math;
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent, navigator:L13DiffNavigatorComponent, list:L13DiffListComponent) {
+export function init ({ diff, navigator, list }:NavigatorEventsInit) {
 	
 	navigator.addEventListener('scroll', () => {
 		

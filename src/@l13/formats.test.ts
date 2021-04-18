@@ -2,9 +2,9 @@
 
 import * as assert from 'assert';
 
-import { formatAmount, formatFileSize } from './formats';
-
 import { Plural, Test } from '../types';
+
+import { formatAmount, formatFileSize } from './formats';
 
 //	Variables __________________________________________________________________
 
@@ -24,7 +24,7 @@ describe('formats', () => {
 			
 		}
 		
-		describe(`Pixel`, () => {
+		describe('Pixel', () => {
 			
 			runTests([
 				{
@@ -53,7 +53,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`Bytes`, () => {
+		describe('Bytes', () => {
 			
 			runTests([
 				{
@@ -90,7 +90,7 @@ describe('formats', () => {
 			
 		}
 		
-		describe(`Bytes`, () => {
+		describe('Bytes', () => {
 			
 			runTests([
 				{
@@ -122,7 +122,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`KBytes`, () => {
+		describe('KBytes', () => {
 			
 			runTests([
 				{
@@ -139,7 +139,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`MBytes`, () => {
+		describe('MBytes', () => {
 			
 			runTests([
 				{
@@ -161,7 +161,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`GBytes`, () => {
+		describe('GBytes', () => {
 			
 			runTests([
 				{
@@ -178,7 +178,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`TBytes`, () => {
+		describe('TBytes', () => {
 			
 			runTests([
 				{
@@ -195,7 +195,7 @@ describe('formats', () => {
 			
 		});
 		
-		describe(`PBytes`, () => {
+		describe('PBytes', () => {
 			
 			runTests([
 				{
@@ -206,6 +206,7 @@ describe('formats', () => {
 			//	Number.MAX_SAFE_INTEGER 9007199254740991
 				{
 					desc: '1024 PB (1152921504606847000 Bytes)',
+					// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
 					expect: 1152921504606846999,
 					toBe: '1024 PB (1152921504606847000 Bytes)',
 				},

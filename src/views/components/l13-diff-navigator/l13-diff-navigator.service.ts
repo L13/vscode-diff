@@ -17,6 +17,8 @@ import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 export class L13DiffNavigatorViewModelService extends ViewModelService<L13DiffNavigatorViewModel> {
 	
+	public name = 'l13-diff-navigator';
+	
 	public vmc:ViewModelConstructor<L13DiffNavigatorViewModel> = L13DiffNavigatorViewModel;
 	
 }

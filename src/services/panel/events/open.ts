@@ -29,11 +29,11 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	});
 	
-	currentDiffPanel.msg.on('goto:file', async ({ files, openToSide }:DiffGoToMessage) => {
+	currentDiffPanel.msg.on('goto:file', async ({ files: diffFiles, openToSide }:DiffGoToMessage) => {
 		
 		openToSide = settings.get('openToSide', false) || openToSide;
 		
-		for (let i = 0; i < files.length; i++) await DiffOpen.openFile(files[i], i === 0 && openToSide);
+		for (let i = 0; i < diffFiles.length; i++) await DiffOpen.openFile(diffFiles[i], i === 0 && openToSide);
 		
 	});
 	

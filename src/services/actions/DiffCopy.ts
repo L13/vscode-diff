@@ -37,7 +37,7 @@ export class DiffCopy {
 	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
 	
-	private async copy (file:DiffFile, dest:string) :Promise<any> {
+	private async copy (file:DiffFile, dest:string):Promise<undefined|Error> {
 		
 		const stat = await lstat(file.fsPath);
 		
@@ -48,11 +48,11 @@ export class DiffCopy {
 		if (stat.isDirectory()) {
 			if (!statDest || statDest.isDirectory()) {
 				if (!statDest) createDirectory(dest);
-				return Promise.resolve();
+				return Promise.resolve(undefined);
 			}
 			return Promise.reject(new Error(`'${dest}' exists, but is not a folder!`));
 		} else if (stat.isFile()) {
-			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
+			if (!statDest || statDest.isFile()) return await copyFile(file.fsPath, dest);
 			return Promise.reject(new Error(`'${dest}' exists, but is not a file!`));
 		} else if (stat.isSymbolicLink()) {
 			if (!statDest || statDest.isSymbolicLink()) {
@@ -66,18 +66,18 @@ export class DiffCopy {
 	
 	public async showCopyFromToDialog (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
-		const BUTTON_COPY_DONT_SHOW_AGAIN = `Copy, don't show again`;
 		const confirmCopy = settings.get('confirmCopy', true);
 		const length = data.diffs.length;
 		
 		if (!length) return;
 		
 		if (confirmCopy && !data.multi) {
+			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
 			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)['path' + to]}"?`;
-			const value = await dialogs.confirm(text, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
+			const value = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
 				
 			if (value) {
-				if (value === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCopy', false);
+				if (value === buttonCopyDontShowAgain) settings.update('confirmCopy', false);
 				this.copyFromTo(data, from, to);
 			} else this._onDidCancel.fire(undefined);
 		} else this.copyFromTo(data, from, to);
@@ -100,14 +100,14 @@ export class DiffCopy {
 		
 	}
 	
-	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') :void {
+	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
 		
 		const folderTo = to === 'A' ? data.pathA : data.pathB;
 		const diffs:Diff[] = data.diffs;
 		const job:CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
-			done: () => this._onDidCopyFiles.fire({ data, from ,to }),
+			done: () => this._onDidCopyFiles.fire({ data, from, to }),
 		};
 		
 		diffs.forEach(async (diff:Diff) => {
@@ -183,7 +183,7 @@ function getRealRelative (root:string, relative:string) {
 	const names = relative.split(path.sep);
 	let cwd = root;
 	
-	return path.join.apply(path, names.map((name) => {
+	return path.join(...names.map((name) => {
 		
 		const cwdNames = fs.readdirSync(cwd);
 		
@@ -206,10 +206,10 @@ async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string,
 		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;
 		const realRelative = getRealRelative(folderTo, relative);
 		if (relative !== realRelative) {
-			const BUTTON_COPY_DONT_SHOW_AGAIN = `Copy, don't show again`;
-			// tslint:disable-next-line: max-line-length
-			const copy = await dialogs.confirm(`Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`, 'Copy', BUTTON_COPY_DONT_SHOW_AGAIN);
-			if (copy === BUTTON_COPY_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCopy', false);
+			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
+			const text = `Overwrite content of file "${path.join(folderTo, realRelative)}" with file "${fsPath}"?`;
+			const copy = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
+			if (copy === buttonCopyDontShowAgain) settings.update('confirmCaseInsensitiveCopy', false);
 			return !!copy;
 		}
 	}

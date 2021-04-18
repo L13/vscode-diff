@@ -1,6 +1,15 @@
 //	Imports ____________________________________________________________________
 
-import { DeletedFilesMessage, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, DiffOpenMessage, DiffResultMessage, UpdatedFilesMessage } from '../../../types';
+import {
+	DeletedFilesMessage,
+	Diff,
+	DiffCopyMessage,
+	DiffFile,
+	DiffMultiCopyMessage,
+	DiffOpenMessage,
+	DiffResultMessage,
+	UpdatedFilesMessage,
+} from '../../../types';
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 
@@ -23,7 +32,7 @@ const FILTERS = Symbol.for('filters');
 
 export class L13DiffListViewModel extends ViewModel {
 	
-	private [FILTERS]:L13DiffListPipe<Diff>[] = [];
+	private [FILTERS]:Array<L13DiffListPipe<Diff>> = [];
 	
 	private map:{ [name:string]:Diff } = {};
 	
@@ -37,16 +46,16 @@ export class L13DiffListViewModel extends ViewModel {
 		settings: null,
 	};
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
-	public disable () :void {
+	public disable () {
 		
 		this.disabled = true;
 		this.requestUpdate();
 		
 	}
 	
-	public enable () :void {
+	public enable () {
 		
 		this.disabled = false;
 		this.requestUpdate();
@@ -74,7 +83,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public getDiffById (id:string) :null|Diff {
+	public getDiffById (id:string):null|Diff {
 		
 		return this.map[id] || null;
 		
@@ -229,6 +238,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public updateMultiList (data:DiffCopyMessage|DiffResultMessage) {
 		
 		//
@@ -262,7 +272,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public filter () :void {
+	public filter () {
 		
 		let filteredItems = this.items;
 		
@@ -276,7 +286,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public getCopyListByIds (ids:string[], from:'left'|'right') :DiffCopyMessage {
+	public getCopyListByIds (ids:string[], from:'left'|'right'):DiffCopyMessage {
 		
 		const items = ids.map((id) => this.map[id]).filter((diff:Diff) => from === 'left' && diff.fileA || from === 'right' && diff.fileB);
 		
@@ -306,7 +316,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private getDiffsByIds (ids:string[]) :DiffResultMessage {
+	private getDiffsByIds (ids:string[]):DiffResultMessage {
 		
 		const diffs = ids.map((id) => this.map[id]);
 		
@@ -319,7 +329,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public open (ids:string[], openToSide:boolean) :void {
+	public open (ids:string[], openToSide:boolean) {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
@@ -327,7 +337,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public copy (ids:string[], from:'left'|'right') :void {
+	public copy (ids:string[], from:'left'|'right') {
 		
 		const diffResult = this.getCopyListByIds(ids, from);
 		
@@ -336,7 +346,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public multiCopy (ids:string[], from:'left'|'right') :void {
+	public multiCopy (ids:string[], from:'left'|'right') {
 		
 		if (ids.length && this.diffResult.pathA && this.diffResult.pathB) {
 			msg.send<DiffMultiCopyMessage>(`multi-copy:${from}`, {
@@ -362,7 +372,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public goto (ids:string[], side:'left'|'right', openToSide:boolean) :void {
+	public goto (ids:string[], side:'left'|'right', openToSide:boolean) {
 		
 		const files = this.getGoToListByIds(ids, side);
 		
@@ -370,7 +380,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (ids:string[], side:'left'|'right'|'files' = 'files') :void {
+	public delete (ids:string[], side:'left'|'right'|'files' = 'files') {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		

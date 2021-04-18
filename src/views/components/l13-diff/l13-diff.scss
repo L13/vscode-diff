@@ -55,7 +55,7 @@ l13-diff-tools {
 	position: relative;
 	z-index: 3;
 }
-	
+
 l13-diff-views,
 l13-diff-compare {
 	min-width: 175px;
@@ -86,7 +86,7 @@ l13-diff-search {
 		animation: moveout 0.1s linear;
 	}
 }
-			
+
 @keyframes movein {
 	0% {
 		top: -42px;
@@ -95,7 +95,7 @@ l13-diff-search {
 		top: 0;
 	}
 }
-			
+
 @keyframes moveout {
 	0% {
 		top: 0;
@@ -173,5 +173,5 @@ l13-diff-no-result {
 }
 
 ::-webkit-scrollbar-corner {
-    background-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
 }

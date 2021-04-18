@@ -5,8 +5,6 @@ import { EventListener } from '../../../types';
 
 import { Event } from './event.class';
 
-const { push } = Array.prototype;
-
 //	Variables __________________________________________________________________
 
 const LISTENERS = Symbol.for('listeners');
@@ -19,9 +17,9 @@ const LISTENERS = Symbol.for('listeners');
 
 export class EventDispatcher {
 	
-	private [LISTENERS]:{ [eventName:string]: EventListener[] } = Object.create(null);
+	private [LISTENERS]:{ [eventName:string]:EventListener[] } = Object.create(null);
 	
-	public on (name:string, listener:EventListener) :void {
+	public on (name:string, listener:EventListener) {
 		
 		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
@@ -29,13 +27,13 @@ export class EventDispatcher {
 		
 	}
 	
-	public hasEvent (name:string) :boolean {
+	public hasEvent (name:string) {
 		
 		return !!this[LISTENERS][name];
 		
 	}
 	
-	public hasEventListener (name:string, listener:EventListener) :boolean {
+	public hasEventListener (name:string, listener:EventListener) {
 		
 		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
@@ -45,11 +43,11 @@ export class EventDispatcher {
 		
 	}
 	
-	public dispatchEvent (nameOrEvent:string|Event, ...args:any[]) :boolean {
+	public dispatchEvent (nameOrEvent:string|Event, ...args:any[]) {
 		
 		let event:null|Event = nameOrEvent instanceof Event ? nameOrEvent : null;
-		const name:string = '' + (event ? event.type : nameOrEvent);
-		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
+		const name = <string>(event ? event.type : nameOrEvent);
+		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 		//	Copy listeners to prevent stuttering if a listener will be deleted
@@ -59,7 +57,7 @@ export class EventDispatcher {
 			let i = 0;
 			let listener;
 			
-			if (args.length) push.apply(values, args);
+			if (args.length) values.push(...args);
 			
 			while ((listener = listeners[i++])) {
 				listener.apply(this, values);
@@ -73,7 +71,7 @@ export class EventDispatcher {
 		
 	}
 	
-	public removeEventListener (name:string, listener:EventListener) :void {
+	public removeEventListener (name:string, listener:EventListener) {
 		
 		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
 		

@@ -29,7 +29,7 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public constructor (private readonly favoriteGroupsState:FavoriteGroupsState, private readonly favoritesState:FavoritesState) {}
+	private constructor (private readonly favoriteGroupsState:FavoriteGroupsState, private readonly favoritesState:FavoritesState) {}
 	
 	public async add () {
 		
@@ -59,7 +59,7 @@ export class FavoriteGroupsDialog {
 			const newFavoriteGroupItem = { label: '$(add) New Group...' };
 			const items = [
 				newFavoriteGroupItem,
-				...favoriteGroups
+				...favoriteGroups,
 			];
 			const selectedItem = await vscode.window.showQuickPick(items, {
 				placeHolder: 'Select a favorite group',
@@ -82,7 +82,7 @@ export class FavoriteGroupsDialog {
 			value: favoriteGroup.label,
 		});
 		
-		if (!label || favoriteGroup.label === label) return;
+		if (!label || favoriteGroup.label === label) return;
 		
 		if (this.favoriteGroupsState.getByName(label)) {
 			vscode.window.showInformationMessage(`Favorite group with name "${label}" exists!`);
@@ -95,17 +95,17 @@ export class FavoriteGroupsDialog {
 	
 	public async remove (favoriteGroup:FavoriteGroup) {
 		
-		const BUTTON_DELETE_GROUP_AND_FAVORITES = 'Delete Group and Favorites';
+		const buttonDeleteGroupAndFavorites = 'Delete Group and Favorites';
 		const buttons = ['Delete'];
 		const favorites = this.favoritesState.getFavoritesByGroup(favoriteGroup);
 		
-		if (favorites.length) buttons.push(BUTTON_DELETE_GROUP_AND_FAVORITES);
+		if (favorites.length) buttons.push(buttonDeleteGroupAndFavorites);
 		
 		const value = await dialogs.confirm(`Delete favorite group "${favoriteGroup.label}"?`, ...buttons);
 		
 		if (!value) return;
 		
-		this.favoriteGroupsState.remove(favoriteGroup, value === BUTTON_DELETE_GROUP_AND_FAVORITES);
+		this.favoriteGroupsState.remove(favoriteGroup, value === buttonDeleteGroupAndFavorites);
 		
 	}
 	

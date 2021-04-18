@@ -13,16 +13,12 @@ import { Dictionary, Diff, DiffError, DiffFile, DiffInitMessage, DiffSettings, S
 
 import * as dialogs from '../common/dialogs';
 import { isTextFile } from '../common/extensions';
+import { parsePredefinedVariable } from '../common/paths';
 import * as settings from '../common/settings';
 
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
-
-const findPlaceholder = /^\$\{workspaceFolder(?:\:((?:\\\}|[^\}])*))?\}/;
-const findEscapedEndingBrace = /\\\}/g;
-
-const COMPARE_DONT_SHOW_AGAIN = 'Compare, don\'t show again';
 
 const BUFFER_MAX_LENGTH = constants.MAX_LENGTH;
 const MAX_CACHE_BUFFER_LENGTH = 33554432; // 32 MB
@@ -65,26 +61,26 @@ export class DiffCompare {
 	private _onDidScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
 	public readonly onDidScanFolder:vscode.Event<StatsMap> = this._onDidScanFolder.event;
 	
-	public initCompare (data:DiffInitMessage) :void {
+	public initCompare (data:DiffInitMessage) {
 		
 		this._onWillCompare.fire(undefined);
 		
 		let pathA = parsePredefinedVariable(data.pathA);
 		let pathB = parsePredefinedVariable(data.pathB);
 		
-		if (!pathA) return this.onError(`The left path is empty.`, pathA, pathB);
-		if (!pathB) return this.onError(`The right path is empty.`, pathA, pathB);
+		if (!pathA) return this.onError('The left path is empty.', pathA, pathB);
+		if (!pathB) return this.onError('The right path is empty.', pathA, pathB);
 		
 		pathA = sanitize(pathA);
 		pathB = sanitize(pathB);
 		
-		if (!isAbsolute(pathA)) return this.onError(`The left path is not absolute.`, pathA, pathB);
-		if (!isAbsolute(pathB)) return this.onError(`The right path is not absolute.`, pathA, pathB);
+		if (!isAbsolute(pathA)) return this.onError('The left path is not absolute.', pathA, pathB);
+		if (!isAbsolute(pathB)) return this.onError('The right path is not absolute.', pathA, pathB);
 		
 		pathA = vscode.Uri.file(pathA).fsPath;
 		pathB = vscode.Uri.file(pathB).fsPath;
 		
-		if (pathA === pathB) return this.onError(`The left and right path is the same.`, pathA, pathB);
+		if (pathA === pathB) return this.onError('The left and right path is the same.', pathA, pathB);
 		
 		const statA = lstatSync(pathA);
 		if (!statA) return this.onError(`The left path "${pathA}" does not exist.`, pathA, pathB);
@@ -94,11 +90,11 @@ export class DiffCompare {
 		
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
-		else this.onError(`The left and right path can't be compared!`, pathA, pathB);
+		else this.onError('The left and right path can\'t be compared!', pathA, pathB);
 		
 	}
 	
-	public updateDiffs (data:DiffResult) :void {
+	public updateDiffs (data:DiffResult) {
 		
 		data.diffs.forEach((diff:Diff) => {
 			
@@ -164,16 +160,18 @@ export class DiffCompare {
 		
 	}
 	
-	private async createDiffs (dirnameA:string, dirnameB:string) :Promise<DiffResult> {
+	private async createDiffs (dirnameA:string, dirnameB:string):Promise<DiffResult> {
 		
 		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
 		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
 		
 		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
 			if (settings.get('confirmCaseInsensitiveCompare', true)) {
-				const value = await dialogs.confirm(`The file system is case sensitive. Are you sure to compare case insensitive?`, 'Compare', COMPARE_DONT_SHOW_AGAIN);
+				const buttonCompareDontShowAgain = 'Compare, don\'t show again';
+				const text = 'The file system is case sensitive. Are you sure to compare case insensitive?';
+				const value = await dialogs.confirm(text, 'Compare', buttonCompareDontShowAgain);
 				if (value) {
-					if (value === COMPARE_DONT_SHOW_AGAIN) settings.update('confirmCaseInsensitiveCompare', false);
+					if (value === buttonCompareDontShowAgain) settings.update('confirmCaseInsensitiveCompare', false);
 				} else useCaseSensitive = true;
 			}
 		}
@@ -257,24 +255,24 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	
 	diff.status = 'unchanged';
 		
-	const sizeA = (<fs.Stats>fileA.stat).size;
-	const sizeB = (<fs.Stats>fileB.stat).size;
+	const sizeA = fileA.stat.size;
+	const sizeB = fileB.stat.size;
 	
 	if (typeA === 'file') {
 		
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace) &&
-			isTextFile(fileA.basename) &&
-			sizeA <= BUFFER_MAX_LENGTH &&
-			sizeB <= BUFFER_MAX_LENGTH) {
+		} else if ((ignoreEndOfLine || ignoreTrimWhitespace)
+			&& isTextFile(fileA.basename)
+			&& sizeA <= BUFFER_MAX_LENGTH
+			&& sizeB <= BUFFER_MAX_LENGTH) {
 				
 			// if (sizeA === sizeB && sizeA > MAX_CACHE_BUFFER_LENGTH && hasSameContents(fileA.fsPath, fileB.fsPath)) return;
 				
 			let bufferA = fs.readFileSync(fileA.fsPath);
 			let bufferB = fs.readFileSync(fileB.fsPath);
 			
-		//	If files are equal normalizing is not necessary
+			//	If files are equal normalizing is not necessary
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
 			
 			if (ignoreTrimWhitespace) {
@@ -316,34 +314,6 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	
 }
 
-function parsePredefinedVariable (pathname:string) {
-	
-	// tslint:disable-next-line: only-arrow-functions
-	return pathname.replace(findPlaceholder, function (match, name) {
-		
-		const workspaceFolders = vscode.workspace.workspaceFolders;
-		
-		if (!workspaceFolders) {
-			vscode.window.showErrorMessage('No workspace folder available!');
-			return match;
-		}
-		
-		if (!name) return workspaceFolders[0].uri.fsPath;
-		
-		name = name.replace(findEscapedEndingBrace, '}');
-		
-		for (const workspaceFolder of workspaceFolders) {
-			if (workspaceFolder.name === name) return workspaceFolder.uri.fsPath;
-		}
-		
-		vscode.window.showErrorMessage(`No workspace folder with name "${name}" available!`);
-		
-		return match;
-		
-	});
-	
-}
-
 function addFile (diffs:Dictionary<Diff>, id:string, fileA:DiffFile, fileB:DiffFile) {
 	
 	const file = fileA || fileB;
@@ -372,6 +342,7 @@ function hasSameContents (pathA:string, pathB:string) {
 		const bufferA = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
 		const bufferB = Buffer.alloc(MAX_CACHE_BUFFER_LENGTH);
 		
+		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const sizeA = fs.readSync(fdA, bufferA, 0, MAX_CACHE_BUFFER_LENGTH, null);
 			if (!sizeA) break;
@@ -384,6 +355,7 @@ function hasSameContents (pathA:string, pathB:string) {
 			if (sizeA < MAX_CACHE_BUFFER_LENGTH || sizeB < MAX_CACHE_BUFFER_LENGTH) break;
 		}
 		return true;
+	// eslint-disable-next-line no-useless-catch
 	} catch (error) {
 		throw error;
 	} finally {

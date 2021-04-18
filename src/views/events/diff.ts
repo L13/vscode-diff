@@ -1,11 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffInitViewMessage, DiffUpdatePathsMessage } from '../../types';
+import { DiffEventsInit, DiffInitViewMessage, DiffUpdatePathsMessage } from '../../types';
 
 import { msg } from '../common';
-
-import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Variables __________________________________________________________________
 
@@ -17,7 +14,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent, leftVM:L13DiffInputViewModel, rightVM:L13DiffInputViewModel) {
+export function init ({ diff, leftVM, rightVM }:DiffEventsInit) {
 	
 	msg.on('cancel', () => diff.enable());
 	

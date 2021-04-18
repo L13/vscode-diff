@@ -1,10 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { CompareCommandsInit } from '../../types';
 
-import { L13DiffInputComponent } from '../components/l13-diff-input/l13-diff-input.component';
-import { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -16,7 +14,7 @@ import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Exports ____________________________________________________________________
 
-export function init (diff:L13DiffComponent, left:L13DiffInputComponent, right:L13DiffInputComponent, search:L13DiffSearchComponent) {
+export function init ({ diff, left, right, search }:CompareCommandsInit) {
 	
 	msg.on('l13Diff.action.panel.compare', () => {
 		

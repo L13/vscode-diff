@@ -44,7 +44,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidNotCompare(({ error, pathA, pathB}) => {
+	currentDiffPanel.compare.onDidNotCompare(({ error, pathA, pathB }) => {
 		
 		currentDiffPanel.output.log(`${error}`);
 		

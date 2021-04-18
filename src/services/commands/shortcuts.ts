@@ -18,7 +18,7 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 export function activate (context:vscode.ExtensionContext) {
 	
-	commands.register(context, createKeyboardShortcuts([
+	commands.register(context, createDiffPanelLinks([
 		'l13Diff.action.panel.addToFavorites',
 		'l13Diff.action.panel.compare',
 		'l13Diff.action.panel.compareAll',
@@ -64,11 +64,11 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function createKeyboardShortcuts (commands:string[]) {
+function createDiffPanelLinks (diffPanelCommands:string[]) {
 	
-	const map:{ [command:string]: () => void } = {};
+	const map:{ [command:string]:() => void } = {};
 	
-	commands.forEach((command) => {
+	diffPanelCommands.forEach((command) => {
 		
 		map[command] = () => DiffPanel.send(command);
 		

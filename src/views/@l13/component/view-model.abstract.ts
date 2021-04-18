@@ -19,17 +19,17 @@ const refreshComponents = new Map();
 
 export abstract class ViewModel extends EventDispatcher {
 	
-	private [COMPONENTS]:L13Element<ViewModel>[] = [];
+	private [COMPONENTS]:Array<L13Element<ViewModel>> = [];
 	
-	private [VM_ID]:string|L13Element<ViewModel>;
+	private [VM_ID]:string;
 	
-	public get vmId () {
+	public get id () {
 		
 		return this[VM_ID];
 		
 	}
 	
-	public set vmId (value) {
+	public set id (value) {
 		
 		this[VM_ID] = value;
 		

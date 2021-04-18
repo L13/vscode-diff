@@ -24,10 +24,12 @@ export * from './services/@types/events';
 export * from './services/@types/favorites';
 export * from './services/@types/fse';
 export * from './services/@types/history';
+export * from './services/@types/packages';
 export * from './services/@types/panel';
 
 export * from './views/@types/events';
 export * from './views/@types/intro';
+export * from './views/@types/inits';
 export * from './views/@types/keyboards';
 export * from './views/@types/list';
 export * from './views/@types/search';

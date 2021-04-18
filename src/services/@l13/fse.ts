@@ -3,15 +3,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { WalkTreeJob, WalkTreeOptions } from '../../types';
-import { DiffFileTypes, StatsMap } from '../../types';
+import { DiffFileTypes, StatsMap, WalkTreeJob, WalkTreeOptions } from '../../types';
 
 import { isWindows } from './platforms';
 
 //	Variables __________________________________________________________________
 
-const findRegExpChars:RegExp = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
+// eslint-disable-next-line no-useless-escape
+const findRegExpChars = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
+// eslint-disable-next-line no-control-regex, no-useless-escape 
 const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
 const findColon = /:/g;
 
@@ -27,7 +28,7 @@ export function createDirectory (pathname:string) {
 	
 }
 
-export function copyFile (sourcePath:string, destPath:string) {
+export function copyFile (sourcePath:string, destPath:string) :Promise<undefined|Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -49,7 +50,7 @@ export function copyFile (sourcePath:string, destPath:string) {
 	
 }
 
-export function copySymbolicLink (sourcePath:string, destPath:string) {
+export function copySymbolicLink (sourcePath:string, destPath:string) :Promise<undefined|Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -150,7 +151,7 @@ export function sanitize (pathname:string) {
 
 function escapeGlobForRegExp (text:any) :string {
 	
-	return ('' + text).replace(findRegExpChars, (match) => {
+	return `${text}`.replace(findRegExpChars, (match) => {
 		
 		if (match === '\\*' || match === '\\?') return match;
 		
@@ -180,14 +181,14 @@ function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:str
 		name: relative + sep,
 		basename: path.basename(relative) + sep,
 		dirname,
-		extname: (type === 'file' ? path.extname(relative) : ''),
+		extname: type === 'file' ? path.extname(relative) : '',
 		type,
 		ignore,
 	};
 	
 }
 
-function _walktree (job:WalkTreeJob, cwd:string, relative:string = '') {
+function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
 	
 	if (job.abort && job.error) return; // If error no further actions
 	

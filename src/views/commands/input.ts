@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { msg } from '../common';
+import { InputCommandsInit } from '../../types';
 
-import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
+import { msg } from '../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,7 +14,7 @@ import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-inp
 
 //	Exports ____________________________________________________________________
 
-export function init (leftVM:L13DiffInputViewModel, rightVM:L13DiffInputViewModel) {
+export function init ({ leftVM, rightVM }:InputCommandsInit) {
 	
 	msg.on('l13Diff.action.input.pickLeftFolder', () => leftVM.pick());
 	

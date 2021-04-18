@@ -2,11 +2,11 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffNavigatorViewModelService } from './l13-diff-navigator.service';
-import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
-
 import styles from '../styles';
 import templates from '../templates';
+
+import { L13DiffNavigatorViewModelService } from './l13-diff-navigator.service';
+import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 const { round } = Math;
 
@@ -37,9 +37,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	@L13Query('div')
 	public scrollbar:HTMLDivElement;
 	
-	private scrollbarOffsetY:number = 0;
+	private scrollbarOffsetY = 0;
 	
-	private scrollbarMaxY:number = 0;
+	private scrollbarMaxY = 0;
 	
 	private contextRuler:CanvasRenderingContext2D = null;
 	
@@ -67,7 +67,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		this.setScrollbarY(event.offsetY - offsetY);
 		this.scrollbarDown(event, offsetY);
 		
-	}
+	};
 	
 	private scrollbarDown = (event:MouseEvent, offsetY?:number) => {
 		
@@ -83,7 +83,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.dispatchCustomEvent('mousedownscroll');
 		
-	}
+	};
 		
 	private scrollbarMove = (event:MouseEvent) => {
 		
@@ -91,7 +91,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.setScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
 		
-	}
+	};
 		
 	private scrollbarUp = () => {
 		
@@ -102,20 +102,20 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.dispatchCustomEvent('mouseupscroll');
 		
-	}
+	};
 	
 	private setScrollbarY (y:number) {
 		
 		if (y < 0) y = 0;
 		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
 		
-		this.scrollbar.style.top = y + 'px';
+		this.scrollbar.style.top = `${y}px`;
 		
 		this.dispatchCustomEvent('scroll');
 		
 	}
 	
-	public clearSelection () :void {
+	public clearSelection () {
 		
 		const canvas = this.canvasRuler;
 		const context = this.contextRuler;
@@ -124,7 +124,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public buildSelection (items:any[], listHeight:number) :void {
+	public buildSelection (items:any[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasRuler;
@@ -135,7 +135,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		canvas.height = listHeight; // clears the canvas, too
 		
-		items.reduce((y, { offsetHeight, selected }) => {
+		items.reduce((y:number, { offsetHeight, selected }) => {
 
 			const h = offsetHeight / total * canvas.height;
 		
@@ -172,7 +172,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 			this.scrollbarMaxY = listHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		
-		items.reduce((y, { status, offsetHeight }) => {
+		items.reduce((y:number, { status, offsetHeight }) => {
 			
 			const h = offsetHeight / total * canvas.height;
 			const color = colors[status];

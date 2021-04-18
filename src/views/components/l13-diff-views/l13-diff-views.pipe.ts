@@ -4,7 +4,6 @@ import { Diff, ViewsCache } from '../../../types';
 
 import { L13DiffListPipe } from '../l13-diff-list/l13-diff-list.interface';
 
-import { L13DiffViewsViewModelService } from './l13-diff-views.service';
 import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
 //	Variables __________________________________________________________________
@@ -19,8 +18,6 @@ import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
 export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 	
-	public vm:L13DiffViewsViewModel = null;
-	
 	private cache:ViewsCache = {
 		unchangedChecked: false,
 		deletedChecked: true,
@@ -31,13 +28,9 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		filteredItems: [],
 	};
 	
-	public constructor (vmOrVmId:string|L13DiffViewsViewModel) {
-		
-		this.vm = typeof vmOrVmId === 'string' ? new L13DiffViewsViewModelService().model(vmOrVmId) : vmOrVmId;
-		
-	}
+	public constructor (public readonly vm:L13DiffViewsViewModel) {}
 	
-	public transform (items:Diff[]) :Diff[] {
+	public transform (items:Diff[]):Diff[] {
 		
 		const cache = this.cache;
 		const vm = this.vm;
@@ -48,7 +41,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 			&& vm.modifiedChecked === cache.modifiedChecked
 			&& vm.untrackedChecked === cache.untrackedChecked
 			&& vm.ignoredChecked === cache.ignoredChecked
-			) {
+		) {
 			return cache.filteredItems;
 		}
 		

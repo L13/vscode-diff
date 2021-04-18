@@ -14,11 +14,11 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffActionsViewModel extends ViewModel {
 	
-	public selectDisabled:boolean = true;
+	public selectDisabled = true;
 	
-	public copyDisabled:boolean = true;
+	public copyDisabled = true;
 	
-	public disable () :void {
+	public disable () {
 		
 		this.selectDisabled = true;
 		this.copyDisabled = true;
@@ -26,7 +26,7 @@ export class L13DiffActionsViewModel extends ViewModel {
 		
 	}
 	
-	public enable () :void {
+	public enable () {
 		
 		this.selectDisabled = false;
 		this.copyDisabled = false;
@@ -34,14 +34,14 @@ export class L13DiffActionsViewModel extends ViewModel {
 		
 	}
 	
-	public disableCopy () :void {
+	public disableCopy () {
 		
 		this.copyDisabled = true;
 		this.requestUpdate();
 		
 	}
 	
-	public enableCopy () :void {
+	public enableCopy () {
 		
 		this.copyDisabled = false;
 		this.requestUpdate();

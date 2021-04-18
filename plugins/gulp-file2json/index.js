@@ -87,7 +87,7 @@ function parseTemplate (content, map) {
 	
 	return content.replace(/__[A-Z0-9]+__/g, function (match) {
 		
-		return map.hasOwnProperty(match) ? map[match] :  '';
+		return map.hasOwnProperty(match) ? map[match] :  '';
 		
 	});
 	

@@ -1,4 +1,4 @@
-// tslint:disable
+/* eslint-disable */
 export default {
 	"l13-diff-actions/l13-diff-actions.html": "<button id=\"l13_copy_right\" [disabled]=\"copyDisabled\"></button>\n<button id=\"l13_select_deleted\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_modified\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_untracked\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_select_all\" [disabled]=\"selectDisabled\"></button>\n<button id=\"l13_copy_left\" [disabled]=\"copyDisabled\"></button>",
 	"l13-diff-compare/l13-diff-compare.html": "<button [disabled]=\"disabled\">Compare</button>",

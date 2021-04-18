@@ -16,33 +16,33 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffViewsViewModel extends ViewModel {
 	
-	public disabled:boolean = false;
+	public disabled = false;
 	
-	public disable () :void {
+	public disable () {
 		
 		this.disabled = true;
 		this.requestUpdate();
 		
 	}
 	
-	public enable () :void {
+	public enable () {
 		
 		this.disabled = false;
 		this.requestUpdate();
 		
 	}
 	
-	public unchangedChecked:boolean = false;
+	public unchangedChecked = false;
 	
-	public deletedChecked:boolean = true;
+	public deletedChecked = true;
 	
-	public modifiedChecked:boolean = true;
+	public modifiedChecked = true;
 	
-	public untrackedChecked:boolean = true;
+	public untrackedChecked = true;
 	
-	public ignoredChecked:boolean = false;
+	public ignoredChecked = false;
 	
-	public getState () :ViewsState {
+	public getState ():ViewsState {
 		
 		return {
 			unchangedChecked: this.unchangedChecked,
@@ -54,7 +54,7 @@ export class L13DiffViewsViewModel extends ViewModel {
 		
 	}
 	
-	public setState (state:ViewsState) :void {
+	public setState (state:ViewsState) {
 		
 		this.unchangedChecked = state.unchangedChecked;
 		this.deletedChecked = state.deletedChecked;

@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import { ProjectTreeItem } from '../@types/projects';
+
 import * as commands from '../common/commands';
 
 //	Variables __________________________________________________________________
@@ -40,7 +42,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.projects.selectForCompare': ({ project }) => {
+		'l13Diff.action.projects.selectForCompare': ({ project }:ProjectTreeItem) => {
 			
 			if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
 			
@@ -48,7 +50,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.projects.compareWithSelected': ({ project }) => {
+		'l13Diff.action.projects.compareWithSelected': ({ project }:ProjectTreeItem) => {
 			
 			vscode.commands.executeCommand('l13Diff.action.panel.openAndCompare', folderUri, vscode.Uri.file(project.path));
 			

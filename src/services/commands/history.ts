@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { Comparison } from '../../types';
 
 import * as commands from '../common/commands';
+import * as settings from '../common/settings';
 
 import { FavoritesDialog } from '../dialogs/FavoritesDialog';
 import { HistoryDialog } from '../dialogs/HistoryDialog';
@@ -45,16 +46,6 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	vscode.window.registerTreeDataProvider('l13DiffHistory', historyProvider);
 	
-	subscriptions.push(vscode.window.onDidChangeWindowState(({ focused }) => {
-		
-		if (focused) { // Update data if changes in another workspace have been done
-			historyProvider.refresh({
-				comparisons: historyState.get(),
-			});
-		}
-		
-	}));
-	
 	subscriptions.push(historyState.onDidChangeComparisons((comparisons) => {
 		
 		historyProvider.refresh({
@@ -65,20 +56,18 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.history.open': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
-		'l13Diff.action.history.openOnly': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
-		'l13Diff.action.history.openAndCompare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
-		'l13Diff.action.history.openInNewPanel': ({ comparison }:HistoryTreeItem) => {
-			
-			DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
-			
-		},
+		'l13Diff.action.history.compare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel()),
+		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
+		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
 		
 		'l13Diff.action.history.addToFavorites': ({ comparison }:HistoryTreeItem) => {
 			
 			favoritesDialog.add(comparison.fileA, comparison.fileB);
 			
 		},
+		
+		'l13Diff.action.history.copyLeftPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileA),
+		'l13Diff.action.history.copyRightPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileB),
 		
 		'l13Diff.action.history.remove': ({ comparison }:HistoryTreeItem) => historyDialog.remove(comparison),
 		
@@ -90,8 +79,9 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function openComparison (context:vscode.ExtensionContext, comparison:Comparison, compare:boolean) {
+function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean) {
 	
-	DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], compare);
+	if (openInNewPanel) DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
+	else DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 	
 }

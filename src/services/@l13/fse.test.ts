@@ -67,6 +67,7 @@ describe('fse', () => {
 		function runNegativeTests (tests:NegativeTest[]) {
 			
 			for (const test of tests) {
+				// eslint-disable-next-line max-len
 				it(`"${test.glob}" doesn't match "${test.doesNotMatch}" (${test.platform}, case ${test.useCaseSensitive ? 'sensitive' : 'insensitive'})`, () => {
 					
 					assert.ok(!createFindGlob(test.glob, test.useCaseSensitive).test(test.doesNotMatch));

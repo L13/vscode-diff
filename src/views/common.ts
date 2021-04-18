@@ -10,7 +10,7 @@ const findStyleUrl = /url\s*\(\s*"([^"]+)"\s*\)/g;
 
 //	Initialize _________________________________________________________________
 
- // Fixes async dom loading bug on windows in a virtual machine?!?
+// Fixes async dom loading bug on windows in a virtual machine?!?
 window.addEventListener('load', () => {
 	
 	detectPlatform();
@@ -39,12 +39,12 @@ export function parseIcons (text:string) {
 	
 	return text.replace(findStyleUrl, (match:string, url:string) => {
 		
-		const image = (<any>icons)[url];
+		const image = (<{ [url:string]:string }>icons)[url];
 		
 		if (image) match = `url("data:image/svg+xml;base64,${btoa(image)}")`;
 		
 		return match;
-	
+		
 	});
 	
 }
@@ -58,7 +58,7 @@ export function removeChildren (node:Node) {
 }
 
 export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) {
-		
+	
 	const offsetTop = element.offsetTop;
 	const offsetHeight = parent.offsetHeight;
 	const scrollTop = parent.scrollTop;
@@ -66,7 +66,7 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 	if (scrollTop > offsetTop) {
 		parent.scrollTop = offsetTop;
 	} else if (scrollTop + offsetHeight < offsetTop + element.offsetHeight) {
-		parent.scrollTop = (offsetTop + element.offsetHeight) - offsetHeight;
+		parent.scrollTop = offsetTop + element.offsetHeight - offsetHeight;
 	}
 	
 }

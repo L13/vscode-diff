@@ -47,13 +47,13 @@ export class DiffOutput {
 		
 	}
 	
-	public log (text:string) :void {
+	public log (text:string) {
 		
 		this.msg(`[${createTimestamp()}] ${text}`);
 		
 	}
 	
-	public msg (line:string = '') :void {
+	public msg (line = '') {
 		
 		this.lines.push(line);
 		
@@ -61,19 +61,19 @@ export class DiffOutput {
 		
 	}
 	
-	public show () :void {
+	public show () {
 		
 		if (DiffOutput.currentOutput === this) DiffOutput.output.show();
 		
 	}
 	
-	public hide () :void {
+	public hide () {
 		
 		if (DiffOutput.currentOutput === this) DiffOutput.output.hide();
 		
 	}
 	
-	public clear () :void {
+	public clear () {
 		
 		this.lines = [];
 		
@@ -81,7 +81,7 @@ export class DiffOutput {
 		
 	}
 	
-	public dispose () :void {
+	public dispose () {
 		
 		remove(DiffOutput.outputs, this);
 		
@@ -100,9 +100,9 @@ export class DiffOutput {
 function createTimestamp () {
 	
 	const now = new Date();
-	const hours = '' + now.getHours();
-	const minutes = '' + now.getMinutes();
-	const seconds = '' + now.getSeconds();
+	const hours = `${now.getHours()}`;
+	const minutes = `${now.getMinutes()}`;
+	const seconds = `${now.getSeconds()}`;
 	
 	return `${padStart(hours, 2, '0')}:${padStart(minutes, 2, '0')}:${padStart(seconds, 2, '0')}`;
 	
