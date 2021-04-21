@@ -52,6 +52,8 @@
 				}
 			}
 		],
+		"brace-style": "off",
+		"@typescript-eslint/brace-style": "error",
 		"comma-dangle": "off",
 		"@typescript-eslint/comma-dangle": [
 			"error",

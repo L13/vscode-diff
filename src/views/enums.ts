@@ -12,7 +12,8 @@
 
 //	Exports ____________________________________________________________________
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint does not work correct for enum? (brace-style)
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/brace-style
 export enum Direction { PREVIOUS, NEXT }
 
 //	Functions __________________________________________________________________

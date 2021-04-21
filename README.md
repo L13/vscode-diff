@@ -290,8 +290,13 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Favorites Context Menu
 
-* `Open` - Open the favorite diff without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Open and Compare` - Open the favorite diff and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Compare` - Start the favorite diff immediately in the current active panel. Ignores `l13Diff.openInNewDiffPanel`.
+* `Compare in New Panel` - Start the favorite diff immediately in a new diff panel. Ignores `l13Diff.openInNewDiffPanel`.
+* `Reveal in Finder/Explorer` - Reveal the left or right file/folder in the finder/explorer. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open in Integrated Terminal` - Open the left or right path in the integrated terminal. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open Workspace` - Open the left or right path as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open as Workspace` - Open the two paths as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Add Folders to Workspace` - Add the paths to the current workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 * `Add to Group` - Add a favorite diff to a group.
 * `Copy Left Path` - Copy the left path of the favorite diff to the clipboard.
 * `Copy Right Path` - Copy the right path of the favorite diff to the clipboard.
@@ -316,8 +321,13 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Context Menu
 
-* `Open` - Open the previous comparison without starting a comparison immediately.
-* `Open and Compare` - Open the previous comparison and start a comparison immediately.
+* `Compare` - Start the previous comparison immediately in the current active panel. Ignores `l13Diff.openInNewDiffPanel`.
+* `Compare in New Panel` - Start the previous comparison immediately in a new diff panel. Ignores `l13Diff.openInNewDiffPanel`.
+* `Reveal in Finder/Explorer` - Reveal the left or right file/folder in the finder/explorer. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open in Integrated Terminal` - Open the left or right path in the integrated terminal. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open Workspace` - Open the left or right path as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open as Workspace` - Open the two paths as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Add Folders to Workspace` - Add the paths to the current workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 * `Add to Favorites` - Add a previous comparison to favorites.
 * `Copy Left Path` - Copy the left path of the previous comparison to the clipboard.
 * `Copy Right Path` - Copy the right path of the previous comparison to the clipboard.
