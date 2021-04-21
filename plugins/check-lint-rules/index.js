@@ -47,7 +47,9 @@ commonESLintRules.forEach((rule) => {
 	}
 	
 	if (!(rule in allRules) && `@typescript-eslint/${rule}` in allRules) {
-		console.log(`Missing javascript rule "${rule}"`);
+		if (allRules[`@typescript-eslint/${rule}`] === 'off') {
+			console.log(`Typescript rule "@typescript-eslint/${rule}" not required because value is "off"`);
+		} else console.log(`Missing javascript rule "${rule}"`);
 	}
 	
 });
