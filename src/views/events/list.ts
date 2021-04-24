@@ -58,6 +58,15 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
+	list.addEventListener('wheel', (event) => {
+		
+		diff.setScrollbarPosition();
+		list.showVisibleListViewItems();
+		
+		event.stopImmediatePropagation();
+		
+	});
+	
 	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
 	
 	document.addEventListener('mouseup', ({ target }) => {

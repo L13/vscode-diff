@@ -751,6 +751,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		});
 		
 		this.content.style.height = `${this.cacheFilteredListItemViews.length * 22}px`;
+		this.scrollTop = 0;
+		this.previousScrollTop = -22;
 		this.showVisibleListViewItems();
 		this.restoreSelections();
 		
@@ -760,15 +762,27 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	private previousScrollTop = -22;
+	
 	public showVisibleListViewItems () {
 		
 		const scrollTop = this.scrollTop;
+		const delta = scrollTop - this.previousScrollTop;
+		
+		if (delta > -22 && delta < 22) return;
+		
+		this.previousScrollTop = scrollTop;
+		
+		const elements = this.cacheFilteredListItemViews;
+		const itemsPerPage = Math.ceil(this.offsetHeight / 22);
 		let start = Math.floor(scrollTop / 22) - 10;
 		let end = Math.ceil((scrollTop + this.offsetHeight) / 22) + 10;
-		const views = this.cacheFilteredListItemViews;
+		
+		if (delta > 0) end += itemsPerPage;
+		else start -= itemsPerPage;
 		
 		if (start < 0) start = 0;
-		if (end > views.length) end = views.length;
+		if (end > elements.length) end = elements.length;
 		
 		let nextElement = this.content.firstElementChild;
 		
@@ -776,13 +790,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const element = nextElement;
 			const index = parseInt(element.getAttribute('data-index'), 10);
 			nextElement = element.nextElementSibling;
-			if (index < start || index > end) element.remove();
+			if (index < start || index >= end) element.remove();
 		}
 		
 		const fragment = document.createDocumentFragment();
 		
 		for (let i = start; i < end; i++) {
-			const element = views[i];
+			const element = elements[i];
 			if (!element.parentNode) fragment.appendChild(element);
 		}
 		
