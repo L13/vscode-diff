@@ -168,7 +168,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		if (total !== listHeight) {
 			this.scrollbar.style.display = 'block';
-			this.scrollbar.style.height = `${ round(listHeight / total * canvas.height) }px`;
+			this.scrollbar.style.height = `${round(listHeight / total * canvas.height)}px`;
 			this.scrollbarMaxY = listHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		

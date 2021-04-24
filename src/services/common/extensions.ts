@@ -72,12 +72,12 @@ function createFindGlob (ignore:string[]) {
 
 function escapeForRegExp (text:string) {
 	
-	return ('' + text).replace(findRegExpChars, (match) => {
+	return `${text}`.replace(findRegExpChars, (match) => {
 		
 		if (match === '*') return '.*';
 		if (match === '?') return '.';
 		
-		return '\\' + match;
+		return `\\${match}`;
 		
 	});
 	

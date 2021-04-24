@@ -295,15 +295,13 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
-		} else {
-			if (sizeA === sizeB) {
-				if (sizeA <= MAX_CACHE_BUFFER_LENGTH) {
-					const bufferA = fs.readFileSync(fileA.fsPath);
-					const bufferB = fs.readFileSync(fileB.fsPath);
-					if (!bufferA.equals(bufferB)) diff.status = 'modified';
-				} else if (!hasSameContents(fileA.fsPath, fileB.fsPath)) diff.status = 'modified';
-			} else diff.status = 'modified';
-		}
+		} else if (sizeA === sizeB) {
+			if (sizeA <= MAX_CACHE_BUFFER_LENGTH) {
+				const bufferA = fs.readFileSync(fileA.fsPath);
+				const bufferB = fs.readFileSync(fileB.fsPath);
+				if (!bufferA.equals(bufferB)) diff.status = 'modified';
+			} else if (!hasSameContents(fileA.fsPath, fileB.fsPath)) diff.status = 'modified';
+		} else diff.status = 'modified';
 	} else if (typeA === 'symlink') {
 		if (sizeA === sizeB) {
 			if (!ignoreContents) {

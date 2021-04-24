@@ -125,8 +125,10 @@ function useWorkspaceSettings (pathname:string) :boolean {
 
 function showDepricated (ignore:string[], pathname?:string) {
 	
-	// eslint-disable-next-line max-len
-	vscode.window.showWarningMessage(`${pathname ? pathname + ': ' : ''}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`);
+	const filename = pathname ? `${pathname}: ` : '';
+	const message = `${filename}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`;
+	
+	vscode.window.showWarningMessage(message);
 	
 	return ignore.map((pattern) => `**/${pattern}`);
 	

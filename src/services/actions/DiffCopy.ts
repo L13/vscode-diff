@@ -82,7 +82,7 @@ export class DiffCopy {
 		
 		if (confirmCopy && !data.multi) {
 			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
-			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)['path' + to]}"?`;
+			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)[`path${to}`]}"?`;
 			const value = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
 				
 			if (value) {
@@ -195,15 +195,17 @@ function getRealRelative (root:string, relative:string) {
 	return path.join(...names.map((name) => {
 		
 		const cwdNames = fs.readdirSync(cwd);
+		let cwdName;
 		
 		name = name.toUpperCase();
 		
-		for (const cwdName of cwdNames) {
-			if (cwdName.toUpperCase() === name) {
-				cwd = path.join(cwd, cwdName);
-				return cwdName;
-			}
+		for (cwdName of cwdNames) {
+			if (cwdName.toUpperCase() === name) break;
 		}
+		
+		cwd = path.join(cwd, cwdName);
+		
+		return cwdName;
 		
 	}));
 	

@@ -405,11 +405,10 @@ function set (context:any, path:string, value:any) {
 		if (!names.length) {
 			context[name] = value;
 			return;
-		} else {
-			context = context[name];
-			if (context == null) return;
-			name = names.shift();
 		}
+		context = context[name];
+		if (context == null) return;
+		name = names.shift();
 	}
 	
 }
@@ -425,11 +424,10 @@ function run (context:any, path:string) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			if (typeof context[name] === 'function') context[name]();
 			return;
-		} else {
-			context = context[name];
-			if (context == null) return;
-			name = names.shift();
 		}
+		context = context[name];
+		if (context == null) return;
+		name = names.shift();
 	}
 	
 }

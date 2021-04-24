@@ -568,21 +568,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
-		} else {
-			if (key === 'ArrowUp') {
-				if (!lastSelection) this.selectItem(this.getLastItem());
-				else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
-			} else if (key === 'PageUp') {
-				const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
-				let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
-				if (!lastSelection) this.selectItem(currentElement, false);
-				else if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
-				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
-			} else if (key === 'Home') {
-				if (!lastSelection) this.selectItem(this.getFirstItem());
-				else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
-			}
+		} else if (key === 'ArrowUp') {
+			if (!lastSelection) this.selectItem(this.getLastItem());
+			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
+		} else if (key === 'PageUp') {
+			const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
+			let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
+			if (!lastSelection) this.selectItem(currentElement, false);
+			else if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
+			this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
+		} else if (key === 'Home') {
+			if (!lastSelection) this.selectItem(this.getFirstItem());
+			else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 		}
 		
 	}
@@ -594,22 +592,20 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
-		} else {
-			if (key === 'ArrowDown') {
-				if (!lastSelection) this.selectItem(this.getFirstItem());
-				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
-			} else if (key === 'PageDown') {
-				const viewHeight = this.offsetHeight;
-				const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
-				let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
-				if (!lastSelection) this.selectItem(currentElement, false);
-				else if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
-				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
-			} else if (key === 'End') {
-				if (!lastSelection) this.selectItem(this.getLastItem());
-				else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
-			}
+		} else if (key === 'ArrowDown') {
+			if (!lastSelection) this.selectItem(this.getFirstItem());
+			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
+		} else if (key === 'PageDown') {
+			const viewHeight = this.offsetHeight;
+			const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
+			let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
+			if (!lastSelection) this.selectItem(currentElement, false);
+			else if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
+			this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
+		} else if (key === 'End') {
+			if (!lastSelection) this.selectItem(this.getLastItem());
+			else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 		}
 		
 	}
@@ -714,7 +710,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const fileA = diff.fileA;
 			const fileB = diff.fileB;
 			
-			row.classList.add('-' + diff.status);
+			row.classList.add(`-${diff.status}`);
 			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', diff.id);
 			
