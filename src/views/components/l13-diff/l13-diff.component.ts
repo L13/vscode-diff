@@ -164,8 +164,9 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		panelVM.loading = false;
 		
 		if (listVM.items.length) {
+			const hasSelectedElement = this.list.cacheFilteredListItemViews.some((element) => element.classList.contains('-selected'));
 			actionsVM.enable();
-			if (!this.list.content.querySelector('.-selected')) actionsVM.disableCopy();
+			if (!hasSelectedElement) actionsVM.disableCopy();
 		}
 		
 		compareVM.enable();
@@ -245,17 +246,15 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	public updateNavigator (updateMap = true, updateSelection = true) {
 			
-		let element:HTMLElement = <HTMLElement> this.list.content.firstElementChild;
-		const values:ListItemInfo[] = [];
-		
-		while (element) {
-			values.push({
+		const values:ListItemInfo[] = this.list.cacheFilteredListItemViews.map((element) => {
+			
+			return {
 				selected: element.classList.contains('-selected'),
 				status: <DiffStatus>element.getAttribute('data-status'),
-				offsetHeight: element.offsetHeight,
-			});
-			element = <HTMLElement>element.nextElementSibling;
-		}
+				offsetHeight: 22,
+			};
+			
+		});
 		
 		const listHeight = this.list.offsetHeight;
 		

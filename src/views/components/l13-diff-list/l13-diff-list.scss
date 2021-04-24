@@ -46,8 +46,12 @@ l13-diff-list-content {
 
 l13-diff-list-row {
 	display: flex;
-	width: 100%;
+	height: 22px;
+	position: absolute;
+	left: 0;
+	top: 0;
 	outline-offset: -1px;
+	width: 100%;
 	
 	&:hover {
 		background: var(--vscode-list-hoverBackground);

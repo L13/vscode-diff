@@ -49,6 +49,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	private cacheSelectionHistory:HTMLElement[] = [];
 	private cacheSelectedListItems:HTMLElement[] = [];
 	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
+	public cacheFilteredListItemViews:HTMLElement[] = [];
 	private cacheListItems:Diff[] = [];
 	private cacheFilteredListItems:Diff[] = [];
 	
@@ -682,7 +683,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		super.update();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
-		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.showFiteredListItemViews();
+		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFiteredListItemViews();
 		
 	}
 	
@@ -726,26 +727,64 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private showFiteredListItemViews () {
+	private createFiteredListItemViews () {
 		
 		this.unselect();
 		
 		removeChildren(this.content);
 		
-		const fragment = document.createDocumentFragment();
+		this.cacheFilteredListItemViews = [];
 		
-		this.viewmodel.filteredItems.forEach((diff) => {
+		this.viewmodel.filteredItems.forEach((diff, index) => {
 			
-			fragment.appendChild(this.cacheListItemViews[diff.id]);
+			const element = this.cacheListItemViews[diff.id];
+			
+			element.setAttribute('data-index', `${index}`);
+			element.style.top = `${index * 22}px`;
+			this.cacheFilteredListItemViews.push(element);
 			
 		});
 		
-		this.content.appendChild(fragment);
+		this.content.style.height = `${this.cacheFilteredListItemViews.length * 22}px`;
+		this.showVisibleListViewItems();
 		this.restoreSelections();
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
 		
 		this.dispatchCustomEvent('filtered');
+		
+	}
+	
+	public showVisibleListViewItems () {
+		
+		const scrollTop = this.scrollTop;
+		const start = Math.floor(scrollTop / 22);
+		let end = Math.ceil((scrollTop + this.offsetHeight) / 22) + 1;
+		
+		if (end > this.cacheFilteredListItemViews.length) {
+			end = this.cacheFilteredListItemViews.length;
+		}
+		
+		let nextElement = this.content.firstElementChild;
+		const fragment = document.createDocumentFragment();
+		
+		removeChildren(this.content);
+		
+		while (nextElement) {
+			const currentElement = nextElement;
+			const index = parseInt(currentElement.getAttribute('data-index'), 10);
+			if (index < start || index > end) currentElement.remove();
+			nextElement = nextElement.nextElementSibling || this.content.firstElementChild;
+		}
+		
+		for (let i = start; i < end; i++) {
+			const element = this.cacheFilteredListItemViews[i];
+			if (!element.parentNode) fragment.appendChild(element);
+		}
+		
+		this.content.appendChild(fragment);
+		
+		console.log(this.content.childNodes.length);
 		
 	}
 	
