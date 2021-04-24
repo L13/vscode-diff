@@ -48,10 +48,13 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	list.addEventListener('scroll', () => {
+	list.addEventListener('scroll', (event) => {
 		
 		diff.setScrollbarPosition();
 		list.showVisibleListViewItems();
+		
+		event.stopImmediatePropagation();
+		event.preventDefault();
 		
 	});
 	

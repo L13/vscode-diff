@@ -57,10 +57,6 @@ l13-diff-list-row {
 		l13-diff-context {
 			background: var(--l13-context-hover-background);
 			display: block;
-			
-			&::before {
-				background: linear-gradient(90deg, transparent 0%, var(--l13-context-hover-background) 100%);
-			}
 		}
 	}
 	

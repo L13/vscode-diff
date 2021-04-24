@@ -414,18 +414,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectRange (from:HTMLElement, to:HTMLElement) {
 		
-		const elements:HTMLElement[] = [];
-		
 		[from, to] = from.offsetTop < to.offsetTop ? [from, to] : [to, from];
 		
-		while (from !== to) {
-			from.classList.add('-selected');
-			elements[elements.length] = from;
-			from = <HTMLElement>from.nextElementSibling;
-		}
+		const start = parseInt(from.getAttribute('data-index'), 10);
+		const end = parseInt(to.getAttribute('data-index'), 10);
+		const elements = this.cacheFilteredListItemViews.slice(start, end);
 		
-		to.classList.add('-selected');
-		elements[elements.length] = to;
+		elements.forEach((element) => element.classList.add('-selected'));
 		
 		this.dispatchCustomEvent('selected');
 		
@@ -458,13 +453,25 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getFirstItem () {
 		
-		return <HTMLElement> this.content.firstElementChild;
+		return this.cacheFilteredListItemViews[0];
 		
 	}
 	
 	private getLastItem () {
 		
-		return <HTMLElement> this.content.lastElementChild;
+		return this.cacheFilteredListItemViews[this.cacheFilteredListItemViews.length - 1];
+		
+	}
+	
+	private getNextItem (element:HTMLElement) {
+		
+		return this.cacheFilteredListItemViews[parseInt(element.getAttribute('data-index'), 10) + 1];
+		
+	}
+	
+	private getPreviousItem (element:HTMLElement) {
+		
+		return this.cacheFilteredListItemViews[parseInt(element.getAttribute('data-index'), 10) - 1];
 		
 	}
 	
@@ -472,7 +479,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		let previousElementSibling:HTMLElement;
 		
-		while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
+		while ((previousElementSibling = this.getPreviousItem(currentElement))) {
 			if (previousElementSibling.offsetTop > viewStart) {
 				currentElement = previousElementSibling;
 				continue;
@@ -488,7 +495,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		let nextElementSibling:HTMLElement;
 		
-		while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
+		while ((nextElementSibling = this.getNextItem(currentElement))) {
 			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
 				currentElement = nextElementSibling;
 				continue;
@@ -566,13 +573,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getFirstItem() : this.getLastItem());
-			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else if (!this.getPreviousItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
+			else this.selectPreviousOrNextItem(this.getPreviousItem(lastSelection), shiftKey);
 		} else if (key === 'ArrowUp') {
 			if (!lastSelection) this.selectItem(this.getLastItem());
-			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
+			else if (!this.getPreviousItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(this.getPreviousItem(lastSelection), shiftKey);
 		} else if (key === 'PageUp') {
 			const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
 			let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
@@ -590,13 +597,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getLastItem() : this.getFirstItem());
-			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else if (!this.getNextItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
+			else this.selectPreviousOrNextItem(this.getNextItem(lastSelection), shiftKey);
 		} else if (key === 'ArrowDown') {
 			if (!lastSelection) this.selectItem(this.getFirstItem());
-			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
+			else if (!this.getNextItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(this.getNextItem(lastSelection), shiftKey);
 		} else if (key === 'PageDown') {
 			const viewHeight = this.offsetHeight;
 			const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
@@ -756,12 +763,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public showVisibleListViewItems () {
 		
 		const scrollTop = this.scrollTop;
-		const start = Math.floor(scrollTop / 22);
-		let end = Math.ceil((scrollTop + this.offsetHeight) / 22) + 1;
+		let start = Math.floor(scrollTop / 22) - 10;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / 22) + 10;
+		const views = this.cacheFilteredListItemViews;
 		
-		if (end > this.cacheFilteredListItemViews.length) {
-			end = this.cacheFilteredListItemViews.length;
-		}
+		if (start < 0) start = 0;
+		if (end > views.length) end = views.length;
 		
 		let nextElement = this.content.firstElementChild;
 		
@@ -775,7 +782,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const fragment = document.createDocumentFragment();
 		
 		for (let i = start; i < end; i++) {
-			const element = this.cacheFilteredListItemViews[i];
+			const element = views[i];
 			if (!element.parentNode) fragment.appendChild(element);
 		}
 		
