@@ -39,7 +39,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	@L13Query('l13-diff-list-content')
 	public content:HTMLElement;
 	
-	private context:L13DiffContextComponent;
+	// private context:L13DiffContextComponent;
 	
 	public disabled = false;
 	
@@ -57,8 +57,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		super();
 		
-		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
-		this.context.vmId = 'context';
+		// this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
+		// this.context.vmId = 'context';
 		
 		this.addEventListener('focus', () => {
 			
@@ -139,7 +139,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.cacheSelectedListItems = [];
 					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
 					else this.cacheSelectionHistory.push(listRow);
-					if (this.content.querySelector('.-selected')) this.dispatchCustomEvent('selected');
+					if (this.cacheFilteredListItemViews.some((element) => element.classList.contains('-selected'))) this.dispatchCustomEvent('selected');
 					else this.dispatchCustomEvent('unselected');
 				} else {
 					this.unselect();
@@ -275,123 +275,123 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		let contextTimeoutId:NodeJS.Timeout = null;
+		// let contextTimeoutId:NodeJS.Timeout = null;
 		
-		this.content.addEventListener('mouseover', ({ target }) => {
+		// this.content.addEventListener('mouseover', ({ target }) => {
 			
-			if (<HTMLElement>target === this.context) return;
+		// 	if (<HTMLElement>target === this.context) return;
 			
-			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
+		// 	const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
 			
-			if (element) {
-				const context = this.context;
-				const contextParentNode = context.parentNode;
-				if (element.childNodes.length) {
-					if (contextParentNode !== element) {
-						if (contextTimeoutId) clearTimeout(contextTimeoutId);
-						if (contextParentNode) context.remove();
-						contextTimeoutId = setTimeout(() => {
+		// 	if (element) {
+		// 		const context = this.context;
+		// 		const contextParentNode = context.parentNode;
+		// 		if (element.childNodes.length) {
+		// 			if (contextParentNode !== element) {
+		// 				if (contextTimeoutId) clearTimeout(contextTimeoutId);
+		// 				if (contextParentNode) context.remove();
+		// 				contextTimeoutId = setTimeout(() => {
 							
-							const viewmodel = context.viewmodel;
+		// 					const viewmodel = context.viewmodel;
 							
-							switch (element.getAttribute('data-type')) {
-								case 'file':
-								case 'symlink':
-									viewmodel.enableAll();
-									break;
-								case 'folder':
-									viewmodel.enableAll();
-									viewmodel.gotoDisabled = true;
-									break;
-								default:
-									viewmodel.disableAll();
-							}
-							element.appendChild(context);
+		// 					switch (element.getAttribute('data-type')) {
+		// 						case 'file':
+		// 						case 'symlink':
+		// 							viewmodel.enableAll();
+		// 							break;
+		// 						case 'folder':
+		// 							viewmodel.enableAll();
+		// 							viewmodel.gotoDisabled = true;
+		// 							break;
+		// 						default:
+		// 							viewmodel.disableAll();
+		// 					}
+		// 					element.appendChild(context);
 							
-						}, 300);
-					}
-				} else {
-					if (contextTimeoutId) clearTimeout(contextTimeoutId);
-					if (contextParentNode) context.remove();
-				}
-			}
+		// 				}, 300);
+		// 			}
+		// 		} else {
+		// 			if (contextTimeoutId) clearTimeout(contextTimeoutId);
+		// 			if (contextParentNode) context.remove();
+		// 		}
+		// 	}
 			
-		});
+		// });
 		
-		this.content.addEventListener('mouseleave', () => {
+		// this.content.addEventListener('mouseleave', () => {
 			
-			if (contextTimeoutId) clearTimeout(contextTimeoutId);
-			if (this.context.parentNode) this.context.remove();
+		// 	if (contextTimeoutId) clearTimeout(contextTimeoutId);
+		// 	if (this.context.parentNode) this.context.remove();
 			
-		});
+		// });
 		
 	//	context menu
 		
-		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
-		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
+		// this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
+		// this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 		
-		this.context.addEventListener('copy', ({ target, detail }:any) => {
+		// this.context.addEventListener('copy', ({ target, detail }:any) => {
 			
-			if (this.disabled) return;
+		// 	if (this.disabled) return;
 			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
+		// 	const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+		// 	const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
+		// 	const isSelected = rowNode.classList.contains('-selected');
+		// 	const selections = this.getIdsBySelection();
+		// 	const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
 			
-			if (!isSelected) this.cacheCurrentSelections = selections;
+		// 	if (!isSelected) this.cacheCurrentSelections = selections;
 			
-			this.dispatchCustomEvent('copy');
+		// 	this.dispatchCustomEvent('copy');
 			
-			if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
-			else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+		// 	if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
+		// 	else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
 			
-		});
+		// });
 		
-		this.context.addEventListener('goto', ({ target, detail }:any) => {
+		// this.context.addEventListener('goto', ({ target, detail }:any) => {
 			
-			if (this.disabled) return;
+		// 	if (this.disabled) return;
 			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
+		// 	const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+		// 	const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
+		// 	const isSelected = rowNode.classList.contains('-selected');
+		// 	const selections = this.getIdsBySelection();
+		// 	const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
 			
-			if (!isSelected) this.cacheCurrentSelections = selections;
+		// 	if (!isSelected) this.cacheCurrentSelections = selections;
 			
-			// this.dispatchCustomEvent('goto');
-			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
+		// 	// this.dispatchCustomEvent('goto');
+		// 	this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
 			
-		});
+		// });
 		
-		this.context.addEventListener('reveal', ({ target }) => {
+		// this.context.addEventListener('reveal', ({ target }) => {
 			
-			if (this.disabled) return;
+		// 	if (this.disabled) return;
 			
-			const pathname = (<HTMLElement>target).closest('l13-diff-list-file').getAttribute('data-fs-path');
+		// 	const pathname = (<HTMLElement>target).closest('l13-diff-list-file').getAttribute('data-fs-path');
 			
-			msg.send<string>('reveal:file', pathname);
+		// 	msg.send<string>('reveal:file', pathname);
 			
-		});
+		// });
 		
-		this.context.addEventListener('delete', ({ target }) => {
+		// this.context.addEventListener('delete', ({ target }) => {
 			
-			if (this.disabled) return;
+		// 	if (this.disabled) return;
 			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
+		// 	const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
+		// 	const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
+		// 	const isSelected = rowNode.classList.contains('-selected');
+		// 	const selections = this.getIdsBySelection();
+		// 	const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
 			
-			if (!isSelected) this.cacheCurrentSelections = selections;
+		// 	if (!isSelected) this.cacheCurrentSelections = selections;
 			
-			this.dispatchCustomEvent('delete');
-			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
+		// 	this.dispatchCustomEvent('delete');
+		// 	this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
 			
-		});
+		// });
 		
 		msg.on('cancel', () => {
 			
@@ -619,10 +619,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		let dispatchSelectedEvent = false;
 		
 		for (const type of Object.values(types)) {
-			const elements = this.content.querySelectorAll(`l13-diff-list-row.-${type}`);
+			const elements = this.cacheFilteredListItemViews.filter((element) => element.classList.contains(`-${type}`));
 			if (elements.length) {
 				elements.forEach((element) => element.classList.add('-selected'));
-				this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+				this.cacheSelectionHistory.push(elements[elements.length - 1]);
 				dispatchSelectedEvent = true;
 			}
 		}
@@ -641,9 +641,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheSelectionHistory = [];
 		
-		const elements = this.content.querySelectorAll('.-selected');
-		
-		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
+		this.cacheFilteredListItemViews.forEach((element) => element.classList.remove('-selected'));
 		
 		this.dispatchCustomEvent('unselected');
 		
@@ -651,7 +649,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getIdsBySelection () {
 		
-		const elements = this.content.querySelectorAll('.-selected');
+		const elements = this.cacheFilteredListItemViews.filter((element) => element.classList.contains('-selected'));
 		const ids:string[] = [];
 		
 		elements.forEach((element) => ids.push(element.getAttribute('data-id')));
@@ -766,16 +764,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		let nextElement = this.content.firstElementChild;
-		const fragment = document.createDocumentFragment();
-		
-		removeChildren(this.content);
 		
 		while (nextElement) {
-			const currentElement = nextElement;
-			const index = parseInt(currentElement.getAttribute('data-index'), 10);
-			if (index < start || index > end) currentElement.remove();
-			nextElement = nextElement.nextElementSibling || this.content.firstElementChild;
+			const element = nextElement;
+			const index = parseInt(element.getAttribute('data-index'), 10);
+			nextElement = element.nextElementSibling;
+			if (index < start || index > end) element.remove();
 		}
+		
+		const fragment = document.createDocumentFragment();
 		
 		for (let i = start; i < end; i++) {
 			const element = this.cacheFilteredListItemViews[i];
@@ -783,8 +780,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.content.appendChild(fragment);
-		
-		console.log(this.content.childNodes.length);
 		
 	}
 	
@@ -874,6 +869,23 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 			ignored.textContent = `(ignored ${values.join(' and ')})`;
 			ignored.classList.add('-info');
 			path.appendChild(ignored);
+		}
+		
+		const context = <L13DiffContextComponent>document.createElement('l13-diff-context');
+		context.vmId = `context-${file.fsPath}`;
+		column.appendChild(context);
+		
+		switch (type) {
+			case 'file':
+			case 'symlink':
+				context.viewmodel.enableAll();
+				break;
+			case 'folder':
+				context.viewmodel.enableAll();
+				context.viewmodel.gotoDisabled = true;
+				break;
+			default:
+				context.viewmodel.disableAll();
 		}
 	}
 	
