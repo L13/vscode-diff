@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { Diff, DiffFile, DiffOpenMessage, DiffStatus } from '../../../types';
+import type { Diff, DiffFile, DiffStatus } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 import { formatDate, formatFileSize } from '../../../@l13/formats';
@@ -14,6 +14,9 @@ import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-conte
 
 import styles from '../styles';
 import templates from '../templates';
+
+import * as context from './events/context-menu';
+import * as dragNDrop from './events/drag-n-drop';
 
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
@@ -45,22 +48,39 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public tabIndex = 0;
 	
-	private cacheCurrentSelections:string[] = [];
-	private cacheSelectionHistory:HTMLElement[] = [];
-	private cacheSelectedListItems:HTMLElement[] = [];
-	private cacheListItems:Diff[] = [];
-	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
-	private cacheFilteredListItems:Diff[] = [];
-	public cacheFilteredListItemViews:HTMLElement[] = [];
+	private rowHeight = 0;
 	
-	private dragSrcRowElement:HTMLElement = null;
+	private previousScrollTop = 0;
+	
+	public currentSelections:string[] = [];
+	
+	private cacheSelectionHistory:HTMLElement[] = [];
+	
+	private cacheSelectedListItems:HTMLElement[] = [];
+	
+	private cacheListItems:Diff[] = [];
+	
+	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
+	
+	private cacheFilteredListItems:Diff[] = [];
+	
+	public filteredListItemViews:HTMLElement[] = [];
+	
+	public dragSrcRowElement:HTMLElement = null;
 	
 	public constructor () {
 		
 		super();
 		
+		this.detectRowHeight();
+		
+	//	context menu
+	
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		this.context.vmId = 'context';
+		
+		context.init({ context: this.context, list: this });
+		dragNDrop.init({ list: this });
 		
 		this.addEventListener('focus', () => {
 			
@@ -141,7 +161,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.cacheSelectedListItems = [];
 					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
 					else this.cacheSelectionHistory.push(listRow);
-					if (this.cacheFilteredListItemViews.some((element) => element.classList.contains('-selected'))) this.dispatchCustomEvent('selected');
+					if (this.filteredListItemViews.some((element) => element.classList.contains('-selected'))) this.dispatchCustomEvent('selected');
 					else this.dispatchCustomEvent('unselected');
 				} else {
 					this.unselect();
@@ -161,236 +181,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		let dragSrcElement:HTMLElement = null;
-		
-		this.content.addEventListener('dragstart', (event) => {
-			
-			if (this.disabled) return;
-			
-			dragSrcElement = <HTMLElement>event.target;
-			this.dragSrcRowElement = dragSrcElement.closest('l13-diff-list-row');
-			
-			const columnNode = dragSrcElement.closest('l13-diff-list-file');
-			const rowNode = columnNode.closest('l13-diff-list-row');
-			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-			const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
-			
-			dragSrcElement.style.opacity = '0.4';
-			event.dataTransfer.setData('data-diff-file', JSON.stringify(file));
-			
-		});
-		
-		let dropHoverElement:HTMLElement = null;
-		
-		this.content.addEventListener('dragover', (event) => {
-			
-			if (this.disabled) return;
-			
-			event.preventDefault();
-			
-			const element:HTMLElement = <HTMLElement>event.target;
-			
-			if (element) {
-				const dropable:HTMLElement = element.closest('l13-diff-list-file');
-				if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
-					if (dropHoverElement && dropHoverElement !== dropable) {
-						dropHoverElement.classList.remove('-draghover');
-					}
-					if (dropable !== dropHoverElement && dropable !== dragSrcElement?.parentElement && dropable.firstElementChild) {
-						dropHoverElement = dropable;
-						dropHoverElement.classList.add('-draghover');
-					}
-				}
-			}
-			
-		});
-		
-		this.content.addEventListener('dragexit', (event) => {
-			
-			event.preventDefault();
-			
-			dragSrcElement.style.opacity = '1';
-			this.dragSrcRowElement = null;
-			dragSrcElement = null;
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('dragend', (event) => {
-			
-			event.preventDefault();
-			
-			dragSrcElement.style.opacity = '1';
-			this.dragSrcRowElement = null;
-			dragSrcElement = null;
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('dragleave', (event) => {
-			
-			event.preventDefault();
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('drop', (event) => {
-			
-			if (this.disabled) return;
-			
-			event.preventDefault();
-			
-			const target = (<HTMLElement>event.target).closest('l13-diff-list-file');
-			const rowNode = target.closest('l13-diff-list-row');
-			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
-			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
-			const typeA = fileA.type;
-			
-			if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
-			
-			msg.send<DiffOpenMessage>('open:diff', {
-				pathA: fileA.root,
-				pathB: fileB.root,
-				diffs: [
-					{
-						id: null,
-						status: 'modified',
-						type: typeA,
-						ignoredWhitespace: false,
-						ignoredEOL: false,
-						fileA,
-						fileB,
-					},
-				],
-				openToSide: event.altKey,
-			});
-			
-		});
-		
-		this.content.addEventListener('mouseover', ({ target }) => {
-			
-			if (<HTMLElement>target === this.context) return;
-			
-			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
-			
-			if (element) {
-				const context = this.context;
-				const contextParentNode = context.parentNode;
-				if (element.childNodes.length) {
-					if (contextParentNode !== element) {
-						if (contextParentNode) context.remove();
-						const viewmodel = context.viewmodel;
-						switch (element.getAttribute('data-type')) {
-							case 'file':
-							case 'symlink':
-								viewmodel.enableAll();
-								break;
-							case 'folder':
-								viewmodel.enableAll();
-								viewmodel.gotoDisabled = true;
-								break;
-							default:
-								viewmodel.disableAll();
-						}
-						element.appendChild(context);
-					}
-				} else if (contextParentNode) context.remove();
-			}
-			
-		});
-		
-		this.content.addEventListener('mouseleave', () => {
-			
-			this.context.remove();
-			
-		});
-		
-	//	context menu
-		
-		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
-		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
-		
-		this.context.addEventListener('copy', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			this.dispatchCustomEvent('copy');
-			
-			if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
-			else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
-		this.context.addEventListener('goto', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			// this.dispatchCustomEvent('goto');
-			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
-			
-		});
-		
-		this.context.addEventListener('reveal', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const pathname = (<HTMLElement>target).closest('l13-diff-list-file').getAttribute('data-fs-path');
-			
-			msg.send<string>('reveal:file', pathname);
-			
-		});
-		
-		this.context.addEventListener('delete', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			this.dispatchCustomEvent('delete');
-			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
 		msg.on('cancel', () => {
 			
-			if (this.cacheCurrentSelections.length) this.cacheCurrentSelections = [];
+			if (this.currentSelections.length) this.currentSelections = [];
 			
 		});
+		
+	}
+	
+	private detectRowHeight () {
+		
+		const row = document.createElement('l13-diff-list-row');
+		
+		row.appendChild(document.createTextNode('\u00A0'));
+		this.content.appendChild(row);
+		this.rowHeight = (<HTMLElement> this.content.firstElementChild).offsetHeight;
+		row.remove();
 		
 	}
 	
@@ -411,7 +217,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const toIndex = parseInt(to.getAttribute('data-index'), 10);
 		
 		const [start, end] = fromIndex < toIndex ? [fromIndex, toIndex] : [toIndex, fromIndex];
-		const elements = this.cacheFilteredListItemViews.slice(start, end + 1);
+		const elements = this.filteredListItemViews.slice(start, end + 1);
 		
 		elements.forEach((element) => element.classList.add('-selected'));
 		
@@ -446,25 +252,25 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getFirstItem () {
 		
-		return this.cacheFilteredListItemViews[0];
+		return this.filteredListItemViews[0];
 		
 	}
 	
 	private getLastItem () {
 		
-		return this.cacheFilteredListItemViews[this.cacheFilteredListItemViews.length - 1];
+		return this.filteredListItemViews[this.filteredListItemViews.length - 1];
 		
 	}
 	
 	private getNextItem (element:HTMLElement) {
 		
-		return this.cacheFilteredListItemViews[parseInt(element.getAttribute('data-index'), 10) + 1];
+		return this.filteredListItemViews[parseInt(element.getAttribute('data-index'), 10) + 1];
 		
 	}
 	
 	private getPreviousItem (element:HTMLElement) {
 		
-		return this.cacheFilteredListItemViews[parseInt(element.getAttribute('data-index'), 10) - 1];
+		return this.filteredListItemViews[parseInt(element.getAttribute('data-index'), 10) - 1];
 		
 	}
 	
@@ -620,7 +426,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		let dispatchSelectedEvent = false;
 		
 		for (const type of Object.values(types)) {
-			const elements = this.cacheFilteredListItemViews.filter((element) => element.classList.contains(`-${type}`));
+			const elements = this.filteredListItemViews.filter((element) => element.classList.contains(`-${type}`));
 			if (elements.length) {
 				elements.forEach((element) => element.classList.add('-selected'));
 				this.cacheSelectionHistory.push(elements[elements.length - 1]);
@@ -642,15 +448,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheSelectionHistory = [];
 		
-		this.cacheFilteredListItemViews.forEach((element) => element.classList.remove('-selected'));
+		this.filteredListItemViews.forEach((element) => element.classList.remove('-selected'));
 		
 		this.dispatchCustomEvent('unselected');
 		
 	}
 	
-	private getIdsBySelection () {
+	public getIdsBySelection () {
 		
-		const elements = this.cacheFilteredListItemViews.filter((element) => element.classList.contains('-selected'));
+		const elements = this.filteredListItemViews.filter((element) => element.classList.contains('-selected'));
 		const ids:string[] = [];
 		
 		elements.forEach((element) => ids.push(element.getAttribute('data-id')));
@@ -732,21 +538,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		removeChildren(this.content);
 		
-		this.cacheFilteredListItemViews = [];
+		this.filteredListItemViews = [];
 		
 		this.viewmodel.filteredItems.forEach((diff, index) => {
 			
 			const element = this.cacheListItemViews[diff.id];
 			
 			element.setAttribute('data-index', `${index}`);
-			element.style.top = `${index * 22}px`;
-			this.cacheFilteredListItemViews.push(element);
+			element.style.top = `${index * this.rowHeight}px`;
+			this.filteredListItemViews.push(element);
 			
 		});
 		
-		this.content.style.height = `${this.cacheFilteredListItemViews.length * 22}px`;
+		this.content.style.height = `${this.filteredListItemViews.length * this.rowHeight}px`;
 		this.scrollTop = 0;
-		this.previousScrollTop = -22;
+		this.previousScrollTop = -this.rowHeight;
 		this.showVisibleListViewItems();
 		this.restoreSelections();
 		
@@ -756,30 +562,29 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private previousScrollTop = -22;
-	
 	public showVisibleListViewItems () {
 		
 		const scrollTop = this.scrollTop;
 		const delta = scrollTop - this.previousScrollTop;
 		
-		if (delta > -22 && delta < 22) return;
+		if (delta > -this.rowHeight && delta < this.rowHeight) return;
 		
 		this.previousScrollTop = scrollTop;
 		
-		const elements = this.cacheFilteredListItemViews;
-		const itemsPerPage = Math.ceil(this.offsetHeight / 22);
-		let start = Math.floor(scrollTop / 22) - 10;
-		let end = Math.ceil((scrollTop + this.offsetHeight) / 22) + 10;
+		const elements = this.filteredListItemViews;
+		const dragSrcRowElement = this.dragSrcRowElement;
+		let nextElement = this.content.firstElementChild;
+		
+		const itemsPerPage = Math.ceil(this.offsetHeight / this.rowHeight);
+		let start = Math.floor(scrollTop / this.rowHeight) - 10;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / this.rowHeight) + 10;
+		
 		
 		if (delta > 0) end += itemsPerPage;
 		else start -= itemsPerPage;
 		
 		if (start < 0) start = 0;
 		if (end > elements.length) end = elements.length;
-		
-		let nextElement = this.content.firstElementChild;
-		const dragSrcRowElement = this.dragSrcRowElement;
 		
 		while (nextElement) {
 			const element = nextElement;
@@ -801,7 +606,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private restoreSelections () {
 		
-		const cacheCurrentSelections = this.cacheCurrentSelections;
+		const cacheCurrentSelections = this.currentSelections;
 		
 		if (cacheCurrentSelections.length) {
 			cacheCurrentSelections.forEach((id) => {
@@ -811,7 +616,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				if (element.parentNode) element.classList.add('-selected');
 				
 			});
-			this.cacheCurrentSelections = [];
+			this.currentSelections = [];
 			this.dispatchCustomEvent('selected');
 		}
 		

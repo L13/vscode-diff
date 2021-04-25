@@ -3,6 +3,7 @@
 import type { L13DiffActionsComponent } from '../components/l13-diff-actions/l13-diff-actions.component';
 import type { L13DiffActionsViewModel } from '../components/l13-diff-actions/l13-diff-actions.viewmodel';
 import type { L13DiffCompareComponent } from '../components/l13-diff-compare/l13-diff-compare.component';
+import type { L13DiffContextComponent } from '../components/l13-diff-context/l13-diff-context.component';
 import type { L13DiffInputComponent } from '../components/l13-diff-input/l13-diff-input.component';
 import type { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
 import type { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
@@ -47,10 +48,19 @@ export type CompareEventsInit = {
 	compare:L13DiffCompareComponent,
 };
 
+export type ContextEventsInit = {
+	context:L13DiffContextComponent,
+	list:L13DiffListComponent,
+};
+
 export type DiffEventsInit = {
 	diff:L13DiffComponent,
 	leftVM:L13DiffInputViewModel,
 	rightVM:L13DiffInputViewModel,
+};
+
+export type DragNDropEventsInit = {
+	list:L13DiffListComponent,
 };
 
 export type FavoritesCommandsInit = {

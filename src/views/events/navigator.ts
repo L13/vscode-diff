@@ -4,7 +4,7 @@ import type { NavigatorEventsInit } from '../../types';
 
 //	Variables __________________________________________________________________
 
-const { round } = Math;
+const { floor } = Math;
 
 //	Initialize _________________________________________________________________
 
@@ -16,7 +16,16 @@ export function init ({ diff, navigator, list }:NavigatorEventsInit) {
 	
 	navigator.addEventListener('scroll', () => {
 		
-		list.scrollTop = round(navigator.scrollbar.offsetTop / navigator.canvasMap.offsetHeight * list.scrollHeight);
+		const scrollbarOffsetTop = navigator.scrollbar.offsetTop;
+		const scrollbarOffsetHeight = navigator.scrollbar.offsetHeight;
+		const canvasOffsetHeight = navigator.canvasMap.offsetHeight;
+		const listScrollHeight = list.scrollHeight;
+		
+		if (scrollbarOffsetTop + scrollbarOffsetHeight === canvasOffsetHeight) {
+			list.scrollTop = listScrollHeight;
+		} else {
+			list.scrollTop = floor(scrollbarOffsetTop / canvasOffsetHeight * listScrollHeight);
+		}
 		
 	});
 	
