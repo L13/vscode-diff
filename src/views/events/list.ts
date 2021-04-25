@@ -48,9 +48,14 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
+	let isScrolling = false;
+	
+	navigator.addEventListener('mousedownscroll', () => isScrolling = true);
+	navigator.addEventListener('mouseupscroll', () => isScrolling = false);
+	
 	list.addEventListener('scroll', (event) => {
 		
-		diff.setScrollbarPosition();
+		if (!isScrolling) diff.setScrollbarPosition();
 		list.showVisibleListViewItems();
 		
 		event.stopImmediatePropagation();
@@ -60,7 +65,7 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 	
 	list.addEventListener('wheel', (event) => {
 		
-		diff.setScrollbarPosition();
+		if (!isScrolling) diff.setScrollbarPosition();
 		list.showVisibleListViewItems();
 		
 		event.stopImmediatePropagation();

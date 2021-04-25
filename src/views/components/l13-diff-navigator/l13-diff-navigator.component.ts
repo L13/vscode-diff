@@ -41,6 +41,8 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	private scrollbarMaxY = 0;
 	
+	private previousScrollbarY = 0;
+	
 	private contextRuler:CanvasRenderingContext2D = null;
 	
 	private contextMap:CanvasRenderingContext2D = null;
@@ -109,6 +111,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		if (y < 0) y = 0;
 		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
 		
+		if (this.previousScrollbarY === y) return;
+		
+		this.previousScrollbarY = y;
 		this.scrollbar.style.top = `${y}px`;
 		
 		this.dispatchCustomEvent('scroll');

@@ -235,12 +235,18 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
+	private previousNavigatorScrollbarY = 0;
+	
 	public setScrollbarPosition () {
 		
 		const list = this.list;
 		const navigator = this.navigator;
+		const y = round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight);
 		
-		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight)}px`;
+		if (this.previousNavigatorScrollbarY === y) return;
+		
+		this.previousNavigatorScrollbarY	= y;
+		navigator.scrollbar.style.top = `${y}px`;
 		
 	}
 	

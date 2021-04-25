@@ -1,16 +1,18 @@
 :host {
 	display: block;
 	position: relative;
+	transform: translate3d(0, 0, 0);
 	user-select: none;
 }
 
 div {
 	background-color: var(--vscode-scrollbarSlider-background);
 	box-sizing: border-box;
-	height: 10px;
+	height: 10;
 	position: absolute;
-	top: 0;
 	right: 0;
+	top: 0;
+	transform: translate3d(0, 0, 0);
 	width: 30px;
 	z-index: 1;
 		
