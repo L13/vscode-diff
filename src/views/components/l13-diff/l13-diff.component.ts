@@ -164,9 +164,8 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		panelVM.loading = false;
 		
 		if (listVM.items.length) {
-			const hasSelectedElement = this.list.filteredListItemViews.some((element) => element.classList.contains('-selected'));
 			actionsVM.enable();
-			if (!hasSelectedElement) actionsVM.disableCopy();
+			if (!this.list.hasSelectedItem()) actionsVM.disableCopy();
 		}
 		
 		compareVM.enable();
@@ -251,13 +250,15 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	}
 	
 	public updateNavigator (updateMap = true, updateSelection = true) {
+		
+		const rowHeight = this.list.rowHeight;
 			
 		const values:ListItemInfo[] = this.list.filteredListItemViews.map((element) => {
 			
 			return {
-				selected: element.classList.contains('-selected'),
+				selected: this.list.isSelectedItem(element),
 				status: <DiffStatus>element.getAttribute('data-status'),
-				offsetHeight: 22,
+				offsetHeight: rowHeight,
 			};
 			
 		});

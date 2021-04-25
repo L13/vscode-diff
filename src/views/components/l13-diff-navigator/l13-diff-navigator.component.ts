@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import type { ListItemInfo } from '../../../types';
+
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import styles from '../styles';
@@ -129,7 +131,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public buildSelection (items:any[], listHeight:number) {
+	public buildSelection (items:ListItemInfo[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasRuler;
@@ -155,7 +157,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public build (items:any[], listHeight:number) {
+	public build (items:ListItemInfo[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasMap;

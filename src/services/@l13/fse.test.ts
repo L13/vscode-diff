@@ -9,15 +9,15 @@ import { createFindGlob } from './fse';
 type PositiveTest = {
 	platform:string,
 	useCaseSensitive?:boolean,
-	glob:any,
-	matches:any,
+	glob:string[],
+	matches:string,
 };
 
 type NegativeTest = {
 	platform:string,
 	useCaseSensitive?:boolean,
-	glob:any,
-	doesNotMatch:any,
+	glob:string[],
+	doesNotMatch:string,
 };
 
 //	Initialize _________________________________________________________________

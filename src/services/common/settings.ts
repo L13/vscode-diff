@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+import { JSONObject } from '../../types';
+
 import { lstatSync, walkUp } from '../@l13/fse';
 import { parse } from '../@l13/jsonc';
 
@@ -98,7 +100,7 @@ function loadSettingsExclude (pathname:string) :string[] {
 	
 	const codeSettingsPath = path.join(codePath, 'settings.json');
 	const stat = lstatSync(codeSettingsPath);
-	let json:any = {};
+	let json:JSONObject = {};
 	
 	if (stat && stat.isFile()) {
 		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
@@ -109,11 +111,11 @@ function loadSettingsExclude (pathname:string) :string[] {
 		}
 	}
 	
-	let ignore:string[] = json['l13Diff.ignore'];
+	let ignore:string[] = <string[]>json['l13Diff.ignore'];
 	
 	if (ignore) ignore = showDepricated(ignore, pathname);
 	
-	return json['l13Diff.exclude'] || ignore || null;
+	return <string[]>json['l13Diff.exclude'] || ignore || null;
 	
 }
 

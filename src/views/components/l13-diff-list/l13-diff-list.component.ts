@@ -48,7 +48,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public tabIndex = 0;
 	
-	private rowHeight = 0;
+	public readonly rowHeight = 22;
 	
 	private previousScrollTop = 0;
 	
@@ -72,7 +72,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		super();
 		
-		this.detectRowHeight();
+		// this.detectRowHeight();
 		
 	//	context menu
 	
@@ -153,16 +153,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						//	On Linux always last clicked item will be remembered
 							this.cacheSelectionHistory = [isWindows ? lastSelection : listRow];
 						}
-						if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
+						if (this.cacheSelectedListItems.length) this.unselectItems(this.cacheSelectedListItems);
 						this.cacheSelectedListItems = this.selectRange(listRow, lastSelection);
 					} else this.selectListItem(listRow);
 				} else if (isMetaKey(ctrlKey, metaKey)) {
-					listRow.classList.toggle('-selected');
+					this.toggleItemSelection(listRow);
 					this.cacheSelectedListItems = [];
-					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
+					if (!this.isSelectedItem(listRow)) remove(this.cacheSelectionHistory, listRow);
 					else this.cacheSelectionHistory.push(listRow);
-					if (this.filteredListItemViews.some((element) => element.classList.contains('-selected'))) this.dispatchCustomEvent('selected');
-					else this.dispatchCustomEvent('unselected');
+					if (this.hasSelectedItem()) this.dispatchEventSelected();
+					else this.dispatchEventUnselected();
 				} else {
 					this.unselect();
 					this.selectListItem(listRow);
@@ -189,39 +189,36 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private detectRowHeight () {
+	// private detectRowHeight () {
 		
-		const row = document.createElement('l13-diff-list-row');
+	// 	const row = document.createElement('l13-diff-list-row');
 		
-		row.appendChild(document.createTextNode('\u00A0'));
-		this.content.appendChild(row);
-		this.rowHeight = (<HTMLElement> this.content.firstElementChild).offsetHeight;
-		row.remove();
+	// 	row.appendChild(document.createTextNode('\u00A0'));
+	// 	this.content.appendChild(row);
+	// 	this.rowHeight = (<HTMLElement> this.content.firstElementChild).offsetHeight;
+	// 	row.remove();
 		
-	}
+	// }
 	
 	private selectListItem (element:HTMLElement) {
 		
-		element.classList.add('-selected');
-		
+		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
-		
-		this.dispatchCustomEvent('selected');
+		this.dispatchEventSelected();
 		
 	}
 	
 	private selectRange (from:HTMLElement, to:HTMLElement) {
 		
-		const fromIndex = parseInt(from.getAttribute('data-index'), 10);
-		const toIndex = parseInt(to.getAttribute('data-index'), 10);
+		const fromIndex = this.getIndex(from);
+		const toIndex = this.getIndex(to);
 		
 		const [start, end] = fromIndex < toIndex ? [fromIndex, toIndex] : [toIndex, fromIndex];
 		const elements = this.filteredListItemViews.slice(start, end + 1);
 		
-		elements.forEach((element) => element.classList.add('-selected'));
-		
-		this.dispatchCustomEvent('selected');
+		this.selectItems(elements);
+		this.dispatchEventSelected();
 		
 		return elements;
 		
@@ -229,11 +226,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectItem (element:HTMLElement, dispatchEvent = true) {
 		
-		element.classList.add('-selected');
+		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
 		scrollElementIntoView(this, element);
 		
-		if (dispatchEvent) this.dispatchCustomEvent('selected');
+		if (dispatchEvent) this.dispatchEventSelected();
 		
 	}
 	
@@ -241,12 +238,24 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey && this.cacheSelectionHistory.length > 1) {
 			this.unselect();
-			element.classList.add('-selected');
+			this.addItemSelection(element);
 			this.cacheSelectionHistory.push(element);
-			this.dispatchCustomEvent('selected');
+			this.dispatchEventSelected();
 		}
 		
 		scrollElementIntoView(this, element);
+		
+	}
+	
+	private addIndex (element:HTMLElement, index:number) {
+		
+		element.setAttribute('data-index', `${index}`);
+		
+	}
+	
+	private getIndex (element:HTMLElement) {
+		
+		return +element.getAttribute('data-index');
 		
 	}
 	
@@ -264,13 +273,73 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private getNextItem (element:HTMLElement) {
 		
-		return this.filteredListItemViews[parseInt(element.getAttribute('data-index'), 10) + 1];
+		return this.filteredListItemViews[this.getIndex(element) + 1];
 		
 	}
 	
 	private getPreviousItem (element:HTMLElement) {
 		
-		return this.filteredListItemViews[parseInt(element.getAttribute('data-index'), 10) - 1];
+		return this.filteredListItemViews[this.getIndex(element) - 1];
+		
+	}
+	
+	public isSelectedItem (element:HTMLElement) {
+		
+		return element.classList.contains('-selected');
+		
+	}
+	
+	public hasSelectedItem () {
+		
+		return this.filteredListItemViews.some((element) => element.classList.contains('-selected'));
+		
+	}
+	
+	public getSelectedItems () {
+		
+		return this.filteredListItemViews.filter((element) => element.classList.contains('-selected'));
+		
+	}
+	
+	private addItemSelection (element:HTMLElement) {
+		
+		element.classList.add('-selected');
+		
+	}
+	
+	private removeItemSelection (element:HTMLElement) {
+		
+		element.classList.remove('-selected');
+		
+	}
+	
+	private toggleItemSelection (element:HTMLElement) {
+		
+		element.classList.toggle('-selected');
+		
+	}
+	
+	private selectItems (elements:HTMLElement[]) {
+		
+		elements.forEach((element) => element.classList.add('-selected'));
+		
+	}
+	
+	private unselectItems (elements:HTMLElement[]) {
+		
+		elements.forEach((element) => element.classList.remove('-selected'));
+		
+	}
+	
+	private dispatchEventSelected () {
+		
+		this.dispatchCustomEvent('selected');
+		
+	}
+	
+	private dispatchEventUnselected () {
+		
+		this.dispatchCustomEvent('unselected');
 		
 	}
 	
@@ -311,9 +380,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) this.unselect();
 		
 		this.cacheSelectionHistory.push(element);
-		element.classList.add('-selected');
+		this.addItemSelection(element);
 		scrollElementIntoView(this, element);
-		this.dispatchCustomEvent('selected');
+		this.dispatchEventSelected();
 		
 	}
 	
@@ -321,11 +390,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey) {
 			this.unselect();
-			to.classList.add('-selected');
-			this.dispatchCustomEvent('selected');
+			this.addItemSelection(to);
+			this.dispatchEventSelected();
 		} else {
 			if (isWindows) {
-				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
+				if (this.cacheSelectedListItems.length) this.unselectItems(this.cacheSelectedListItems);
 				if (this.cacheSelectionHistory.length > 1) {
 					this.cacheSelectionHistory.pop();
 					from = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -335,7 +404,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.cacheSelectionHistory.push(to);
-		this.content.appendChild(to);
+	//	Fixes virtual scrolling if element is not in the DOM
+		if (!to.parentNode) this.content.appendChild(to);
 		scrollElementIntoView(this, to);
 		
 	}
@@ -344,8 +414,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey) {
 			this.unselect();
-			currentElement.classList.add('-selected');
-			this.dispatchCustomEvent('selected');
+			this.addItemSelection(currentElement);
+			this.dispatchEventSelected();
 		} else {
 			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
 		}
@@ -359,7 +429,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.content.firstChild) return;
 		
-		this.dispatchCustomEvent('selected');
+		this.dispatchEventSelected();
 		event.preventDefault();
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -428,13 +498,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		for (const type of Object.values(types)) {
 			const elements = this.filteredListItemViews.filter((element) => element.classList.contains(`-${type}`));
 			if (elements.length) {
-				elements.forEach((element) => element.classList.add('-selected'));
+				this.selectItems(elements);
 				this.cacheSelectionHistory.push(elements[elements.length - 1]);
 				dispatchSelectedEvent = true;
 			}
 		}
 		
-		if (dispatchSelectedEvent) this.dispatchCustomEvent('selected');
+		if (dispatchSelectedEvent) this.dispatchEventSelected();
 		
 	}
 	
@@ -447,21 +517,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public unselect () {
 		
 		this.cacheSelectionHistory = [];
-		
-		this.filteredListItemViews.forEach((element) => element.classList.remove('-selected'));
-		
-		this.dispatchCustomEvent('unselected');
+		this.unselectItems(this.filteredListItemViews);
+		this.dispatchEventUnselected();
 		
 	}
 	
 	public getIdsBySelection () {
 		
-		const elements = this.filteredListItemViews.filter((element) => element.classList.contains('-selected'));
-		const ids:string[] = [];
-		
-		elements.forEach((element) => ids.push(element.getAttribute('data-id')));
-		
-		return ids;
+		return this.getSelectedItems().map((element) => element.getAttribute('data-id'));
 		
 	}
 	
@@ -488,14 +551,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		super.update();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
-		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFiteredListItemViews();
+		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews();
 		
 	}
 	
 	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
-		const newCacheListItemViews:{ [name:string]:HTMLElement } = {};
+		const cacheListItemViews:{ [name:string]:HTMLElement } = {};
 		
 		const foldersA:string[] = [];
 		const foldersB:string[] = [];
@@ -523,16 +586,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			appendColumn(row, diff, fileA, detectExistingFolder(fileA, foldersB, foldersA));
 			appendColumn(row, diff, fileB, detectExistingFolder(fileB, foldersA, foldersB));
 			
-			newCacheListItemViews[diff.id] = row;
+			cacheListItemViews[diff.id] = row;
 			
 		});
 		
 		this.cacheListItems = items;
-		this.cacheListItemViews = newCacheListItemViews;
+		this.cacheListItemViews = cacheListItemViews;
 		
 	}
 	
-	private createFiteredListItemViews () {
+	private createFilteredListItemViews () {
 		
 		this.unselect();
 		
@@ -544,7 +607,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const element = this.cacheListItemViews[diff.id];
 			
-			element.setAttribute('data-index', `${index}`);
+			this.addIndex(element, index);
 			element.style.top = `${index * this.rowHeight}px`;
 			this.filteredListItemViews.push(element);
 			
@@ -573,12 +636,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const elements = this.filteredListItemViews;
 		const dragSrcRowElement = this.dragSrcRowElement;
-		let nextElement = this.content.firstElementChild;
+		let nextElement = <HTMLElement> this.content.firstElementChild;
 		
 		const itemsPerPage = Math.ceil(this.offsetHeight / this.rowHeight);
 		let start = Math.floor(scrollTop / this.rowHeight) - 10;
 		let end = Math.ceil((scrollTop + this.offsetHeight) / this.rowHeight) + 10;
-		
 		
 		if (delta > 0) end += itemsPerPage;
 		else start -= itemsPerPage;
@@ -588,8 +650,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		while (nextElement) {
 			const element = nextElement;
-			const index = +element.getAttribute('data-index');
-			nextElement = element.nextElementSibling;
+			const index = this.getIndex(element);
+			nextElement = <HTMLElement>element.nextElementSibling;
 			if (element !== dragSrcRowElement && (index < start || index >= end)) element.remove();
 		}
 		
@@ -613,11 +675,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				
 				const element = this.cacheListItemViews[id];
 				
-				if (element.parentNode) element.classList.add('-selected');
+				if (element.parentNode) this.addItemSelection(element);
 				
 			});
 			this.currentSelections = [];
-			this.dispatchCustomEvent('selected');
+			this.dispatchEventSelected();
 		}
 		
 	}

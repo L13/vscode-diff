@@ -14,6 +14,7 @@
 
 export * from './@types/diffs';
 export * from './@types/formats';
+export * from './@types/json';
 export * from './@types/messages';
 export * from './@types/tests';
 
