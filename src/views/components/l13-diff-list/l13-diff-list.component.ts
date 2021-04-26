@@ -638,12 +638,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const dragSrcRowElement = this.dragSrcRowElement;
 		let nextElement = <HTMLElement> this.content.firstElementChild;
 		
-		const itemsPerPage = Math.ceil(this.offsetHeight / this.rowHeight);
-		let start = Math.floor(scrollTop / this.rowHeight) - 10;
-		let end = Math.ceil((scrollTop + this.offsetHeight) / this.rowHeight) + 10;
-		
-		if (delta > 0) end += itemsPerPage;
-		else start -= itemsPerPage;
+		let start = Math.floor(scrollTop / this.rowHeight) - 3;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / this.rowHeight) + 3;
 		
 		if (start < 0) start = 0;
 		if (end > elements.length) end = elements.length;

@@ -48,17 +48,34 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	function scroll (event:Event) {
+	let requestedAnimationFrame:number = null;
+	
+	function animate () {
 		
+		requestedAnimationFrame = null;
 		diff.setScrollbarPosition();
 		list.showVisibleListViewItems();
 		
-		event.stopImmediatePropagation();
+	}
+	
+	function scroll () {
+		
+		if (!requestedAnimationFrame) {
+			requestedAnimationFrame = requestAnimationFrame(animate);
+		}
 		
 	}
 	
 	list.addEventListener('scroll', scroll, { capture: true, passive: true });
-	list.addEventListener('wheel', scroll, { capture: true, passive: true });
+	list.addEventListener('wheel', (event) => {
+		
+		event.stopImmediatePropagation();
+		event.preventDefault();
+		
+		list.scrollTop += event.deltaY;
+		scroll();
+		
+	}, { capture: true });
 	
 	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
 	
