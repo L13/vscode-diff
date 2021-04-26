@@ -1,6 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { SwapEventsInit } from '../../types';
+import type { CompareEventsInit } from '../../../../types';
+
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -12,9 +14,16 @@ import type { SwapEventsInit } from '../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, swap }:SwapEventsInit) {
+export function init ({ diff, compare }:CompareEventsInit) {
 	
-	swap.addEventListener('swap', ({ detail }:any) => diff.swapInputs(detail.altKey));
+	compare.addEventListener('compare', (event) => {
+		
+		if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
+		else diff.initCompare();
+		
+	});
+	
+	msg.on('compare:multi', () => diff.initCompare());
 	
 }
 

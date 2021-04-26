@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { InputEventsInit } from '../../types';
+import type { InputEventsInit } from '../../../../types';
 
 //	Variables __________________________________________________________________
 

@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { SwapCommandsInit } from '../../types';
+import type { SwapCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 

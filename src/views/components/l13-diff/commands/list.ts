@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { CompareEventsInit } from '../../types';
+import type { ListCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,16 +14,22 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, compare }:CompareEventsInit) {
+export function init ({ diff, list, search }:ListCommandsInit) {
 	
-	compare.addEventListener('compare', (event) => {
+	msg.on('l13Diff.action.list.delete', () => {
 		
-		if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
-		else diff.initCompare();
+		if (list.disabled) return;
+		
+		diff.disable();
+		list.delete();
 		
 	});
 	
-	msg.on('compare:multi', () => diff.initCompare());
+	msg.on('l13Diff.action.list.unselect', () => {
+		
+		if (!search.focused) list.unselect();
+		
+	});
 	
 }
 

@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { ListCommandsInit } from '../../types';
+import type { DiffFavoriteMessage, FavoritesCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,20 +14,14 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, search }:ListCommandsInit) {
+export function init ({ leftVM, rightVM }:FavoritesCommandsInit) {
 	
-	msg.on('l13Diff.action.list.delete', () => {
+	msg.on('l13Diff.action.panel.addToFavorites', () => {
 		
-		if (list.disabled) return;
-		
-		diff.disable();
-		list.delete();
-		
-	});
-	
-	msg.on('l13Diff.action.list.unselect', () => {
-		
-		if (!search.focused) list.unselect();
+		msg.send<DiffFavoriteMessage>('save:favorite', {
+			pathA: leftVM.value,
+			pathB: rightVM.value,
+		});
 		
 	});
 	

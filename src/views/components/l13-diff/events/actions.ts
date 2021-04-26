@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { ActionsEventsInit } from '../../types';
+import type { ActionsEventsInit } from '../../../../types';
 
-import { isMetaKey } from '../common';
+import { isMetaKey } from '../../../common';
 
 //	Variables __________________________________________________________________
 

@@ -1,8 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { MenuCommandsInit } from '../../types';
-
-import { msg } from '../common';
+import type { SwapEventsInit } from '../../../../types';
 
 //	Variables __________________________________________________________________
 
@@ -14,13 +12,9 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ menu }:MenuCommandsInit) {
+export function init ({ diff, swap }:SwapEventsInit) {
 	
-	msg.on('l13Diff.action.menu.close', () => {
-		
-		if (menu && menu.parentNode) menu.remove();
-		
-	});
+	swap.addEventListener('swap', ({ detail }:any) => diff.swapInputs(detail.altKey));
 	
 }
 

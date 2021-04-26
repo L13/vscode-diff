@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { SearchEventsInit } from '../../types';
+import type { SearchEventsInit } from '../../../../types';
 
 //	Variables __________________________________________________________________
 

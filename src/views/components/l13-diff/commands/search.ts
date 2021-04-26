@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import type { SearchCommandsInit } from '../../types';
+import type { SearchCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
