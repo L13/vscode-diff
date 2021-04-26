@@ -48,29 +48,17 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	let isScrolling = false;
-	
-	navigator.addEventListener('mousedownscroll', () => isScrolling = true);
-	navigator.addEventListener('mouseupscroll', () => isScrolling = false);
-	
-	list.addEventListener('scroll', (event) => {
+	function scroll (event:Event) {
 		
-		if (!isScrolling) diff.setScrollbarPosition();
-		list.showVisibleListViewItems();
-		
-		event.stopImmediatePropagation();
-		event.preventDefault();
-		
-	});
-	
-	list.addEventListener('wheel', (event) => {
-		
-		if (!isScrolling) diff.setScrollbarPosition();
+		diff.setScrollbarPosition();
 		list.showVisibleListViewItems();
 		
 		event.stopImmediatePropagation();
 		
-	});
+	}
+	
+	list.addEventListener('scroll', scroll, { capture: true, passive: true });
+	list.addEventListener('wheel', scroll, { capture: true, passive: true });
 	
 	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
 	

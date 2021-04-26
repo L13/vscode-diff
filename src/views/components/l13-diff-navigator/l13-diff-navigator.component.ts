@@ -116,9 +116,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		if (this.previousScrollbarY === y) return;
 		
 		this.previousScrollbarY = y;
-		this.scrollbar.style.top = `${y}px`;
+		// this.scrollbar.style.top = `${y}px`;
 		
-		this.dispatchCustomEvent('scroll');
+		this.dispatchCustomEvent('scroll', { y, height: this.scrollbar.offsetHeight });
 		
 	}
 	

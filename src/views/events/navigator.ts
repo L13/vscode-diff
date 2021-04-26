@@ -14,10 +14,10 @@ const { floor } = Math;
 
 export function init ({ diff, navigator, list }:NavigatorEventsInit) {
 	
-	navigator.addEventListener('scroll', () => {
+	navigator.addEventListener('scroll', (event:any) => {
 		
-		const scrollbarOffsetTop = navigator.scrollbar.offsetTop;
-		const scrollbarOffsetHeight = navigator.scrollbar.offsetHeight;
+		const scrollbarOffsetTop = <number>event.detail.y;
+		const scrollbarOffsetHeight = <number>event.detail.height;
 		const canvasOffsetHeight = navigator.canvasMap.offsetHeight;
 		const listScrollHeight = list.scrollHeight;
 		
