@@ -48,30 +48,12 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	let requestedAnimationFrame:number = null;
-	
-	function move () {
-		
-		requestedAnimationFrame = null;
-		diff.setScrollbarPosition();
-		list.showVisibleListViewItems();
-		
-	}
-	
-	function scroll () {
-		
-		if (!requestedAnimationFrame) {
-			requestedAnimationFrame = requestAnimationFrame(move);
-		}
-		
-	}
-	
 	list.addEventListener('scroll', (event) => {
 		
 		event.stopImmediatePropagation();
-		event.preventDefault();
 		
-		scroll();
+		diff.setScrollbarPosition();
+		list.showVisibleListViewItems();
 		
 	});
 	
@@ -81,7 +63,6 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		event.preventDefault();
 		
 		list.scrollTop += event.deltaY;
-		scroll();
 		
 	});
 	
