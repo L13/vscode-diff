@@ -50,7 +50,7 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 	
 	let requestedAnimationFrame:number = null;
 	
-	function animate () {
+	function move () {
 		
 		requestedAnimationFrame = null;
 		diff.setScrollbarPosition();
@@ -61,12 +61,20 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 	function scroll () {
 		
 		if (!requestedAnimationFrame) {
-			requestedAnimationFrame = requestAnimationFrame(animate);
+			requestedAnimationFrame = requestAnimationFrame(move);
 		}
 		
 	}
 	
-	list.addEventListener('scroll', scroll, { capture: true, passive: true });
+	list.addEventListener('scroll', (event) => {
+		
+		event.stopImmediatePropagation();
+		event.preventDefault();
+		
+		scroll();
+		
+	});
+	
 	list.addEventListener('wheel', (event) => {
 		
 		event.stopImmediatePropagation();
@@ -75,7 +83,9 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		list.scrollTop += event.deltaY;
 		scroll();
 		
-	}, { capture: true });
+	});
+	
+	window.addEventListener('resize', () => list.showVisibleListViewItems(true));
 	
 	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
 	

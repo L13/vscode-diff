@@ -17,6 +17,19 @@ l13-diff-list-content {
 			&.-selected {
 				background: var(--vscode-list-activeSelectionBackground);
 				color: var(--vscode-list-activeSelectionForeground);
+		
+				&.-ignored {
+					
+					l13-diff-list-file {
+						
+						span {
+							
+							&.-missing {
+								color: var(--vscode-list-activeSelectionForeground);
+							}
+						}
+					}
+				}
 					
 				l13-diff-list-file {
 					

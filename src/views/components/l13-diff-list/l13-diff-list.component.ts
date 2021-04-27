@@ -228,7 +228,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
-		scrollElementIntoView(this, element);
+		scrollElementIntoListView(this, element);
 		
 		if (dispatchEvent) this.dispatchEventSelected();
 		
@@ -243,7 +243,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			this.dispatchEventSelected();
 		}
 		
-		scrollElementIntoView(this, element);
+		scrollElementIntoListView(this, element);
 		
 	}
 	
@@ -348,7 +348,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		let previousElementSibling:HTMLElement;
 		
 		while ((previousElementSibling = this.getPreviousItem(currentElement))) {
-			if (previousElementSibling.offsetTop > viewStart) {
+			if (parseInt(previousElementSibling.style.top, 10) > viewStart) {
 				currentElement = previousElementSibling;
 				continue;
 			}
@@ -364,7 +364,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		let nextElementSibling:HTMLElement;
 		
 		while ((nextElementSibling = this.getNextItem(currentElement))) {
-			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
+			if (parseInt(nextElementSibling.style.top, 10) + this.rowHeight < viewEnd) {
 				currentElement = nextElementSibling;
 				continue;
 			}
@@ -381,7 +381,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.cacheSelectionHistory.push(element);
 		this.addItemSelection(element);
-		scrollElementIntoView(this, element);
+		scrollElementIntoListView(this, element);
+		
 		this.dispatchEventSelected();
 		
 	}
@@ -404,9 +405,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.cacheSelectionHistory.push(to);
-	//	Fixes virtual scrolling if element is not in the DOM
-		if (!to.parentNode) this.content.appendChild(to);
-		scrollElementIntoView(this, to);
+		scrollElementIntoListView(this, to);
 		
 	}
 	
@@ -421,7 +420,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.cacheSelectionHistory.push(currentElement);
-		scrollElementIntoView(this, currentElement);
+		scrollElementIntoListView(this, currentElement);
 		
 	}
 	
@@ -615,8 +614,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		this.content.style.height = `${this.filteredListItemViews.length * this.rowHeight}px`;
 		this.scrollTop = 0;
-		this.previousScrollTop = -this.rowHeight;
-		this.showVisibleListViewItems();
+		this.previousScrollTop = 0;
+		this.showVisibleListViewItems(true);
 		this.restoreSelections();
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
@@ -625,12 +624,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public showVisibleListViewItems () {
+	public showVisibleListViewItems (forceUpdate?:boolean) {
 		
 		const scrollTop = this.scrollTop;
 		const delta = scrollTop - this.previousScrollTop;
 		
-		if (delta > -this.rowHeight && delta < this.rowHeight) return;
+		if (!forceUpdate && delta > -this.rowHeight && delta < this.rowHeight) return;
 		
 		this.previousScrollTop = scrollTop;
 		
@@ -768,5 +767,14 @@ function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders
 	}
 	
 	return [null, file.dirname];
+	
+}
+
+function scrollElementIntoListView (list:L13DiffListComponent, element:HTMLElement) {
+	
+//	Fixes virtual scrolling if element is not in the DOM
+	if (!element.parentNode) list.content.appendChild(element);
+	
+	scrollElementIntoView(list, element);
 	
 }
