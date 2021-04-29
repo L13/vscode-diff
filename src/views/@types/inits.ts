@@ -90,9 +90,6 @@ export type ListEventsInit = {
 	diff:L13DiffComponent,
 	list:L13DiffListComponent,
 	listVM:L13DiffListViewModel,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	search:L13DiffSearchComponent,
 	navigator:L13DiffNavigatorComponent,
 	actionsVM:L13DiffActionsViewModel,
 	result:HTMLElement,
@@ -104,7 +101,6 @@ export type MenuCommandsInit = {
 };
 
 export type NavigatorEventsInit = {
-	diff:L13DiffComponent,
 	navigator:L13DiffNavigatorComponent,
 	list:L13DiffListComponent,
 };
@@ -133,6 +129,14 @@ export type SwapEventsInit = {
 
 export type ViewsCommandsInit = {
 	viewsVM:L13DiffViewsViewModel,
+};
+
+export type WindowEventsInit = {
+	diff:L13DiffComponent,
+	list:L13DiffListComponent,
+	left:L13DiffInputComponent,
+	right:L13DiffInputComponent,
+	search:L13DiffSearchComponent,
 };
 
 //	Functions __________________________________________________________________

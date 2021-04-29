@@ -12,28 +12,25 @@ const { floor } = Math;
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, navigator, list }:NavigatorEventsInit) {
+export function init ({ navigator, list }:NavigatorEventsInit) {
 	
-	navigator.addEventListener('scroll', (event:any) => {
+	navigator.addEventListener('mousemovescroll', (event:any) => {
 		
-		const scrollbarOffsetTop = <number>event.detail.y;
-		const scrollbarOffsetHeight = <number>event.detail.height;
-		const canvasOffsetHeight = navigator.canvasMap.offsetHeight;
+		const scrollbarY = <number>event.detail.y;
+		const scrollbarHeight = <number>event.detail.height;
+		const canvasHeight = navigator.canvasMap.offsetHeight;
 		const listScrollHeight = list.scrollHeight;
 		
-		if (scrollbarOffsetTop + scrollbarOffsetHeight === canvasOffsetHeight) {
+		if (scrollbarY + scrollbarHeight === canvasHeight) {
 			list.scrollTop = listScrollHeight;
 		} else {
-			list.scrollTop = floor(scrollbarOffsetTop / canvasOffsetHeight * listScrollHeight);
+			list.scrollTop = floor(scrollbarY / canvasHeight * listScrollHeight);
 		}
 		
 	});
 	
 	navigator.addEventListener('mousedownscroll', () => list.classList.add('-active'));
 	navigator.addEventListener('mouseupscroll', () => list.classList.remove('-active'));
-	
-	window.addEventListener('theme', () => diff.updateNavigator());
-	window.addEventListener('resize', () => diff.updateNavigator());
 	
 }
 

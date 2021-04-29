@@ -127,6 +127,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		this.addEventListener('wheel', (event) => {
+			
+			event.stopImmediatePropagation();
+			event.preventDefault();
+			
+			this.scrollTop += event.deltaY;
+			
+		});
+		
 		this.content.addEventListener('click', ({ target, metaKey, ctrlKey, shiftKey, offsetX }) => {
 			
 			if (this.disabled) return;
@@ -628,8 +637,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const scrollTop = this.scrollTop;
 		const delta = scrollTop - this.previousScrollTop;
+		const rowHeight = this.rowHeight;
 		
-		if (!forceUpdate && delta > -this.rowHeight && delta < this.rowHeight) return;
+		if (!forceUpdate && delta > -rowHeight && delta < rowHeight) return;
 		
 		this.previousScrollTop = scrollTop;
 		
@@ -637,8 +647,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const dragSrcRowElement = this.dragSrcRowElement;
 		let nextElement = <HTMLElement> this.content.firstElementChild;
 		
-		let start = Math.floor(scrollTop / this.rowHeight) - 3;
-		let end = Math.ceil((scrollTop + this.offsetHeight) / this.rowHeight) + 3;
+		let start = Math.floor(scrollTop / rowHeight) - 3;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / rowHeight) + 3;
 		
 		if (start < 0) start = 0;
 		if (end > elements.length) end = elements.length;

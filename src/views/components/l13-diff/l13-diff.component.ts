@@ -50,8 +50,6 @@ const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
 
-const { round } = Math;
-
 //	Initialize _________________________________________________________________
 
 listVM.pipe(new L13DiffViewsPipe(viewsVM))
@@ -151,10 +149,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		events.actions.init({ diff, actions, list });
 		events.compare.init({ diff, compare });
 		events.input.init({ diff, left, menu, right });
-		events.list.init({ diff, actionsVM, intro, list, listVM, left, navigator, result, right, search });
-		events.navigator.init({ diff, list, navigator });
+		events.list.init({ diff, actionsVM, intro, list, listVM, navigator, result });
+		events.navigator.init({ list, navigator });
 		events.search.init({ diff, search, list, navigator });
 		events.swap.init({ diff, swap });
+		events.window.init({ diff, list, left, right, search });
 		
 		events.diff.init({ diff, leftVM, rightVM });
 		
@@ -235,18 +234,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	private previousNavigatorScrollbarY = 0;
-	
-	public setScrollbarPosition () {
+	public updateScrollbarPosition () {
 		
 		const list = this.list;
-		const navigator = this.navigator;
-		const y = round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight);
 		
-		if (this.previousNavigatorScrollbarY === y) return;
-		
-		this.previousNavigatorScrollbarY	= y;
-		navigator.scrollbar.style.top = `${y}px`;
+		this.navigator.setScrollbarPosition(list.scrollTop / list.scrollHeight);
 		
 	}
 	
@@ -269,7 +261,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		if (updateMap) {
 			this.navigator.build(values, listHeight);
 			this.navigator.style.top = `${this.panel.offsetHeight}px`;
-			this.setScrollbarPosition();
+			this.updateScrollbarPosition();
 		}
 		
 		if (updateSelection) {

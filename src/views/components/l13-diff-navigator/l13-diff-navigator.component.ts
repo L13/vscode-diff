@@ -68,7 +68,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		const offsetY = round(this.scrollbar.offsetHeight / 2);
 		
-		this.setScrollbarY(event.offsetY - offsetY);
+		this.calcScrollbarY(event.offsetY - offsetY);
 		this.scrollbarDown(event, offsetY);
 		
 	};
@@ -93,7 +93,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		if (!event.which) return this.scrollbarUp();
 		
-		this.setScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
+		this.calcScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
 		
 	};
 		
@@ -108,17 +108,29 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	};
 	
-	private setScrollbarY (y:number) {
+	private calcScrollbarY (y:number) {
 		
 		if (y < 0) y = 0;
 		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
 		
 		if (this.previousScrollbarY === y) return;
 		
-		this.previousScrollbarY = y;
-		// this.scrollbar.style.top = `${y}px`;
+		this.dispatchCustomEvent('mousemovescroll', { y, height: this.scrollbar.offsetHeight });
 		
-		this.dispatchCustomEvent('scroll', { y, height: this.scrollbar.offsetHeight });
+	}
+	
+	public setScrollbarPosition (ratio:number) {
+		
+		let y = round(ratio * this.canvasMap.offsetHeight);
+		const maxY = this.scrollbarMaxY;
+		
+		if (y < 0) y = 0;
+		else if (y > maxY) y = maxY;
+		
+		if (this.previousScrollbarY === y) return;
+		
+		this.previousScrollbarY = y;
+		this.scrollbar.style.top = `${y}px`;
 		
 	}
 	
@@ -127,7 +139,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		const canvas = this.canvasRuler;
 		const context = this.contextRuler;
 		
-		context.clearRect(0, 0, canvas.height, canvas.height);
+		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 	}
 	
