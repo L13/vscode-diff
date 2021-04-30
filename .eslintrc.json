@@ -107,6 +107,7 @@
 			}
 		],
 		"@typescript-eslint/member-ordering": "off",
+		"camelcase": "off",
 		"@typescript-eslint/naming-convention": [
 			"error",
 			{

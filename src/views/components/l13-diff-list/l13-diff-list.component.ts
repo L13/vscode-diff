@@ -8,7 +8,6 @@ import { formatDate, formatFileSize } from '../../../@l13/formats';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
-import { Direction } from '../../enums';
 
 import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
@@ -22,6 +21,10 @@ import { L13DiffListViewModelService } from './l13-diff-list.service';
 import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
+
+// eslint does not work correct for enum? (brace-style)
+// eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/brace-style
+enum Direction { PREVIOUS, NEXT }
 
 const { PREVIOUS, NEXT } = Direction;
 
