@@ -59,10 +59,13 @@
 			"error",
 			{
 				"arrays": "always-multiline",
-				"objects": "always-multiline",
-				"imports": "always-multiline",
+				"enums": "always-multiline",
 				"exports": "always-multiline",
-				"functions": "never"
+				"functions": "never",
+				"generics": "always-multiline",
+				"imports": "always-multiline",
+				"objects": "always-multiline",
+				"tuples": "always-multiline"
 			}
 		],
 		"comma-spacing": "off",
@@ -167,6 +170,7 @@
 		],
 		"@typescript-eslint/prefer-for-of": "error",
 		"@typescript-eslint/prefer-function-type": "error",
+		"@typescript-eslint/prefer-literal-enum-member": "error",
 		"quotes": "off",
 		"@typescript-eslint/quotes": [
 			"error",

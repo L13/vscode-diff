@@ -17,14 +17,11 @@ import templates from '../templates';
 import * as context from './events/context-menu';
 import * as dragNDrop from './events/drag-n-drop';
 
+import { Direction } from './enums';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
-
-// eslint does not work correct for enum? (brace-style)
-// eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/brace-style
-enum Direction { PREVIOUS, NEXT }
 
 const { PREVIOUS, NEXT } = Direction;
 
