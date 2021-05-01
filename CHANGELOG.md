@@ -7,6 +7,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 - Added virtual scrolling in list view.
 
+### Fixed
+
+- Fixed keyboard shortcuts for `Ctrl/Cmd + A` and `Ctrl/Cmd + C` if the focus is on an input box or the command palette.
+
 ## [0.33.0] - 2021-04-18
 
 ### Added

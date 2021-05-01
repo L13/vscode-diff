@@ -451,13 +451,13 @@
 				"mac": "meta+c",
 				"key": "ctrl+c",
 				"command": "l13Diff.action.panel.compare",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+alt+c",
 				"key": "ctrl+alt+c",
 				"command": "l13Diff.action.panel.compareAll",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+backspace",
@@ -475,7 +475,7 @@
 				"mac": "meta+a",
 				"key": "ctrl+a",
 				"command": "l13Diff.action.actions.selectAllEntries",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+s",
