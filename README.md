@@ -6,7 +6,7 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 0.35.0
 
-- Added different icons for file or folder comparsion in history view. Previous file comparison opens in now Diff Editor.
+- Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 
 ## Index
 
@@ -322,16 +322,18 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 #### Context Menu
 
 * `Compare` - Start the previous comparison immediately in the current active panel. Ignores `l13Diff.openInNewDiffPanel`.
-* `Compare in New Panel` - Start the previous comparison immediately in a new diff panel. Ignores `l13Diff.openInNewDiffPanel`.
+* `Compare in New Panel` [2] - Start the previous comparison immediately in a new diff panel. Ignores `l13Diff.openInNewDiffPanel`.
 * `Reveal in Finder/Explorer` - Reveal the left or right file/folder in the finder/explorer. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-* `Open in Integrated Terminal` - Open the left or right path in the integrated terminal. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-* `Open Workspace` - Open the left or right path as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-* `Open as Workspace` - Open the two paths as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-* `Add Folders to Workspace` - Add the paths to the current workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open in Integrated Terminal` [2] - Open the left or right path in the integrated terminal. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open Workspace` [2] - Open the left or right path as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Open as Workspace` [2] - Open the two paths as a workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+* `Add Folders to Workspace` [2] - Add the paths to the current workspace. Requires version 0.20.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 * `Add to Favorites` - Add a previous comparison to favorites.
 * `Copy Left Path` - Copy the left path of the previous comparison to the clipboard.
 * `Copy Right Path` - Copy the right path of the previous comparison to the clipboard.
 * `Delete` - Delete the previous comparison from the history.
+
+[2] Only available for previous folder comparisons.
 
 ### Statusbar
 
