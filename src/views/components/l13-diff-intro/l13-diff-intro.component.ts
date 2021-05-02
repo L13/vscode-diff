@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DisplayShortcut, Keybinding } from '../../../types';
+import type { DisplayShortcut, Keybinding } from '../../../types';
 
 import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
@@ -10,7 +10,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffIntroViewModelService } from './l13-diff-intro.service';
-import { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
+import type { L13DiffIntroViewModel } from './l13-diff-intro.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -20,21 +20,13 @@ const CTRL = '⌃';
 const SHIFT = '⇧';
 
 const macOSSymbols = {
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Alt: ALT,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Cmd: CMD,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Command: CMD,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Control: CTRL,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Ctrl: CTRL,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Meta: CMD,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Option: ALT,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	Shift: SHIFT,
 };
 

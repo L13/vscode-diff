@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffPanelStateMessage } from '../../../types';
+import type { DiffPanelStateMessage } from '../../../types';
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

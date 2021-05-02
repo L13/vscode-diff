@@ -1,8 +1,9 @@
 //	Imports ____________________________________________________________________
 
-import { Options } from '../../@types/components';
+import type { Options } from '../../@types/components';
+
 import { ViewModelService } from './view-model-service.abstract';
-import { ViewModel } from './view-model.abstract';
+import type { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________
 
@@ -350,36 +351,33 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) {
 	
 	const textNodes = getAllTextNodes(component[SHADOW_ROOT]);
 	
-	if (textNodes) {
+	textNodes?.forEach((textNode) => {
 		
-		textNodes.forEach((textNode) => {
-			
-			if (!textNode.parentNode || textNode.parentNode.nodeName === 'STYLE' || textNode.parentNode.nodeName === 'SCRIPT') return;
-			
-			let text = textNode.nodeValue;
-			
-			if (!text) return;
-			
-			let match = findScope.exec(text);
-			
-			if (!match) return;
-			
-			const fragment = document.createDocumentFragment();
-			
-			do {
-				fragment.appendChild(document.createTextNode(text.slice(0, match.index)));
-				const scope = document.createTextNode('');
-				registerBinding(component, scope, 'nodeValue', match[1]);
-				fragment.appendChild(scope);
-				text = text.slice(match.index + match[0].length);
-			} while ((match = findScope.exec(text)));
-			
-			if (text) fragment.appendChild(document.createTextNode(text));
-			
-			textNode.parentNode.replaceChild(fragment, textNode);
-			
-		});
-	}
+		if (!textNode.parentNode || textNode.parentNode.nodeName === 'STYLE' || textNode.parentNode.nodeName === 'SCRIPT') return;
+		
+		let text = textNode.nodeValue;
+		
+		if (!text) return;
+		
+		let match = findScope.exec(text);
+		
+		if (!match) return;
+		
+		const fragment = document.createDocumentFragment();
+		
+		do {
+			fragment.appendChild(document.createTextNode(text.slice(0, match.index)));
+			const scope = document.createTextNode('');
+			registerBinding(component, scope, 'nodeValue', match[1]);
+			fragment.appendChild(scope);
+			text = text.slice(match.index + match[0].length);
+		} while ((match = findScope.exec(text)));
+		
+		if (text) fragment.appendChild(document.createTextNode(text));
+		
+		textNode.parentNode.replaceChild(fragment, textNode);
+		
+	});
 	
 }
 
@@ -407,11 +405,10 @@ function set (context:any, path:string, value:any) {
 		if (!names.length) {
 			context[name] = value;
 			return;
-		} else {
-			context = context[name];
-			if (context == null) return;
-			name = names.shift();
 		}
+		context = context[name];
+		if (context == null) return;
+		name = names.shift();
 	}
 	
 }
@@ -427,11 +424,10 @@ function run (context:any, path:string) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			if (typeof context[name] === 'function') context[name]();
 			return;
-		} else {
-			context = context[name];
-			if (context == null) return;
-			name = names.shift();
 		}
+		context = context[name];
+		if (context == null) return;
+		name = names.shift();
 	}
 	
 }

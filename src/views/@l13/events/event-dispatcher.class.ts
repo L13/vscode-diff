@@ -1,7 +1,8 @@
 //	Imports ____________________________________________________________________
 
+import type { EventListener } from '../../../types';
+
 import { remove } from '../../../@l13/arrays';
-import { EventListener } from '../../../types';
 
 import { Event } from './event.class';
 

@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.33.0",
+	"version": "0.34.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -451,13 +451,13 @@
 				"mac": "meta+c",
 				"key": "ctrl+c",
 				"command": "l13Diff.action.panel.compare",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+alt+c",
 				"key": "ctrl+alt+c",
 				"command": "l13Diff.action.panel.compareAll",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+backspace",
@@ -475,7 +475,7 @@
 				"mac": "meta+a",
 				"key": "ctrl+a",
 				"command": "l13Diff.action.actions.selectAllEntries",
-				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus"
+				"when": "l13DiffFocus && !l13DiffInputFocus && !l13DiffSearchFocus && !inputFocus"
 			},
 			{
 				"mac": "meta+s",
@@ -1237,6 +1237,7 @@
 		"eslint": "^7.23.0",
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-jsdoc": "^32.3.0",
+		"eslint-plugin-l13": "file:plugins/eslint-plugin-l13",
 		"glob": "^7.1.3",
 		"gulp": "^4.0.2",
 		"gulp-sass": "^4.0.2",

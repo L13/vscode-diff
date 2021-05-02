@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DiffFileTypes, StatsMap, WalkTreeJob, WalkTreeOptions } from '../../types';
+import type { DiffFileTypes, StatsMap, WalkTreeJob, WalkTreeOptions } from '../../types';
 
 import { isWindows } from './platforms';
 
@@ -12,7 +12,7 @@ import { isWindows } from './platforms';
 // eslint-disable-next-line no-useless-escape
 const findRegExpChars = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
-// eslint-disable-next-line no-control-regex, no-useless-escape 
+// eslint-disable-next-line no-control-regex, no-useless-escape
 const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
 const findColon = /:/g;
 
@@ -161,7 +161,7 @@ function escapeGlobForRegExp (text:any) :string {
 		if (match === '**/') return '(?:[^/\\\\]+[/\\\\])*';
 		if (match === '/**') return '(?:[/\\\\][^/\\\\]+)*';
 		
-		return '\\' + match;
+		return `\\${match}`;
 		
 	});
 	
@@ -228,16 +228,17 @@ function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
 				
 				if (statError) {
 					addFile(job.result, 'error', null, pathname, cwd, currentRelative, currentDirname, true);
+				} else if (stat.isDirectory()) {
+					addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					if (!ignore) return _walktree(job, cwd, currentRelative);
+				} else if (stat.isFile()) {
+					const maxSize = job.maxSize;
+					if (maxSize && stat.size > maxSize) ignore = true;
+					addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+				} else if (stat.isSymbolicLink()) {
+					addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
 				} else {
-					if (stat.isDirectory()) {
-						addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-						if (!ignore) return _walktree(job, cwd, currentRelative);
-					} else if (stat.isFile()) {
-						const maxSize = job.maxSize;
-						if (maxSize && stat.size > maxSize) ignore = true;
-						addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-					} else if (stat.isSymbolicLink()) addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-					else addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
+					addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
 				}
 				
 				job.tasks--;

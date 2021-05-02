@@ -1,11 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { Comparison } from '../../types';
+import type { Comparison } from '../../types';
 
 import * as dialogs from '../common/dialogs';
 
-import { HistoryState } from '../states/HistoryState';
-import { MenuState } from '../states/MenuState';
+import type { HistoryState } from '../states/HistoryState';
+import type { MenuState } from '../states/MenuState';
 
 //	Variables __________________________________________________________________
 

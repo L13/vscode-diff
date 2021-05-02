@@ -8,7 +8,16 @@ import { formatAmount } from '../../@l13/formats';
 import { pluralFiles } from '../../@l13/units/files';
 import { copyFile, copySymbolicLink, createDirectory, lstat } from '../@l13/fse';
 
-import { CopyFileEvent, CopyFilesEvent, CopyFilesJob, Diff, DiffCopyMessage, DiffFile, DiffMultiCopyMessage, MultiCopyEvent } from '../../types';
+import type {
+	CopyFileEvent,
+	CopyFilesEvent,
+	CopyFilesJob,
+	Diff,
+	DiffCopyMessage,
+	DiffFile,
+	DiffMultiCopyMessage,
+	MultiCopyEvent,
+} from '../../types';
 
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';
@@ -73,7 +82,7 @@ export class DiffCopy {
 		
 		if (confirmCopy && !data.multi) {
 			const buttonCopyDontShowAgain = 'Copy, don\'t show again';
-			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)['path' + to]}"?`;
+			const text = `Copy ${formatAmount(length, pluralFiles)} to "${(<any>data)[`path${to}`]}"?`;
 			const value = await dialogs.confirm(text, 'Copy', buttonCopyDontShowAgain);
 				
 			if (value) {
@@ -186,15 +195,17 @@ function getRealRelative (root:string, relative:string) {
 	return path.join(...names.map((name) => {
 		
 		const cwdNames = fs.readdirSync(cwd);
+		let cwdName;
 		
 		name = name.toUpperCase();
 		
-		for (const cwdName of cwdNames) {
-			if (cwdName.toUpperCase() === name) {
-				cwd = path.join(cwd, cwdName);
-				return cwdName;
-			}
+		for (cwdName of cwdNames) {
+			if (cwdName.toUpperCase() === name) break;
 		}
+		
+		cwd = path.join(cwd, cwdName);
+		
+		return cwdName;
 		
 	}));
 	

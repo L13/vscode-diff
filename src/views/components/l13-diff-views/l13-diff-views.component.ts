@@ -8,7 +8,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffViewsViewModelService } from './l13-diff-views.service';
-import { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
+import type { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
 //	Variables __________________________________________________________________
 

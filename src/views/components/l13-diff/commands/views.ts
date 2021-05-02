@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ViewsCommandsInit } from '../../types';
+import type { ViewsCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 

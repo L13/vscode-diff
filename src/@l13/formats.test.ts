@@ -2,7 +2,7 @@
 
 import * as assert from 'assert';
 
-import { Plural, Test } from '../types';
+import type { Plural, Test } from '../types';
 
 import { formatAmount, formatFileSize } from './formats';
 

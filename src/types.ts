@@ -14,6 +14,7 @@
 
 export * from './@types/diffs';
 export * from './@types/formats';
+export * from './@types/json';
 export * from './@types/messages';
 export * from './@types/tests';
 
@@ -26,6 +27,8 @@ export * from './services/@types/fse';
 export * from './services/@types/history';
 export * from './services/@types/packages';
 export * from './services/@types/panel';
+export * from './services/@types/projects';
+export * from './services/@types/states';
 
 export * from './views/@types/events';
 export * from './views/@types/intro';

@@ -8,6 +8,7 @@ import * as list from './events/list';
 import * as navigator from './events/navigator';
 import * as search from './events/search';
 import * as swap from './events/swap';
+import * as window from './events/window';
 
 //	Variables __________________________________________________________________
 
@@ -28,6 +29,7 @@ export {
 	navigator,
 	search,
 	swap,
+	window,
 };
 
 //	Functions __________________________________________________________________

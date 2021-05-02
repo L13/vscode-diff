@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffFile, DiffOpenMessage, DiffStatus } from '../../../types';
+import type { Diff, DiffFile, DiffStatus } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 import { formatDate, formatFileSize } from '../../../@l13/formats';
@@ -8,15 +8,18 @@ import { formatDate, formatFileSize } from '../../../@l13/formats';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
-import { Direction } from '../../enums';
 
-import { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
+import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
 import styles from '../styles';
 import templates from '../templates';
 
+import * as context from './events/context-menu';
+import * as dragNDrop from './events/drag-n-drop';
+
+import { Direction } from './enums';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
-import { L13DiffListViewModel } from './l13-diff-list.viewmodel';
+import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -45,19 +48,39 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public tabIndex = 0;
 	
-	private cacheCurrentSelections:string[] = [];
+	public readonly rowHeight = 22;
+	
+	private previousScrollTop = 0;
+	
+	public currentSelections:string[] = [];
+	
 	private cacheSelectionHistory:HTMLElement[] = [];
+	
 	private cacheSelectedListItems:HTMLElement[] = [];
-	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
+	
 	private cacheListItems:Diff[] = [];
+	
+	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
+	
 	private cacheFilteredListItems:Diff[] = [];
+	
+	public filteredListItemViews:HTMLElement[] = [];
+	
+	public dragSrcRowElement:HTMLElement = null;
 	
 	public constructor () {
 		
 		super();
 		
+		// this.detectRowHeight();
+		
+	//	context menu
+	
 		this.context = <L13DiffContextComponent>document.createElement('l13-diff-context');
 		this.context.vmId = 'context';
+		
+		context.init({ context: this.context, list: this });
+		dragNDrop.init({ list: this });
 		
 		this.addEventListener('focus', () => {
 			
@@ -104,6 +127,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
+		this.addEventListener('wheel', (event) => {
+			
+			event.stopImmediatePropagation();
+			event.preventDefault();
+			
+			this.scrollTop += event.deltaY;
+			
+		});
+		
 		this.content.addEventListener('click', ({ target, metaKey, ctrlKey, shiftKey, offsetX }) => {
 			
 			if (this.disabled) return;
@@ -130,16 +162,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 						//	On Linux always last clicked item will be remembered
 							this.cacheSelectionHistory = [isWindows ? lastSelection : listRow];
 						}
-						if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
+						if (this.cacheSelectedListItems.length) this.unselectItems(this.cacheSelectedListItems);
 						this.cacheSelectedListItems = this.selectRange(listRow, lastSelection);
 					} else this.selectListItem(listRow);
 				} else if (isMetaKey(ctrlKey, metaKey)) {
-					listRow.classList.toggle('-selected');
+					this.toggleItemSelection(listRow);
 					this.cacheSelectedListItems = [];
-					if (!listRow.classList.contains('-selected')) remove(this.cacheSelectionHistory, listRow);
+					if (!this.isSelectedItem(listRow)) remove(this.cacheSelectionHistory, listRow);
 					else this.cacheSelectionHistory.push(listRow);
-					if (this.content.querySelector('.-selected')) this.dispatchCustomEvent('selected');
-					else this.dispatchCustomEvent('unselected');
+					if (this.hasSelectedItem()) this.dispatchEventSelected();
+					else this.dispatchEventUnselected();
 				} else {
 					this.unselect();
 					this.selectListItem(listRow);
@@ -158,275 +190,44 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		let dragSrcElement:HTMLElement = null;
-		
-		this.content.addEventListener('dragstart', (event) => {
-			
-			if (this.disabled) return;
-			
-			dragSrcElement = <HTMLElement>event.target;
-			
-			const columnNode = dragSrcElement.closest('l13-diff-list-file');
-			const rowNode = columnNode.closest('l13-diff-list-row');
-			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-			const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
-			
-			dragSrcElement.style.opacity = '0.4';
-			event.dataTransfer.setData('data-diff-file', JSON.stringify(file));
-			
-		});
-		
-		let dropHoverElement:HTMLElement = null;
-		
-		this.content.addEventListener('dragover', (event) => {
-			
-			if (this.disabled) return;
-			
-			event.preventDefault();
-			
-			const element:HTMLElement = <HTMLElement>event.target;
-			
-			if (element) {
-				const dropable:HTMLElement = element.closest('l13-diff-list-file');
-				if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
-					if (dropHoverElement && dropHoverElement !== dropable) {
-						dropHoverElement.classList.remove('-draghover');
-					}
-					if (dropable !== dropHoverElement && dropable !== dragSrcElement?.parentElement && dropable.firstElementChild) {
-						dropHoverElement = dropable;
-						dropHoverElement.classList.add('-draghover');
-					}
-				}
-			}
-			
-		});
-		
-		this.content.addEventListener('dragexit', (event) => {
-			
-			event.preventDefault();
-			
-			dragSrcElement.style.opacity = '1';
-			dragSrcElement = null;
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('dragend', (event) => {
-			
-			event.preventDefault();
-			
-			dragSrcElement.style.opacity = '1';
-			dragSrcElement = null;
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('dragleave', (event) => {
-			
-			event.preventDefault();
-			
-			if (dropHoverElement) {
-				dropHoverElement.classList.remove('-draghover');
-				dropHoverElement = null;
-			}
-			
-		});
-		
-		this.content.addEventListener('drop', (event) => {
-			
-			if (this.disabled) return;
-			
-			event.preventDefault();
-			
-			const target = (<HTMLElement>event.target).closest('l13-diff-list-file');
-			const rowNode = target.closest('l13-diff-list-row');
-			const diff = this.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-			const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
-			const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
-			const typeA = fileA.type;
-			
-			if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
-			
-			msg.send<DiffOpenMessage>('open:diff', {
-				pathA: fileA.root,
-				pathB: fileB.root,
-				diffs: [
-					{
-						id: null,
-						status: 'modified',
-						type: typeA,
-						ignoredWhitespace: false,
-						ignoredEOL: false,
-						fileA,
-						fileB,
-					},
-				],
-				openToSide: event.altKey,
-			});
-			
-		});
-		
-		let contextTimeoutId:NodeJS.Timeout = null;
-		
-		this.content.addEventListener('mouseover', ({ target }) => {
-			
-			if (<HTMLElement>target === this.context) return;
-			
-			const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
-			
-			if (element) {
-				const context = this.context;
-				const contextParentNode = context.parentNode;
-				if (element.childNodes.length) {
-					if (contextParentNode !== element) {
-						if (contextTimeoutId) clearTimeout(contextTimeoutId);
-						if (contextParentNode) context.remove();
-						contextTimeoutId = setTimeout(() => {
-							
-							const viewmodel = context.viewmodel;
-							
-							switch (element.getAttribute('data-type')) {
-								case 'file':
-								case 'symlink':
-									viewmodel.enableAll();
-									break;
-								case 'folder':
-									viewmodel.enableAll();
-									viewmodel.gotoDisabled = true;
-									break;
-								default:
-									viewmodel.disableAll();
-							}
-							element.appendChild(context);
-							
-						}, 300);
-					}
-				} else {
-					if (contextTimeoutId) clearTimeout(contextTimeoutId);
-					if (contextParentNode) context.remove();
-				}
-			}
-			
-		});
-		
-		this.content.addEventListener('mouseleave', () => {
-			
-			if (contextTimeoutId) clearTimeout(contextTimeoutId);
-			if (this.context.parentNode) this.context.remove();
-			
-		});
-		
-	//	context menu
-		
-		this.context.addEventListener('click', (event) => event.stopImmediatePropagation());
-		this.context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
-		
-		this.context.addEventListener('copy', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			this.dispatchCustomEvent('copy');
-			
-			if (detail.altKey) this.viewmodel.multiCopy(ids, fileNode.nextElementSibling ? 'left' : 'right');
-			else this.viewmodel.copy(ids, fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
-		this.context.addEventListener('goto', ({ target, detail }:any) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			// this.dispatchCustomEvent('goto');
-			this.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
-			
-		});
-		
-		this.context.addEventListener('reveal', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const pathname = (<HTMLElement>target).closest('l13-diff-list-file').getAttribute('data-fs-path');
-			
-			msg.send<string>('reveal:file', pathname);
-			
-		});
-		
-		this.context.addEventListener('delete', ({ target }) => {
-			
-			if (this.disabled) return;
-			
-			const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
-			const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
-			const isSelected = rowNode.classList.contains('-selected');
-			const selections = this.getIdsBySelection();
-			const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-			
-			if (!isSelected) this.cacheCurrentSelections = selections;
-			
-			this.dispatchCustomEvent('delete');
-			this.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
-			
-		});
-		
 		msg.on('cancel', () => {
 			
-			if (this.cacheCurrentSelections.length) this.cacheCurrentSelections = [];
+			if (this.currentSelections.length) this.currentSelections = [];
 			
 		});
 		
 	}
 	
+	// private detectRowHeight () {
+		
+	// 	const row = document.createElement('l13-diff-list-row');
+		
+	// 	row.appendChild(document.createTextNode('\u00A0'));
+	// 	this.content.appendChild(row);
+	// 	this.rowHeight = (<HTMLElement> this.content.firstElementChild).offsetHeight;
+	// 	row.remove();
+		
+	// }
+	
 	private selectListItem (element:HTMLElement) {
 		
-		element.classList.add('-selected');
-		
+		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
 		this.cacheSelectedListItems = [];
-		
-		this.dispatchCustomEvent('selected');
+		this.dispatchEventSelected();
 		
 	}
 	
 	private selectRange (from:HTMLElement, to:HTMLElement) {
 		
-		const elements:HTMLElement[] = [];
+		const fromIndex = this.getIndex(from);
+		const toIndex = this.getIndex(to);
 		
-		[from, to] = from.offsetTop < to.offsetTop ? [from, to] : [to, from];
+		const [start, end] = fromIndex < toIndex ? [fromIndex, toIndex] : [toIndex, fromIndex];
+		const elements = this.filteredListItemViews.slice(start, end + 1);
 		
-		while (from !== to) {
-			from.classList.add('-selected');
-			elements[elements.length] = from;
-			from = <HTMLElement>from.nextElementSibling;
-		}
-		
-		to.classList.add('-selected');
-		elements[elements.length] = to;
-		
-		this.dispatchCustomEvent('selected');
+		this.selectItems(elements);
+		this.dispatchEventSelected();
 		
 		return elements;
 		
@@ -434,11 +235,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private selectItem (element:HTMLElement, dispatchEvent = true) {
 		
-		element.classList.add('-selected');
+		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
-		scrollElementIntoView(this, element);
+		scrollElementIntoListView(this, element);
 		
-		if (dispatchEvent) this.dispatchCustomEvent('selected');
+		if (dispatchEvent) this.dispatchEventSelected();
 		
 	}
 	
@@ -446,24 +247,108 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey && this.cacheSelectionHistory.length > 1) {
 			this.unselect();
-			element.classList.add('-selected');
+			this.addItemSelection(element);
 			this.cacheSelectionHistory.push(element);
-			this.dispatchCustomEvent('selected');
+			this.dispatchEventSelected();
 		}
 		
-		scrollElementIntoView(this, element);
+		scrollElementIntoListView(this, element);
+		
+	}
+	
+	private addIndex (element:HTMLElement, index:number) {
+		
+		element.setAttribute('data-index', `${index}`);
+		
+	}
+	
+	private getIndex (element:HTMLElement) {
+		
+		return +element.getAttribute('data-index');
 		
 	}
 	
 	private getFirstItem () {
 		
-		return <HTMLElement> this.content.firstElementChild;
+		return this.filteredListItemViews[0];
 		
 	}
 	
 	private getLastItem () {
 		
-		return <HTMLElement> this.content.lastElementChild;
+		return this.filteredListItemViews[this.filteredListItemViews.length - 1];
+		
+	}
+	
+	private getNextItem (element:HTMLElement) {
+		
+		return this.filteredListItemViews[this.getIndex(element) + 1];
+		
+	}
+	
+	private getPreviousItem (element:HTMLElement) {
+		
+		return this.filteredListItemViews[this.getIndex(element) - 1];
+		
+	}
+	
+	public isSelectedItem (element:HTMLElement) {
+		
+		return element.classList.contains('-selected');
+		
+	}
+	
+	public hasSelectedItem () {
+		
+		return this.filteredListItemViews.some((element) => element.classList.contains('-selected'));
+		
+	}
+	
+	public getSelectedItems () {
+		
+		return this.filteredListItemViews.filter((element) => element.classList.contains('-selected'));
+		
+	}
+	
+	private addItemSelection (element:HTMLElement) {
+		
+		element.classList.add('-selected');
+		
+	}
+	
+	private removeItemSelection (element:HTMLElement) {
+		
+		element.classList.remove('-selected');
+		
+	}
+	
+	private toggleItemSelection (element:HTMLElement) {
+		
+		element.classList.toggle('-selected');
+		
+	}
+	
+	private selectItems (elements:HTMLElement[]) {
+		
+		elements.forEach((element) => element.classList.add('-selected'));
+		
+	}
+	
+	private unselectItems (elements:HTMLElement[]) {
+		
+		elements.forEach((element) => element.classList.remove('-selected'));
+		
+	}
+	
+	private dispatchEventSelected () {
+		
+		this.dispatchCustomEvent('selected');
+		
+	}
+	
+	private dispatchEventUnselected () {
+		
+		this.dispatchCustomEvent('unselected');
 		
 	}
 	
@@ -471,8 +356,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		let previousElementSibling:HTMLElement;
 		
-		while ((previousElementSibling = <HTMLElement>currentElement.previousElementSibling)) {
-			if (previousElementSibling.offsetTop > viewStart) {
+		while ((previousElementSibling = this.getPreviousItem(currentElement))) {
+			if (parseInt(previousElementSibling.style.top, 10) > viewStart) {
 				currentElement = previousElementSibling;
 				continue;
 			}
@@ -487,8 +372,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		let nextElementSibling:HTMLElement;
 		
-		while ((nextElementSibling = <HTMLElement>currentElement.nextElementSibling)) {
-			if (nextElementSibling.offsetTop + nextElementSibling.offsetHeight < viewEnd) {
+		while ((nextElementSibling = this.getNextItem(currentElement))) {
+			if (parseInt(nextElementSibling.style.top, 10) + this.rowHeight < viewEnd) {
 				currentElement = nextElementSibling;
 				continue;
 			}
@@ -504,9 +389,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		if (!shiftKey) this.unselect();
 		
 		this.cacheSelectionHistory.push(element);
-		element.classList.add('-selected');
-		scrollElementIntoView(this, element);
-		this.dispatchCustomEvent('selected');
+		this.addItemSelection(element);
+		scrollElementIntoListView(this, element);
+		
+		this.dispatchEventSelected();
 		
 	}
 	
@@ -514,11 +400,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey) {
 			this.unselect();
-			to.classList.add('-selected');
-			this.dispatchCustomEvent('selected');
+			this.addItemSelection(to);
+			this.dispatchEventSelected();
 		} else {
 			if (isWindows) {
-				if (this.cacheSelectedListItems.length) this.cacheSelectedListItems.forEach((element) => element.classList.remove('-selected'));
+				if (this.cacheSelectedListItems.length) this.unselectItems(this.cacheSelectedListItems);
 				if (this.cacheSelectionHistory.length > 1) {
 					this.cacheSelectionHistory.pop();
 					from = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -528,7 +414,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.cacheSelectionHistory.push(to);
-		scrollElementIntoView(this, to);
+		scrollElementIntoListView(this, to);
 		
 	}
 	
@@ -536,14 +422,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!shiftKey) {
 			this.unselect();
-			currentElement.classList.add('-selected');
-			this.dispatchCustomEvent('selected');
+			this.addItemSelection(currentElement);
+			this.dispatchEventSelected();
 		} else {
 			this.cacheSelectedListItems = this.selectRange(lastSelection, currentElement);
 		}
 		
 		this.cacheSelectionHistory.push(currentElement);
-		scrollElementIntoView(this, currentElement);
+		scrollElementIntoListView(this, currentElement);
 		
 	}
 	
@@ -551,7 +437,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (!this.content.firstChild) return;
 		
-		this.dispatchCustomEvent('selected');
+		this.dispatchEventSelected();
 		event.preventDefault();
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
@@ -565,24 +451,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getFirstItem() : this.getLastItem());
-			else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else if (!this.getPreviousItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
-		} else {
-			if (key === 'ArrowUp') {
-				if (!lastSelection) this.selectItem(this.getLastItem());
-				else if (!lastSelection.previousElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.previousElementSibling, shiftKey);
-			} else if (key === 'PageUp') {
-				const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
-				let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
-				if (!lastSelection) this.selectItem(currentElement, false);
-				else if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
-				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
-			} else if (key === 'Home') {
-				if (!lastSelection) this.selectItem(this.getFirstItem());
-				else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
-			}
+			else this.selectPreviousOrNextItem(this.getPreviousItem(lastSelection), shiftKey);
+		} else if (key === 'ArrowUp') {
+			if (!lastSelection) this.selectItem(this.getLastItem());
+			else if (!this.getPreviousItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(this.getPreviousItem(lastSelection), shiftKey);
+		} else if (key === 'PageUp') {
+			const viewStart = this.scrollTop - 1; // Why does - 1 fixes the issue???
+			let currentElement = this.getPreviousPageItem(this.getLastItem(), viewStart);
+			if (!lastSelection) this.selectItem(currentElement, false);
+			else if (currentElement === lastSelection) currentElement = this.getPreviousPageItem(lastSelection, viewStart - this.offsetHeight);
+			this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
+		} else if (key === 'Home') {
+			if (!lastSelection) this.selectItem(this.getFirstItem());
+			else this.selectFirstOrLastItem(lastSelection, this.getFirstItem(), shiftKey);
 		}
 		
 	}
@@ -591,25 +475,23 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getLastItem() : this.getFirstItem());
-			else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
+			else if (!this.getNextItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
 			else if (altKey) this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
-			else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
-		} else {
-			if (key === 'ArrowDown') {
-				if (!lastSelection) this.selectItem(this.getFirstItem());
-				else if (!lastSelection.nextElementSibling) this.selectNoneItem(lastSelection, shiftKey);
-				else this.selectPreviousOrNextItem(<HTMLElement>lastSelection.nextElementSibling, shiftKey);
-			} else if (key === 'PageDown') {
-				const viewHeight = this.offsetHeight;
-				const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
-				let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
-				if (!lastSelection) this.selectItem(currentElement, false);
-				else if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
-				this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
-			} else if (key === 'End') {
-				if (!lastSelection) this.selectItem(this.getLastItem());
-				else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
-			}
+			else this.selectPreviousOrNextItem(this.getNextItem(lastSelection), shiftKey);
+		} else if (key === 'ArrowDown') {
+			if (!lastSelection) this.selectItem(this.getFirstItem());
+			else if (!this.getNextItem(lastSelection)) this.selectNoneItem(lastSelection, shiftKey);
+			else this.selectPreviousOrNextItem(this.getNextItem(lastSelection), shiftKey);
+		} else if (key === 'PageDown') {
+			const viewHeight = this.offsetHeight;
+			const viewEnd = this.scrollTop + viewHeight + 1; // Why does + 1 fixes the issue???
+			let currentElement = this.getNextPageItem(this.getFirstItem(), viewEnd);
+			if (!lastSelection) this.selectItem(currentElement, false);
+			else if (currentElement === lastSelection) currentElement = this.getNextPageItem(lastSelection, viewEnd + viewHeight);
+			this.selectPreviousOrNextPageItem(currentElement, lastSelection, shiftKey);
+		} else if (key === 'End') {
+			if (!lastSelection) this.selectItem(this.getLastItem());
+			else this.selectFirstOrLastItem(lastSelection, this.getLastItem(), shiftKey);
 		}
 		
 	}
@@ -622,15 +504,15 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		let dispatchSelectedEvent = false;
 		
 		for (const type of Object.values(types)) {
-			const elements = this.content.querySelectorAll(`l13-diff-list-row.-${type}`);
+			const elements = this.filteredListItemViews.filter((element) => element.classList.contains(`-${type}`));
 			if (elements.length) {
-				elements.forEach((element) => element.classList.add('-selected'));
-				this.cacheSelectionHistory.push(<HTMLElement>elements[elements.length - 1]);
+				this.selectItems(elements);
+				this.cacheSelectionHistory.push(elements[elements.length - 1]);
 				dispatchSelectedEvent = true;
 			}
 		}
 		
-		if (dispatchSelectedEvent) this.dispatchCustomEvent('selected');
+		if (dispatchSelectedEvent) this.dispatchEventSelected();
 		
 	}
 	
@@ -643,23 +525,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	public unselect () {
 		
 		this.cacheSelectionHistory = [];
-		
-		const elements = this.content.querySelectorAll('.-selected');
-		
-		if (elements.length) elements.forEach((element) => element.classList.remove('-selected'));
-		
-		this.dispatchCustomEvent('unselected');
+		this.unselectItems(this.filteredListItemViews);
+		this.dispatchEventUnselected();
 		
 	}
 	
-	private getIdsBySelection () {
+	public getIdsBySelection () {
 		
-		const elements = this.content.querySelectorAll('.-selected');
-		const ids:string[] = [];
-		
-		elements.forEach((element) => ids.push(element.getAttribute('data-id')));
-		
-		return ids;
+		return this.getSelectedItems().map((element) => element.getAttribute('data-id'));
 		
 	}
 	
@@ -686,14 +559,14 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		super.update();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
-		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.showFiteredListItemViews();
+		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews();
 		
 	}
 	
 	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
-		const newCacheListItemViews:{ [name:string]:HTMLElement } = {};
+		const cacheListItemViews:{ [name:string]:HTMLElement } = {};
 		
 		const foldersA:string[] = [];
 		const foldersB:string[] = [];
@@ -714,37 +587,44 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const fileA = diff.fileA;
 			const fileB = diff.fileB;
 			
-			row.classList.add('-' + diff.status);
+			row.classList.add(`-${diff.status}`);
 			row.setAttribute('data-status', diff.status);
 			row.setAttribute('data-id', diff.id);
 			
 			appendColumn(row, diff, fileA, detectExistingFolder(fileA, foldersB, foldersA));
 			appendColumn(row, diff, fileB, detectExistingFolder(fileB, foldersA, foldersB));
 			
-			newCacheListItemViews[diff.id] = row;
+			cacheListItemViews[diff.id] = row;
 			
 		});
 		
 		this.cacheListItems = items;
-		this.cacheListItemViews = newCacheListItemViews;
+		this.cacheListItemViews = cacheListItemViews;
 		
 	}
 	
-	private showFiteredListItemViews () {
+	private createFilteredListItemViews () {
 		
 		this.unselect();
 		
 		removeChildren(this.content);
 		
-		const fragment = document.createDocumentFragment();
+		this.filteredListItemViews = [];
 		
-		this.viewmodel.filteredItems.forEach((diff) => {
+		this.viewmodel.filteredItems.forEach((diff, index) => {
 			
-			fragment.appendChild(this.cacheListItemViews[diff.id]);
+			const element = this.cacheListItemViews[diff.id];
+			
+			this.addIndex(element, index);
+			element.style.top = `${index * this.rowHeight}px`;
+			this.filteredListItemViews.push(element);
 			
 		});
 		
-		this.content.appendChild(fragment);
+		this.content.style.height = `${this.filteredListItemViews.length * this.rowHeight}px`;
+		this.scrollTop = 0;
+		this.previousScrollTop = 0;
+		this.showVisibleListViewItems(true);
 		this.restoreSelections();
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
@@ -753,20 +633,58 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
+	public showVisibleListViewItems (forceUpdate?:boolean) {
+		
+		const scrollTop = this.scrollTop;
+		const delta = scrollTop - this.previousScrollTop;
+		const rowHeight = this.rowHeight;
+		
+		if (!forceUpdate && delta > -rowHeight && delta < rowHeight) return;
+		
+		this.previousScrollTop = scrollTop;
+		
+		const elements = this.filteredListItemViews;
+		const dragSrcRowElement = this.dragSrcRowElement;
+		let nextElement = <HTMLElement> this.content.firstElementChild;
+		
+		let start = Math.floor(scrollTop / rowHeight) - 3;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / rowHeight) + 3;
+		
+		if (start < 0) start = 0;
+		if (end > elements.length) end = elements.length;
+		
+		while (nextElement) {
+			const element = nextElement;
+			const index = this.getIndex(element);
+			nextElement = <HTMLElement>element.nextElementSibling;
+			if (element !== dragSrcRowElement && (index < start || index >= end)) element.remove();
+		}
+		
+		const fragment = document.createDocumentFragment();
+		
+		for (let i = start; i < end; i++) {
+			const element = elements[i];
+			if (!element.parentNode) fragment.appendChild(element);
+		}
+		
+		this.content.appendChild(fragment);
+		
+	}
+	
 	private restoreSelections () {
 		
-		const cacheCurrentSelections = this.cacheCurrentSelections;
+		const cacheCurrentSelections = this.currentSelections;
 		
 		if (cacheCurrentSelections.length) {
 			cacheCurrentSelections.forEach((id) => {
 				
 				const element = this.cacheListItemViews[id];
 				
-				if (element.parentNode) element.classList.add('-selected');
+				if (element.parentNode) this.addItemSelection(element);
 				
 			});
-			this.cacheCurrentSelections = [];
-			this.dispatchCustomEvent('selected');
+			this.currentSelections = [];
+			this.dispatchEventSelected();
 		}
 		
 	}
@@ -859,5 +777,14 @@ function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders
 	}
 	
 	return [null, file.dirname];
+	
+}
+
+function scrollElementIntoListView (list:L13DiffListComponent, element:HTMLElement) {
+	
+//	Fixes virtual scrolling if element is not in the DOM
+	if (!element.parentNode) list.content.appendChild(element);
+	
+	scrollElementIntoView(list, element);
 	
 }

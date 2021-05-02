@@ -1,10 +1,10 @@
 //	Imports ____________________________________________________________________
 
-import { Diff, DiffResultMessage } from '../../../types';
+import type { Diff, DiffResultMessage } from '../../../types';
 
-import { DiffResult } from '../../output/DiffResult';
+import type { DiffResult } from '../../output/DiffResult';
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

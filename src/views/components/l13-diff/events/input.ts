@@ -1,8 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { SwapCommandsInit } from '../../types';
-
-import { msg } from '../common';
+import type { InputEventsInit } from '../../../../types';
 
 //	Variables __________________________________________________________________
 
@@ -14,11 +12,13 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff }:SwapCommandsInit) {
+export function init ({ diff, left, right, menu }:InputEventsInit) {
 	
-	msg.on('l13Diff.action.inputs.swap', () => diff.swapInputs());
+	left.menu = menu;
+	right.menu = menu;
 	
-	msg.on('l13Diff.action.inputs.swapAll', () => diff.swapInputs(true));
+	left.addEventListener('compare', () => diff.initCompare());
+	right.addEventListener('compare', () => diff.initCompare());
 	
 }
 

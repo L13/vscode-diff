@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Favorite } from '../@types/favorites';
+import type { Favorite } from '../../types';
 
 import * as commands from '../common/commands';
 import * as settings from '../common/settings';

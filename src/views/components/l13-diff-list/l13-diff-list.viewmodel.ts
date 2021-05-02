@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import {
+import type {
 	DeletedFilesMessage,
 	Diff,
 	DiffCopyMessage,
@@ -15,7 +15,7 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 import { msg } from '../../common';
 
-import { L13DiffListPipe } from './l13-diff-list.interface';
+import type { L13DiffListPipe } from './l13-diff-list.interface';
 
 //	Variables __________________________________________________________________
 
@@ -417,7 +417,6 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 	diffs.forEach((diff) => {
 		
 		if (diff.type === 'folder' && (!diff.fileA || !diff.fileB)) {
-			
 			copiedDiffs.some((copiedDiff:Diff) => {
 				
 				if (diff.id !== copiedDiff.id && (copiedDiff.status === 'unchanged' || copiedDiff.status === 'ignored')) {
@@ -428,7 +427,6 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 				return false;
 				
 			});
-			
 		}
 		
 	});

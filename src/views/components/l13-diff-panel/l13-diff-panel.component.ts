@@ -6,7 +6,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffPanelViewModelService } from './l13-diff-panel.service';
-import { L13DiffPanelViewModel } from './l13-diff-panel.viewmodel';
+import type { L13DiffPanelViewModel } from './l13-diff-panel.viewmodel';
 
 //	Variables __________________________________________________________________
 

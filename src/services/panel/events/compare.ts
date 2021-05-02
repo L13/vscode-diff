@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { StatsMap } from '../../../types';
+import type { StatsMap } from '../../../types';
 
 import { formatAmount } from '../../../@l13/formats';
 import { pluralEntries } from '../../../@l13/units/files';
@@ -13,7 +13,7 @@ import { DiffStats } from '../../output/DiffStats';
 import { HistoryState } from '../../states/HistoryState';
 import { MenuState } from '../../states/MenuState';
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

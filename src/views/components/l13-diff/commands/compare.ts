@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ListCommandsInit } from '../../types';
+import type { CompareCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,20 +14,17 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, search }:ListCommandsInit) {
+export function init ({ diff, left, right, search }:CompareCommandsInit) {
 	
-	msg.on('l13Diff.action.list.delete', () => {
+	msg.on('l13Diff.action.panel.compare', () => {
 		
-		if (list.disabled) return;
-		
-		diff.disable();
-		list.delete();
+		if (!left.focused && !right.focused && !search.focused) diff.initCompare();
 		
 	});
 	
-	msg.on('l13Diff.action.list.unselect', () => {
+	msg.on('l13Diff.action.panel.compareAll', () => {
 		
-		if (!search.focused) list.unselect();
+		if (!left.focused && !right.focused && !search.focused) msg.send('compare:multi');
 		
 	});
 	

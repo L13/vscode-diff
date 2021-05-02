@@ -1,7 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFile } from '../../@types/diffs';
-import { DiffCopyMessage, DiffInitMessage, DiffMultiCopyMessage } from '../../@types/messages';
+import type { DiffFile } from '../../@types/diffs';
+import type { DiffCopyMessage, DiffInitMessage, DiffMultiCopyMessage } from '../../@types/messages';
 
 //	Variables __________________________________________________________________
 

@@ -3,7 +3,7 @@
 import { join, resolve } from 'path';
 import * as vscode from 'vscode';
 
-import { Comparison } from '../../../types';
+import type { Comparison } from '../../../types';
 
 //	Variables __________________________________________________________________
 

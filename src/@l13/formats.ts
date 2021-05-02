@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
-import { Plural } from '../@types/formats';
+import type { Plural } from '../types';
+
 import { pluralBytes } from './units/files';
 
 const { floor, log, pow } = Math;

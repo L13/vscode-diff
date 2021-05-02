@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { ProjectTreeItem } from '../@types/projects';
+import type { ProjectTreeItem } from '../../types';
 
 import * as commands from '../common/commands';
 

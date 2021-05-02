@@ -2,9 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Favorite, FavoriteGroup } from '../@types/favorites';
-import { Comparison } from '../@types/history';
-import { StateInfo } from '../@types/states';
+import type { Comparison, Favorite, FavoriteGroup, StateInfo } from '../../types';
 
 //	Variables __________________________________________________________________
 

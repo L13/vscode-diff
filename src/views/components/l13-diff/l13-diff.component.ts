@@ -1,19 +1,19 @@
 //	Imports ____________________________________________________________________
 
-import { DiffInitMessage, DiffPanelStateMessage, DiffStatus, ListItemInfo } from '../../../types';
+import type { DiffInitMessage, DiffPanelStateMessage, DiffStatus, ListItemInfo } from '../../../types';
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
-import { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
-import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
-import { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
-import { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
-import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
-import { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
-import { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
-import { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
-import { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
+import type { L13DiffActionsComponent } from '../l13-diff-actions/l13-diff-actions.component';
+import type { L13DiffCompareComponent } from '../l13-diff-compare/l13-diff-compare.component';
+import type { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
+import type { L13DiffIntroComponent } from '../l13-diff-intro/l13-diff-intro.component';
+import type { L13DiffListComponent } from '../l13-diff-list/l13-diff-list.component';
+import type { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import type { L13DiffNavigatorComponent } from '../l13-diff-navigator/l13-diff-navigator.component';
+import type { L13DiffPanelComponent } from '../l13-diff-panel/l13-diff-panel.component';
+import type { L13DiffSearchComponent } from '../l13-diff-search/l13-diff-search.component';
+import type { L13DiffSwapComponent } from '../l13-diff-swap/l13-diff-swap.component';
 
 import { L13DiffActionsViewModelService } from '../l13-diff-actions/l13-diff-actions.service';
 import { L13DiffCompareViewModelService } from '../l13-diff-compare/l13-diff-compare.service';
@@ -27,15 +27,16 @@ import { L13DiffViewsViewModelService } from '../l13-diff-views/l13-diff-views.s
 import { L13DiffSearchPipe } from '../l13-diff-search/l13-diff-search.pipe';
 import { L13DiffViewsPipe } from '../l13-diff-views/l13-diff-views.pipe';
 
-import * as commands from '../../commands';
 import { msg } from '../../common';
-import * as events from '../../events';
 
 import styles from '../styles';
 import templates from '../templates';
 
+import * as commands from './commands';
+import * as events from './events';
+
 import { L13DiffViewModelService } from './l13-diff.service';
-import { L13DiffViewModel } from './l13-diff.viewmodel';
+import type { L13DiffViewModel } from './l13-diff.viewmodel';
 
 //	Variables __________________________________________________________________
 
@@ -48,8 +49,6 @@ const rightVM = new L13DiffInputViewModelService().model('right');
 const searchVM = new L13DiffSearchViewModelService().model('search');
 const swapVM = new L13DiffSwapViewModelService().model('swap');
 const viewsVM = new L13DiffViewsViewModelService().model('views');
-
-const { round } = Math;
 
 //	Initialize _________________________________________________________________
 
@@ -150,10 +149,11 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		events.actions.init({ diff, actions, list });
 		events.compare.init({ diff, compare });
 		events.input.init({ diff, left, menu, right });
-		events.list.init({ diff, actionsVM, intro, list, listVM, left, navigator, result, right, search });
-		events.navigator.init({ diff, list, navigator });
+		events.list.init({ diff, actionsVM, intro, list, listVM, navigator, result });
+		events.navigator.init({ list, navigator });
 		events.search.init({ diff, search, list, navigator });
 		events.swap.init({ diff, swap });
+		events.window.init({ diff, list, left, right, search });
 		
 		events.diff.init({ diff, leftVM, rightVM });
 		
@@ -165,7 +165,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		if (listVM.items.length) {
 			actionsVM.enable();
-			if (!this.list.content.querySelector('.-selected')) actionsVM.disableCopy();
+			if (!this.list.hasSelectedItem()) actionsVM.disableCopy();
 		}
 		
 		compareVM.enable();
@@ -234,35 +234,34 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public setScrollbarPosition () {
+	public updateScrollbarPosition () {
 		
 		const list = this.list;
-		const navigator = this.navigator;
 		
-		navigator.scrollbar.style.top = `${round(list.scrollTop / list.scrollHeight * navigator.canvasMap.offsetHeight)}px`;
+		this.navigator.setScrollbarPosition(list.scrollTop / list.scrollHeight);
 		
 	}
 	
 	public updateNavigator (updateMap = true, updateSelection = true) {
-			
-		let element:HTMLElement = <HTMLElement> this.list.content.firstElementChild;
-		const values:ListItemInfo[] = [];
 		
-		while (element) {
-			values.push({
-				selected: element.classList.contains('-selected'),
+		const rowHeight = this.list.rowHeight;
+			
+		const values:ListItemInfo[] = this.list.filteredListItemViews.map((element) => {
+			
+			return {
+				selected: this.list.isSelectedItem(element),
 				status: <DiffStatus>element.getAttribute('data-status'),
-				offsetHeight: element.offsetHeight,
-			});
-			element = <HTMLElement>element.nextElementSibling;
-		}
+				offsetHeight: rowHeight,
+			};
+			
+		});
 		
 		const listHeight = this.list.offsetHeight;
 		
 		if (updateMap) {
 			this.navigator.build(values, listHeight);
 			this.navigator.style.top = `${this.panel.offsetHeight}px`;
-			this.setScrollbarPosition();
+			this.updateScrollbarPosition();
 		}
 		
 		if (updateSelection) {

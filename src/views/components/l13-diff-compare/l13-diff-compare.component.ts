@@ -8,7 +8,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffCompareViewModelService } from './l13-diff-compare.service';
-import { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
+import type { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
 
 //	Variables __________________________________________________________________
 

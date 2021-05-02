@@ -52,7 +52,7 @@ export class DiffStatusBar {
 	
 	public update (text = '') {
 		
-		this.currentText = '$(file-submodule) ' + (text || 'Diff Folders');
+		this.currentText = `$(file-submodule) ${text || 'Diff Folders'}`;
 		
 		if (DiffStatusBar.currentStatusBar === this) DiffStatusBar.statusBarItem.text = this.currentText;
 		

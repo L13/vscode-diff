@@ -2,8 +2,9 @@
 
 import * as vscode from 'vscode';
 
+import type { JSONValue, Message, MessageListener } from '../../types';
+
 import { remove } from '../../@l13/arrays';
-import { Message, MessageListener } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -41,7 +42,7 @@ export class DiffMessage {
 		
 	}
 	
-	public send <T> (command:string, data:T = null) {
+	public send <T = JSONValue> (command:string, data:T = null) {
 		
 		this.panel.webview.postMessage({ command, data });
 		

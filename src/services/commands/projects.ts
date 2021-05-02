@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { ProjectTreeItem } from '../@types/projects';
+import type { ProjectTreeItem } from '../../types';
 
 import * as commands from '../common/commands';
 
@@ -27,7 +27,7 @@ export function activate (context:vscode.ExtensionContext) {
 			const workspaces = workspaceFoldersQuickPickItems();
 			
 			if (workspaces.length > 1) {
-				const value:any = await vscode.window.showQuickPick(workspaces);
+				const value = await vscode.window.showQuickPick(workspaces);
 				if (value) DiffPanel.createOrShow(context, [{ fsPath: value.description }, { fsPath: project.path }], true);
 			} else if (workspaces.length === 1) {
 				DiffPanel.createOrShow(context, [{ fsPath: workspaces[0].description }, { fsPath: project.path }], true);
@@ -47,7 +47,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function workspaceFoldersQuickPickItems () :any {
+function workspaceFoldersQuickPickItems () :Array<{ label:string, description:string }> {
 	
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	
