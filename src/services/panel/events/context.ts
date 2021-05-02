@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

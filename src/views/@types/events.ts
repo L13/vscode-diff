@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { Event } from '../@l13/events/event.class';
+import type { Event } from '../@l13/events/event.class';
 
 //	Variables __________________________________________________________________
 

@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFavoriteMessage, FavoritesCommandsInit } from '../../types';
+import type { MenuCommandsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,14 +14,11 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ leftVM, rightVM }:FavoritesCommandsInit) {
+export function init ({ menu }:MenuCommandsInit) {
 	
-	msg.on('l13Diff.action.panel.addToFavorites', () => {
+	msg.on('l13Diff.action.menu.close', () => {
 		
-		msg.send<DiffFavoriteMessage>('save:favorite', {
-			pathA: leftVM.value,
-			pathB: rightVM.value,
-		});
+		if (menu && menu.parentNode) menu.remove();
 		
 	});
 	

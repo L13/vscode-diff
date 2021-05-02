@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { Uri } from '../types';
+import type { JSONValue, Uri } from '../types';
 
-import { Diff, DiffFile, DiffSettings } from './diffs';
+import type { Diff, DiffFile, DiffSettings } from './diffs';
 
 //	Variables __________________________________________________________________
 
@@ -103,7 +103,7 @@ export type DiffUpdatePathsMessage = {
 
 export type Message = {
 	command:string,
-	data:any,
+	data:JSONValue,
 };
 
 export type MessageListener = (...args:any[]) => void;

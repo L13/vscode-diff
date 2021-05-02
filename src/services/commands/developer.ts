@@ -4,8 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Favorite, FavoriteGroup } from '../@types/favorites';
-import { Comparison } from '../@types/history';
+import type { Comparison, Favorite, FavoriteGroup } from '../../types';
 
 import * as commands from '../common/commands';
 import * as dialogs from '../common/dialogs';

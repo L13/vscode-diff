@@ -2,13 +2,13 @@
 
 import * as vscode from 'vscode';
 
-import { DiffMenuMessage } from '../../../types';
+import type { DiffMenuMessage } from '../../../types';
 
 import { workspacePaths } from '../../common/paths';
 
 import { MenuState } from '../../states/MenuState';
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

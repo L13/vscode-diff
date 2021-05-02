@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModelConstructor } from '../../@types/components';
+import type { ViewModelConstructor } from '../../@types/components';
 
-import { ViewModel } from './view-model.abstract';
+import type { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________
 

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ListEventsInit } from '../../types';
+import type { ListEventsInit } from '../../../../types';
 
 //	Variables __________________________________________________________________
 
@@ -12,7 +12,7 @@ import { ListEventsInit } from '../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, listVM, left, right, search, navigator, actionsVM, result, intro }:ListEventsInit) {
+export function init ({ diff, list, listVM, navigator, actionsVM, result, intro }:ListEventsInit) {
 	
 	listVM.on('cancel', () => diff.enable());
 	listVM.on('compared', () => diff.enable());
@@ -48,28 +48,16 @@ export function init ({ diff, list, listVM, left, right, search, navigator, acti
 		
 	});
 	
-	list.addEventListener('scroll', () => diff.setScrollbarPosition());
+	list.addEventListener('scroll', (event) => {
+		
+		event.stopImmediatePropagation();
+		
+		diff.updateScrollbarPosition();
+		list.showVisibleListViewItems();
+		
+	});
+	
 	list.addEventListener('filtered', () => diff.updateNavigator(true, false));
-	
-	document.addEventListener('mouseup', ({ target }) => {
-		
-		if (list.disabled) return;
-		
-		if (target === document.body || target === document.documentElement) list.unselect();
-		
-	});
-	
-	window.addEventListener('focus', () => {
-		
-		if (list.content.firstElementChild && !left.focused && !right.focused && !search.focused) {
-			setTimeout(() => {
-				
-				if (!left.focused && !right.focused && !search.focused) list.focus();
-				
-			}, 0);
-		}
-		
-	});
 	
 }
 

@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { SwapEventsInit } from '../../types';
+
 
 //	Variables __________________________________________________________________
 
@@ -12,10 +12,9 @@ import { SwapEventsInit } from '../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, swap }:SwapEventsInit) {
-	
-	swap.addEventListener('swap', ({ detail }:any) => diff.swapInputs(detail.altKey));
-	
+export enum Direction {
+	PREVIOUS,
+	NEXT,
 }
 
 //	Functions __________________________________________________________________

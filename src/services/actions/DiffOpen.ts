@@ -3,7 +3,7 @@
 import { basename } from 'path';
 import * as vscode from 'vscode';
 
-import { Diff, DiffFile } from '../../types';
+import type { Diff, DiffFile } from '../../types';
 
 import { formatName, formatNameAndDesc } from '../@l13/formats';
 import { lstat } from '../@l13/fse';
@@ -100,16 +100,17 @@ function formatLabel (fileA:DiffFile, fileB:DiffFile) {
 		if (labelFormat === 'complete' || labelFormat === 'compact') {
 			const [name, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
 			label = labelFormat === 'complete' && root ? `${name} (${root})` : name;
-		} else if (labelFormat === 'relative') label = formatName(fileA.name, fileB.name);
-		else label = formatName(fileA.fsPath, fileB.fsPath);
-	} else {
-		if (labelFormat === 'complete') label = `${fileA.name} (${formatName(fileA.root, fileB.root)})`;
-		else if (labelFormat === 'compact') {
-			const [name] = formatNameAndDesc(fileA.root, fileB.root);
-			label = `${fileA.name} (${name})`;
-		} else if (labelFormat === 'relative') label = fileA.name;
-		else label = basename(fileA.name);
-	}
+		} else if (labelFormat === 'relative') {
+			label = formatName(fileA.name, fileB.name);
+		} else label = formatName(fileA.fsPath, fileB.fsPath);
+	} else if (labelFormat === 'complete') {
+		label = `${fileA.name} (${formatName(fileA.root, fileB.root)})`;
+	} else if (labelFormat === 'compact') {
+		const [name] = formatNameAndDesc(fileA.root, fileB.root);
+		label = `${fileA.name} (${name})`;
+	} else if (labelFormat === 'relative') {
+		label = fileA.name;
+	} else label = basename(fileA.name);
 	
 	return label;
 	

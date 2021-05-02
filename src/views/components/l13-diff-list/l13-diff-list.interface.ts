@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { ViewModel } from '../../@l13/component/view-model.abstract';
+import type { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 

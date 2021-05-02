@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Comparison } from '../../types';
+import type { Comparison } from '../../types';
 
 import { formatNameAndDesc } from '../@l13/formats';
 

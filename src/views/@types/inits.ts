@@ -1,19 +1,20 @@
 //	Imports ____________________________________________________________________
 
-import { L13DiffActionsComponent } from '../components/l13-diff-actions/l13-diff-actions.component';
-import { L13DiffActionsViewModel } from '../components/l13-diff-actions/l13-diff-actions.viewmodel';
-import { L13DiffCompareComponent } from '../components/l13-diff-compare/l13-diff-compare.component';
-import { L13DiffInputComponent } from '../components/l13-diff-input/l13-diff-input.component';
-import { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
-import { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
-import { L13DiffListViewModel } from '../components/l13-diff-list/l13-diff-list.viewmodel';
-import { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
-import { L13DiffNavigatorComponent } from '../components/l13-diff-navigator/l13-diff-navigator.component';
-import { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
-import { L13DiffSearchViewModel } from '../components/l13-diff-search/l13-diff-search.viewmodel';
-import { L13DiffSwapComponent } from '../components/l13-diff-swap/l13-diff-swap.component';
-import { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-views.viewmodel';
-import { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
+import type { L13DiffActionsComponent } from '../components/l13-diff-actions/l13-diff-actions.component';
+import type { L13DiffActionsViewModel } from '../components/l13-diff-actions/l13-diff-actions.viewmodel';
+import type { L13DiffCompareComponent } from '../components/l13-diff-compare/l13-diff-compare.component';
+import type { L13DiffContextComponent } from '../components/l13-diff-context/l13-diff-context.component';
+import type { L13DiffInputComponent } from '../components/l13-diff-input/l13-diff-input.component';
+import type { L13DiffInputViewModel } from '../components/l13-diff-input/l13-diff-input.viewmodel';
+import type { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-list.component';
+import type { L13DiffListViewModel } from '../components/l13-diff-list/l13-diff-list.viewmodel';
+import type { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
+import type { L13DiffNavigatorComponent } from '../components/l13-diff-navigator/l13-diff-navigator.component';
+import type { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
+import type { L13DiffSearchViewModel } from '../components/l13-diff-search/l13-diff-search.viewmodel';
+import type { L13DiffSwapComponent } from '../components/l13-diff-swap/l13-diff-swap.component';
+import type { L13DiffViewsViewModel } from '../components/l13-diff-views/l13-diff-views.viewmodel';
+import type { L13DiffComponent } from '../components/l13-diff/l13-diff.component';
 
 //	Variables __________________________________________________________________
 
@@ -47,10 +48,19 @@ export type CompareEventsInit = {
 	compare:L13DiffCompareComponent,
 };
 
+export type ContextEventsInit = {
+	context:L13DiffContextComponent,
+	list:L13DiffListComponent,
+};
+
 export type DiffEventsInit = {
 	diff:L13DiffComponent,
 	leftVM:L13DiffInputViewModel,
 	rightVM:L13DiffInputViewModel,
+};
+
+export type DragNDropEventsInit = {
+	list:L13DiffListComponent,
 };
 
 export type FavoritesCommandsInit = {
@@ -80,9 +90,6 @@ export type ListEventsInit = {
 	diff:L13DiffComponent,
 	list:L13DiffListComponent,
 	listVM:L13DiffListViewModel,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	search:L13DiffSearchComponent,
 	navigator:L13DiffNavigatorComponent,
 	actionsVM:L13DiffActionsViewModel,
 	result:HTMLElement,
@@ -94,7 +101,6 @@ export type MenuCommandsInit = {
 };
 
 export type NavigatorEventsInit = {
-	diff:L13DiffComponent,
 	navigator:L13DiffNavigatorComponent,
 	list:L13DiffListComponent,
 };
@@ -123,6 +129,14 @@ export type SwapEventsInit = {
 
 export type ViewsCommandsInit = {
 	viewsVM:L13DiffViewsViewModel,
+};
+
+export type WindowEventsInit = {
+	diff:L13DiffComponent,
+	list:L13DiffListComponent,
+	left:L13DiffInputComponent,
+	right:L13DiffInputComponent,
+	search:L13DiffSearchComponent,
 };
 
 //	Functions __________________________________________________________________

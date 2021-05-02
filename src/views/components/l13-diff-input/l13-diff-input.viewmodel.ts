@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffDialogMessage } from '../../../@types/messages';
+import type { DiffDialogMessage } from '../../../types';
 
 import { ViewModel } from '../../@l13/component/view-model.abstract';
 

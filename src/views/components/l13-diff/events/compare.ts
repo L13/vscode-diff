@@ -1,8 +1,8 @@
 //	Imports ____________________________________________________________________
 
-import { MenuCommandsInit } from '../../types';
+import type { CompareEventsInit } from '../../../../types';
 
-import { msg } from '../common';
+import { msg } from '../../../common';
 
 //	Variables __________________________________________________________________
 
@@ -14,13 +14,16 @@ import { msg } from '../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ menu }:MenuCommandsInit) {
+export function init ({ diff, compare }:CompareEventsInit) {
 	
-	msg.on('l13Diff.action.menu.close', () => {
+	compare.addEventListener('compare', (event) => {
 		
-		if (menu && menu.parentNode) menu.remove();
+		if ((<any>(<MouseEvent>event).detail).altKey) msg.send('compare:multi');
+		else diff.initCompare();
 		
 	});
+	
+	msg.on('compare:multi', () => diff.initCompare());
 	
 }
 

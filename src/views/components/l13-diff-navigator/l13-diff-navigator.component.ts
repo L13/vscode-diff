@@ -1,12 +1,14 @@
 //	Imports ____________________________________________________________________
 
+import type { ListItemInfo } from '../../../types';
+
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffNavigatorViewModelService } from './l13-diff-navigator.service';
-import { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
+import type { L13DiffNavigatorViewModel } from './l13-diff-navigator.viewmodel';
 
 const { round } = Math;
 
@@ -41,6 +43,8 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	private scrollbarMaxY = 0;
 	
+	private previousScrollbarY = 0;
+	
 	private contextRuler:CanvasRenderingContext2D = null;
 	
 	private contextMap:CanvasRenderingContext2D = null;
@@ -64,7 +68,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		const offsetY = round(this.scrollbar.offsetHeight / 2);
 		
-		this.setScrollbarY(event.offsetY - offsetY);
+		this.calcScrollbarY(event.offsetY - offsetY);
 		this.scrollbarDown(event, offsetY);
 		
 	};
@@ -89,7 +93,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		if (!event.which) return this.scrollbarUp();
 		
-		this.setScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
+		this.calcScrollbarY(event.clientY - this.scrollbarOffsetY - this.offsetTop);
 		
 	};
 		
@@ -104,14 +108,29 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	};
 	
-	private setScrollbarY (y:number) {
+	private calcScrollbarY (y:number) {
 		
 		if (y < 0) y = 0;
 		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
 		
-		this.scrollbar.style.top = `${y}px`;
+		if (this.previousScrollbarY === y) return;
 		
-		this.dispatchCustomEvent('scroll');
+		this.dispatchCustomEvent('mousemovescroll', { y, height: this.scrollbar.offsetHeight });
+		
+	}
+	
+	public setScrollbarPosition (ratio:number) {
+		
+		let y = round(ratio * this.canvasMap.offsetHeight - 0.7);
+		const maxY = this.scrollbarMaxY;
+		
+		if (y < 0) y = 0;
+		else if (y > maxY) y = maxY;
+		
+		if (this.previousScrollbarY === y) return;
+		
+		this.previousScrollbarY = y;
+		this.scrollbar.style.top = `${y}px`;
 		
 	}
 	
@@ -120,11 +139,11 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		const canvas = this.canvasRuler;
 		const context = this.contextRuler;
 		
-		context.clearRect(0, 0, canvas.height, canvas.height);
+		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 	}
 	
-	public buildSelection (items:any[], listHeight:number) {
+	public buildSelection (items:ListItemInfo[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasRuler;
@@ -150,7 +169,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public build (items:any[], listHeight:number) {
+	public build (items:ListItemInfo[], listHeight:number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasMap;
@@ -168,7 +187,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		if (total !== listHeight) {
 			this.scrollbar.style.display = 'block';
-			this.scrollbar.style.height = `${ round(listHeight / total * canvas.height) }px`;
+			this.scrollbar.style.height = `${round(listHeight / total * canvas.height)}px`;
 			this.scrollbarMaxY = listHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		

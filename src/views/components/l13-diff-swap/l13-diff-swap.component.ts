@@ -8,7 +8,7 @@ import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffSwapViewModelService } from './l13-diff-swap.service';
-import { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
+import type { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 
 //	Variables __________________________________________________________________
 

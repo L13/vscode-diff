@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import { Comparison } from '../../types';
+import type { Comparison } from '../../types';
 
 import * as commands from '../common/commands';
 import * as settings from '../common/settings';

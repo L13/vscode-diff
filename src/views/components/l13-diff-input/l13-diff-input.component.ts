@@ -1,18 +1,18 @@
 //	Imports ____________________________________________________________________
 
-import { DiffFile } from '../../../@types/diffs';
+import type { DiffFile } from '../../../@types/diffs';
 
 import { changePlatform, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { addButtonActiveStyleEvents, msg, parseIcons, setLabel } from '../../common';
 
-import { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
+import type { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 
 import styles from '../styles';
 import templates from '../templates';
 
 import { L13DiffInputViewModelService } from './l13-diff-input.service';
-import { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
+import type { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 
 //	Variables __________________________________________________________________
 

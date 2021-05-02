@@ -2,11 +2,11 @@
 
 import * as vscode from 'vscode';
 
-import { Favorite } from '../@types/favorites';
+import type { Favorite } from '../../types';
 
 import * as dialogs from '../common/dialogs';
 
-import { FavoritesState } from '../states/FavoritesState';
+import type { FavoritesState } from '../states/FavoritesState';
 
 //	Variables __________________________________________________________________
 

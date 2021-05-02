@@ -2,7 +2,14 @@
 
 import * as vscode from 'vscode';
 
-import { Favorite, FavoriteGroup, FavoritesStates, FavoriteTreeItems, InitialState, RefreshFavoritesStates } from '../../types';
+import type {
+	Favorite,
+	FavoriteGroup,
+	FavoritesStates,
+	FavoriteTreeItems,
+	InitialState,
+	RefreshFavoritesStates,
+} from '../../types';
 
 import * as settings from '../common/settings';
 

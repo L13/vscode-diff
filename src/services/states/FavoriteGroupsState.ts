@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
 
-import { FavoriteGroup } from '../../types';
+import type { FavoriteGroup } from '../../types';
 
 import * as states from '../common/states';
 

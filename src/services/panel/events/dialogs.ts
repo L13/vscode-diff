@@ -2,7 +2,7 @@
 
 import * as dialogs from '../../common/dialogs';
 
-import { DiffPanel } from '../DiffPanel';
+import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 

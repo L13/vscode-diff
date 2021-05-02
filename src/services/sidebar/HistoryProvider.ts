@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { Comparison } from '../../types';
-import { HistoryStates, RefreshHistoryStates } from '../@types/history';
+import type { Comparison } from '../../types';
+import type { HistoryStates, RefreshHistoryStates } from '../@types/history';
 
 import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
