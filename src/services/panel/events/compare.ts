@@ -58,7 +58,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onWillCompareFiles(({ data, pathA, pathB }) => {
 		
-		historyState.add(pathA, pathB);
+		historyState.add(pathA, pathB, 'file');
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
@@ -75,7 +75,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onWillCompareFolders(({ data, pathA, pathB }) => {
 		
-		historyState.add(pathA, pathB);
+		historyState.add(pathA, pathB, 'folder');
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);

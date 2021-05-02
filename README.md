@@ -4,9 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.34.0
+## What's new in Diff Folders 0.35.0
 
-- Added virtual scrolling in list view.
+- Added different icons for file or folder comparsion in history view. Previous file comparison opens in now Diff Editor.
 
 ## Index
 

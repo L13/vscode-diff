@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [0.35.0] - 2021-05-16
+
+### Added
+
+- Added different icons for file or folder comparsion in history view. Previous file comparison opens in now Diff Editor.
+
 ## [0.34.0] - 2021-05-02
 
 ### Added

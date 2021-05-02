@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.34.0",
+	"version": "0.35.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -961,32 +961,32 @@
 				{
 					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"group": "navigation@1",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.compareInNewPanel",
 					"group": "navigation@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.addToFavorites",
 					"group": "navigation@5",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.copyLeftPath",
 					"group": "6_copypath@1",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.copyRightPath",
 					"group": "6_copypath@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.remove",
 					"group": "7_modification@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.projects.compareWithSelected",

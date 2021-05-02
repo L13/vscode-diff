@@ -81,6 +81,17 @@ export function activate (context:vscode.ExtensionContext) {
 
 function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean) {
 	
+	if (comparison.type === 'file') {
+		const left = vscode.Uri.file(comparison.fileA);
+		const right = vscode.Uri.file(comparison.fileB);
+		const openToSide = settings.get('openToSide', false);
+		vscode.commands.executeCommand('vscode.diff', left, right, undefined, {
+			preview: false,
+			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+		});
+		return;
+	}
+	
 	if (openInNewPanel) DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 	else DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 	
