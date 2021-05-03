@@ -25,6 +25,7 @@ import { isTextFile } from '../common/extensions';
 import { parsePredefinedVariable } from '../common/paths';
 import * as settings from '../common/settings';
 
+import { DiffOutput } from '../output/DiffOutput';
 import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
@@ -141,19 +142,30 @@ export class DiffCompare {
 		
 		this._onWillCompareFolders.fire({ data, pathA, pathB });
 		
+		const diffSettings = await getDiffSettings(pathA, pathB);
+		
 		try {
-			this._onDidCompareFolders.fire(await this.createDiffs(pathA, pathB));
+			const diffResult = await this.createDiffs(pathA, pathB, diffSettings);
+			this._onDidCompareFolders.fire(diffResult);
 		} catch (error) {
-			this.onError(error, pathA, pathB);
+			this.onError(error, pathA, pathB, diffSettings);
 		}
 		
 	}
 	
-	private onError (error:string|Error, pathA:string, pathB:string) {
+	private onError (error:string|Error, pathA:string, pathB:string, diffSettings?:DiffSettings) {
 		
-		vscode.window.showErrorMessage(`${error}`);
+		const buttons = [];
 		
-		this._onDidNotCompare.fire({ error, pathA, pathB });
+		if (diffSettings) buttons.push('Show Output');
+		
+		vscode.window.showErrorMessage(`${error}`, ...buttons).then((value) => {
+			
+			if (value) DiffOutput.currentOutput?.show();
+			
+		});
+		
+		this._onDidNotCompare.fire({ diffSettings, error, pathA, pathB });
 		
 	}
 	
@@ -169,31 +181,8 @@ export class DiffCompare {
 		
 	}
 	
-	private async createDiffs (dirnameA:string, dirnameB:string):Promise<DiffResult> {
+	private async createDiffs (dirnameA:string, dirnameB:string, diffSettings:DiffSettings):Promise<DiffResult> {
 		
-		const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
-		let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
-		
-		if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
-			if (settings.get('confirmCaseInsensitiveCompare', true)) {
-				const buttonCompareDontShowAgain = 'Compare, don\'t show again';
-				const text = 'The file system is case sensitive. Are you sure to compare case insensitive?';
-				const value = await dialogs.confirm(text, 'Compare', buttonCompareDontShowAgain);
-				if (value) {
-					if (value === buttonCompareDontShowAgain) settings.update('confirmCaseInsensitiveCompare', false);
-				} else useCaseSensitive = true;
-			}
-		}
-		
-		const diffSettings:DiffSettings = {
-			abortOnError: settings.get('abortOnError', true),
-			excludes: settings.getExcludes(dirnameA, dirnameB),
-			ignoreContents: settings.get('ignoreContents', false),
-			ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
-			ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
-			maxFileSize: settings.maxFileSize(),
-			useCaseSensitive,
-		};
 		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB, diffSettings);
 		const resultA:StatsMap = await this.scanFolder(dirnameA, diffSettings);
 		const resultB:StatsMap = await this.scanFolder(dirnameB, diffSettings);
@@ -210,6 +199,34 @@ export class DiffCompare {
 }
 
 //	Functions __________________________________________________________________
+
+async function getDiffSettings (dirnameA:string, dirnameB:string) :Promise<DiffSettings> {
+	
+	const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
+	let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
+	
+	if (settings.hasCaseSensitiveFileSystem && !useCaseSensitive) {
+		if (settings.get('confirmCaseInsensitiveCompare', true)) {
+			const buttonCompareDontShowAgain = 'Compare, don\'t show again';
+			const text = 'The file system is case sensitive. Are you sure to compare case insensitive?';
+			const value = await dialogs.confirm(text, 'Compare', buttonCompareDontShowAgain);
+			if (value) {
+				if (value === buttonCompareDontShowAgain) settings.update('confirmCaseInsensitiveCompare', false);
+			} else useCaseSensitive = true;
+		}
+	}
+	
+	return {
+		abortOnError: settings.get('abortOnError', true),
+		excludes: settings.getExcludes(dirnameA, dirnameB),
+		ignoreContents: settings.get('ignoreContents', false),
+		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
+		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
+		maxFileSize: settings.maxFileSize(),
+		useCaseSensitive,
+	};
+	
+}
 
 function createListA (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:DiffSettings) {
 	

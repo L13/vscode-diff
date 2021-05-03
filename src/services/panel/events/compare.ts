@@ -44,11 +44,13 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidNotCompare(({ error, pathA, pathB }) => {
+	currentDiffPanel.compare.onDidNotCompare(({ diffSettings, error, pathA, pathB }) => {
 		
 		currentDiffPanel.output.log(`${error}`);
 		
 		if (error instanceof Error) currentDiffPanel.output.msg(`${error.stack}`);
+		
+		if (diffSettings) currentDiffPanel.output.msg(`\n\n\n${DiffStats.formatSettings(diffSettings)}`);
 		
 		currentDiffPanel.msg.send('create:diffs', new DiffResult(pathA, pathB, null));
 		

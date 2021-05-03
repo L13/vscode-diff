@@ -3,7 +3,7 @@
 import { formatAmount, formatFileSize } from '../../@l13/formats';
 import { pluralErrors, pluralFiles, pluralFolders, pluralOthers, pluralSymlinks } from '../../@l13/units/files';
 
-import type { Diff, DiffFile } from '../../types';
+import type { Diff, DiffFile, DiffSettings } from '../../types';
 
 import type { DiffResult } from './DiffResult';
 
@@ -78,15 +78,7 @@ export class DiffStats {
 		const pathA = this.pathA;
 		const pathB = this.pathB;
 		
-		return `SETTINGS
-
-Abort on Error: ${settings.abortOnError}
-Excludes: "${settings.excludes.join('", "')}"
-Ignore Contents: ${settings.ignoreContents}
-Ignore End of Line: ${settings.ignoreEndOfLine}
-Ignore Trim Whitespace: ${settings.ignoreTrimWhitespace}
-Max File Size: ${settings.maxFileSize ? `${settings.maxFileSize} MB` : '0'}
-Use Case Sensitive: ${settings.useCaseSensitive}
+		return `${DiffStats.formatSettings(settings)}
 
 
 
@@ -115,6 +107,20 @@ Ignored:     ${formatEntries(this.ignored)}
 
 UPDATES
 `;
+		
+	}
+	
+	public static formatSettings (settings:DiffSettings) {
+		
+		return `SETTINGS
+
+Abort on Error: ${settings.abortOnError}
+Excludes: "${settings.excludes.join('", "')}"
+Ignore Contents: ${settings.ignoreContents}
+Ignore End of Line: ${settings.ignoreEndOfLine}
+Ignore Trim Whitespace: ${settings.ignoreTrimWhitespace}
+Max File Size: ${settings.maxFileSize ? `${settings.maxFileSize} MB` : '0'}
+Use Case Sensitive: ${settings.useCaseSensitive}`;
 		
 	}
 	
