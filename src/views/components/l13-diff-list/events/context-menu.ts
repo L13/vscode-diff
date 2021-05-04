@@ -123,7 +123,14 @@ export function init ({ context, list }:ContextEventsInit) {
 		event.stopPropagation();
 		event.preventDefault();
 		
-		context.remove();
+		const contextParentNode = context.parentNode;
+		
+		if (!contextParentNode) return;
+		
+		const target = <HTMLElement>event.target;
+		const nodeName = target.nodeName;
+		
+		if (nodeName === 'L13-DIFF-LIST-FILE' && contextParentNode === target) context.remove();
 		
 	}, { capture: true });
 	

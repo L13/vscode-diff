@@ -94,25 +94,32 @@ export class DiffOpen {
 function formatLabel (fileA:DiffFile, fileB:DiffFile) {
 	
 	const labelFormat = settings.get('labelFormat', 'complete');
-	let label = '';
 	
 	if (fileA.name !== fileB.name) {
-		if (labelFormat === 'complete' || labelFormat === 'compact') {
-			const [name, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
-			label = labelFormat === 'complete' && root ? `${name} (${root})` : name;
-		} else if (labelFormat === 'relative') {
-			label = formatName(fileA.name, fileB.name);
-		} else label = formatName(fileA.fsPath, fileB.fsPath);
-	} else if (labelFormat === 'complete') {
-		label = `${fileA.name} (${formatName(fileA.root, fileB.root)})`;
-	} else if (labelFormat === 'compact') {
-		const [name] = formatNameAndDesc(fileA.root, fileB.root);
-		label = `${fileA.name} (${name})`;
-	} else if (labelFormat === 'relative') {
-		label = fileA.name;
-	} else label = basename(fileA.name);
+		switch (labelFormat) {
+			case 'complete':
+			case 'compact': {
+				const [name, root] = formatNameAndDesc(fileA.fsPath, fileB.fsPath);
+				return labelFormat === 'complete' && root ? `${name} (${root})` : name;
+			}
+			case 'relative':
+				return formatName(fileA.name, fileB.name);
+		}
+		return formatName(fileA.fsPath, fileB.fsPath);
+	}
 	
-	return label;
+	switch (labelFormat) {
+		case 'complete':
+			return `${fileA.name} (${formatName(fileA.root, fileB.root)})`;
+		case 'compact': {
+			const [name] = formatNameAndDesc(fileA.root, fileB.root);
+			return `${fileA.name} (${name})`;
+		}
+		case 'relative':
+			return fileA.name;
+	}
+	
+	return basename(fileA.name);
 	
 }
 
