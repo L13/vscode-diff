@@ -307,8 +307,8 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 #### Favorite Groups Context Menu
 
-* `Open All ` - Open all favorite diffs of a group without starting a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
-* `Open All and Compare` - Open all favorite diffs of a group and start a comparison immediately. Ignores `l13Diff.openFavoriteAndCompare`.
+* `Compare All` - Compare all favorite diffs of a group at once.
+* `Compare All Side By Side` - Compare all favorite diffs of a group at once side by side.
 * `Rename` - Change the name of a favorite group.
 * `Delete` - Delete a favorite group. Optionally you can delete also all favorites in the group.
 
