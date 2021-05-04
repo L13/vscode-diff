@@ -160,6 +160,10 @@
 				"title": "Compare All"
 			},
 			{
+				"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+				"title": "Compare All Side By Side"
+			},
+			{
 				"command": "l13Diff.action.favoriteGroups.rename",
 				"title": "Rename"
 			},
@@ -660,6 +664,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.action.favoriteGroups.rename",
 					"when": "false"
 				},
@@ -946,6 +954,11 @@
 				{
 					"command": "l13Diff.action.favoriteGroups.compareAll",
 					"group": "navigation@1",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
+					"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+					"group": "navigation@2",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{

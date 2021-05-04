@@ -7,6 +7,7 @@ Compare two folders in Visual Studio Code.
 ## What's new in Diff Folders 0.35.0
 
 - Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+- Added `Compare All Side By Side` to favorite groups context menu.
 
 ## Index
 

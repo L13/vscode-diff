@@ -6,6 +6,11 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Added
 
 - Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
+- Added `Compare All Side By Side` to favorite groups context menu.
+
+### Fixed
+
+- Fixed flickering context menu in list view.
 
 ## [0.34.0] - 2021-05-02
 
