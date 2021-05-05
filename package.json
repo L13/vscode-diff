@@ -1221,6 +1221,11 @@
 					"default": true,
 					"description": "Controls whether the diff should ask for confirmation when deleting files."
 				},
+				"l13Diff.confirmOpenMultipleDiffPanels": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether a group should ask for confirmation when more than 3 diff panels should be opened at once."
+				},
 				"l13Diff.abortOnError": {
 					"type": "boolean",
 					"default": true,

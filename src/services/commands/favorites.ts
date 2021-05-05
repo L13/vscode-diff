@@ -102,15 +102,19 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		'l13Diff.action.favoriteGroups.add': () => favoriteGroupsDialog.add(),
 		
-		'l13Diff.action.favoriteGroups.compareAll': ({ favoriteGroup }:FavoriteGroupTreeItem) => {
+		'l13Diff.action.favoriteGroups.compareAll': async ({ favoriteGroup }:FavoriteGroupTreeItem) => {
 			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup));
+			const favorites = await favoriteGroupsDialog.openMultipleDiffPanels(favoriteGroup);
+			
+			if (favorites) openFavorites(context, favorites);
 			
 		},
 		
-		'l13Diff.action.favoriteGroups.compareAllSideBySide': ({ favoriteGroup }:FavoriteGroupTreeItem) => {
+		'l13Diff.action.favoriteGroups.compareAllSideBySide': async ({ favoriteGroup }:FavoriteGroupTreeItem) => {
 			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup), true);
+			const favorites = await favoriteGroupsDialog.openMultipleDiffPanels(favoriteGroup);
+			
+			if (favorites) openFavorites(context, favorites, true);
 			
 		},
 		

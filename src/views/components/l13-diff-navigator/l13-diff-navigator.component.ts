@@ -121,7 +121,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	public setScrollbarPosition (ratio:number) {
 		
-		let y = round(ratio * this.canvasMap.offsetHeight - 0.7);
+		let y = round(ratio * this.canvasMap.offsetHeight);
 		const maxY = this.scrollbarMaxY;
 		
 		if (y < 0) y = 0;

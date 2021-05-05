@@ -8,6 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
 - Added `Compare All Side By Side` to favorite groups context menu.
+- Added `l13Diff.confirmOpenMultipleDiffPanels` for `Compare All` and `Compare All Side By Side`.
 
 ## Index
 
@@ -93,6 +94,7 @@ Compare two folders in Visual Studio Code.
 * `l13Diff.confirmCopy` - If false confirm dialog for copying files does not appear.
 * `l13Diff.confirmCaseInsensitiveCopy` - If false confirm dialog for copying case sensitive on a case insensitive file system does not appear.
 * `l13Diff.confirmDelete` - If false confirm dialog for deleting files does not appear. Is not used if you have to decide which side have to be deleted.
+* `l13Diff.confirmOpenMultipleDiffPanels` - If true `Compare All` and `Compare All Side By Side` shows a dialog if more than 3 diff panels will be opened at once.
 * `l13Diff.initialFavoriteGroupsState` - Set the initial state of a group.
 	* `remember` - (default) Remember the collpased and expanded state of each group.
 	* `collapsed` - Show all groups collapsed at start.
