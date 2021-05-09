@@ -42,16 +42,16 @@ l13-diff-menu {
 }
 
 l13-diff-swap {
-	left: calc(50% - 10px);
+	left: calc(50% - 11px);
 	position: absolute;
-	top: 10px;
+	top: 9px;
 	z-index: 3;
 }
 
 l13-diff-tools {
 	background: var(--vscode-sideBar-background);
 	display: flex;
-	padding: 10px 0 7px 0;
+	padding: 7px 0 4px 0;
 	position: relative;
 	z-index: 3;
 }
