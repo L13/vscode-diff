@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import type { Favorite, FavoriteGroup } from '../../types';
 
 import * as dialogs from '../common/dialogs';
+import * as settings from '../common/settings';
 
 import type { FavoriteGroupsState } from '../states/FavoriteGroupsState';
 import type { FavoritesState } from '../states/FavoritesState';
@@ -72,6 +73,22 @@ export class FavoriteGroupsDialog {
 		if (!favoriteGroup) return;
 		
 		this.favoritesState.addFavoriteToGroup(favorite, favoriteGroup.id);
+		
+	}
+	
+	public async openMultipleDiffPanels (favoriteGroup:FavoriteGroup) {
+		
+		const favorites = this.favoritesState.getFavoritesByGroup(favoriteGroup);
+		
+		if (favorites.length > 3 && settings.get('confirmOpenMultipleDiffPanels', true)) {
+			const buttonCompareDontShowAgain = 'Compare, don\'t show again';
+			const text = `Open "${favoriteGroup.label}" with ${favorites.length} comparisons in multiple diff panels at once?`;
+			const value = await dialogs.confirm(text, 'Compare', buttonCompareDontShowAgain);
+			if (!value) return null;
+			if (value === buttonCompareDontShowAgain) settings.update('confirmOpenMultipleDiffPanels', false);
+		}
+		
+		return favorites;
 		
 	}
 	

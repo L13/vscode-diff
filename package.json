@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "0.34.0",
+	"version": "0.35.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -158,6 +158,10 @@
 			{
 				"command": "l13Diff.action.favoriteGroups.compareAll",
 				"title": "Compare All"
+			},
+			{
+				"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+				"title": "Compare All Side By Side"
 			},
 			{
 				"command": "l13Diff.action.favoriteGroups.rename",
@@ -660,6 +664,10 @@
 					"when": "false"
 				},
 				{
+					"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+					"when": "false"
+				},
+				{
 					"command": "l13Diff.action.favoriteGroups.rename",
 					"when": "false"
 				},
@@ -949,6 +957,11 @@
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
 				},
 				{
+					"command": "l13Diff.action.favoriteGroups.compareAllSideBySide",
+					"group": "navigation@2",
+					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
+				},
+				{
 					"command": "l13Diff.action.favoriteGroups.rename",
 					"group": "7_modification@1",
 					"when": "view == l13DiffFavorites && viewItem == favoriteGroup"
@@ -961,32 +974,32 @@
 				{
 					"command": "l13Diff.action.history.compareInCurrentPanel",
 					"group": "navigation@1",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.compareInNewPanel",
 					"group": "navigation@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.addToFavorites",
 					"group": "navigation@5",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.copyLeftPath",
 					"group": "6_copypath@1",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.copyRightPath",
 					"group": "6_copypath@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.history.remove",
 					"group": "7_modification@2",
-					"when": "view == l13DiffHistory && viewItem == history"
+					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
 					"command": "l13Diff.action.projects.compareWithSelected",
@@ -1207,6 +1220,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Controls whether the diff should ask for confirmation when deleting files."
+				},
+				"l13Diff.confirmOpenMultipleDiffPanels": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether a group should ask for confirmation when more than 3 diff panels should be opened at once."
 				},
 				"l13Diff.abortOnError": {
 					"type": "boolean",

@@ -17,6 +17,7 @@ export type Comparison = {
 	fileB:string,
 	label:string,
 	desc:string,
+	type:'file'|'folder'|'symlink',
 };
 
 export type HistoryStates = {

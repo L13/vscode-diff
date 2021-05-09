@@ -82,11 +82,16 @@ export function init ({ context, list }:ContextEventsInit) {
 		
 	});
 	
-	list.content.addEventListener('mouseover', ({ target }) => {
+	list.content.addEventListener('mouseover', (event) => {
 		
-		if (<HTMLElement>target === context) return;
+		event.stopPropagation();
+		event.preventDefault();
 		
-		const element:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-file');
+		const target = <HTMLElement>event.target;
+		
+		if (target === context) return;
+		
+		const element:HTMLElement = target.closest('l13-diff-list-file');
 		
 		if (element) {
 			const contextParentNode = context.parentNode;
@@ -111,13 +116,23 @@ export function init ({ context, list }:ContextEventsInit) {
 			} else if (contextParentNode) context.remove();
 		}
 		
-	});
+	}, { capture: true });
 	
-	list.content.addEventListener('mouseleave', () => {
+	list.content.addEventListener('mouseleave', (event) => {
 		
-		context.remove();
+		event.stopPropagation();
+		event.preventDefault();
 		
-	});
+		const contextParentNode = context.parentNode;
+		
+		if (!contextParentNode) return;
+		
+		const target = <HTMLElement>event.target;
+		const nodeName = target.nodeName;
+		
+		if (nodeName === 'L13-DIFF-LIST-FILE' && contextParentNode === target) context.remove();
+		
+	}, { capture: true });
 	
 }
 

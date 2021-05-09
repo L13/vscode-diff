@@ -8,10 +8,6 @@ import type { Comparison } from '../../../types';
 //	Variables __________________________________________________________________
 
 const basePath = resolve(__dirname, '..', 'images', 'history');
-const iconPath = {
-	light: join(basePath, 'history-item-light.svg'),
-	dark: join(basePath, 'history-item-dark.svg'),
-};
 
 //	Initialize _________________________________________________________________
 
@@ -27,13 +23,23 @@ export class HistoryTreeItem extends vscode.TreeItem {
 		title: 'Compare',
 	};
 	
-	public iconPath = iconPath;
-	
 	public contextValue = 'history';
 	
 	public constructor (public readonly comparison:Comparison) {
 		
 		super(comparison.label);
+		
+		let type = 'item';
+		
+		if (comparison.type) {
+			type = comparison.type;
+			this.contextValue += `-${type}`;
+		}
+		
+		this.iconPath = {
+			light: join(basePath, `history-${type}-light.svg`),
+			dark: join(basePath, `history-${type}-dark.svg`),
+		};
 		
 		this.description = `${this.comparison.desc || ''}`;
 		this.tooltip = `${this.comparison.fileA} ↔ ${this.comparison.fileB}`;

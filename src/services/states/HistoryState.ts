@@ -46,7 +46,7 @@ export class HistoryState {
 		
 	}
 	
-	public add (pathA:string, pathB:string) {
+	public add (pathA:string, pathB:string, type:'file'|'folder') {
 		
 		let comparisons = states.getComparisons(this.context);
 		const [label, desc] = formatNameAndDesc(pathA, pathB);
@@ -55,6 +55,7 @@ export class HistoryState {
 			fileB: pathB,
 			label,
 			desc,
+			type,
 		};
 		
 		removeComparison(comparisons, comparison);
