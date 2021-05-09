@@ -8,12 +8,13 @@
 		-webkit-appearance: none;
 		appearance: none;
 		background: transparent;
+		border-radius: 5px;
 		cursor: pointer;
-		height: 20px;
-		margin: 0 10px 0 0;
+		height: 26px;
+		margin: 0 4px 0 0;
 		padding: 0 0 0 0;
 		position: relative;
-		width: 20px;
+		width: 26px;
 			
 		&::before {
 			background: var(--l13-icon-background);
@@ -33,13 +34,14 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		&:hover {
+		&:not([disabled]):hover {
 			cursor: pointer;
 			outline: var(--l13-list-hover-outline, none);
+			background-color: var(--l13-button-hover-background);
 		}
 		
 		&:not([disabled]).-active {
-			transform: scale(1.2, 1.2);
+			background-color: var(--l13-button-active-background);
 		}
 		
 		&[disabled] {
@@ -57,9 +59,9 @@
 			mask-position: 50% 50%;
 			-webkit-mask-repeat: no-repeat;
 			mask-repeat: no-repeat;
-			right: -6px;
+			right: -3px;
 			position: absolute;
-			bottom: -7px;
+			bottom: -4px;
 			width: 11px;
 		}
 		
