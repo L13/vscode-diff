@@ -102,9 +102,19 @@ export function activate (context:vscode.ExtensionContext) {
 		
 		'l13Diff.action.favoriteGroups.add': () => favoriteGroupsDialog.add(),
 		
-		'l13Diff.action.favoriteGroups.compareAll': ({ favoriteGroup }:FavoriteGroupTreeItem) => {
+		'l13Diff.action.favoriteGroups.compareAll': async ({ favoriteGroup }:FavoriteGroupTreeItem) => {
 			
-			openFavorites(context, favoritesState.getFavoritesByGroup(favoriteGroup));
+			const favorites = await favoriteGroupsDialog.openMultipleDiffPanels(favoriteGroup);
+			
+			if (favorites) openFavorites(context, favorites);
+			
+		},
+		
+		'l13Diff.action.favoriteGroups.compareAllSideBySide': async ({ favoriteGroup }:FavoriteGroupTreeItem) => {
+			
+			const favorites = await favoriteGroupsDialog.openMultipleDiffPanels(favoriteGroup);
+			
+			if (favorites) openFavorites(context, favorites, true);
 			
 		},
 		
@@ -132,10 +142,10 @@ function openFavorite (context:vscode.ExtensionContext, favorite:Favorite, openI
 	
 }
 
-async function openFavorites (context:vscode.ExtensionContext, favorites:Favorite[]) {
+async function openFavorites (context:vscode.ExtensionContext, favorites:Favorite[], sideBySide?:boolean) {
 	
 	for (const favorite of favorites) {
-		await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true);
+		await DiffPanel.create(context, [{ fsPath: favorite.fileA }, { fsPath: favorite.fileB }], true, sideBySide);
 	}
 	
 }

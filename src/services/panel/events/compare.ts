@@ -44,11 +44,13 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidNotCompare(({ error, pathA, pathB }) => {
+	currentDiffPanel.compare.onDidNotCompare(({ diffSettings, error, pathA, pathB }) => {
 		
 		currentDiffPanel.output.log(`${error}`);
 		
 		if (error instanceof Error) currentDiffPanel.output.msg(`${error.stack}`);
+		
+		if (diffSettings) currentDiffPanel.output.msg(`\n\n\n${DiffStats.formatSettings(diffSettings)}`);
 		
 		currentDiffPanel.msg.send('create:diffs', new DiffResult(pathA, pathB, null));
 		
@@ -58,7 +60,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onWillCompareFiles(({ data, pathA, pathB }) => {
 		
-		historyState.add(pathA, pathB);
+		historyState.add(pathA, pathB, 'file');
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Comparing "${pathA}" ↔ "${pathB}"`);
@@ -75,7 +77,7 @@ export function init (currentDiffPanel:DiffPanel) {
 	
 	currentDiffPanel.compare.onWillCompareFolders(({ data, pathA, pathB }) => {
 		
-		historyState.add(pathA, pathB);
+		historyState.add(pathA, pathB, 'folder');
 		menuState.saveRecentlyUsed(data.pathA, data.pathB);
 		currentDiffPanel.setTitle(pathA, pathB);
 		currentDiffPanel.output.log(`Start comparing "${pathA}" ↔ "${pathB}"`);

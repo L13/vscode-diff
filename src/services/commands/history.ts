@@ -56,9 +56,9 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.history.compare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel()),
-		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false),
-		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true),
+		'l13Diff.action.history.compare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel(), historyState),
+		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false, historyState),
+		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true, historyState),
 		
 		'l13Diff.action.history.addToFavorites': ({ comparison }:HistoryTreeItem) => {
 			
@@ -79,7 +79,19 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean) {
+function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean, historyState:HistoryState) {
+	
+	if (comparison.type === 'file') {
+		const left = vscode.Uri.file(comparison.fileA);
+		const right = vscode.Uri.file(comparison.fileB);
+		const openToSide = settings.get('openToSide', false);
+		vscode.commands.executeCommand('vscode.diff', left, right, undefined, {
+			preview: false,
+			viewColumn: openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+		});
+		historyState.add(comparison.fileA, comparison.fileB, 'file');
+		return;
+	}
 	
 	if (openInNewPanel) DiffPanel.create(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
 	else DiffPanel.createOrShow(context, [{ fsPath: comparison.fileA }, { fsPath: comparison.fileB }], true);
