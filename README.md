@@ -311,7 +311,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 ### Favorites
 
-* `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
+* `Click` - Start the favorite diff immediately in the current active panel. If `l13Diff.openInNewDiffPanel` is true the comparison opens in a new diff panel.
 
 #### Favorites Context Icons
 
