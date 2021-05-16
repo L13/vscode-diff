@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.0.0] - 2021-05-16
+
+- Changed panel icon style to new VS Code icon style.
+
 ## [0.35.0] - 2021-05-09
 
 ### Added

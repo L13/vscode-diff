@@ -7,11 +7,12 @@
 	> button {
 		background: transparent;
 		border: 0;
-		height: 20px;
-		margin: 0 5px 0 5px;
+		border-radius: 5px;
+		height: 26px;
+		margin: 0 2px 0 2px;
 		padding: 0 0 0 0;
 		position: relative;
-		width: 20px;
+		width: 26px;
 			
 		&::before {
 			background: var(--l13-icon-background);
@@ -31,13 +32,14 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
-		&:hover {
+		&:not([disabled]):hover {
 			cursor: pointer;
 			outline: var(--l13-list-hover-outline, none);
+			background-color: var(--l13-button-hover-background);
 		}
 		
 		&:not([disabled]).-active {
-			transform: scale(1.2, 1.2);
+			background-color: var(--l13-button-active-background);
 		}
 		
 		&[disabled] {
@@ -46,7 +48,7 @@
 		}
 		
 		&#l13_copy_left {
-			width: 40px;
+			width: 46px;
 			
 			&::before {
 				-webkit-mask-image: url('copy-left.svg');
@@ -87,7 +89,7 @@
 		}
 		
 		&#l13_copy_right {
-			width: 40px;
+			width: 46px;
 			
 			&::before {
 				-webkit-mask-image: url('copy-right.svg');

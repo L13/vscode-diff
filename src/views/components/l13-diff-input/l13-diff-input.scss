@@ -31,14 +31,14 @@
 	> button {
 		background: transparent;
 		border: 0;
+		border-radius: 5px;
 		cursor: pointer;
-		height: 21px;
+		height: 22px;
 		padding: 0 0 0 0;
 		position: absolute;
-		right: 7px;
-		top: 2px;
-		transition: transform 0.1s;
-		width: 21px;
+		right: 4px;
+		top: 1px;
+		width: 22px;
 			
 		&::before {
 			background: var(--l13-icon-background);
@@ -60,8 +60,12 @@
 			outline: solid 1px var(--vscode-focusBorder, transparent);
 		}
 		
+		&:not([disabled]):hover {
+			background-color: var(--l13-button-hover-background);
+		}
+		
 		&:not([disabled]).-active {
-			transform: scale(1.2, 1.2);
+			background-color: var(--l13-button-active-background);
 		}
 		
 		&[disabled] {

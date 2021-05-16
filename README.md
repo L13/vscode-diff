@@ -1,14 +1,12 @@
-# Diff Folders (L13 Diff)
+# Diff Folders
 
 Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.35.0
+Welcome to version 1.0 of the extension Diff Folders. All of the features on my to-do list are done, but that doesn't mean the extension's development is finished. There are more ideas for the future.
 
-- Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-- Added `Compare All Side By Side` to favorite groups context menu.
-- Added `l13Diff.confirmOpenMultipleDiffPanels` for `Compare All` and `Compare All Side By Side`.
+I also want to say thank you to all reviewers on the Visual Studio Code Marketplace and Github for the positive feedback. I never expected that so many people would download or use the extension. Thank you very much.
 
 ## Index
 
@@ -175,6 +173,24 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Ctrl + S` - Same as `Click`.
 * `Alt + Ctrl + S` - Same as `Alt + Click`.
 
+### Status Buttons
+
+#### macOS
+
+* `Alt + Cmd + 1` - Toggle `Show All Unchanged Files`
+* `Alt + Cmd + 2` - Toggle `Show All Deleted Files`
+* `Alt + Cmd + 3` - Toggle `Show All Modified Files`
+* `Alt + Cmd + 4` - Toggle `Show All Created Files`
+* `Alt + Cmd + 5` - Toggle `Show All Ignored Files`
+
+#### Windows / Linux
+
+* `Alt + Ctrl + 1` - Toggle `Show All Unchanged Files`
+* `Alt + Ctrl + 2` - Toggle `Show All Deleted Files`
+* `Alt + Ctrl + 3` - Toggle `Show All Modified Files`
+* `Alt + Ctrl + 4` - Toggle `Show All Created Files`
+* `Alt + Ctrl + 5` - Toggle `Show All Ignored Files`
+
 ### Compare Button
 
 #### All Platforms
@@ -274,16 +290,26 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Cmd + F` - Show search widget.
 * `Cmd + Alt + C` - Toggle match case.
 * `Cmd + Alt + R` - Toggle use regular expression.
+* `Cmd + Alt + F` - Toggle show files.
+* `Cmd + Alt + D` - Toggle show directories.
+* `Cmd + Alt + L` - Toggle show symbolic links.
+* `Cmd + Alt + X` - Toggle show conflicts.
+* `Cmd + Alt + O` - Toggle show errors andf others.
 
 #### Windows / Linux
 
 * `Ctrl + F` - Show search widget.
 * `Alt + C` - Toggle match case.
 * `Alt + R` - Toggle use regular expression.
+* `Alt + F` - Toggle show files.
+* `Alt + D` - Toggle show directories.
+* `Alt + L` - Toggle show symbolic links.
+* `Alt + X` - Toggle show conflicts.
+* `Alt + O` - Toggle show errors and others.
 
 ### Favorites
 
-* `Click` - Open a favorite diff. If `l13Diff.openFavoriteAndCompare` is true the comparison starts immediately.
+* `Click` - Start the favorite diff immediately in the current active panel. If `l13Diff.openInNewDiffPanel` is true the comparison opens in a new diff panel.
 
 #### Favorites Context Icons
 

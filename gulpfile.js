@@ -65,7 +65,7 @@ gulp.task('icons:common', () => {
 
 gulp.task('icons:json', () => {
 	
-	return gulp.src('src/views/components/icons/components/**/*.svg')
+	return gulp.src('src/views/icons/components/**/*.svg')
 		.pipe(file2json({
 			path: 'icons.ts',
 			indent: '\t',
