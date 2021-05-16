@@ -40,6 +40,9 @@ body {
 		--l13-context-hover-background: var(--vscode-list-hoverBackground);
 		--l13-context-active-background: var(--vscode-list-activeSelectionBackground);
 		--l13-context-inactive-background: var(--vscode-list-inactiveSelectionBackground);
+		
+		--l13-button-hover-background: rgba(184, 184, 184, 0.31);
+		--l13-button-active-background: rgba(166, 166, 166, 0.31);
 	}
 	
 	&.vscode-dark {
@@ -63,6 +66,9 @@ body {
 		--l13-context-hover-background: var(--vscode-list-hoverBackground);
 		--l13-context-active-background: var(--vscode-list-activeSelectionBackground);
 		--l13-context-inactive-background: var(--vscode-list-inactiveSelectionBackground);
+		
+		--l13-button-hover-background: rgba(90, 93, 94, 0.31);
+		--l13-button-active-background: rgba(99, 102, 103, 0.31);
 	}
 	
 	&.vscode-high-contrast {
@@ -91,5 +97,8 @@ body {
 		
 		--l13-list-hover-outline: dashed 1px var(--vscode-contrastActiveBorder);
 		--l13-list-active-outline: solid 1px var(--vscode-contrastActiveBorder);
+		
+		--l13-button-hover-background: none;
+		--l13-button-active-background: none;
 	}
 }
