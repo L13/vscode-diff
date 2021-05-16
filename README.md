@@ -1,14 +1,12 @@
-# Diff Folders (L13 Diff)
+# Diff Folders
 
 Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 0.35.0
+Welcome to version 1.0 of the extension Diff Folders. All of the features on my to-do list are done, but that doesn't mean the extension's development is finished. There are more ideas for the future.
 
-- Added different icons for file and folder comparsions in history view. Previous file comparison opens now in Visual Studio Code Diff Editor. Context menu requires version 0.21.0 of [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects).
-- Added `Compare All Side By Side` to favorite groups context menu.
-- Added `l13Diff.confirmOpenMultipleDiffPanels` for `Compare All` and `Compare All Side By Side`.
+I also want to say thank you to all reviewers on the Visual Studio Code Marketplace and Github for the positive feedback. I never expected that so many people would download or use the extension. Thank you very much.
 
 ## Index
 
