@@ -21,9 +21,6 @@ export function init ({ diff, list, listVM, navigator, actionsVM, result, intro 
 	
 	listVM.on('multicopy', () => diff.disable());
 	
-	listVM.on('updated', () => list.update());
-	listVM.on('removed', () => list.update());
-	
 	listVM.on('filtered', () => {
 		
 		result.style.display = listVM.items.length && !listVM.filteredItems.length ? 'block' : 'none';

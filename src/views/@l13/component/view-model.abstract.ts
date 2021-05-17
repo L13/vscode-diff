@@ -51,7 +51,7 @@ export abstract class ViewModel extends EventDispatcher {
 		
 	}
 	
-	public requestUpdate () {
+	public requestUpdate (...args:any[]) {
 		
 		let promise = refreshComponents.get(this);
 		
@@ -60,7 +60,7 @@ export abstract class ViewModel extends EventDispatcher {
 				
 				requestAnimationFrame(() => {
 					
-					this[COMPONENTS].forEach((component) => component.update());
+					this[COMPONENTS].forEach((component) => component.update(...args));
 					
 					refreshComponents.delete(this);
 					

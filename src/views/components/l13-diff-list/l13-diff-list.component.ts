@@ -554,12 +554,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public update () {
+	public update (options?:{ keepPosition:boolean }) {
 		
 		super.update();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
-		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews();
+		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews(options);
 		
 	}
 	
@@ -603,7 +603,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createFilteredListItemViews () {
+	private createFilteredListItemViews (options?:{ keepPosition:boolean }) {
 		
 		this.unselect();
 		
@@ -622,8 +622,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		});
 		
 		this.content.style.height = `${this.filteredListItemViews.length * this.rowHeight}px`;
-		this.scrollTop = 0;
-		this.previousScrollTop = 0;
+		
+		if (!options?.keepPosition) {
+			this.scrollTop = 0;
+			this.previousScrollTop = 0;
+		}
+		
 		this.showVisibleListViewItems(true);
 		this.restoreSelections();
 		
