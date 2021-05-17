@@ -380,7 +380,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (ids:string[], side:'left'|'right'|'files' = 'files') {
+	public delete (ids:string[], side:'left'|'right'|'both' = 'both') {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
@@ -393,6 +393,8 @@ export class L13DiffListViewModel extends ViewModel {
 
 //	Functions __________________________________________________________________
 
+function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A', to:'B'):boolean;
+function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'B', to:'A'):boolean;
 function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :boolean {
 	
 	const fileFrom = `file${from}`;

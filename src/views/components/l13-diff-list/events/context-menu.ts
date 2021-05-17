@@ -78,7 +78,7 @@ export function init ({ context, list }:ContextEventsInit) {
 		if (!isSelected) list.currentSelections = selections;
 		
 		list.dispatchCustomEvent('delete');
-		list.viewmodel.delete(ids, isSelected ? 'files' : fileNode.nextElementSibling ? 'left' : 'right');
+		list.viewmodel.delete(ids, isSelected ? 'both' : fileNode.nextElementSibling ? 'left' : 'right');
 		
 	});
 	

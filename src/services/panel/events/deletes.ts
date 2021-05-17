@@ -18,7 +18,7 @@ import type { DiffPanel } from '../DiffPanel';
 
 export function init (currentDiffPanel:DiffPanel) {
 	
-	currentDiffPanel.msg.on('delete:files', (data:DiffResult) => {
+	currentDiffPanel.msg.on('delete:both', (data:DiffResult) => {
 		
 		currentDiffPanel.delete.showDeleteFilesDialog(data);
 		
