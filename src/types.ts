@@ -12,6 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
+export * from './@types/basics';
 export * from './@types/diffs';
 export * from './@types/formats';
 export * from './@types/json';
