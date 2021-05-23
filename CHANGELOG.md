@@ -1,7 +1,15 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.0.1] - 2021-05-23
+
+### Fixed
+
+- Fixed scroll position for changes in list view. [Issue #93](https://github.com/L13/vscode-diff/issues/93)
+
 ## [1.0.0] - 2021-05-16
+
+### Changed
 
 - Changed panel icon style to new VS Code icon style.
 

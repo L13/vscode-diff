@@ -162,7 +162,8 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 	}
 	
-	public update () {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public update (...args:any[]) {
 		
 		const viewmodel = this[VIEWMODEL];
 		
