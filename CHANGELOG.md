@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.0.2] - 2021-05-30
+
+### Fixed
+
+- Disabled native context menu in diff panel for non input fields.
+
 ## [1.0.1] - 2021-05-23
 
 ### Fixed

@@ -7,7 +7,7 @@ import { formatDate, formatFileSize } from '../../../@l13/formats';
 
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
+import { disableContextMenu, isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
 
 import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
@@ -81,6 +81,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		context.init({ context: this.context, list: this });
 		dragNDrop.init({ list: this });
+		
+		disableContextMenu(this);
 		
 		this.addEventListener('focus', () => {
 			

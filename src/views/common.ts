@@ -86,6 +86,17 @@ export function setLabel (element:HTMLElement, title:string) {
 	
 }
 
+export function disableContextMenu (element:HTMLElement) {
+	
+	element.addEventListener('contextmenu', (event:MouseEvent) => {
+		
+		event.preventDefault();
+		return false;
+		
+	});
+	
+}
+
 //	Functions __________________________________________________________________
 
 function initThemeChangeListener () {

@@ -4,6 +4,8 @@ import type { ListItemInfo } from '../../../types';
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
+import { disableContextMenu } from '../../common';
+
 import styles from '../styles';
 import templates from '../templates';
 
@@ -61,6 +63,8 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 		this.scrollbar.addEventListener('mousedown', this.scrollbarDown);
 		this.canvasMap.addEventListener('mousedown', this.moveScrollbar);
+		
+		disableContextMenu(this);
 		
 	}
 	

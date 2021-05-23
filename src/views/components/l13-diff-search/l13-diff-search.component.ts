@@ -4,7 +4,7 @@ import type { DiffFile } from '../../../types';
 
 import { L13Class, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { msg, parseIcons, setLabel } from '../../common';
+import { disableContextMenu, msg, parseIcons, setLabel } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -79,6 +79,17 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		setLabel(this.inputConflicts, 'Show Conflicts');
 		setLabel(this.inputOthers, 'Show Errors and Others');
 		setLabel(this.button, 'Close');
+		
+		disableContextMenu(this.resizer);
+		disableContextMenu(this.inputCaseSensitive);
+		disableContextMenu(this.inputCaseSensitive);
+		disableContextMenu(this.inputRegExp);
+		disableContextMenu(this.inputFiles);
+		disableContextMenu(this.inputFolders);
+		disableContextMenu(this.inputSymlinks);
+		disableContextMenu(this.inputConflicts);
+		disableContextMenu(this.inputOthers);
+		disableContextMenu(this.button);
 		
 		this.inputRegExp.addEventListener('mouseup', () => this.inputSearchterm.focus());
 		this.inputCaseSensitive.addEventListener('mouseup', () => this.inputSearchterm.focus());

@@ -2,7 +2,7 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
+import { addButtonActiveStyleEvents, disableContextMenu, parseIcons, setLabel } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -63,6 +63,8 @@ export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel>
 		addButtonActiveStyleEvents(this.selectUntracked);
 		addButtonActiveStyleEvents(this.selectAll);
 		addButtonActiveStyleEvents(this.copyLeft);
+		
+		disableContextMenu(this);
 		
 		this.copyRight.addEventListener('click', ({ altKey }) => {
 			
