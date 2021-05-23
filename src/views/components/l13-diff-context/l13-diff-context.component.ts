@@ -59,7 +59,7 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 		this.buttonReveal.addEventListener('click', () => this.dispatchCustomEvent('reveal'));
 		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
 		
-		disableContextMenu(this, true);
+		disableContextMenu(this);
 		
 	}
 	
