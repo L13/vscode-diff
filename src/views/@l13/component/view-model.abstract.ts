@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import type { Dictionary } from '../../../types';
+
 import { remove } from '../../../@l13/arrays';
 
 import { EventDispatcher } from '../events/event-dispatcher.class';
@@ -51,16 +53,18 @@ export abstract class ViewModel extends EventDispatcher {
 		
 	}
 	
-	public requestUpdate () {
+	public requestUpdate (args?:Dictionary) {
 		
-		let promise = refreshComponents.get(this);
+		let request:[Promise<undefined>, Dictionary?] = refreshComponents.get(this);
 		
-		if (!promise) {
-			promise = new Promise((resolve) => {
+		if (!request) {
+			request = [new Promise((resolve) => {
 				
 				requestAnimationFrame(() => {
 					
-					this[COMPONENTS].forEach((component) => component.update());
+					const params = refreshComponents.get(this)[1];
+					
+					this[COMPONENTS].forEach(params ? (component) => component.update(params) : (component) => component.update());
 					
 					refreshComponents.delete(this);
 					
@@ -70,11 +74,15 @@ export abstract class ViewModel extends EventDispatcher {
 					
 				});
 				
-			});
-			refreshComponents.set(this, promise);
+			})];
+			if (args) request.push({ ...args });
+			refreshComponents.set(this, request);
+		} else if (args) {
+			const params = request[1];
+			request[1] = params ? { ...params, ...args } : { ...args };
 		}
 		
-		return promise;
+		return request[0];
 		
 	}
 	

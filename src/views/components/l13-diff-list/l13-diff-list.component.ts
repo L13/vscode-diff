@@ -554,12 +554,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public update () {
+	public update (options?:{ keepPosition:boolean }) {
 		
 		super.update();
 		
 		if (this.viewmodel.items !== this.cacheListItems) this.createListItemViews();
-		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews();
+		if (this.viewmodel.filteredItems !== this.cacheFilteredListItems) this.createFilteredListItemViews(options);
 		
 	}
 	
@@ -603,7 +603,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createFilteredListItemViews () {
+	private createFilteredListItemViews (options?:{ keepPosition:boolean }) {
 		
 		this.unselect();
 		
@@ -622,8 +622,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		});
 		
 		this.content.style.height = `${this.filteredListItemViews.length * this.rowHeight}px`;
-		this.scrollTop = 0;
-		this.previousScrollTop = 0;
+		
+		if (!options?.keepPosition) {
+			this.scrollTop = 0;
+			this.previousScrollTop = 0;
+		}
+		
 		this.showVisibleListViewItems(true);
 		this.restoreSelections();
 		
@@ -647,8 +651,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		const dragSrcRowElement = this.dragSrcRowElement;
 		let nextElement = <HTMLElement> this.content.firstElementChild;
 		
-		let start = Math.floor(scrollTop / rowHeight) - 3;
-		let end = Math.ceil((scrollTop + this.offsetHeight) / rowHeight) + 3;
+		let start = Math.floor(scrollTop / rowHeight) - 1;
+		let end = Math.ceil((scrollTop + this.offsetHeight) / rowHeight) + 1;
 		
 		if (start < 0) start = 0;
 		if (end > elements.length) end = elements.length;
@@ -657,7 +661,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			const element = nextElement;
 			const index = this.getIndex(element);
 			nextElement = <HTMLElement>element.nextElementSibling;
-			if (element !== dragSrcRowElement && (index < start || index >= end)) element.remove();
+			if (element !== dragSrcRowElement && (index < start || index > end)) element.remove();
 		}
 		
 		const fragment = document.createDocumentFragment();

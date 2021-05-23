@@ -4,7 +4,10 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 //	Variables __________________________________________________________________
 
-
+const GOTO_DISABLED = Symbol.for('gotoDisabled');
+const COPY_DISABLED = Symbol.for('copyDisabled');
+const REVEAL_DISABLED = Symbol.for('revealDisabled');
+const DELETE_DISABLED = Symbol.for('deleteDisabled');
 
 //	Initialize _________________________________________________________________
 
@@ -14,72 +17,72 @@ import { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export class L13DiffContextViewModel extends ViewModel {
 	
-	private _gotoDisabled = false;
+	private [GOTO_DISABLED] = false;
 	
-	private _copyDisabled = false;
+	private [COPY_DISABLED] = false;
 	
-	private _revealDisabled = false;
+	private [REVEAL_DISABLED] = false;
 	
-	private _deleteDisabled = false;
+	private [DELETE_DISABLED] = false;
 	
 	get gotoDisabled () {
 		
-		return this._gotoDisabled;
+		return this[GOTO_DISABLED];
 		
 	}
 	
 	set gotoDisabled (value:boolean) {
 		
-		this._gotoDisabled = value;
+		this[GOTO_DISABLED] = value;
 		this.requestUpdate();
 		
 	}
 	
 	get copyDisabled () {
 		
-		return this._copyDisabled;
+		return this[COPY_DISABLED];
 		
 	}
 	
 	set copyDisabled (value:boolean) {
 		
-		this._copyDisabled = value;
+		this[COPY_DISABLED] = value;
 		this.requestUpdate();
 		
 	}
 	
 	get revealDisabled () {
 		
-		return this._revealDisabled;
+		return this[REVEAL_DISABLED];
 		
 	}
 	
 	set revealDisabled (value:boolean) {
 		
-		this._revealDisabled = value;
+		this[REVEAL_DISABLED] = value;
 		this.requestUpdate();
 		
 	}
 	
 	get deleteDisabled () {
 		
-		return this._deleteDisabled;
+		return this[DELETE_DISABLED];
 		
 	}
 	
 	set deleteDisabled (value:boolean) {
 		
-		this._deleteDisabled = value;
+		this[DELETE_DISABLED] = value;
 		this.requestUpdate();
 		
 	}
 	
 	public enableAll () {
 		
-		this._gotoDisabled = false;
-		this._copyDisabled = false;
-		this._revealDisabled = false;
-		this._deleteDisabled = false;
+		this[GOTO_DISABLED] = false;
+		this[COPY_DISABLED] = false;
+		this[REVEAL_DISABLED] = false;
+		this[DELETE_DISABLED] = false;
 		
 		this.requestUpdate();
 		
@@ -87,10 +90,10 @@ export class L13DiffContextViewModel extends ViewModel {
 	
 	public disableAll () {
 		
-		this._gotoDisabled = true;
-		this._copyDisabled = true;
-		this._revealDisabled = true;
-		this._deleteDisabled = true;
+		this[GOTO_DISABLED] = true;
+		this[COPY_DISABLED] = true;
+		this[REVEAL_DISABLED] = true;
+		this[DELETE_DISABLED] = true;
 		
 		this.requestUpdate();
 		

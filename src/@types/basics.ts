@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import { DiffSettings } from '../../@types/diffs';
+
 
 //	Variables __________________________________________________________________
 
@@ -12,11 +12,8 @@ import { DiffSettings } from '../../@types/diffs';
 
 //	Exports ____________________________________________________________________
 
-export type DiffError = {
-	diffSettings?:DiffSettings,
-	error:string|Error,
-	pathA:string,
-	pathB:string,
+export type Dictionary<T = any> = {
+	[key:string]:T,
 };
 
 //	Functions __________________________________________________________________

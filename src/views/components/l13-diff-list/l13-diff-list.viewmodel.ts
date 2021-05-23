@@ -74,7 +74,7 @@ export class L13DiffListViewModel extends ViewModel {
 		msg.on('delete:files', (data:DiffResultMessage) => this.updateDeletedList(data));
 		msg.on('remove:files', (data:DeletedFilesMessage) => this.removeFiles(data.files));
 		
-		msg.on('update:files', (data:UpdatedFilesMessage) => this.updateFiles(data.files));
+		msg.on('update:files', (data:UpdatedFilesMessage) => this.detectChangedFiles(data.files));
 		msg.on('update:diffs', (data:DiffResultMessage) => this.updateDiffList(data));
 		msg.on('update:multi', (data:DiffCopyMessage|DiffResultMessage) => this.updateMultiList(data));
 		
@@ -137,6 +137,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		updateCopiedParentFolders(this.items, diffs);
 		
+		this.filter(true);
 		this.dispatchEvent('copied');
 		
 	}
@@ -190,8 +191,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		updateDeletedSubfiles(items, diffs);
 		
-		this.filter();
-		
+		this.filter(true);
 		this.dispatchEvent('removed');
 		
 	}
@@ -205,11 +205,12 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		updateDeletedSubfiles(items, diffs);
 		
+		this.filter(true);
 		this.dispatchEvent('deleted');
 		
 	}
 	
-	private updateFiles (files:string[]) {
+	private detectChangedFiles (files:string[]) {
 		
 		const diffs = this.items.filter(({ fileA, fileB }) => {
 			
@@ -233,7 +234,7 @@ export class L13DiffListViewModel extends ViewModel {
 	public updateDiffList (diffResult:DiffResultMessage) {
 		
 		this.updateItems(diffResult.diffs);
-		this.filter();
+		this.filter(true);
 		this.dispatchEvent('updated');
 		
 	}
@@ -266,13 +267,12 @@ export class L13DiffListViewModel extends ViewModel {
 			
 		});
 		
-		this.filter();
-		
+		this.filter(true);
 		this.dispatchEvent('swapped');
 		
 	}
 	
-	public filter () {
+	public filter (keepPosition?:boolean) {
 		
 		let filteredItems = this.items;
 		
@@ -280,7 +280,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		this.filteredItems = filteredItems;
 		
-		this.requestUpdate();
+		this.requestUpdate({ keepPosition });
 		
 		this.dispatchEvent('filtered');
 		
@@ -364,9 +364,9 @@ export class L13DiffListViewModel extends ViewModel {
 		|| from === 'right' && this.diffResult.pathB === data.pathB) {
 			const diffCopy:DiffCopyMessage = this.getCopyListByIds(data.ids, from);
 			if (diffCopy.diffs.length) {
-				this.dispatchEvent('multicopy');
 				diffCopy.multi = true;
 				msg.send<DiffCopyMessage>(`copy:${from}`, diffCopy);
+				this.dispatchEvent('multicopy');
 			}
 		}
 		
@@ -380,7 +380,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (ids:string[], side:'left'|'right'|'files' = 'files') {
+	public delete (ids:string[], side:'left'|'right'|'both' = 'both') {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
@@ -393,6 +393,8 @@ export class L13DiffListViewModel extends ViewModel {
 
 //	Functions __________________________________________________________________
 
+function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A', to:'B'):boolean;
+function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'B', to:'A'):boolean;
 function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :boolean {
 	
 	const fileFrom = `file${from}`;

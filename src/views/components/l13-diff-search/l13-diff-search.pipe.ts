@@ -94,7 +94,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 				if (!searchterm) return true;
 				const fileA = diff.fileA;
 				const fileB = diff.fileB;
-				return fileA && regexp.test(fileA.relative) || fileB && regexp.test(fileB.relative);
+				return fileA && regexp.test(fileA.name) || fileB && regexp.test(fileB.name);
 			}
 			
 			return false;
