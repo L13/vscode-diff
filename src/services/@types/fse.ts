@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { DiffFile } from '../../@types/diffs';
+import type { Dictionary, DiffFile } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -19,9 +19,7 @@ export type WalkTreeOptions = {
 	maxFileSize?:number,
 };
 
-export type StatsMap = {
-	[pathname:string]:DiffFile,
-};
+export type StatsMap = Dictionary<DiffFile>;
 
 export type WalkTreeJob = {
 	error:null|Error,

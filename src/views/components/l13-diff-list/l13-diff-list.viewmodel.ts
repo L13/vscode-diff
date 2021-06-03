@@ -2,6 +2,7 @@
 
 import type {
 	DeletedFilesMessage,
+	Dictionary,
 	Diff,
 	DiffCopyMessage,
 	DiffFile,
@@ -34,7 +35,7 @@ export class L13DiffListViewModel extends ViewModel {
 	
 	private [FILTERS]:Array<L13DiffListPipe<Diff>> = [];
 	
-	private map:{ [name:string]:Diff } = {};
+	private map:Dictionary<Diff> = {};
 	
 	public items:Diff[] = [];
 	public filteredItems:Diff[] = [];

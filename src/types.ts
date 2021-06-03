@@ -31,6 +31,7 @@ export * from './services/@types/panel';
 export * from './services/@types/projects';
 export * from './services/@types/states';
 
+export * from './views/@types/components';
 export * from './views/@types/events';
 export * from './views/@types/intro';
 export * from './views/@types/inits';

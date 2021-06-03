@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { Diff, DiffFile, DiffStatus } from '../../../types';
+import type { Dictionary, Diff, DiffFile, DiffStatus } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 import { formatDate, formatFileSize } from '../../../@l13/formats';
@@ -60,7 +60,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private cacheListItems:Diff[] = [];
 	
-	private cacheListItemViews:{ [name:string]:HTMLElement } = {};
+	private cacheListItemViews:Dictionary<HTMLElement> = {};
 	
 	private cacheFilteredListItems:Diff[] = [];
 	
@@ -568,7 +568,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
-		const cacheListItemViews:{ [name:string]:HTMLElement } = {};
+		const cacheListItemViews:Dictionary<HTMLElement> = {};
 		
 		const foldersA:string[] = [];
 		const foldersB:string[] = [];
