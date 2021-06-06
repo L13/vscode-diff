@@ -3,6 +3,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ## [1.0.2] - 2021-05-30
 
+### Added
+
+- Add `category` for some commands in package.json
+
 ### Fixed
 
 - Disabled native context menu in diff panel for non input fields.

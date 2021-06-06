@@ -70,9 +70,9 @@ I also want to say thank you to all reviewers on the Visual Studio Code Marketpl
 ## Available Commands
 
 * `New Diff Panel` - Open the diff panel.
-* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
-* `Diff Folders: Delete All Favorites` - Delete all favorites.
-* `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
+* `Clear History` - Clear the history of recently used files, folders and previous comparisons.
+* `Delete All Favorites` - Delete all favorites.
+* `Show Output Channel` - Open the output channel for the current comparison.
 
 ## Available Settings
 

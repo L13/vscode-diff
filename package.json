@@ -97,7 +97,8 @@
 			},
 			{
 				"command": "l13Diff.action.history.clear",
-				"title": "Diff Folders: Clear History",
+				"category": "Diff Folders",
+				"title": "Clear History",
 				"icon": {
 					"light": "images/history/history-clear-light.svg",
 					"dark": "images/history/history-clear-dark.svg"
@@ -173,7 +174,8 @@
 			},
 			{
 				"command": "l13Diff.action.favorites.clear",
-				"title": "Diff Folders: Delete All Favorites"
+				"category": "Diff Folders",
+				"title": "Delete All Favorites"
 			},
 			{
 				"command": "l13Diff.action.history.compare",
@@ -205,7 +207,8 @@
 			},
 			{
 				"command": "l13Diff.action.output.show",
-				"title": "Diff Folders: Show Output Channel"
+				"category": "Diff Folders",
+				"title": "Show Output Channel"
 			},
 			{
 				"command": "l13Diff.action.projects.compareWithWorkspace",
