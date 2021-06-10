@@ -47,6 +47,15 @@
 		"onView:l13DiffHistory",
 		"onWebviewPanel:l13DiffPanel"
 	],
+	"extensionKind": [
+		"ui",
+		"workspace"
+	],
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": true
+		}
+	},
 	"main": "./out/extension.js",
 	"contributes": {
 		"viewsContainers": {

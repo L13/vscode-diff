@@ -1,11 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [1.0.2] - 2021-05-30
+## [1.0.2] - 2021-06-13
 
 ### Added
 
 - Add `category` for some commands in package.json
+- Added minimum support/fix for trusted and remote workspaces.
 
 ### Fixed
 
