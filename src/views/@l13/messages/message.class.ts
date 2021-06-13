@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { MessageListener } from '../../../types';
+import type { Dictionary, MessageListener } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 
@@ -18,7 +18,7 @@ const LISTENERS = Symbol.for('listeners');
 
 export class Message {
 	
-	private [LISTENERS]:{ [name:string]:MessageListener[] } = Object.create(null);
+	private [LISTENERS]:Dictionary<MessageListener[]> = Object.create(null);
 	
 	public constructor (private readonly root:typeof vscode) {
 		

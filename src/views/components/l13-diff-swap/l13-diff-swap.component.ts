@@ -2,7 +2,7 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
+import { addButtonActiveStyleEvents, disableContextMenu, parseIcons, setLabel } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -40,6 +40,7 @@ export class L13DiffSwapComponent extends L13Element<L13DiffSwapViewModel> {
 		this.button.addEventListener('click', (event) => this.dispatchCustomEvent('swap', event));
 		
 		addButtonActiveStyleEvents(this.button);
+		disableContextMenu(this);
 		
 	}
 	

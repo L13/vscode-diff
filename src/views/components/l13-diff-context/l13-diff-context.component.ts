@@ -2,7 +2,7 @@
 
 import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { addButtonActiveStyleEvents, parseIcons, setLabel } from '../../common';
+import { addButtonActiveStyleEvents, disableContextMenu, parseIcons, setLabel } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -58,6 +58,8 @@ export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel>
 		this.buttonGoto.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('goto', { altKey }));
 		this.buttonReveal.addEventListener('click', () => this.dispatchCustomEvent('reveal'));
 		this.buttonDelete.addEventListener('click', () => this.dispatchCustomEvent('delete'));
+		
+		disableContextMenu(this);
 		
 	}
 	

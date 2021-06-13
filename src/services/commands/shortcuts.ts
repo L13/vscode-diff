@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 
+import type { Dictionary } from '../../types';
+
 import * as commands from '../common/commands';
 
 import { DiffPanel } from '../panel/DiffPanel';
@@ -66,7 +68,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 function createDiffPanelLinks (diffPanelCommands:string[]) {
 	
-	const map:{ [command:string]:() => void } = {};
+	const map:Dictionary<() => void> = {};
 	
 	diffPanelCommands.forEach((command) => {
 		

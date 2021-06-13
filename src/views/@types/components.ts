@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import type { Dictionary } from '../../types';
+
 import type { ViewModel } from '../@l13/component/view-model.abstract';
 import type { ViewModelService } from '../@l13/core';
 
@@ -13,7 +15,7 @@ import type { ViewModelService } from '../@l13/core';
 
 //	Exports ____________________________________________________________________
 
-export type Options = {
+export type ComponentOptions = {
 	name:string,
 	service:ViewModelServiceConstructor<ViewModelService<ViewModel>>,
 	styles?:string[],
@@ -21,7 +23,7 @@ export type Options = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ViewModelConstructor<T extends ViewModel> = new (options?:{ [name:string]:any }) => T;
+export type ViewModelConstructor<T extends ViewModel> = new (options?:Dictionary<any>) => T;
 
 export type ViewModelServiceConstructor<T extends ViewModelService<ViewModel>> = new () => T;
 
