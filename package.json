@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"publisher": "L13RARY",
 	"license": "SEE LICENCE IN LICENCE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -47,6 +47,15 @@
 		"onView:l13DiffHistory",
 		"onWebviewPanel:l13DiffPanel"
 	],
+	"extensionKind": [
+		"ui",
+		"workspace"
+	],
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": true
+		}
+	},
 	"main": "./out/extension.js",
 	"contributes": {
 		"viewsContainers": {
@@ -97,7 +106,8 @@
 			},
 			{
 				"command": "l13Diff.action.history.clear",
-				"title": "Diff Folders: Clear History",
+				"category": "Diff Folders",
+				"title": "Clear History",
 				"icon": {
 					"light": "images/history/history-clear-light.svg",
 					"dark": "images/history/history-clear-dark.svg"
@@ -173,7 +183,8 @@
 			},
 			{
 				"command": "l13Diff.action.favorites.clear",
-				"title": "Diff Folders: Delete All Favorites"
+				"category": "Diff Folders",
+				"title": "Delete All Favorites"
 			},
 			{
 				"command": "l13Diff.action.history.compare",
@@ -205,7 +216,8 @@
 			},
 			{
 				"command": "l13Diff.action.output.show",
-				"title": "Diff Folders: Show Output Channel"
+				"category": "Diff Folders",
+				"title": "Show Output Channel"
 			},
 			{
 				"command": "l13Diff.action.projects.compareWithWorkspace",

@@ -16,6 +16,7 @@ I also want to say thank you to all reviewers on the Visual Studio Code Marketpl
 1. [Predefined Variables](#predefined-variables)
 1. [Mouse and Keyboard Shortcuts](#mouse-and-keyboard-shortcuts)
 1. [Custom Keybindings](#custom-keybindings)
+1. [Workspace Trust](#workspace-trust)
 1. [Recommended Settings](#recommended-settings)
 1. [Recommended Extensions](#recommended-extensions)
 
@@ -70,9 +71,9 @@ I also want to say thank you to all reviewers on the Visual Studio Code Marketpl
 ## Available Commands
 
 * `New Diff Panel` - Open the diff panel.
-* `Diff Folders: Clear History` - Clear the history of recently used files, folders and previous comparisons.
-* `Diff Folders: Delete All Favorites` - Delete all favorites.
-* `Diff Folders: Show Output Channel` - Open the output channel for the current comparison.
+* `Clear History` - Clear the history of recently used files, folders and previous comparisons.
+* `Delete All Favorites` - Delete all favorites.
+* `Show Output Channel` - Open the output channel for the current comparison.
 
 ## Available Settings
 
@@ -397,6 +398,12 @@ Custom keyboard shortcuts can be assigned to the commands. But not every command
 * `l13DiffListFocus` - The value is true if the list view has focus.
 * `l13DiffInputFocus` - The value is true if the left or right input has focus.
 * `l13DiffSearchFocus` - The value is true if the search input has focus.
+
+## Workspace Trust
+
+The extension is written with security in mind. Paths will be sanitized before they are used and if the file `.vscode/settings.json` is available in a workspace the content will be parsed with the native JSON parser to get the values of `l13Diff.exclude`.
+
+Right now it is not possible to show a message if files will be copied from an untrusted workspace to a trusted one because there is no API to figure out if a workspace, which is not the current one, is trusted or not. Please always be careful when copying files and folders.
 
 ## Recommended Settings
 

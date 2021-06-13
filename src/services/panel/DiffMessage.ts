@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import type { JSONValue, Message, MessageListener } from '../../types';
+import type { Dictionary, JSONValue, Message, MessageListener } from '../../types';
 
 import { remove } from '../../@l13/arrays';
 
@@ -18,7 +18,7 @@ const LISTENERS = Symbol.for('listeners');
 
 export class DiffMessage {
 	
-	private [LISTENERS]:{ [name:string]:MessageListener[] } = Object.create(null);
+	private [LISTENERS]:Dictionary<MessageListener[]> = Object.create(null);
 	
 	public constructor (private panel:vscode.WebviewPanel, disposables:vscode.Disposable[]) {
 		

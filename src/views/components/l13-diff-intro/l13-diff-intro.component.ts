@@ -4,7 +4,7 @@ import type { DisplayShortcut, Keybinding } from '../../../types';
 
 import { isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { parseIcons } from '../../common';
+import { disableContextMenu, parseIcons } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -65,6 +65,8 @@ export class L13DiffIntroComponent extends L13Element<L13DiffIntroViewModel> {
 		super();
 		
 		this.shortcuts.appendChild(createShortcutViews(keyboardShortcuts));
+		
+		disableContextMenu(this);
 		
 	}
 	

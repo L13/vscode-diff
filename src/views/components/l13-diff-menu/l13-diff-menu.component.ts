@@ -2,7 +2,7 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { removeChildren, scrollElementIntoView, setLabel } from '../../common';
+import { disableContextMenu, removeChildren, scrollElementIntoView, setLabel } from '../../common';
 
 import { L13DiffInputComponent } from '../l13-diff-input/l13-diff-input.component';
 
@@ -41,6 +41,8 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 	public constructor () {
 
 		super();
+		
+		disableContextMenu(this);
 
 		this.addEventListener('mouseenter', () => this.isCursorInMenu = true);
 		this.addEventListener('mouseleave', () => this.isCursorInMenu = false);

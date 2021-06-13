@@ -4,7 +4,7 @@ import type { DiffFile } from '../../../@types/diffs';
 
 import { changePlatform, L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { addButtonActiveStyleEvents, msg, parseIcons, setLabel } from '../../common';
+import { addButtonActiveStyleEvents, disableContextMenu, msg, parseIcons, setLabel } from '../../common';
 
 import type { L13DiffMenuComponent } from '../l13-diff-menu/l13-diff-menu.component';
 
@@ -47,6 +47,8 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		super();
 		
 		setLabel(this.button, 'Open Dialog to pick a File or Folder');
+		
+		disableContextMenu(this.button);
 		
 		this.input.addEventListener('focus', async () => {
 			

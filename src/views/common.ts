@@ -1,5 +1,7 @@
 //	Imports ____________________________________________________________________
 
+import type { Dictionary } from '../types';
+
 import { detectLanguage, detectPlatform, isMacOs, Message } from './@l13/core';
 
 import icons from './components/icons';
@@ -39,7 +41,7 @@ export function parseIcons (text:string) {
 	
 	return text.replace(findStyleUrl, (match:string, url:string) => {
 		
-		const image = (<{ [url:string]:string }>icons)[url];
+		const image = (<Dictionary<string>>icons)[url];
 		
 		if (image) match = `url("data:image/svg+xml;base64,${btoa(image)}")`;
 		
@@ -83,6 +85,17 @@ export function setLabel (element:HTMLElement, title:string) {
 	
 	element.setAttribute('aria-label', title);
 	element.setAttribute('title', title);
+	
+}
+
+export function disableContextMenu (element:HTMLElement) {
+	
+	element.addEventListener('contextmenu', (event:MouseEvent) => {
+		
+		event.preventDefault();
+		return false;
+		
+	});
 	
 }
 

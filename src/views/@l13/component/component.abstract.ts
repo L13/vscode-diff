@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { Options } from '../../@types/components';
+import type { ComponentOptions, Dictionary } from '../../../types';
 
 import { ViewModelService } from './view-model-service.abstract';
 import type { ViewModel } from './view-model.abstract';
@@ -27,7 +27,7 @@ const findScope = /\{\{\s*(.+?)\s*\}\}/;
 
 //	Exports ____________________________________________________________________
 
-export function L13Component (options:Options) {
+export function L13Component (options:ComponentOptions) {
 	
 	return function (target:new () => any) {
 		
@@ -62,13 +62,13 @@ export function L13Query (rule:string) {
 	
 }
 
-export function L13Class (classNames:{ [name:string]:string }) {
+export function L13Class (classNames:Dictionary<string>) {
 	
 	return function (prototype:any, name:string) {
 		
-		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map<string, { [name:string]:string }>();
+		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map<string, Dictionary<string>>();
 		
-		(<Map<string, { [name:string]:string }>>prototype[CLASSNAMES]).set(name, classNames);
+		(<Map<string, Dictionary<string>>>prototype[CLASSNAMES]).set(name, classNames);
 		
 	};
 	
@@ -80,7 +80,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
 	private [CONDITIONALS]:Map<Element, { cmd:string, comment:Comment }> = new Map();
 	
-	private [CLASSNAMES]:Map<string, { [name:string]:string }>;
+	private [CLASSNAMES]:Map<string, Dictionary<string>>;
 	
 	private [QUERIES]:Map<string, string>;
 	
@@ -221,7 +221,7 @@ function getAttributes (element:Element) {
 	
 	const attributes = element.attributes;
 	const length = attributes.length;
-	const map:{ [name:string]:string } = {};
+	const map:Dictionary<string> = {};
 	let i = 0;
 	let name;
 	

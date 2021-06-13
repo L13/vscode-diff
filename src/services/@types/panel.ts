@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import type { Dictionary } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -12,9 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
-export type ContextStates = {
-	[name:string]:boolean,
-};
+export type ContextStates = Dictionary<boolean>;
 
 export type Uri = {
 	fsPath:string,

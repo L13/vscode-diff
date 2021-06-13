@@ -2,7 +2,7 @@
 
 import { L13Component, L13Element, L13Query } from '../../@l13/core';
 
-import { setLabel } from '../../common';
+import { disableContextMenu, setLabel } from '../../common';
 
 import styles from '../styles';
 import templates from '../templates';
@@ -38,6 +38,8 @@ export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel>
 		setLabel(this.button, 'Compare');
 		
 		this.button.addEventListener('click', ({ altKey }) => this.dispatchCustomEvent('compare', { altKey }));
+		
+		disableContextMenu(this);
 		
 	}
 	

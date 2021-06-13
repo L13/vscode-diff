@@ -32,6 +32,11 @@
 			"type": "gulp",
 			"task": "watch",
 			"problemMatcher": []
+		},
+		{
+			"type": "gulp",
+			"task": "build & watch",
+			"problemMatcher": []
 		}
 	]
 }

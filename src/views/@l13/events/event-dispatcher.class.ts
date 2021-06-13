@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { EventListener } from '../../../types';
+import type { Dictionary, EventListener } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
 
@@ -18,7 +18,7 @@ const LISTENERS = Symbol.for('listeners');
 
 export class EventDispatcher {
 	
-	private [LISTENERS]:{ [eventName:string]:EventListener[] } = Object.create(null);
+	private [LISTENERS]:Dictionary<EventListener[]> = Object.create(null);
 	
 	public on (name:string, listener:EventListener) {
 		
