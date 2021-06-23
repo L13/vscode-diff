@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.0.3] - 2021-06-23
+
+### Changed
+
+- Changed `extensionKind` [Issue #98](https://github.com/L13/vscode-diff/issues/98)
+
 ## [1.0.2] - 2021-06-13
 
 ### Added
