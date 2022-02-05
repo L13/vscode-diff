@@ -1133,14 +1133,14 @@
 					},
 					"description": "Indicates files or folders to be ignored, like \".git\", \".svn\", \"CVS\", \"node_modules\", etc."
 				},
-        "l13Diff.include": {
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "description": "Indicates files or folders to be included. If any are specified, only these will be included."
-        },
+				"l13Diff.include": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"description": "Indicates files or folders to be included. If any are specified, only these will be included."
+				},
 				"l13Diff.openInNewDiffPanel": {
 					"type": "boolean",
 					"default": false,
