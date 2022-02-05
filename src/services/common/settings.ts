@@ -60,6 +60,16 @@ export function getExcludes (pathA:string, pathB:string) :string[] {
 	
 }
 
+export function getIncludes (pathA:string, pathB:string) :string[] {
+
+	const includes = get('include', []);
+	const includesA:string[] = useWorkspaceSettings(pathA) ? includes : loadSettingsInclude(pathA) || includes;
+	const includesB:string[] = useWorkspaceSettings(pathB) ? includes : loadSettingsInclude(pathB) || includes;
+	
+	return [...includesA, ...includesB].filter((value, index, values) => values.indexOf(value) === index);
+	
+}
+
 export function ignoreTrimWhitespace () {
 	
 	const useDefault = get('ignoreTrimWhitespace', 'default');
@@ -116,6 +126,29 @@ function loadSettingsExclude (pathname:string) :string[] {
 	if (ignore) ignore = showDepricated(ignore, pathname);
 	
 	return <string[]>json['l13Diff.exclude'] || ignore || null;
+	
+}
+
+function loadSettingsInclude (pathname:string) :string[] {
+	
+	const codePath = walkUp(pathname, '.vscode');
+	
+	if (!codePath) return null;
+	
+	const codeSettingsPath = path.join(codePath, 'settings.json');
+	const stat = lstatSync(codeSettingsPath);
+	let json:JSONObject = {};
+	
+	if (stat && stat.isFile()) {
+		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
+		try {
+			json = parse(content);
+		} catch {
+			vscode.window.showErrorMessage(`Syntax error in settings file "${codeSettingsPath}"!`);
+		}
+	}
+	
+	return <string[]>json['l13Diff.include'] || null;
 	
 }
 

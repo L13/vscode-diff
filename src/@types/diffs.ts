@@ -35,12 +35,14 @@ export type DiffFile = {
 	dirname:string,
 	extname:string,
 	ignore:boolean,
+	allow: boolean,
 	type:DiffFileTypes,
 };
 
 export type DiffSettings = {
 	abortOnError:boolean,
 	excludes:string[],
+	includes: string[],
 	ignoreContents:boolean,
 	ignoreEndOfLine:boolean,
 	ignoreTrimWhitespace:boolean,

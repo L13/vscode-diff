@@ -116,6 +116,7 @@ UPDATES
 
 Abort on Error: ${settings.abortOnError}
 Excludes: "${settings.excludes.join('", "')}"
+Includes: "${settings.includes.join('", "')}"
 Ignore Contents: ${settings.ignoreContents}
 Ignore End of Line: ${settings.ignoreEndOfLine}
 Ignore Leading/Trailing Whitespace: ${settings.ignoreTrimWhitespace}

@@ -15,6 +15,7 @@ import type { Dictionary, DiffFile } from '../../types';
 export type WalkTreeOptions = {
 	abortOnError:boolean,
 	excludes?:string[],
+	includes?:string[],
 	useCaseSensitive?:boolean,
 	maxFileSize?:number,
 };
@@ -25,6 +26,7 @@ export type WalkTreeJob = {
 	error:null|Error,
 	abort:boolean,
 	ignore:null|RegExp,
+	allow:null|RegExp,
 	tasks:number,
 	result:StatsMap,
 	maxSize:number,

@@ -78,6 +78,7 @@ export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap
 		const job:WalkTreeJob = {
 			error: null,
 			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes, options.useCaseSensitive) : null,
+			allow: Array.isArray(options.includes) ? createFindGlob(options.includes, options.useCaseSensitive) : null,
 			result: {},
 			tasks: 1,
 			maxSize: options.maxFileSize || 0,
@@ -131,9 +132,9 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 	
 }
 
-export function createFindGlob (ignore:string[], useCaseSensitive:boolean) {
+export function createFindGlob (patterns:string[], useCaseSensitive:boolean) {
 	
-	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`, useCaseSensitive ? '' : 'i');
+	return patterns.length > 0 ? new RegExp(`^(${patterns.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`, useCaseSensitive ? '' : 'i') : null;
 	
 }
 
@@ -167,7 +168,7 @@ function escapeGlobForRegExp (text:any) :string {
 	
 }
 
-function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean) {
+function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean, allow:boolean) {
 	
 	const sep = type === 'folder' ? path.sep : '';
 	
@@ -184,6 +185,7 @@ function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:str
 		extname: type === 'file' ? path.extname(relative) : '',
 		type,
 		ignore,
+		allow
 	};
 	
 }
@@ -223,22 +225,23 @@ function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
 				let ignore = job.ignore?.test(currentRelative);
+				let allow = job.allow?.test(currentRelative) ?? true;
 				
 				currentDirname = currentDirname === '.' ? '' : currentDirname + path.sep;
 				
 				if (statError) {
-					addFile(job.result, 'error', null, pathname, cwd, currentRelative, currentDirname, true);
+					addFile(job.result, 'error', null, pathname, cwd, currentRelative, currentDirname, true, true);
 				} else if (stat.isDirectory()) {
-					addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore);
-					if (!ignore) return _walktree(job, cwd, currentRelative);
+					addFile(job.result, 'folder', stat, pathname, cwd, currentRelative, currentDirname, ignore, allow);
+					if (!ignore && allow) return _walktree(job, cwd, currentRelative);
 				} else if (stat.isFile()) {
 					const maxSize = job.maxSize;
 					if (maxSize && stat.size > maxSize) ignore = true;
-					addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					addFile(job.result, 'file', stat, pathname, cwd, currentRelative, currentDirname, ignore, allow);
 				} else if (stat.isSymbolicLink()) {
-					addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore);
+					addFile(job.result, 'symlink', stat, pathname, cwd, currentRelative, currentDirname, ignore, allow);
 				} else {
-					addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true);
+					addFile(job.result, 'unknown', stat, pathname, cwd, currentRelative, currentDirname, true, true);
 				}
 				
 				job.tasks--;
