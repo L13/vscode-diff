@@ -169,11 +169,11 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, { abortOnError, excludes, useCaseSensitive, maxFileSize }:DiffSettings) {
+	public async scanFolder (dirname:string, { abortOnError, excludes, includes, useCaseSensitive, maxFileSize }:DiffSettings) {
 		
 		this._onWillScanFolder.fire(dirname);
 		
-		const result = await walkTree(dirname, { abortOnError, excludes, useCaseSensitive, maxFileSize });
+		const result = await walkTree(dirname, { abortOnError, excludes, includes, useCaseSensitive, maxFileSize });
 		
 		this._onDidScanFolder.fire(result);
 		
@@ -219,6 +219,7 @@ async function getDiffSettings (dirnameA:string, dirnameB:string) :Promise<DiffS
 	return {
 		abortOnError: settings.get('abortOnError', true),
 		excludes: settings.getExcludes(dirnameA, dirnameB),
+		includes: settings.getIncludes(dirnameA, dirnameB),
 		ignoreContents: settings.get('ignoreContents', false),
 		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
 		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),

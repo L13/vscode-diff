@@ -225,7 +225,7 @@ function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
 				const currentRelative = path.join(relative, name);
 				let currentDirname = path.dirname(currentRelative);
 				let ignore = job.ignore?.test(currentRelative);
-				let allow = job.allow?.test(currentRelative) ?? true;
+				const allow = job.allow?.test(currentRelative) ?? true;
 				
 				currentDirname = currentDirname === '.' ? '' : currentDirname + path.sep;
 				
