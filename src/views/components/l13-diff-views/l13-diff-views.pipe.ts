@@ -18,7 +18,7 @@ import type { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 
 export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 	
-	private cache:ViewsCache = {
+	private cache: ViewsCache = {
 		unchangedChecked: false,
 		deletedChecked: true,
 		modifiedChecked: true,
@@ -28,9 +28,9 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		filteredItems: [],
 	};
 	
-	public constructor (public readonly vm:L13DiffViewsViewModel) {}
+	public constructor (public readonly vm: L13DiffViewsViewModel) {}
 	
-	public transform (items:Diff[]):Diff[] {
+	public transform (items: Diff[]): Diff[] {
 		
 		const cache = this.cache;
 		const vm = this.vm;
@@ -52,7 +52,7 @@ export class L13DiffViewsPipe implements L13DiffListPipe<Diff> {
 		cache.untrackedChecked = vm.untrackedChecked;
 		cache.ignoredChecked = vm.ignoredChecked;
 		
-		return cache.filteredItems = items.filter((diff:Diff) => {
+		return cache.filteredItems = items.filter((diff: Diff) => {
 			
 			return vm.unchangedChecked && diff.status === 'unchanged'
 				|| vm.deletedChecked && diff.status === 'deleted'

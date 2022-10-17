@@ -13,10 +13,10 @@
 //	Exports ____________________________________________________________________
 
 export type Keybinding = {
-	title?:string,
-	key:string,
-	mac?:string,
-	win?:string,
+	title?: string,
+	key: string,
+	mac?: string,
+	win?: string,
 };
 
 //	Functions __________________________________________________________________

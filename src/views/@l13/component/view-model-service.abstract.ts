@@ -6,7 +6,7 @@ import type { ViewModel } from './view-model.abstract';
 
 //	Variables __________________________________________________________________
 
-const viewmodels = new Map<ViewModelConstructor<any>, { counter:number, vms:Map<string, ViewModel> }>();
+const viewmodels = new Map<ViewModelConstructor<any>, { counter: number, vms: Map<string, ViewModel> }>();
 
 //	Initialize _________________________________________________________________
 
@@ -16,11 +16,11 @@ const viewmodels = new Map<ViewModelConstructor<any>, { counter:number, vms:Map<
 
 export abstract class ViewModelService<T extends ViewModel> {
 	
-	public abstract name:string;
+	public abstract name: string;
 	
-	public abstract vmc:ViewModelConstructor<T>;
+	public abstract vmc: ViewModelConstructor<T>;
 	
-	public model (vmId:string):T {
+	public model (vmId: string): T {
 		
 		let collection = viewmodels.get(this.vmc);
 		
@@ -42,7 +42,7 @@ export abstract class ViewModelService<T extends ViewModel> {
 		
 	}
 	
-	public static requestUpdate (vmc?:new () => ViewModel) {
+	public static requestUpdate (vmc?: new () => ViewModel) {
 		
 		if (vmc) {
 			const collection = viewmodels.get(vmc);

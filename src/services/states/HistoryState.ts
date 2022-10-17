@@ -21,18 +21,18 @@ import * as states from '../common/states';
 
 export class HistoryState {
 	
-	private static current:HistoryState = null;
+	private static current: HistoryState = null;
 	
-	public static create (context:vscode.ExtensionContext) {
+	public static create (context: vscode.ExtensionContext) {
 		
 		return HistoryState.current || (HistoryState.current = new HistoryState(context));
 		
 	}
 	
-	private constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context: vscode.ExtensionContext) {}
 	
-	private _onDidChangeComparisons:vscode.EventEmitter<Comparison[]> = new vscode.EventEmitter<Comparison[]>();
-	public readonly onDidChangeComparisons:vscode.Event<Comparison[]> = this._onDidChangeComparisons.event;
+	private _onDidChangeComparisons: vscode.EventEmitter<Comparison[]> = new vscode.EventEmitter<Comparison[]>();
+	public readonly onDidChangeComparisons: vscode.Event<Comparison[]> = this._onDidChangeComparisons.event;
 	
 	public get () {
 		
@@ -40,13 +40,13 @@ export class HistoryState {
 		
 	}
 	
-	private save (comparions:Comparison[]) {
+	private save (comparions: Comparison[]) {
 		
 		states.updateComparisons(this.context, comparions);
 		
 	}
 	
-	public add (pathA:string, pathB:string, type:'file'|'folder') {
+	public add (pathA: string, pathB: string, type: 'file' | 'folder') {
 		
 		let comparisons = states.getComparisons(this.context);
 		const [label, desc] = formatNameAndDesc(pathA, pathB);
@@ -68,7 +68,7 @@ export class HistoryState {
 		
 	}
 	
-	public remove (comparison:Comparison) {
+	public remove (comparison: Comparison) {
 		
 		const comparisons = states.getComparisons(this.context);
 		
@@ -90,7 +90,7 @@ export class HistoryState {
 
 //	Functions __________________________________________________________________
 
-function removeComparison (comparisons:Comparison[], comparison:Comparison) {
+function removeComparison (comparisons: Comparison[], comparison: Comparison) {
 	
 	for (let i = 0; i < comparisons.length; i++) {
 		const com = comparisons[i];

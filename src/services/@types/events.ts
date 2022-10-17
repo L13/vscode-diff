@@ -14,25 +14,25 @@ import type { DiffCopyMessage, DiffInitMessage, DiffMultiCopyMessage } from '../
 //	Exports ____________________________________________________________________
 
 export type CopyFileEvent = {
-	from:DiffFile,
-	to:DiffFile,
+	from: DiffFile,
+	to: DiffFile,
 };
 
 export type CopyFilesEvent = {
-	data:DiffCopyMessage,
-	from:'A'|'B',
-	to:'A'|'B',
+	data: DiffCopyMessage,
+	from: 'A' | 'B',
+	to: 'A' | 'B',
 };
 
 export type MultiCopyEvent = {
-	data:DiffMultiCopyMessage,
-	from:'left'|'right',
+	data: DiffMultiCopyMessage,
+	from: 'left' | 'right',
 };
 
 export type StartEvent = {
-	data:DiffInitMessage,
-	pathA:string,
-	pathB:string
+	data: DiffInitMessage,
+	pathA: string,
+	pathB: string
 };
 
 //	Functions __________________________________________________________________

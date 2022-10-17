@@ -20,7 +20,7 @@ export class L13DiffActionsViewModelService extends ViewModelService<L13DiffActi
 	
 	public name = 'l13-diff-actions';
 	
-	public vmc:ViewModelConstructor<L13DiffActionsViewModel> = L13DiffActionsViewModel;
+	public vmc: ViewModelConstructor<L13DiffActionsViewModel> = L13DiffActionsViewModel;
 	
 }
 

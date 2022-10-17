@@ -17,7 +17,7 @@ export class SymlinkContentProvider implements vscode.TextDocumentContentProvide
 	
 	public static SCHEME = 'l13diffsymlink';
 	
-	public provideTextDocumentContent (uri:vscode.Uri, cancel:vscode.CancellationToken):Promise<string> {
+	public provideTextDocumentContent (uri: vscode.Uri, cancel: vscode.CancellationToken): Promise<string> {
 		
 		if (cancel.isCancellationRequested) return Promise.resolve('');
 		
@@ -34,7 +34,7 @@ export class SymlinkContentProvider implements vscode.TextDocumentContentProvide
 		
 	}
 	
-	public static parse (pathname:string) {
+	public static parse (pathname: string) {
 		
 		return vscode.Uri.parse(`${SymlinkContentProvider.SCHEME}:${pathname}?ts=${+new Date()}`, true);
 		

@@ -7,10 +7,10 @@ import { formatNameAndDesc } from './formats';
 //	Variables __________________________________________________________________
 
 export type Test = {
-	desc:string,
-	pathA:string,
-	pathB:string,
-	toBe:string[],
+	desc: string,
+	pathA: string,
+	pathB: string,
+	toBe: string[],
 };
 
 //	Initialize _________________________________________________________________
@@ -19,7 +19,7 @@ describe('formats', () => {
 	
 	describe('.formatNameAndDesc()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepStrictEqual(formatNameAndDesc(test.pathA, test.pathB), test.toBe));

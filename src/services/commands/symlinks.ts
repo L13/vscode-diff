@@ -14,7 +14,7 @@ import { SymlinkContentProvider } from '../actions/symlinks/SymlinkContentProvid
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	const contentProvider = new SymlinkContentProvider();
 	

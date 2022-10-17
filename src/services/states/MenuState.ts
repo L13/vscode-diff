@@ -17,18 +17,18 @@ import * as states from '../common/states';
 
 export class MenuState {
 	
-	private static current:MenuState = null;
+	private static current: MenuState = null;
 	
-	public static create (context:vscode.ExtensionContext) {
+	public static create (context: vscode.ExtensionContext) {
 		
 		return MenuState.current || (MenuState.current = new MenuState(context));
 		
 	}
 	
-	private constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context: vscode.ExtensionContext) {}
 	
-	private _onDidChangeHistory:vscode.EventEmitter<string[]> = new vscode.EventEmitter<string[]>();
-	public readonly onDidChangeHistory:vscode.Event<string[]> = this._onDidChangeHistory.event;
+	private _onDidChangeHistory: vscode.EventEmitter<string[]> = new vscode.EventEmitter<string[]>();
+	public readonly onDidChangeHistory: vscode.Event<string[]> = this._onDidChangeHistory.event;
 	
 	public get () {
 		
@@ -36,13 +36,13 @@ export class MenuState {
 		
 	}
 	
-	private save (history:string[]) {
+	private save (history: string[]) {
 		
 		states.updateHistory(this.context, history);
 		
 	}
 	
-	public saveRecentlyUsed (pathA:string, pathB:string) {
+	public saveRecentlyUsed (pathA: string, pathB: string) {
 		
 		let history = states.getHistory(this.context);
 		

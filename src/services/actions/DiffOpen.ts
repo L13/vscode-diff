@@ -24,7 +24,7 @@ import { SymlinkContentProvider } from './symlinks/SymlinkContentProvider';
 
 export class DiffOpen {
 	
-	public static async openFile (fsPathOrFile:string|DiffFile, openToSide:boolean) {
+	public static async openFile (fsPathOrFile: string | DiffFile, openToSide: boolean) {
 		
 		try {
 			const fsPath = typeof fsPathOrFile === 'string' ? fsPathOrFile : fsPathOrFile.fsPath;
@@ -39,11 +39,11 @@ export class DiffOpen {
 		
 	}
 	
-	private static async openDiff (diff:Diff, openToSide:boolean) {
+	private static async openDiff (diff: Diff, openToSide: boolean) {
 		
 		try {
-			const fileA:DiffFile = diff.fileA;
-			const fileB:DiffFile = diff.fileB;
+			const fileA: DiffFile = diff.fileA;
+			const fileB: DiffFile = diff.fileB;
 			const statA = await lstat(fileA.fsPath);
 			const statB = await lstat(fileB.fsPath);
 			
@@ -68,7 +68,7 @@ export class DiffOpen {
 		
 	}
 	
-	public static async open (diff:Diff, openToSide:boolean) {
+	public static async open (diff: Diff, openToSide: boolean) {
 		
 		switch (diff.status) {
 			case 'deleted':
@@ -91,7 +91,7 @@ export class DiffOpen {
 
 //	Functions __________________________________________________________________
 
-function formatLabel (fileA:DiffFile, fileB:DiffFile) {
+function formatLabel (fileA: DiffFile, fileB: DiffFile) {
 	
 	const labelFormat = settings.get('labelFormat', 'complete');
 	
@@ -123,7 +123,7 @@ function formatLabel (fileA:DiffFile, fileB:DiffFile) {
 	
 }
 
-async function openDiff (left:vscode.Uri, right:vscode.Uri, title:string, openToSide:boolean) {
+async function openDiff (left: vscode.Uri, right: vscode.Uri, title: string, openToSide: boolean) {
 	
 	await vscode.commands.executeCommand('vscode.diff', left, right, title, {
 		preview: false,
@@ -132,7 +132,7 @@ async function openDiff (left:vscode.Uri, right:vscode.Uri, title:string, openTo
 	
 }
 
-async function openFile (uri:vscode.Uri, openToSide:boolean) {
+async function openFile (uri: vscode.Uri, openToSide: boolean) {
 	
 	await vscode.commands.executeCommand('vscode.open', uri, {
 		preview: false,

@@ -13,12 +13,12 @@
 //	Exports ____________________________________________________________________
 
 export type DeleteDialog = {
-	text:string,
-	textSingle?:string,
-	buttonAll:string,
-	buttonLeft?:string,
-	buttonRight?:string,
-	buttonOk?:string,
+	text: string,
+	textSingle?: string,
+	buttonAll: string,
+	buttonLeft?: string,
+	buttonRight?: string,
+	buttonOk?: string,
 };
 
 //	Functions __________________________________________________________________

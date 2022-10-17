@@ -33,14 +33,14 @@ const FILTERS = Symbol.for('filters');
 
 export class L13DiffListViewModel extends ViewModel {
 	
-	private [FILTERS]:Array<L13DiffListPipe<Diff>> = [];
+	private [FILTERS]: Array<L13DiffListPipe<Diff>> = [];
 	
-	private map:Dictionary<Diff> = {};
+	private map: Dictionary<Diff> = {};
 	
-	public items:Diff[] = [];
-	public filteredItems:Diff[] = [];
+	public items: Diff[] = [];
+	public filteredItems: Diff[] = [];
 	
-	public diffResult:DiffResultMessage = {
+	public diffResult: DiffResultMessage = {
 		diffs: [],
 		pathA: '',
 		pathB: '',
@@ -67,30 +67,30 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		super();
 		
-		msg.on('create:diffs', (data:DiffResultMessage) => this.createList(data));
+		msg.on('create:diffs', (data: DiffResultMessage) => this.createList(data));
 		
-		msg.on('copy:left', (data:DiffCopyMessage) => this.updateCopiedList(data));
-		msg.on('copy:right', (data:DiffCopyMessage) => this.updateCopiedList(data));
+		msg.on('copy:left', (data: DiffCopyMessage) => this.updateCopiedList(data));
+		msg.on('copy:right', (data: DiffCopyMessage) => this.updateCopiedList(data));
 		
-		msg.on('delete:files', (data:DiffResultMessage) => this.updateDeletedList(data));
-		msg.on('remove:files', (data:DeletedFilesMessage) => this.removeFiles(data.files));
+		msg.on('delete:files', (data: DiffResultMessage) => this.updateDeletedList(data));
+		msg.on('remove:files', (data: DeletedFilesMessage) => this.removeFiles(data.files));
 		
-		msg.on('update:files', (data:UpdatedFilesMessage) => this.detectChangedFiles(data.files));
-		msg.on('update:diffs', (data:DiffResultMessage) => this.updateDiffList(data));
-		msg.on('update:multi', (data:DiffCopyMessage|DiffResultMessage) => this.updateMultiList(data));
+		msg.on('update:files', (data: UpdatedFilesMessage) => this.detectChangedFiles(data.files));
+		msg.on('update:diffs', (data: DiffResultMessage) => this.updateDiffList(data));
+		msg.on('update:multi', (data: DiffCopyMessage | DiffResultMessage) => this.updateMultiList(data));
 		
-		msg.on('multi-copy:left', (data:DiffMultiCopyMessage) => this.multiCopyFiles('left', data));
-		msg.on('multi-copy:right', (data:DiffMultiCopyMessage) => this.multiCopyFiles('right', data));
+		msg.on('multi-copy:left', (data: DiffMultiCopyMessage) => this.multiCopyFiles('left', data));
+		msg.on('multi-copy:right', (data: DiffMultiCopyMessage) => this.multiCopyFiles('right', data));
 		
 	}
 	
-	public getDiffById (id:string):null|Diff {
+	public getDiffById (id: string): null | Diff {
 		
 		return this.map[id] || null;
 		
 	}
 	
-	public pipe (pipe:L13DiffListPipe<Diff>) {
+	public pipe (pipe: L13DiffListPipe<Diff>) {
 		
 		this[FILTERS].push(pipe);
 		
@@ -100,26 +100,26 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public createList (diffResult:DiffResultMessage) {
+	public createList (diffResult: DiffResultMessage) {
 		
 		this.enable();
 		
 		this.diffResult = diffResult;
 		this.map = {};
 		
-		this.diffResult.diffs.forEach((diff:Diff) => this.map[diff.id] = diff);
+		this.diffResult.diffs.forEach((diff: Diff) => this.map[diff.id] = diff);
 		this.items = this.diffResult.diffs;
 		
 		this.dispatchEvent('compared');
 		
 	}
 	
-	private updateItems (diffs:Diff[]) {
+	private updateItems (diffs: Diff[]) {
 		
 		const items = this.items = this.items.slice();
 		const map = this.map;
 		
-		diffs.forEach((diff:Diff) => {
+		diffs.forEach((diff: Diff) => {
 			
 			const originalDiff = map[diff.id];
 			
@@ -130,7 +130,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public updateCopiedList (diffResult:DiffCopyMessage) {
+	public updateCopiedList (diffResult: DiffCopyMessage) {
 		
 		const diffs = diffResult.diffs;
 		
@@ -143,11 +143,11 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private updateStatus (items:Diff[], diffs:Diff[]) {
+	private updateStatus (items: Diff[], diffs: Diff[]) {
 		
 		const map = this.map;
 		
-		diffs.forEach((diff:Diff) => {
+		diffs.forEach((diff: Diff) => {
 			
 			const originalDiff = map[diff.id];
 			
@@ -169,10 +169,10 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private removeFiles (files:string[]) {
+	private removeFiles (files: string[]) {
 		
 		const items = this.items = this.items.slice();
-		const diffs = items.filter((diff:Diff) => {
+		const diffs = items.filter((diff: Diff) => {
 			
 			if (files.includes(diff.fileA?.fsPath)) {
 				diff.fileA = null;
@@ -197,7 +197,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public updateDeletedList (diffResult:DiffResultMessage) {
+	public updateDeletedList (diffResult: DiffResultMessage) {
 		
 		const items = this.items = this.items.slice();
 		const diffs = diffResult.diffs;
@@ -211,7 +211,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private detectChangedFiles (files:string[]) {
+	private detectChangedFiles (files: string[]) {
 		
 		const diffs = this.items.filter(({ fileA, fileB }) => {
 			
@@ -232,7 +232,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public updateDiffList (diffResult:DiffResultMessage) {
+	public updateDiffList (diffResult: DiffResultMessage) {
 		
 		this.updateItems(diffResult.diffs);
 		this.filter(true);
@@ -241,7 +241,7 @@ export class L13DiffListViewModel extends ViewModel {
 	}
 	
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public updateMultiList (data:DiffCopyMessage|DiffResultMessage) {
+	public updateMultiList (data: DiffCopyMessage | DiffResultMessage) {
 		
 		//
 		
@@ -256,7 +256,7 @@ export class L13DiffListViewModel extends ViewModel {
 		diffResult.pathA = diffResult.pathB;
 		diffResult.pathB = pathA;
 		
-		items.forEach((diff:Diff) => {
+		items.forEach((diff: Diff) => {
 			
 			const fileA = diff.fileA;
 			
@@ -273,7 +273,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public filter (keepPosition?:boolean) {
+	public filter (keepPosition?: boolean) {
 		
 		let filteredItems = this.items;
 		
@@ -287,9 +287,9 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public getCopyListByIds (ids:string[], from:'left'|'right'):DiffCopyMessage {
+	public getCopyListByIds (ids: string[], from: 'left' | 'right'): DiffCopyMessage {
 		
-		const items = ids.map((id) => this.map[id]).filter((diff:Diff) => from === 'left' && diff.fileA || from === 'right' && diff.fileB);
+		const items = ids.map((id) => this.map[id]).filter((diff: Diff) => from === 'left' && diff.fileA || from === 'right' && diff.fileB);
 		
 		return {
 			diffs: items,
@@ -300,12 +300,12 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public getGoToListByIds (ids:string[], side:'left'|'right') {
+	public getGoToListByIds (ids: string[], side: 'left' | 'right') {
 		
 		const items = ids.map((id) => this.map[id]);
-		const files:DiffFile[] = [];
+		const files: DiffFile[] = [];
 		
-		items.forEach((diff:Diff) => {
+		items.forEach((diff: Diff) => {
 			
 			const file = side === 'left' && diff.fileA || side === 'right' && diff.fileB;
 			
@@ -317,7 +317,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private getDiffsByIds (ids:string[]):DiffResultMessage {
+	private getDiffsByIds (ids: string[]): DiffResultMessage {
 		
 		const diffs = ids.map((id) => this.map[id]);
 		
@@ -330,7 +330,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public open (ids:string[], openToSide:boolean) {
+	public open (ids: string[], openToSide: boolean) {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
@@ -338,7 +338,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public copy (ids:string[], from:'left'|'right') {
+	public copy (ids: string[], from: 'left' | 'right') {
 		
 		const diffResult = this.getCopyListByIds(ids, from);
 		
@@ -347,7 +347,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public multiCopy (ids:string[], from:'left'|'right') {
+	public multiCopy (ids: string[], from: 'left' | 'right') {
 		
 		if (ids.length && this.diffResult.pathA && this.diffResult.pathB) {
 			msg.send<DiffMultiCopyMessage>(`multi-copy:${from}`, {
@@ -359,11 +359,11 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	private multiCopyFiles (from:'left'|'right', data:DiffMultiCopyMessage) {
+	private multiCopyFiles (from: 'left' | 'right', data: DiffMultiCopyMessage) {
 		
 		if (from === 'left' && this.diffResult.pathA === data.pathA
 		|| from === 'right' && this.diffResult.pathB === data.pathB) {
-			const diffCopy:DiffCopyMessage = this.getCopyListByIds(data.ids, from);
+			const diffCopy: DiffCopyMessage = this.getCopyListByIds(data.ids, from);
 			if (diffCopy.diffs.length) {
 				diffCopy.multi = true;
 				msg.send<DiffCopyMessage>(`copy:${from}`, diffCopy);
@@ -373,7 +373,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public goto (ids:string[], side:'left'|'right', openToSide:boolean) {
+	public goto (ids: string[], side: 'left' | 'right', openToSide: boolean) {
 		
 		const files = this.getGoToListByIds(ids, side);
 		
@@ -381,7 +381,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 	}
 	
-	public delete (ids:string[], side:'left'|'right'|'both' = 'both') {
+	public delete (ids: string[], side: 'left' | 'right' | 'both' = 'both') {
 		
 		const diffResult = this.getDiffsByIds(ids);
 		
@@ -394,15 +394,15 @@ export class L13DiffListViewModel extends ViewModel {
 
 //	Functions __________________________________________________________________
 
-function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A', to:'B'):boolean;
-function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'B', to:'A'):boolean;
-function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :boolean {
+function copyDiffFile (diff: Diff, copiedDiff: Diff, from: 'A', to: 'B'): boolean;
+function copyDiffFile (diff: Diff, copiedDiff: Diff, from: 'B', to: 'A'): boolean;
+function copyDiffFile (diff: Diff, copiedDiff: Diff, from: 'A' | 'B', to: 'A' | 'B'): boolean {
 	
 	const fileFrom = `file${from}`;
-	const file:DiffFile = (<any>diff)[fileFrom];
+	const file: DiffFile = (<any>diff)[fileFrom];
 	
 	if (file && (<DiffFile>(<any>copiedDiff)[fileFrom]).path.startsWith(file.path)) {
-		const clone:DiffFile = parse(stringify(file));
+		const clone: DiffFile = parse(stringify(file));
 		const fileTo = `file${to}`;
 		clone.root = (<any>copiedDiff)[fileTo].root;
 		clone.path = clone.root + clone.path.slice(file.root.length);
@@ -415,12 +415,12 @@ function copyDiffFile (diff:Diff, copiedDiff:Diff, from:'A'|'B', to:'A'|'B') :bo
 	
 }
 
-function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
+function updateCopiedParentFolders (diffs: Diff[], copiedDiffs: Diff[]) {
 	
 	diffs.forEach((diff) => {
 		
 		if (diff.type === 'folder' && (!diff.fileA || !diff.fileB)) {
-			copiedDiffs.some((copiedDiff:Diff) => {
+			copiedDiffs.some((copiedDiff: Diff) => {
 				
 				if (diff.id !== copiedDiff.id && (copiedDiff.status === 'unchanged' || copiedDiff.status === 'ignored')) {
 					if (copyDiffFile(diff, copiedDiff, 'A', 'B')) return true;
@@ -436,7 +436,7 @@ function updateCopiedParentFolders (diffs:Diff[], copiedDiffs:Diff[]) {
 	
 }
 
-function updateDeletedSubfiles (diffs:Diff[], deletedDiffs:Diff[]) {
+function updateDeletedSubfiles (diffs: Diff[], deletedDiffs: Diff[]) {
 	
 	const deletedFolders = deletedDiffs.filter((diff) => diff.type === 'folder');
 	

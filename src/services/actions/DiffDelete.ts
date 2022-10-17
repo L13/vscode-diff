@@ -11,7 +11,7 @@ import { DiffResult } from '../output/DiffResult';
 
 //	Variables __________________________________________________________________
 
-const selectableTrashDialog:DeleteDialog = {
+const selectableTrashDialog: DeleteDialog = {
 	text: 'Which files should be moved to the trash?',
 	textSingle: 'Which file should be moved to the trash?',
 	buttonAll: 'Move All to Trash',
@@ -19,7 +19,7 @@ const selectableTrashDialog:DeleteDialog = {
 	buttonRight: 'Move Right to Trash',
 };
 
-const selectableDeleteDialog:DeleteDialog = {
+const selectableDeleteDialog: DeleteDialog = {
 	text: 'Which files should be permanently deleted?',
 	textSingle: 'Which file should be permanently deleted?',
 	buttonAll: 'Delete All',
@@ -27,14 +27,14 @@ const selectableDeleteDialog:DeleteDialog = {
 	buttonRight: 'Delete Right',
 };
 
-const simpleTrashDialog:DeleteDialog = {
+const simpleTrashDialog: DeleteDialog = {
 	text: 'Are you sure to delete all selected files?',
 	textSingle: 'Are you sure to delete the selected file?',
 	buttonAll: 'Move to Trash',
 	buttonOk: 'Move, don\'t show again',
 };
 
-const simpleDeleteDialog:DeleteDialog = {
+const simpleDeleteDialog: DeleteDialog = {
 	text: 'Are you sure to delete all selected files permanently?',
 	textSingle: 'Are you sure to delete the selected file permanently?',
 	buttonAll: 'Delete',
@@ -49,24 +49,24 @@ const simpleDeleteDialog:DeleteDialog = {
 
 export class DiffDelete {
 	
-	private _onDidDeleteFile:vscode.EventEmitter<DiffFile> = new vscode.EventEmitter<DiffFile>();
-	public readonly onDidDeleteFile:vscode.Event<DiffFile> = this._onDidDeleteFile.event;
+	private _onDidDeleteFile: vscode.EventEmitter<DiffFile> = new vscode.EventEmitter<DiffFile>();
+	public readonly onDidDeleteFile: vscode.Event<DiffFile> = this._onDidDeleteFile.event;
 	
-	private _onDidDeleteFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidDeleteFiles:vscode.Event<DiffResult> = this._onDidDeleteFiles.event;
+	private _onDidDeleteFiles: vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidDeleteFiles: vscode.Event<DiffResult> = this._onDidDeleteFiles.event;
 	
-	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
+	private _onDidCancel: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidCancel: vscode.Event<undefined> = this._onDidCancel.event;
 	
-	public async showDeleteFileDialog (data:DiffResult, side:'left'|'right') {
+	public async showDeleteFileDialog (data: DiffResult, side: 'left' | 'right') {
 		
-		const diffs:Diff[] = data.diffs;
+		const diffs: Diff[] = data.diffs;
 		
 		if (!diffs.length) return;
 		
-		const useTrash:boolean = settings.enableTrash();
-		const confirmDelete:boolean = settings.get('confirmDelete', true);
-		const dialog:DeleteDialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
+		const useTrash: boolean = settings.enableTrash();
+		const confirmDelete: boolean = settings.get('confirmDelete', true);
+		const dialog: DeleteDialog = useTrash ? simpleTrashDialog : simpleDeleteDialog;
 		
 		if (confirmDelete) {
 			const value = await dialogs.confirm(dialog.textSingle, dialog.buttonAll, dialog.buttonOk);
@@ -78,9 +78,9 @@ export class DiffDelete {
 		
 	}
 	
-	public async showDeleteFilesDialog (data:DiffResult) {
+	public async showDeleteFilesDialog (data: DiffResult) {
 		
-		const diffs:Diff[] = data.diffs;
+		const diffs: Diff[] = data.diffs;
 		
 		if (!diffs.length) return;
 		
@@ -98,11 +98,11 @@ export class DiffDelete {
 			}
 		}
 		
-		const useTrash:boolean = settings.enableTrash();
-		const confirmDelete:boolean = settings.get('confirmDelete', true);
+		const useTrash: boolean = settings.enableTrash();
+		const confirmDelete: boolean = settings.get('confirmDelete', true);
 		
 		if (confirmDelete || selectSide) {
-			let dialog:DeleteDialog = null;
+			let dialog: DeleteDialog = null;
 			const args = [];
 			
 			if (selectSide) {
@@ -125,7 +125,7 @@ export class DiffDelete {
 		
 	}
 	
-	private async deleteFile (diffs:Diff[], pathname:string, useTrash:boolean) {
+	private async deleteFile (diffs: Diff[], pathname: string, useTrash: boolean) {
 		
 		try {
 			await vscode.workspace.fs.delete(vscode.Uri.file(pathname), {
@@ -136,7 +136,7 @@ export class DiffDelete {
 			return vscode.window.showErrorMessage(error.message);
 		}
 		
-		let file:DiffFile = null;
+		let file: DiffFile = null;
 		
 		for (const diff of diffs) {
 			if (diff.fileA?.path === pathname) file = diff.fileA;
@@ -153,11 +153,11 @@ export class DiffDelete {
 		
 	}
 	
-	private async deleteFiles (data:DiffResult, side:'all'|'left'|'right', useTrash:boolean) {
+	private async deleteFiles (data: DiffResult, side: 'all' | 'left' | 'right', useTrash: boolean) {
 		
-		const diffs:Diff[] = data.diffs;
-		const folders:string[] = [];
-		const files:string[] = [];
+		const diffs: Diff[] = data.diffs;
+		const folders: string[] = [];
+		const files: string[] = [];
 		
 		for (const diff of diffs) {
 			const fileA = diff.fileA;
@@ -189,14 +189,14 @@ export class DiffDelete {
 
 //	Functions __________________________________________________________________
 
-function separateFilesAndFolders (file:DiffFile, folders:string[], files:string[]) {
+function separateFilesAndFolders (file: DiffFile, folders: string[], files: string[]) {
 	
 	if (file.type === 'folder') folders.push(file.path);
 	else files.push(file.path);
 	
 }
 
-function removeSubfiles (folders:string[], files:string[]) {
+function removeSubfiles (folders: string[], files: string[]) {
 	
 	for (const folder of folders) {
 		let i = 0;

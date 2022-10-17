@@ -27,116 +27,116 @@ import type { L13DiffComponent } from '../components/l13-diff/l13-diff.component
 //	Exports ____________________________________________________________________
 
 export type ActionsCommandsInit = {
-	list:L13DiffListComponent,
+	list: L13DiffListComponent,
 };
 
 export type ActionsEventsInit = {
-	diff:L13DiffComponent,
-	actions:L13DiffActionsComponent,
-	list:L13DiffListComponent,
+	diff: L13DiffComponent,
+	actions: L13DiffActionsComponent,
+	list: L13DiffListComponent,
 };
 
 export type CompareCommandsInit = {
-	diff:L13DiffComponent,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	search:L13DiffSearchComponent,
+	diff: L13DiffComponent,
+	left: L13DiffInputComponent,
+	right: L13DiffInputComponent,
+	search: L13DiffSearchComponent,
 };
 
 export type CompareEventsInit = {
-	diff:L13DiffComponent,
-	compare:L13DiffCompareComponent,
+	diff: L13DiffComponent,
+	compare: L13DiffCompareComponent,
 };
 
 export type ContextEventsInit = {
-	context:L13DiffContextComponent,
-	list:L13DiffListComponent,
+	context: L13DiffContextComponent,
+	list: L13DiffListComponent,
 };
 
 export type DiffEventsInit = {
-	diff:L13DiffComponent,
-	leftVM:L13DiffInputViewModel,
-	rightVM:L13DiffInputViewModel,
+	diff: L13DiffComponent,
+	leftVM: L13DiffInputViewModel,
+	rightVM: L13DiffInputViewModel,
 };
 
 export type DragNDropEventsInit = {
-	list:L13DiffListComponent,
+	list: L13DiffListComponent,
 };
 
 export type FavoritesCommandsInit = {
-	leftVM:L13DiffInputViewModel,
-	rightVM:L13DiffInputViewModel,
+	leftVM: L13DiffInputViewModel,
+	rightVM: L13DiffInputViewModel,
 };
 
 export type InputCommandsInit = {
-	leftVM:L13DiffInputViewModel,
-	rightVM:L13DiffInputViewModel,
+	leftVM: L13DiffInputViewModel,
+	rightVM: L13DiffInputViewModel,
 };
 
 export type InputEventsInit = {
-	diff:L13DiffComponent,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	menu:L13DiffMenuComponent,
+	diff: L13DiffComponent,
+	left: L13DiffInputComponent,
+	right: L13DiffInputComponent,
+	menu: L13DiffMenuComponent,
 };
 
 export type ListCommandsInit = {
-	diff:L13DiffComponent,
-	list:L13DiffListComponent,
-	search:L13DiffSearchComponent,
+	diff: L13DiffComponent,
+	list: L13DiffListComponent,
+	search: L13DiffSearchComponent,
 };
 
 export type ListEventsInit = {
-	diff:L13DiffComponent,
-	list:L13DiffListComponent,
-	listVM:L13DiffListViewModel,
-	navigator:L13DiffNavigatorComponent,
-	actionsVM:L13DiffActionsViewModel,
-	result:HTMLElement,
-	intro:HTMLElement,
+	diff: L13DiffComponent,
+	list: L13DiffListComponent,
+	listVM: L13DiffListViewModel,
+	navigator: L13DiffNavigatorComponent,
+	actionsVM: L13DiffActionsViewModel,
+	result: HTMLElement,
+	intro: HTMLElement,
 };
 
 export type MenuCommandsInit = {
-	menu:L13DiffMenuComponent,
+	menu: L13DiffMenuComponent,
 };
 
 export type NavigatorEventsInit = {
-	navigator:L13DiffNavigatorComponent,
-	list:L13DiffListComponent,
+	navigator: L13DiffNavigatorComponent,
+	list: L13DiffListComponent,
 };
 
 export type SearchCommandsInit = {
-	search:L13DiffSearchComponent,
-	searchVM:L13DiffSearchViewModel,
-	widgets:HTMLElement,
+	search: L13DiffSearchComponent,
+	searchVM: L13DiffSearchViewModel,
+	widgets: HTMLElement,
 };
 
 export type SearchEventsInit = {
-	diff:L13DiffComponent,
-	list:L13DiffListComponent,
-	navigator:L13DiffNavigatorComponent,
-	search:L13DiffSearchComponent,
+	diff: L13DiffComponent,
+	list: L13DiffListComponent,
+	navigator: L13DiffNavigatorComponent,
+	search: L13DiffSearchComponent,
 };
 
 export type SwapCommandsInit = {
-	diff:L13DiffComponent,
+	diff: L13DiffComponent,
 };
 
 export type SwapEventsInit = {
-	diff:L13DiffComponent,
-	swap:L13DiffSwapComponent,
+	diff: L13DiffComponent,
+	swap: L13DiffSwapComponent,
 };
 
 export type ViewsCommandsInit = {
-	viewsVM:L13DiffViewsViewModel,
+	viewsVM: L13DiffViewsViewModel,
 };
 
 export type WindowEventsInit = {
-	diff:L13DiffComponent,
-	list:L13DiffListComponent,
-	left:L13DiffInputComponent,
-	right:L13DiffInputComponent,
-	search:L13DiffSearchComponent,
+	diff: L13DiffComponent,
+	list: L13DiffListComponent,
+	left: L13DiffInputComponent,
+	right: L13DiffInputComponent,
+	search: L13DiffSearchComponent,
 };
 
 //	Functions __________________________________________________________________

@@ -33,13 +33,13 @@ const { round } = Math;
 export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewModel> {
 	
 	@L13Query('#ruler')
-	public canvasRuler:HTMLCanvasElement;
+	public canvasRuler: HTMLCanvasElement;
 	
 	@L13Query('#map')
-	public canvasMap:HTMLCanvasElement;
+	public canvasMap: HTMLCanvasElement;
 	
 	@L13Query('div')
-	public scrollbar:HTMLDivElement;
+	public scrollbar: HTMLDivElement;
 	
 	private scrollbarOffsetY = 0;
 	
@@ -47,9 +47,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 	
 	private previousScrollbarY = 0;
 	
-	private contextRuler:CanvasRenderingContext2D = null;
+	private contextRuler: CanvasRenderingContext2D = null;
 	
-	private contextMap:CanvasRenderingContext2D = null;
+	private contextMap: CanvasRenderingContext2D = null;
 	
 	public constructor () {
 		
@@ -68,7 +68,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	private moveScrollbar = (event:MouseEvent) => {
+	private moveScrollbar = (event: MouseEvent) => {
 		
 		const offsetY = round(this.scrollbar.offsetHeight / 2);
 		
@@ -77,7 +77,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	};
 	
-	private scrollbarDown = (event:MouseEvent, offsetY?:number) => {
+	private scrollbarDown = (event: MouseEvent, offsetY?: number) => {
 		
 		document.documentElement.classList.add('-unselectable');
 		
@@ -93,7 +93,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	};
 		
-	private scrollbarMove = (event:MouseEvent) => {
+	private scrollbarMove = (event: MouseEvent) => {
 		
 		if (!event.which) return this.scrollbarUp();
 		
@@ -112,7 +112,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	};
 	
-	private calcScrollbarY (y:number) {
+	private calcScrollbarY (y: number) {
 		
 		if (y < 0) y = 0;
 		else if (y > this.scrollbarMaxY) y = this.scrollbarMaxY;
@@ -123,7 +123,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public setScrollbarPosition (ratio:number) {
+	public setScrollbarPosition (ratio: number) {
 		
 		let y = round(ratio * this.canvasMap.offsetHeight);
 		const maxY = this.scrollbarMaxY;
@@ -147,7 +147,7 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public buildSelection (items:ListItemInfo[], listHeight:number) {
+	public buildSelection (items: ListItemInfo[], listHeight: number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasRuler;
@@ -158,9 +158,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		canvas.height = listHeight; // clears the canvas, too
 		
-		items.reduce((y:number, { offsetHeight, selected }) => {
+		items.reduce((y: number, { offsetHeight, selected }) => {
 
-			const h = offsetHeight / total * canvas.height;
+			const h: number = offsetHeight / total * canvas.height;
 		
 			if (!selected) return y + h;
 		
@@ -173,13 +173,13 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 		
 	}
 	
-	public build (items:ListItemInfo[], listHeight:number) {
+	public build (items: ListItemInfo[], listHeight: number) {
 		
 		const total = items.reduce((value, { offsetHeight }) => value += offsetHeight, 0);
 		const canvas = this.canvasMap;
 		const context = this.contextMap;
 		const computedStyle = getComputedStyle(document.documentElement);
-		const colors:any = {
+		const colors: any = {
 			conflicting: computedStyle.getPropertyValue('--vscode-gitDecoration-conflictingResourceForeground'),
 			deleted: computedStyle.getPropertyValue('--vscode-gitDecoration-deletedResourceForeground'),
 			modified: computedStyle.getPropertyValue('--vscode-gitDecoration-modifiedResourceForeground'),
@@ -195,9 +195,9 @@ export class L13DiffNavigatorComponent extends L13Element<L13DiffNavigatorViewMo
 			this.scrollbarMaxY = listHeight - this.scrollbar.offsetHeight;
 		} else this.scrollbar.style.display = 'none';
 		
-		items.reduce((y:number, { status, offsetHeight }) => {
+		items.reduce((y: number, { status, offsetHeight }) => {
 			
-			const h = offsetHeight / total * canvas.height;
+			const h: number = offsetHeight / total * canvas.height;
 			const color = colors[status];
 			
 			if (!color) return y + h;

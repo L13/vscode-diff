@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, search }:ListCommandsInit) {
+export function init ({ diff, list, search }: ListCommandsInit) {
 	
 	msg.on('l13Diff.action.list.delete', () => {
 		

@@ -27,9 +27,9 @@ const findScope = /\{\{\s*(.+?)\s*\}\}/;
 
 //	Exports ____________________________________________________________________
 
-export function L13Component (options:ComponentOptions) {
+export function L13Component (options: ComponentOptions) {
 	
-	return function (target:new () => any) {
+	return function (target: new () => any) {
 		
 		if (!hasParentClass(target, L13Element)) {
 			throw new TypeError(`Class for '${options.name}' is not a child class of 'L13Element'!`);
@@ -50,9 +50,9 @@ export function L13Component (options:ComponentOptions) {
 	
 }
 
-export function L13Query (rule:string) {
+export function L13Query (rule: string) {
 	
-	return function (prototype:any, name:string) {
+	return function (prototype: any, name: string) {
 		
 		if (!prototype[QUERIES]) prototype[QUERIES] = new Map<string, string>();
 		
@@ -62,9 +62,9 @@ export function L13Query (rule:string) {
 	
 }
 
-export function L13Class (classNames:Dictionary<string>) {
+export function L13Class (classNames: Dictionary<string>) {
 	
-	return function (prototype:any, name:string) {
+	return function (prototype: any, name: string) {
 		
 		if (!prototype[CLASSNAMES]) prototype[CLASSNAMES] = new Map<string, Dictionary<string>>();
 		
@@ -76,31 +76,31 @@ export function L13Class (classNames:Dictionary<string>) {
 
 export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	
-	private [BINDINGS]:Map<Element|Text, Map<string, string>> = new Map();
+	private [BINDINGS]: Map<Element | Text, Map<string, string>> = new Map();
 	
-	private [CONDITIONALS]:Map<Element, { cmd:string, comment:Comment }> = new Map();
+	private [CONDITIONALS]: Map<Element, { cmd: string, comment: Comment }> = new Map();
 	
-	private [CLASSNAMES]:Map<string, Dictionary<string>>;
+	private [CLASSNAMES]: Map<string, Dictionary<string>>;
 	
-	private [QUERIES]:Map<string, string>;
+	private [QUERIES]: Map<string, string>;
 	
-	private [SERVICE]:ViewModelService<T>;
+	private [SERVICE]: ViewModelService<T>;
 	
-	private [SHADOW_ROOT]:ShadowRoot;
+	private [SHADOW_ROOT]: ShadowRoot;
 	
-	private [STYLES]:DocumentFragment;
+	private [STYLES]: DocumentFragment;
 	
-	private [TEMPLATE]:HTMLTemplateElement;
+	private [TEMPLATE]: HTMLTemplateElement;
 	
-	private [VIEWMODEL]:T;
+	private [VIEWMODEL]: T;
 	
-	public get vmId ():string {
+	public get vmId (): string {
 		
 		return this.getAttribute('vmId');
 		
 	}
 	
-	public set vmId (id:string) {
+	public set vmId (id: string) {
 		
 		if (this[VIEWMODEL]) this[VIEWMODEL].dispose(this);
 		
@@ -121,7 +121,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 	}
 	
-	public set viewmodel (vm:T) {
+	public set viewmodel (vm: T) {
 		
 		if (!(vm instanceof this[SERVICE].vmc)) {
 			throw new TypeError('viewmodel is not for this component!');
@@ -163,7 +163,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 	}
 	
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public update (...args:any[]) {
+	public update (...args: any[]) {
 		
 		const viewmodel = this[VIEWMODEL];
 		
@@ -183,7 +183,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 		if (this[CLASSNAMES]) {
 			for (const [name, classNames] of this[CLASSNAMES]) {
-				const element:HTMLElement = (<any> this)[name];
+				const element: HTMLElement = (<any> this)[name];
 				for (const [className, path] of Object.entries(classNames)) {
 					if (get(viewmodel, path)) element.classList.add(className);
 					else element.classList.remove(className);
@@ -193,7 +193,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 		
 	}
 	
-	public dispatchCustomEvent (type:string, detail?:any) {
+	public dispatchCustomEvent (type: string, detail?: any) {
 		
 		this.dispatchEvent(new CustomEvent(type, { detail, bubbles: false }));
 		
@@ -203,7 +203,7 @@ export abstract class L13Element<T extends ViewModel> extends HTMLElement {
 
 //	Functions __________________________________________________________________
 
-function hasParentClass (child:any, parent:any) :boolean {
+function hasParentClass (child: any, parent: any): boolean {
 	
 	do {
 		const currentParent = Object.getPrototypeOf(child);
@@ -215,13 +215,13 @@ function hasParentClass (child:any, parent:any) :boolean {
 	
 }
 
-function getAttributes (element:Element) {
+function getAttributes (element: Element) {
 	
 	if (!element.attributes.length) return null;
 	
 	const attributes = element.attributes;
 	const length = attributes.length;
-	const map:Dictionary<string> = {};
+	const map: Dictionary<string> = {};
 	let i = 0;
 	let name;
 	
@@ -233,8 +233,10 @@ function getAttributes (element:Element) {
 	
 }
 
-function getAllTextNodes (root:Element|ShadowRoot) {
+function getAllTextNodes (root: Element | ShadowRoot) {
 	
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
 	const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
 	const textNodes = [];
 	let node;
@@ -245,7 +247,7 @@ function getAllTextNodes (root:Element|ShadowRoot) {
 	
 }
 
-function initViewModel<T extends ViewModel> (component:L13Element<T>) {
+function initViewModel<T extends ViewModel> (component: L13Element<T>) {
 	
 	const vm = component[SERVICE].model(component.vmId);
 	
@@ -256,7 +258,7 @@ function initViewModel<T extends ViewModel> (component:L13Element<T>) {
 	
 }
 
-function registerBinding<T extends ViewModel> (component:L13Element<T>, element:Element|Text, name:string, cmd:string) {
+function registerBinding<T extends ViewModel> (component: L13Element<T>, element: Element | Text, name: string, cmd: string) {
 	
 	const bindings = component[BINDINGS];
 	let elementBindings = bindings.get(element);
@@ -275,7 +277,7 @@ function registerBinding<T extends ViewModel> (component:L13Element<T>, element:
 	
 }
 
-function registerEvent<T extends ViewModel> (component:L13Element<T>, element:Element, name:string, cmd:string) {
+function registerEvent<T extends ViewModel> (component: L13Element<T>, element: Element, name: string, cmd: string) {
 	
 	if (name === 'model') {
 		if (element instanceof HTMLInputElement && element.getAttribute('type') === 'checkbox') {
@@ -293,7 +295,7 @@ function registerEvent<T extends ViewModel> (component:L13Element<T>, element:El
 				
 				const viewmodel = component[VIEWMODEL];
 				
-				set(viewmodel, cmd, (<HTMLInputElement|HTMLTextAreaElement>element).value);
+				set(viewmodel, cmd, (<HTMLInputElement | HTMLTextAreaElement>element).value);
 				
 				viewmodel.requestUpdate();
 				
@@ -313,7 +315,7 @@ function registerEvent<T extends ViewModel> (component:L13Element<T>, element:El
 	
 }
 
-function registerCondition<T extends ViewModel> (component:L13Element<T>, element:Element, cmd:string) {
+function registerCondition<T extends ViewModel> (component: L13Element<T>, element: Element, cmd: string) {
 	
 	const comment = document.createComment(`[if]=${cmd}`);
 	
@@ -321,12 +323,12 @@ function registerCondition<T extends ViewModel> (component:L13Element<T>, elemen
 	
 }
 
-function bindElements<T extends ViewModel> (component:L13Element<T>) {
+function bindElements<T extends ViewModel> (component: L13Element<T>) {
 	
 	const elements = component[SHADOW_ROOT].querySelectorAll('*');
 	
 	if (elements.length) {
-		elements.forEach((element:Element) => {
+		elements.forEach((element: Element) => {
 			
 			const attributes = getAttributes(element);
 			
@@ -382,10 +384,10 @@ function bindElements<T extends ViewModel> (component:L13Element<T>) {
 	
 }
 
-function get (context:any, path:string) :any {
+function get (context: any, path: string): any {
 	
-	const names:string[] = path.split('.');
-	let name:undefined|string = names.shift();
+	const names: string[] = path.split('.');
+	let name: undefined | string = names.shift();
 	
 	while (name && context != null) {
 		context = context[name];
@@ -397,10 +399,10 @@ function get (context:any, path:string) :any {
 	
 }
 
-function set (context:any, path:string, value:any) {
+function set (context: any, path: string, value: any) {
 	
-	const names:string[] = path.split('.');
-	let name:undefined|string = names.shift();
+	const names: string[] = path.split('.');
+	let name: undefined | string = names.shift();
 	
 	while (name && context != null) {
 		if (!names.length) {
@@ -414,10 +416,10 @@ function set (context:any, path:string, value:any) {
 	
 }
 
-function run (context:any, path:string) {
+function run (context: any, path: string) {
 	
-	const names:string[] = path.split('.');
-	let name:undefined|string = names.shift();
+	const names: string[] = path.split('.');
+	let name: undefined | string = names.shift();
 	
 	while (name && context != null) {
 		if (!names.length) {
@@ -433,11 +435,11 @@ function run (context:any, path:string) {
 	
 }
 
-function createStyles (styles:string[]) :DocumentFragment {
+function createStyles (styles: string[]): DocumentFragment {
 	
 	const fragment = document.createDocumentFragment();
 	
-	styles.forEach((text:string) => {
+	styles.forEach((text: string) => {
 		
 		const style = document.createElement('STYLE');
 		
@@ -451,7 +453,7 @@ function createStyles (styles:string[]) :DocumentFragment {
 	
 }
 
-function createTemplate (template:string) :HTMLTemplateElement {
+function createTemplate (template: string): HTMLTemplateElement {
 	
 	const templateElement = <HTMLTemplateElement>document.createElement('TEMPLATE');
 	

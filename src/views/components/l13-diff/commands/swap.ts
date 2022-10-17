@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff }:SwapCommandsInit) {
+export function init ({ diff }: SwapCommandsInit) {
 	
 	msg.on('l13Diff.action.inputs.swap', () => diff.swapInputs());
 	

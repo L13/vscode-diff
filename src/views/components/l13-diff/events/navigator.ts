@@ -12,9 +12,9 @@ const { floor } = Math;
 
 //	Exports ____________________________________________________________________
 
-export function init ({ navigator, list }:NavigatorEventsInit) {
+export function init ({ navigator, list }: NavigatorEventsInit) {
 	
-	navigator.addEventListener('mousemovescroll', (event:any) => {
+	navigator.addEventListener('mousemovescroll', (event: any) => {
 		
 		const scrollbarY = <number>event.detail.y;
 		const scrollbarHeight = <number>event.detail.height;

@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, left, right, search }:CompareCommandsInit) {
+export function init ({ diff, left, right, search }: CompareCommandsInit) {
 	
 	msg.on('l13Diff.action.panel.compare', () => {
 		

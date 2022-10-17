@@ -20,18 +20,18 @@ import * as states from '../common/states';
 
 export class FavoriteGroupsState {
 	
-	private static current:FavoriteGroupsState = null;
+	private static current: FavoriteGroupsState = null;
 	
-	public static create (context:vscode.ExtensionContext) {
+	public static create (context: vscode.ExtensionContext) {
 		
 		return FavoriteGroupsState.current || (FavoriteGroupsState.current = new FavoriteGroupsState(context));
 		
 	}
 	
-	private constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context: vscode.ExtensionContext) {}
 	
-	private _onDidChangeFavoriteGroups:vscode.EventEmitter<FavoriteGroup[]> = new vscode.EventEmitter<FavoriteGroup[]>();
-	public readonly onDidChangeFavoriteGroups:vscode.Event<FavoriteGroup[]> = this._onDidChangeFavoriteGroups.event;
+	private _onDidChangeFavoriteGroups: vscode.EventEmitter<FavoriteGroup[]> = new vscode.EventEmitter<FavoriteGroup[]>();
+	public readonly onDidChangeFavoriteGroups: vscode.Event<FavoriteGroup[]> = this._onDidChangeFavoriteGroups.event;
 	
 	public get () {
 		
@@ -39,19 +39,19 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	private save (favoriteGroups:FavoriteGroup[]) {
+	private save (favoriteGroups: FavoriteGroup[]) {
 		
 		states.updateFavoriteGroups(this.context, favoriteGroups);
 		
 	}
 	
-	public getByName (label:string) {
+	public getByName (label: string) {
 		
 		return this.get().find((favoriteGroup) => favoriteGroup.label === label) || null;
 		
 	}
 	
-	public add (label:string) {
+	public add (label: string) {
 		
 		const favoriteGroups = this.get();
 		
@@ -65,7 +65,7 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public rename (favoriteGroup:FavoriteGroup, label:string) {
+	public rename (favoriteGroup: FavoriteGroup, label: string) {
 		
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
@@ -82,7 +82,7 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public remove (favoriteGroup:FavoriteGroup, removeItems:boolean) {
+	public remove (favoriteGroup: FavoriteGroup, removeItems: boolean) {
 		
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
@@ -107,7 +107,7 @@ export class FavoriteGroupsState {
 		
 	}
 	
-	public saveCollapseState (favoriteGroup:FavoriteGroup, collapsed:boolean) {
+	public saveCollapseState (favoriteGroup: FavoriteGroup, collapsed: boolean) {
 		
 		const favoriteGroups = states.getFavoriteGroups(this.context);
 		const groupId = favoriteGroup.id;
@@ -122,7 +122,7 @@ export class FavoriteGroupsState {
 
 //	Functions __________________________________________________________________
 
-function getNextGroupId (favoriteGroups:FavoriteGroup[]) :number {
+function getNextGroupId (favoriteGroups: FavoriteGroup[]): number {
 	
 	if (!favoriteGroups.length) return 0;
 	

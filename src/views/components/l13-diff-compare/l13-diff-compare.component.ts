@@ -29,7 +29,7 @@ import type { L13DiffCompareViewModel } from './l13-diff-compare.viewmodel';
 export class L13DiffCompareComponent extends L13Element<L13DiffCompareViewModel> {
 	
 	@L13Query('button')
-	private button:HTMLButtonElement;
+	private button: HTMLButtonElement;
 	
 	public constructor () {
 		

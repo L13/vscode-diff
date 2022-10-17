@@ -16,7 +16,7 @@ describe('buffers', () => {
 	
 	describe('.normalizeLineEnding()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(normalizeLineEnding(Buffer.from(test.expect)), Buffer.from(test.toBe)));
@@ -336,7 +336,7 @@ describe('buffers', () => {
 	
 	describe('.trimWhitespace()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(trimWhitespace(Buffer.from(test.expect)), Buffer.from(test.toBe)));

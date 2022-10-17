@@ -1270,9 +1270,10 @@
 		"eslint-plugin-l13": "file:plugins/eslint-plugin-l13",
 		"glob": "^7.1.7",
 		"gulp": "^4.0.2",
-		"gulp-sass": "^4.0.2",
+		"gulp-sass": "^5.1.0",
 		"mocha": "^8.4.0",
 		"rollup": "^2.47.0",
+		"sass": "^1.50.0",
 		"typescript": "^4.2.4",
 		"vscode-test": "^1.0.2"
 	}

@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ list }:ActionsCommandsInit) {
+export function init ({ list }: ActionsCommandsInit) {
 	
 	msg.on('l13Diff.action.actions.copyToLeftFolder', () => list.copy('right'));
 	msg.on('l13Diff.action.actions.copyToRightFolder', () => list.copy('left'));

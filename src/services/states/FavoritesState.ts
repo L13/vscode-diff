@@ -20,18 +20,18 @@ import * as states from '../common/states';
 
 export class FavoritesState {
 	
-	private static current:FavoritesState = null;
+	private static current: FavoritesState = null;
 	
-	public static create (context:vscode.ExtensionContext) {
+	public static create (context: vscode.ExtensionContext) {
 		
 		return FavoritesState.current || (FavoritesState.current = new FavoritesState(context));
 		
 	}
 	
-	private constructor (private readonly context:vscode.ExtensionContext) {}
+	private constructor (private readonly context: vscode.ExtensionContext) {}
 	
-	private _onDidChangeFavorites:vscode.EventEmitter<Favorite[]> = new vscode.EventEmitter<Favorite[]>();
-	public readonly onDidChangeFavorites:vscode.Event<Favorite[]> = this._onDidChangeFavorites.event;
+	private _onDidChangeFavorites: vscode.EventEmitter<Favorite[]> = new vscode.EventEmitter<Favorite[]>();
+	public readonly onDidChangeFavorites: vscode.Event<Favorite[]> = this._onDidChangeFavorites.event;
 	
 	public get () {
 		
@@ -39,19 +39,19 @@ export class FavoritesState {
 		
 	}
 	
-	public getByName (label:string) {
+	public getByName (label: string) {
 		
 		return this.get().find((favorite) => favorite.label === label) || null;
 		
 	}
 	
-	private save (favorites:Favorite[]) {
+	private save (favorites: Favorite[]) {
 		
 		states.updateFavorites(this.context, favorites);
 		
 	}
 	
-	public add (label:string, fileA:string, fileB:string) {
+	public add (label: string, fileA: string, fileB: string) {
 		
 		if (this.getByName(label)) return;
 		
@@ -66,7 +66,7 @@ export class FavoritesState {
 		
 	}
 	
-	public rename (favorite:Favorite, label:string) {
+	public rename (favorite: Favorite, label: string) {
 		
 		if (this.getByName(label)) return;
 		
@@ -84,7 +84,7 @@ export class FavoritesState {
 		
 	}
 	
-	public addFavoriteToGroup (favorite:Favorite, groupId:number) {
+	public addFavoriteToGroup (favorite: Favorite, groupId: number) {
 		
 		const favorites = this.get();
 		
@@ -100,7 +100,7 @@ export class FavoritesState {
 		
 	}
 	
-	public getFavoritesByGroup (favoriteGroup:FavoriteGroup) {
+	public getFavoritesByGroup (favoriteGroup: FavoriteGroup) {
 		
 		const groupId = favoriteGroup.id;
 		
@@ -108,7 +108,7 @@ export class FavoritesState {
 		
 	}
 	
-	public removeFavoriteFromGroup (favorite:Favorite) {
+	public removeFavoriteFromGroup (favorite: Favorite) {
 		
 		const favorites = this.get();
 		
@@ -124,7 +124,7 @@ export class FavoritesState {
 		
 	}
 	
-	public remove (favorite:Favorite) {
+	public remove (favorite: Favorite) {
 		
 		const favorites = this.get();
 		

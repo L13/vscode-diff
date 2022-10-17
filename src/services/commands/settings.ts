@@ -16,7 +16,7 @@ import * as settings from '../common/settings';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	extensions.buildWhitelistForTextFiles();
 

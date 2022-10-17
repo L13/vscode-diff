@@ -16,7 +16,7 @@ describe('jsonc', () => {
 	
 	describe('.parse()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(parse(test.expect), test.toBe));

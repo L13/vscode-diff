@@ -12,7 +12,7 @@ import type { Event } from '../@l13/events/event.class';
 
 //	Exports ____________________________________________________________________
 
-export type EventListener = (event?:Event, ...args:any[]) => void;
+export type EventListener = (event?: Event, ...args: any[]) => void;
 
 //	Functions __________________________________________________________________
 

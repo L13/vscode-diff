@@ -19,7 +19,7 @@ const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 
 export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 	
-	private cache:SearchCache = {
+	private cache: SearchCache = {
 		searchterm: '',
 		useRegExp: false,
 		useCaseSensitive: false,
@@ -33,9 +33,9 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		filteredItems: [],
 	};
 	
-	public constructor (public readonly vm:L13DiffSearchViewModel) {}
+	public constructor (public readonly vm: L13DiffSearchViewModel) {}
 	
-	public transform (items:Diff[]):Diff[] {
+	public transform (items: Diff[]): Diff[] {
 		
 		const vm = this.vm;
 		
@@ -64,7 +64,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 			return cache.filteredItems;
 		}
 		
-		let regexp:RegExp = null;
+		let regexp: RegExp = null;
 		
 		try {
 			regexp = new RegExp(useRegExp ? searchterm : escapeForRegExp(searchterm), useCaseSensitive ? '' : 'i');
@@ -84,7 +84,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 		cache.useConflicts = useConflicts;
 		cache.useOthers = useOthers;
 		
-		return cache.filteredItems = items.filter((diff:Diff) => {
+		return cache.filteredItems = items.filter((diff: Diff) => {
 			
 			if (useFiles && diff.type === 'file'
 				|| useFolders && diff.type === 'folder'
@@ -107,7 +107,7 @@ export class L13DiffSearchPipe implements L13DiffListPipe<Diff> {
 
 //	Functions __________________________________________________________________
 
-function escapeForRegExp (text:any) :string {
+function escapeForRegExp (text: any): string {
 	
 	return `${text}`.replace(findRegExpChars, '\\$1');
 	

@@ -14,15 +14,15 @@ const findEscapedEndingBrace = /\\\}/g;
 
 //	Exports ____________________________________________________________________
 
-export function workspacePaths (workspaceFolders:readonly vscode.WorkspaceFolder[]|undefined) {
+export function workspacePaths (workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined) {
 	
-	return (workspaceFolders || []).map((item:vscode.WorkspaceFolder) => item.uri.fsPath);
+	return (workspaceFolders || []).map((item: vscode.WorkspaceFolder) => item.uri.fsPath);
 	
 }
 
-export function parsePredefinedVariable (pathname:string, ignoreErrors = false) {
+export function parsePredefinedVariable (pathname: string, ignoreErrors = false) {
 	
-	return pathname.replace(findPlaceholder, function (match, name:string) {
+	return pathname.replace(findPlaceholder, function (match, name: string) {
 		
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		

@@ -14,10 +14,10 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ list }:DragNDropEventsInit) {
+export function init ({ list }: DragNDropEventsInit) {
 	
-	let dragSrcElement:HTMLElement = null;
-	let dropHoverElement:HTMLElement = null;
+	let dragSrcElement: HTMLElement = null;
+	let dropHoverElement: HTMLElement = null;
 	
 	list.content.addEventListener('dragstart', (event) => {
 		
@@ -42,10 +42,10 @@ export function init ({ list }:DragNDropEventsInit) {
 		
 		event.preventDefault();
 		
-		const element:HTMLElement = <HTMLElement>event.target;
+		const element: HTMLElement = <HTMLElement>event.target;
 		
 		if (element) {
-			const dropable:HTMLElement = element.closest('l13-diff-list-file');
+			const dropable: HTMLElement = element.closest('l13-diff-list-file');
 			if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
 				if (dropHoverElement && dropHoverElement !== dropable) {
 					dropHoverElement.classList.remove('-draghover');
@@ -109,8 +109,8 @@ export function init ({ list }:DragNDropEventsInit) {
 		const target = (<HTMLElement>event.target).closest('l13-diff-list-file');
 		const rowNode = target.closest('l13-diff-list-row');
 		const diff = list.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-		const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
-		const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+		const fileA: DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
+		const fileB: DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
 		const typeA = fileA.type;
 		
 		if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;

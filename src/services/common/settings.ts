@@ -22,39 +22,39 @@ const MAX_FILE_SIZE = Number.MAX_SAFE_INTEGER / MB;
 
 //	Exports ____________________________________________________________________
 
-export function get (key:string, value?:any) {
+export function get (key: string, value?: any) {
 	
 	return vscode.workspace.getConfiguration('l13Diff').get(key, value);
 	
 }
 
-export function update (key:string, value:any, global = true) {
+export function update (key: string, value: any, global = true) {
 	
 	return vscode.workspace.getConfiguration('l13Diff').update(key, value, global);
 	
 }
 
-export function maxHistoryEntries () :number {
+export function maxHistoryEntries (): number {
 	
 	return get('maxHistoryEntries', 10);
 	
 }
 
-export function maxRecentlyUsed () :number {
+export function maxRecentlyUsed (): number {
 	
 	return get('maxRecentlyUsed', 10);
 	
 }
 
-export function getExcludes (pathA:string, pathB:string) :string[] {
+export function getExcludes (pathA: string, pathB: string): string[] {
 	
 	let ignore = get('ignore');
 	
 	if (ignore) ignore = showDepricated(ignore, 'Settings');
 	
 	const excludes = get('exclude', []) || ignore;
-	const excludesA:string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
-	const excludesB:string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
+	const excludesA: string[] = useWorkspaceSettings(pathA) ? excludes : loadSettingsExclude(pathA) || excludes;
+	const excludesB: string[] = useWorkspaceSettings(pathB) ? excludes : loadSettingsExclude(pathB) || excludes;
 	
 	return [...excludesA, ...excludesB].filter((value, index, values) => values.indexOf(value) === index);
 	
@@ -92,7 +92,7 @@ export function openInNewPanel () {
 
 //	Functions __________________________________________________________________
 
-function loadSettingsExclude (pathname:string) :string[] {
+function loadSettingsExclude (pathname: string): string[] {
 	
 	const codePath = walkUp(pathname, '.vscode');
 	
@@ -100,7 +100,7 @@ function loadSettingsExclude (pathname:string) :string[] {
 	
 	const codeSettingsPath = path.join(codePath, 'settings.json');
 	const stat = lstatSync(codeSettingsPath);
-	let json:JSONObject = {};
+	let json: JSONObject = {};
 	
 	if (stat && stat.isFile()) {
 		const content = fs.readFileSync(codeSettingsPath, { encoding: 'utf-8' });
@@ -111,7 +111,7 @@ function loadSettingsExclude (pathname:string) :string[] {
 		}
 	}
 	
-	let ignore:string[] = <string[]>json['l13Diff.ignore'];
+	let ignore: string[] = <string[]>json['l13Diff.ignore'];
 	
 	if (ignore) ignore = showDepricated(ignore, pathname);
 	
@@ -119,13 +119,13 @@ function loadSettingsExclude (pathname:string) :string[] {
 	
 }
 
-function useWorkspaceSettings (pathname:string) :boolean {
+function useWorkspaceSettings (pathname: string): boolean {
 	
 	return vscode.workspace.workspaceFile && vscode.workspace.workspaceFolders.some((folder) => pathname.startsWith(folder.uri.fsPath));
 	
 }
 
-function showDepricated (ignore:string[], pathname?:string) {
+function showDepricated (ignore: string[], pathname?: string) {
 	
 	const filename = pathname ? `${pathname}: ` : '';
 	const message = `${filename}"l13Diff.ignore" is depricated. Please use "l13Diff.exclude" which supports more glob patterns like path segments.`;

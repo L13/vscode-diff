@@ -36,7 +36,7 @@ export async function openFolder () {
 	
 }
 	
-export async function confirm (text:string, ...buttons:string[]) {
+export async function confirm (text: string, ...buttons: string[]) {
 	
 	return await vscode.window.showInformationMessage(text, { modal: true }, ...buttons);
 	

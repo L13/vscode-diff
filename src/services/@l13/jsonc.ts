@@ -12,7 +12,7 @@ const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r
 
 //	Exports ____________________________________________________________________
 
-export function parse (json:string, ...args:any[]) {
+export function parse (json: string, ...args: any[]) {
 	
 	return _parse(json.replace(findComments, (match, comment) => comment ? '' : match), ...args);
 	

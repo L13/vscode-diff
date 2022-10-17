@@ -14,7 +14,7 @@ import { isMetaKey } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, actions, list }:ActionsEventsInit) {
+export function init ({ diff, actions, list }: ActionsEventsInit) {
 	
 	actions.addEventListener('select', (event) => {
 		

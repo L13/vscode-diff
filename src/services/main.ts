@@ -24,7 +24,7 @@ import * as symlinks from './commands/symlinks';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	common.activate(context);
 	explorer.activate(context);

@@ -13,13 +13,13 @@ import type { Diff } from '../../types';
 //	Exports ____________________________________________________________________
 
 export type ViewsCache = {
-	unchangedChecked:boolean,
-	deletedChecked:boolean,
-	modifiedChecked:boolean,
-	untrackedChecked:boolean,
-	ignoredChecked:boolean,
-	items:Diff[],
-	filteredItems:Diff[],
+	unchangedChecked: boolean,
+	deletedChecked: boolean,
+	modifiedChecked: boolean,
+	untrackedChecked: boolean,
+	ignoredChecked: boolean,
+	items: Diff[],
+	filteredItems: Diff[],
 };
 
 //	Functions __________________________________________________________________

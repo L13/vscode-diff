@@ -28,26 +28,26 @@ import { FavoriteTreeItem } from './trees/FavoriteTreeItem';
 
 export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeItems> {
 	
-	private _onDidChangeTreeData:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onDidChangeTreeData:vscode.Event<undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidChangeTreeData: vscode.Event<undefined> = this._onDidChangeTreeData.event;
 	
-	public favorites:Favorite[] = [];
-	public favoriteGroups:FavoriteGroup[] = [];
+	public favorites: Favorite[] = [];
+	public favoriteGroups: FavoriteGroup[] = [];
 	
-	public static current:FavoritesProvider = null;
+	public static current: FavoritesProvider = null;
 	
-	public static create (states:FavoritesStates) {
+	public static create (states: FavoritesStates) {
 		
 		return FavoritesProvider.current || (FavoritesProvider.current = new FavoritesProvider(states));
 		
 	}
 	
-	private constructor (states:FavoritesStates) {
+	private constructor (states: FavoritesStates) {
 		
 		this.favorites = states.favorites;
 		this.favoriteGroups = states.favoriteGroups;
 		
-		const initialState:InitialState = settings.get('initialFavoriteGroupsState', 'remember');
+		const initialState: InitialState = settings.get('initialFavoriteGroupsState', 'remember');
 		
 		if (initialState !== 'remember') {
 			this.favoriteGroups.forEach((favoriteGroup) => favoriteGroup.collapsed = initialState === 'collapsed');
@@ -61,7 +61,7 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		
 	}
 	
-	public refresh (states?:RefreshFavoritesStates) {
+	public refresh (states?: RefreshFavoritesStates) {
 		
 		if (states?.favorites) this.favorites = states.favorites;
 		if (states?.favoriteGroups) this.favoriteGroups = states.favoriteGroups;
@@ -70,15 +70,15 @@ export class FavoritesProvider implements vscode.TreeDataProvider<FavoriteTreeIt
 		
 	}
 	
-	public getTreeItem (element:FavoriteTreeItems):FavoriteTreeItems {
+	public getTreeItem (element: FavoriteTreeItems): FavoriteTreeItems {
 		
 		return element;
 		
 	}
 	
-	public getChildren (element?:FavoriteTreeItems):Thenable<FavoriteTreeItems[]> {
+	public getChildren (element?: FavoriteTreeItems): Thenable<FavoriteTreeItems[]> {
 		
-		const list:FavoriteTreeItems[] = [];
+		const list: FavoriteTreeItems[] = [];
 		
 		if (!this.favorites.length && !this.favoriteGroups.length) return Promise.resolve(list);
 		

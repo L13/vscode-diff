@@ -13,10 +13,10 @@
 //	Exports ____________________________________________________________________
 
 export type DisplayShortcut = {
-	description:string,
-	key:string,
-	mac?:string,
-	win?:string,
+	description: string,
+	key: string,
+	mac?: string,
+	win?: string,
 };
 
 //	Functions __________________________________________________________________

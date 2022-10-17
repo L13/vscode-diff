@@ -12,7 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
-export function remove (values:any[], value:any) {
+export function remove (values: any[], value: any) {
 	
 	const index = values.indexOf(value);
 	
@@ -20,7 +20,7 @@ export function remove (values:any[], value:any) {
 	
 }
 
-export function sortCaseInsensitive (a:string, b:string) {
+export function sortCaseInsensitive (a: string, b: string) {
 	
 	a = a.toUpperCase();
 	b = b.toUpperCase();

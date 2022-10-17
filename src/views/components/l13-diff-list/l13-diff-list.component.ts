@@ -40,9 +40,9 @@ const { PREVIOUS, NEXT } = Direction;
 export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	@L13Query('l13-diff-list-content')
-	public content:HTMLElement;
+	public content: HTMLElement;
 	
-	private context:L13DiffContextComponent;
+	private context: L13DiffContextComponent;
 	
 	public disabled = false;
 	
@@ -52,21 +52,21 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private previousScrollTop = 0;
 	
-	public currentSelections:string[] = [];
+	public currentSelections: string[] = [];
 	
-	private cacheSelectionHistory:HTMLElement[] = [];
+	private cacheSelectionHistory: HTMLElement[] = [];
 	
-	private cacheSelectedListItems:HTMLElement[] = [];
+	private cacheSelectedListItems: HTMLElement[] = [];
 	
-	private cacheListItems:Diff[] = [];
+	private cacheListItems: Diff[] = [];
 	
-	private cacheListItemViews:Dictionary<HTMLElement> = {};
+	private cacheListItemViews: Dictionary<HTMLElement> = {};
 	
-	private cacheFilteredListItems:Diff[] = [];
+	private cacheFilteredListItems: Diff[] = [];
 	
-	public filteredListItemViews:HTMLElement[] = [];
+	public filteredListItemViews: HTMLElement[] = [];
 	
-	public dragSrcRowElement:HTMLElement = null;
+	public dragSrcRowElement: HTMLElement = null;
 	
 	public constructor () {
 		
@@ -149,7 +149,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				return;
 			}
 			
-			const listRow:HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
+			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
 			if (this.cacheSelectionHistory.length) {
 		//	On macOS metaKey overrides shiftKey if both keys are pressed
@@ -211,7 +211,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	// }
 	
-	private selectListItem (element:HTMLElement) {
+	private selectListItem (element: HTMLElement) {
 		
 		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
@@ -220,7 +220,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectRange (from:HTMLElement, to:HTMLElement) {
+	private selectRange (from: HTMLElement, to: HTMLElement) {
 		
 		const fromIndex = this.getIndex(from);
 		const toIndex = this.getIndex(to);
@@ -235,7 +235,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectItem (element:HTMLElement, dispatchEvent = true) {
+	private selectItem (element: HTMLElement, dispatchEvent = true) {
 		
 		this.addItemSelection(element);
 		this.cacheSelectionHistory.push(element);
@@ -245,7 +245,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectNoneItem (element:HTMLElement, shiftKey:boolean) {
+	private selectNoneItem (element: HTMLElement, shiftKey: boolean) {
 		
 		if (!shiftKey && this.cacheSelectionHistory.length > 1) {
 			this.unselect();
@@ -258,13 +258,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private addIndex (element:HTMLElement, index:number) {
+	private addIndex (element: HTMLElement, index: number) {
 		
 		element.setAttribute('data-index', `${index}`);
 		
 	}
 	
-	private getIndex (element:HTMLElement) {
+	private getIndex (element: HTMLElement) {
 		
 		return +element.getAttribute('data-index');
 		
@@ -282,19 +282,19 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private getNextItem (element:HTMLElement) {
+	private getNextItem (element: HTMLElement) {
 		
 		return this.filteredListItemViews[this.getIndex(element) + 1];
 		
 	}
 	
-	private getPreviousItem (element:HTMLElement) {
+	private getPreviousItem (element: HTMLElement) {
 		
 		return this.filteredListItemViews[this.getIndex(element) - 1];
 		
 	}
 	
-	public isSelectedItem (element:HTMLElement) {
+	public isSelectedItem (element: HTMLElement) {
 		
 		return element.classList.contains('-selected');
 		
@@ -312,31 +312,31 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private addItemSelection (element:HTMLElement) {
+	private addItemSelection (element: HTMLElement) {
 		
 		element.classList.add('-selected');
 		
 	}
 	
-	private removeItemSelection (element:HTMLElement) {
+	private removeItemSelection (element: HTMLElement) {
 		
 		element.classList.remove('-selected');
 		
 	}
 	
-	private toggleItemSelection (element:HTMLElement) {
+	private toggleItemSelection (element: HTMLElement) {
 		
 		element.classList.toggle('-selected');
 		
 	}
 	
-	private selectItems (elements:HTMLElement[]) {
+	private selectItems (elements: HTMLElement[]) {
 		
 		elements.forEach((element) => element.classList.add('-selected'));
 		
 	}
 	
-	private unselectItems (elements:HTMLElement[]) {
+	private unselectItems (elements: HTMLElement[]) {
 		
 		elements.forEach((element) => element.classList.remove('-selected'));
 		
@@ -354,9 +354,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private getPreviousPageItem (currentElement:HTMLElement, viewStart:number) {
+	private getPreviousPageItem (currentElement: HTMLElement, viewStart: number) {
 		
-		let previousElementSibling:HTMLElement;
+		let previousElementSibling: HTMLElement;
 		
 		while ((previousElementSibling = this.getPreviousItem(currentElement))) {
 			if (parseInt(previousElementSibling.style.top, 10) > viewStart) {
@@ -370,9 +370,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private getNextPageItem (currentElement:HTMLElement, viewEnd:number) {
+	private getNextPageItem (currentElement: HTMLElement, viewEnd: number) {
 		
-		let nextElementSibling:HTMLElement;
+		let nextElementSibling: HTMLElement;
 		
 		while ((nextElementSibling = this.getNextItem(currentElement))) {
 			if (parseInt(nextElementSibling.style.top, 10) + this.rowHeight < viewEnd) {
@@ -386,7 +386,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPreviousOrNextItem (element:HTMLElement, shiftKey:boolean) {
+	private selectPreviousOrNextItem (element: HTMLElement, shiftKey: boolean) {
 		
 		if (!shiftKey) this.unselect();
 		
@@ -398,7 +398,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectFirstOrLastItem (from:HTMLElement, to:HTMLElement, shiftKey:boolean) {
+	private selectFirstOrLastItem (from: HTMLElement, to: HTMLElement, shiftKey: boolean) {
 		
 		if (!shiftKey) {
 			this.unselect();
@@ -420,7 +420,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPreviousOrNextPageItem (currentElement:HTMLElement, lastSelection:HTMLElement, shiftKey:boolean) {
+	private selectPreviousOrNextPageItem (currentElement: HTMLElement, lastSelection: HTMLElement, shiftKey: boolean) {
 		
 		if (!shiftKey) {
 			this.unselect();
@@ -435,7 +435,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPreviousOrNext (direction:Direction, event:KeyboardEvent) {
+	private selectPreviousOrNext (direction: Direction, event: KeyboardEvent) {
 		
 		if (!this.content.firstChild) return;
 		
@@ -449,7 +449,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPrevious ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
+	private selectPrevious ({ altKey, shiftKey, key }: KeyboardEvent, lastSelection: HTMLElement) {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getFirstItem() : this.getLastItem());
@@ -473,7 +473,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectNext ({ altKey, shiftKey, key }:KeyboardEvent, lastSelection:HTMLElement) {
+	private selectNext ({ altKey, shiftKey, key }: KeyboardEvent, lastSelection: HTMLElement) {
 		
 		if (isMacOs) {
 			if (!lastSelection) this.selectItem(altKey ? this.getLastItem() : this.getFirstItem());
@@ -498,7 +498,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public selectByStatus (typeOrTypes:DiffStatus|DiffStatus[], addToSelection = false) {
+	public selectByStatus (typeOrTypes: DiffStatus | DiffStatus[], addToSelection = false) {
 		
 		if (!addToSelection) this.unselect();
 		
@@ -538,13 +538,13 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public copy (from:'left'|'right') {
+	public copy (from: 'left' | 'right') {
 		
 		this.viewmodel.copy(this.getIdsBySelection(), from);
 		
 	}
 	
-	public multiCopy (from:'left'|'right') {
+	public multiCopy (from: 'left' | 'right') {
 		
 		this.viewmodel.multiCopy(this.getIdsBySelection(), from);
 		
@@ -556,7 +556,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public update (options?:{ keepPosition:boolean }) {
+	public update (options?: { keepPosition: boolean }) {
 		
 		super.update();
 		
@@ -568,10 +568,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	private createListItemViews () {
 		
 		const items = this.viewmodel.items;
-		const cacheListItemViews:Dictionary<HTMLElement> = {};
+		const cacheListItemViews: Dictionary<HTMLElement> = {};
 		
-		const foldersA:string[] = [];
-		const foldersB:string[] = [];
+		const foldersA: string[] = [];
+		const foldersB: string[] = [];
 		
 		items.forEach(({ fileA, fileB }) => {
 			
@@ -605,7 +605,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createFilteredListItemViews (options?:{ keepPosition:boolean }) {
+	private createFilteredListItemViews (options?: { keepPosition: boolean }) {
 		
 		this.unselect();
 		
@@ -639,7 +639,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public showVisibleListViewItems (forceUpdate?:boolean) {
+	public showVisibleListViewItems (forceUpdate?: boolean) {
 		
 		const scrollTop = this.scrollTop;
 		const delta = scrollTop - this.previousScrollTop;
@@ -699,7 +699,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 
 //	Functions __________________________________________________________________
 
-function appendColumn (parent:HTMLElement, diff:Diff, file:DiffFile, exists:string[]) {
+function appendColumn (parent: HTMLElement, diff: Diff, file: DiffFile, exists: string[]) {
 	
 	const column = document.createElement('l13-diff-list-file');
 	
@@ -770,7 +770,7 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 	
 }
 
-function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders:string[]) {
+function detectExistingFolder (file: DiffFile, otherFolders: string[], sameFolders: string[]) {
 	
 	if (!file) return null;
 	
@@ -786,7 +786,7 @@ function detectExistingFolder (file:DiffFile, otherFolders:string[], sameFolders
 	
 }
 
-function scrollElementIntoListView (list:L13DiffListComponent, element:HTMLElement) {
+function scrollElementIntoListView (list: L13DiffListComponent, element: HTMLElement) {
 	
 //	Fixes virtual scrolling if element is not in the DOM
 	if (!element.parentNode) list.content.appendChild(element);

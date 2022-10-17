@@ -14,11 +14,11 @@ const IS_STOPPED = Symbol.for('isStopped');
 
 export class Event {
 	
-	public type:string;
+	public type: string;
 	
 	private [IS_STOPPED] = false;
 	
-	public constructor (options:{ type:string }) {
+	public constructor (options: { type: string }) {
 		
 		this.type = options.type;
 		

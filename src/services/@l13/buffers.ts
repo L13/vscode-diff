@@ -12,7 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
-export function normalizeLineEnding (buffer:Buffer) {
+export function normalizeLineEnding (buffer: Buffer) {
 	
 	if (buffer[0] === 254 && buffer[1] === 255) return normalizeUTF16BE(buffer);
 	if (buffer[0] === 255 && buffer[1] === 254) return normalizeUTF16LE(buffer);
@@ -21,7 +21,7 @@ export function normalizeLineEnding (buffer:Buffer) {
 	
 }
 
-export function trimWhitespace (buffer:Buffer) :Buffer {
+export function trimWhitespace (buffer: Buffer): Buffer {
 	
 	if (buffer[0] === 254 && buffer[1] === 255) return trimUTF16BE(buffer);
 	if (buffer[0] === 255 && buffer[1] === 254) return trimUTF16LE(buffer);
@@ -32,7 +32,7 @@ export function trimWhitespace (buffer:Buffer) :Buffer {
 
 //	Functions __________________________________________________________________
 
-function normalizeAscii (buffer:Buffer) {
+function normalizeAscii (buffer: Buffer) {
 	
 	const length = buffer.length;
 	const cache = [];
@@ -49,7 +49,7 @@ function normalizeAscii (buffer:Buffer) {
 	
 }
 
-function normalizeUTF16BE (buffer:Buffer) {
+function normalizeUTF16BE (buffer: Buffer) {
 	
 	const length = buffer.length;
 	const cache = [];
@@ -67,7 +67,7 @@ function normalizeUTF16BE (buffer:Buffer) {
 	
 }
 
-function normalizeUTF16LE (buffer:Buffer) {
+function normalizeUTF16LE (buffer: Buffer) {
 	
 	const length = buffer.length;
 	const cache = [];
@@ -85,7 +85,7 @@ function normalizeUTF16LE (buffer:Buffer) {
 	
 }
 
-function trimAscii (buffer:Buffer) :Buffer {
+function trimAscii (buffer: Buffer): Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [];
@@ -140,7 +140,7 @@ function trimAscii (buffer:Buffer) :Buffer {
 	
 }
 
-function trimUTF16BE (buffer:Buffer) :Buffer {
+function trimUTF16BE (buffer: Buffer): Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
@@ -192,7 +192,7 @@ function trimUTF16BE (buffer:Buffer) :Buffer {
 	
 }
 
-function trimUTF16LE (buffer:Buffer) :Buffer {
+function trimUTF16LE (buffer: Buffer): Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [buffer[0], buffer[1]];
