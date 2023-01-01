@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [1.0.3] - 2021-06-23
+## [1.0.4] - 2023-01-22
 
-### Changed
+### Fixed
 
-- Changed `extensionKind` [Issue #98](https://github.com/L13/vscode-diff/issues/98)
+- Fixed symlink copy if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 
 ## [1.0.2] - 2021-06-13
 
