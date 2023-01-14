@@ -6,6 +6,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 ### Fixed
 
 - Fixed symlink copy if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
+- Fixed JSONC parser for trailing comma in an objects or array.
 
 ## [1.0.2] - 2021-06-13
 

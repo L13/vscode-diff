@@ -4,7 +4,7 @@ const _parse = JSON.parse;
 
 //	Variables __________________________________________________________________
 
-const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)/g;
+const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)|,[\s\r\n]*?([\]}])/g;
 
 //	Initialize _________________________________________________________________
 
@@ -14,7 +14,7 @@ const findComments = /"(?:[^"\r\n\\]*(?:\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r
 
 export function parse (json: string, ...args: any[]) {
 	
-	return _parse(json.replace(findComments, (match, comment) => comment ? '' : match), ...args);
+	return _parse(json.replace(findComments, (match, comment, close) => comment ? '' : close || match), ...args);
 	
 }
 
