@@ -4,9 +4,11 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-Welcome to version 1.0 of the extension Diff Folders. All of the features on my to-do list are done, but that doesn't mean the extension's development is finished. There are more ideas for the future.
+## What's new in Diff Folders 1.1.0
 
-I also want to say thank you to all reviewers on the Visual Studio Code Marketplace and Github for the positive feedback. I never expected that so many people would download or use the extension. Thank you very much.
+- Added `l13Diff.ignoreUTF8BOM` to ignore UTF-8 BOM in text files.
+- Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
+- Fixed JSONC parser for trailing comma in an object or array.
 
 ## Index
 
@@ -110,6 +112,7 @@ I also want to say thank you to all reviewers on the Visual Studio Code Marketpl
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
+* `l13Diff.ignoreUTF8BOM` [1] - Set true if a comparison for text files should ignore the UTF-8 BOM.
 * `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
 	* `default` - (default) Uses the value of `files.enableTrash`.
 	* `on` - Moves files and folders to the OS trash.
@@ -413,7 +416,8 @@ The two fastest ways to compare files accurate are
 {
 	"l13Diff.ignoreEndOfLine": false,
 	"l13Diff.ignoreTrimWhitespace": "default",
-	"diffEditor.ignoreTrimWhitespace": false
+	"diffEditor.ignoreTrimWhitespace": false,
+	"l13Diff.ignoreUTF8BOM": false
 }
 ```
 
@@ -422,7 +426,8 @@ or
 ```json
 {
 	"l13Diff.ignoreEndOfLine": false,
-	"l13Diff.ignoreTrimWhitespace": "off"
+	"l13Diff.ignoreTrimWhitespace": "off",
+	"l13Diff.ignoreUTF8BOM": false
 }
 ```
 

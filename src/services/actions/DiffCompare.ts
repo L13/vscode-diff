@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
+import { normalizeLineEnding, removeUTF8BOM, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -221,6 +221,7 @@ async function getDiffSettings (dirnameA: string, dirnameB: string): Promise<Dif
 		excludes: settings.getExcludes(dirnameA, dirnameB),
 		ignoreContents: settings.get('ignoreContents', false),
 		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
+		ignoreUTF8BOM: settings.get('ignoreUTF8BOM', false),
 		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
 		maxFileSize: settings.maxFileSize(),
 		useCaseSensitive,
@@ -266,7 +267,7 @@ function compareWithListB (diffs: Dictionary<Diff>, result: StatsMap, diffSettin
 	
 }
 
-function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace }: DiffSettings) {
+function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreUTF8BOM }: DiffSettings) {
 	
 	const fileA = diff.fileA;
 	const fileB = diff.fileB;
@@ -287,7 +288,7 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 	if (typeA === 'file') {
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace)
+		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreUTF8BOM)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
@@ -298,6 +299,12 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			
 			//	If files are equal normalizing is not necessary
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
+			
+			if (ignoreUTF8BOM) {
+				bufferA = removeUTF8BOM(bufferA);
+				bufferB = removeUTF8BOM(bufferB);
+				diff.ignoredUTF8BOM = true;
+			}
 			
 			if (ignoreTrimWhitespace) {
 				bufferA = trimWhitespace(bufferA);
@@ -340,6 +347,7 @@ function addFile (diffs: Dictionary<Diff>, id: string, fileA: DiffFile, fileB: D
 		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
 		type: file.type,
 		ignoredEOL: false,
+		ignoredUTF8BOM: false,
 		ignoredWhitespace: false,
 		fileA,
 		fileB,

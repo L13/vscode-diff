@@ -3,7 +3,7 @@
 import type { Dictionary, Diff, DiffFile, DiffStatus } from '../../../types';
 
 import { remove } from '../../../@l13/arrays';
-import { formatDate, formatFileSize } from '../../../@l13/formats';
+import { formatDate, formatFileSize, formatList } from '../../../@l13/formats';
 
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
@@ -755,12 +755,13 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		basename.classList.add('-basename');
 		path.appendChild(basename);
 		
-		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredWhitespace)) {
+		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredUTF8BOM || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');
 			const values = [];
 			if (diff.ignoredEOL) values.push('eol');
+			if (diff.ignoredUTF8BOM) values.push('utf-8 bom');
 			if (diff.ignoredWhitespace) values.push('whitespace');
-			ignored.textContent = `(ignored ${values.join(' and ')})`;
+			ignored.textContent = `(ignored ${formatList(values)})`;
 			ignored.classList.add('-info');
 			path.appendChild(ignored);
 		}

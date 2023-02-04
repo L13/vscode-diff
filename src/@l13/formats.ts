@@ -45,6 +45,14 @@ export function formatDate (date: Date) {
 	
 }
 
+export function formatList (values: string[]) {
+	
+	const length = values.length;
+	
+	return length > 2 ? `${values.slice(0, -1).join(', ')} and ${values[length - 1]}` : values.join(' and ');
+	
+}
+
 //	Functions __________________________________________________________________
 
 function formatDigit (digit: number) {
