@@ -317,7 +317,11 @@
 			},
 			{
 				"command": "l13Diff.action.search.open",
-				"title": "Filter"
+				"title": "Filter",
+				"icon": {
+					"light": "images/panels/filter-list-light.svg",
+					"dark": "images/panels/filter-list-dark.svg"
+				}
 			},
 			{
 				"command": "l13Diff.action.actions.selectCreatedEntries",
@@ -1041,44 +1045,49 @@
 					"group": "navigation@1"
 				},
 				{
+					"command": "l13Diff.action.search.open",
+					"when": "l13DiffFocus",
+					"group": "navigation@2"
+				},
+				{
 					"command": "l13Diff.action.settings.ignoreCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'on'",
-					"group": "navigation@2"
+					"group": "navigation@3"
 				},
 				{
 					"command": "l13Diff.action.settings.useCaseSensitive",
 					"when": "l13DiffFocus && config.l13Diff.useCaseSensitiveFileName == 'off'",
-					"group": "navigation@2"
+					"group": "navigation@3"
 				},
 				{
 					"command": "l13Diff.action.settings.ignoreEndOfLine",
 					"when": "l13DiffFocus && !config.l13Diff.ignoreEndOfLine",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
 					"command": "l13Diff.action.settings.compareEndOfLine",
 					"when": "l13DiffFocus && config.l13Diff.ignoreEndOfLine",
-					"group": "navigation@3"
+					"group": "navigation@4"
 				},
 				{
 					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && !config.diffEditor.ignoreTrimWhitespace",
-					"group": "navigation@4"
+					"group": "navigation@5"
 				},
 				{
 					"command": "l13Diff.action.settings.ignoreWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'off'",
-					"group": "navigation@4"
+					"group": "navigation@5"
 				},
 				{
 					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'default' && config.diffEditor.ignoreTrimWhitespace",
-					"group": "navigation@4"
+					"group": "navigation@5"
 				},
 				{
 					"command": "l13Diff.action.settings.compareWhitespace",
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
-					"group": "navigation@4"
+					"group": "navigation@5"
 				}
 			]
 		},
