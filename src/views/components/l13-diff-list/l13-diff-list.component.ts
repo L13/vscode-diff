@@ -758,9 +758,9 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredUTF8BOM || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');
 			const values = [];
-			if (diff.ignoredEOL) values.push('eol');
-			if (diff.ignoredUTF8BOM) values.push('utf-8 bom');
-			if (diff.ignoredWhitespace) values.push('whitespace');
+			if (diff.ignoredEOL) values.push('EOL');
+			if (diff.ignoredUTF8BOM) values.push('UTF-8 BOM');
+			if (diff.ignoredWhitespace) values.push('Whitespace');
 			ignored.textContent = `(ignored ${formatList(values)})`;
 			ignored.classList.add('-info');
 			path.appendChild(ignored);

@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { normalizeLineEnding, removeUTF8BOM, trimWhitespace } from '../@l13/buffers';
+import { hasUTF8BOM, normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -301,21 +301,26 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
 			
 			if (ignoreUTF8BOM) {
-				bufferA = removeUTF8BOM(bufferA);
-				bufferB = removeUTF8BOM(bufferB);
-				diff.ignoredUTF8BOM = true;
-			}
-			
-			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA);
-				bufferB = trimWhitespace(bufferB);
-				diff.ignoredWhitespace = true;
+				if (hasUTF8BOM(bufferA)) {
+					bufferA = bufferA.subarray(3);
+					diff.ignoredUTF8BOM = true;
+				}
+				if (hasUTF8BOM(bufferB)) {
+					bufferB = bufferB.subarray(3);
+					diff.ignoredUTF8BOM = true;
+				}
 			}
 			
 			if (ignoreEndOfLine) {
 				bufferA = normalizeLineEnding(bufferA);
 				bufferB = normalizeLineEnding(bufferB);
 				diff.ignoredEOL = true;
+			}
+			
+			if (ignoreTrimWhitespace) {
+				bufferA = trimWhitespace(bufferA);
+				bufferB = trimWhitespace(bufferB);
+				diff.ignoredWhitespace = true;
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';

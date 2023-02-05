@@ -12,9 +12,10 @@
 
 //	Exports ____________________________________________________________________
 
-export function removeUTF8BOM (buffer: Buffer) {
+
+export function hasUTF8BOM (buffer: Buffer) {
 	
-	return hasUTF8BOM(buffer) ? buffer.subarray(3) : buffer;
+	return buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191;
 	
 }
 
@@ -37,12 +38,6 @@ export function trimWhitespace (buffer: Buffer): Buffer {
 }
 
 //	Functions __________________________________________________________________
-
-function hasUTF8BOM (buffer: Buffer) {
-	
-	return buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191;
-	
-}
 
 function normalizeAscii (buffer: Buffer) {
 	

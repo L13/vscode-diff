@@ -4,7 +4,7 @@ import * as assert from 'assert';
 
 import type { Test } from '../../types';
 
-import { normalizeLineEnding, removeUTF8BOM, trimWhitespace } from './buffers';
+import { hasUTF8BOM, normalizeLineEnding, trimWhitespace } from './buffers';
 
 //	Variables __________________________________________________________________
 
@@ -14,12 +14,12 @@ import { normalizeLineEnding, removeUTF8BOM, trimWhitespace } from './buffers';
 
 describe('buffers', () => {
 	
-	describe('.removeUTF8BOM()', () => {
+	describe('.hasUTF8BOM()', () => {
 		
 		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepStrictEqual(removeUTF8BOM(Buffer.from(test.expect)), Buffer.from(test.toBe)));
+				it(test.desc, () => assert.strictEqual(hasUTF8BOM(Buffer.from(test.expect)), test.toBe));
 			}
 			
 		}
@@ -30,19 +30,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [239, 187, 191],
-					toBe: [],
+					toBe: true,
 				},
 				{
 					desc: 'just \\n',
 					expect: [239, 187, 191, 10],
-					toBe: [10],
+					toBe: true,
 				},
 			]);
 			
-			it('all ASCII chars', () => {
+			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.deepStrictEqual(removeUTF8BOM(Buffer.from([239, 187, 191, i])), Buffer.from([i]));
+					assert.strictEqual(hasUTF8BOM(Buffer.from([239, 187, 191, i])), true);
 				}
 				
 			});
@@ -55,19 +55,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [],
-					toBe: [],
+					toBe: false,
 				},
 				{
 					desc: 'just \\n',
 					expect: [10],
-					toBe: [10],
+					toBe: false,
 				},
 			]);
 			
-			it('all basic chars', () => {
+			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.deepStrictEqual(removeUTF8BOM(Buffer.from([i])), Buffer.from([i]));
+					assert.deepStrictEqual(hasUTF8BOM(Buffer.from([i])), false);
 				}
 				
 			});
