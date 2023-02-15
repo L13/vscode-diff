@@ -52,10 +52,10 @@
 		&:checked::after {
 			background: var(--vscode-inputOption-activeBorder);
 			content: '';
-			height: 1px;
+			height: 2px;
 			left: 4px;
 			position: absolute;
-			bottom: 1px;
+			bottom: 0;
 			width: 18px;
 		}
 		
