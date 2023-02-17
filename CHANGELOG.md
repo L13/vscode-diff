@@ -5,7 +5,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Added
 
-- Added `l13Diff.ignoreUTF8BOM` to ignore UTF-8 BOM in text files.
+- Added `l13Diff.ignoreUTFBOM` to ignore UTF-8, UTF-16BE or UTF-16LE BOM in text files.
 
 ### Fixed
 

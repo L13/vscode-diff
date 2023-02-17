@@ -19,7 +19,7 @@ export type Diff = {
 	status: DiffStatus,
 	type: DiffFileTypes | 'mixed',
 	ignoredEOL: boolean,
-	ignoredUTF8BOM: boolean,
+	ignoredUTFBOM: boolean,
 	ignoredWhitespace: boolean,
 	fileA: null | DiffFile,
 	fileB: null | DiffFile,
@@ -45,7 +45,7 @@ export type DiffSettings = {
 	ignoreContents: boolean,
 	ignoreEndOfLine: boolean,
 	ignoreTrimWhitespace: boolean,
-	ignoreUTF8BOM: boolean,
+	ignoreUTFBOM: boolean,
 	maxFileSize: number,
 	useCaseSensitive: boolean,
 };

@@ -124,7 +124,7 @@ export function init ({ list }: DragNDropEventsInit) {
 					status: 'modified',
 					type: typeA,
 					ignoredEOL: false,
-					ignoredUTF8BOM: false,
+					ignoredUTFBOM: false,
 					ignoredWhitespace: false,
 					fileA,
 					fileB,

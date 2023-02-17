@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { hasUTF8BOM, normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
+import { detectUTFBOM, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -221,7 +221,7 @@ async function getDiffSettings (dirnameA: string, dirnameB: string): Promise<Dif
 		excludes: settings.getExcludes(dirnameA, dirnameB),
 		ignoreContents: settings.get('ignoreContents', false),
 		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
-		ignoreUTF8BOM: settings.get('ignoreUTF8BOM', false),
+		ignoreUTFBOM: settings.get('ignoreUTFBOM', false),
 		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
 		maxFileSize: settings.maxFileSize(),
 		useCaseSensitive,
@@ -267,7 +267,7 @@ function compareWithListB (diffs: Dictionary<Diff>, result: StatsMap, diffSettin
 	
 }
 
-function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreUTF8BOM }: DiffSettings) {
+function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreUTFBOM }: DiffSettings) {
 	
 	const fileA = diff.fileA;
 	const fileB = diff.fileB;
@@ -288,7 +288,7 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 	if (typeA === 'file') {
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreUTF8BOM)
+		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreUTFBOM)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
@@ -300,26 +300,31 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			//	If files are equal normalizing is not necessary
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
 			
-			if (ignoreUTF8BOM) {
-				if (hasUTF8BOM(bufferA)) {
-					bufferA = bufferA.subarray(3);
-					diff.ignoredUTF8BOM = true;
-				}
-				if (hasUTF8BOM(bufferB)) {
-					bufferB = bufferB.subarray(3);
-					diff.ignoredUTF8BOM = true;
-				}
+			const bomA = detectUTFBOM(bufferA);
+			const bomB = detectUTFBOM(bufferB);
+			
+			if (bomA && bomB && bomA !== bomB) {
+				diff.status = 'modified';
+				return;
+			}
+			
+			const bom = bomA || bomB;
+			
+			if (ignoreUTFBOM && bom) {
+				if (bomA) bufferA = removeUTFBOM(bufferA, bomA);
+				if (bomB) bufferB = removeUTFBOM(bufferB, bomB);
+				diff.ignoredUTFBOM = true;
 			}
 			
 			if (ignoreEndOfLine) {
-				bufferA = normalizeLineEnding(bufferA);
-				bufferB = normalizeLineEnding(bufferB);
+				bufferA = normalizeLineEnding(bufferA, bom);
+				bufferB = normalizeLineEnding(bufferB, bom);
 				diff.ignoredEOL = true;
 			}
 			
 			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA);
-				bufferB = trimWhitespace(bufferB);
+				bufferA = trimWhitespace(bufferA, bom);
+				bufferB = trimWhitespace(bufferB, bom);
 				diff.ignoredWhitespace = true;
 			}
 			
@@ -352,7 +357,7 @@ function addFile (diffs: Dictionary<Diff>, id: string, fileA: DiffFile, fileB: D
 		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
 		type: file.type,
 		ignoredEOL: false,
-		ignoredUTF8BOM: false,
+		ignoredUTFBOM: false,
 		ignoredWhitespace: false,
 		fileA,
 		fileB,

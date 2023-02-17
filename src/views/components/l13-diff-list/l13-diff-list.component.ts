@@ -755,11 +755,11 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		basename.classList.add('-basename');
 		path.appendChild(basename);
 		
-		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredUTF8BOM || diff.ignoredWhitespace)) {
+		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredUTFBOM || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');
 			const values = [];
 			if (diff.ignoredEOL) values.push('EOL');
-			if (diff.ignoredUTF8BOM) values.push('UTF-8 BOM');
+			if (diff.ignoredUTFBOM) values.push('BOM');
 			if (diff.ignoredWhitespace) values.push('Whitespace');
 			ignored.textContent = `(ignored ${formatList(values)})`;
 			ignored.classList.add('-info');
