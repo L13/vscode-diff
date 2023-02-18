@@ -6,7 +6,8 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 1.1.0
 
-- Added `l13Diff.ignoreUTFBOM` to ignore UTF-8, UTF-16BE or UTF-16LE BOM in text files.
+- Added `l13Diff.ignoreByteOrderMark` to ignore UTF-8, UTF-16BE or UTF-16LE BOM in text files.
+- Added visual context for drag'n drop in the list view.
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
 
@@ -112,7 +113,7 @@ Compare two folders in Visual Studio Code.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
-* `l13Diff.ignoreUTFBOM` [1] - Set true if a comparison for text files should ignore the UTF-8 BOM.
+* `l13Diff.ignoreByteOrderMark` [1] - Set true if a comparison for text files should ignore the UTF-8 BOM.
 * `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
 	* `default` - (default) Uses the value of `files.enableTrash`.
 	* `on` - Moves files and folders to the OS trash.
@@ -417,7 +418,7 @@ The two fastest ways to compare files accurate are
 	"l13Diff.ignoreEndOfLine": false,
 	"l13Diff.ignoreTrimWhitespace": "default",
 	"diffEditor.ignoreTrimWhitespace": false,
-	"l13Diff.ignoreUTFBOM": false
+	"l13Diff.ignoreByteOrderMark": false
 }
 ```
 
@@ -427,7 +428,7 @@ or
 {
 	"l13Diff.ignoreEndOfLine": false,
 	"l13Diff.ignoreTrimWhitespace": "off",
-	"l13Diff.ignoreUTFBOM": false
+	"l13Diff.ignoreByteOrderMark": false
 }
 ```
 

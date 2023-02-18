@@ -1167,7 +1167,7 @@
 					"default": false,
 					"description": "Should CR/LF be ignored in text files?"
 				},
-				"l13Diff.ignoreUTFBOM": {
+				"l13Diff.ignoreByteOrderMark": {
 					"type": "boolean",
 					"default": false,
 					"description": "Should the UTF-8, UTF-16BE or UTF-16LE BOM be ignored in text files?"

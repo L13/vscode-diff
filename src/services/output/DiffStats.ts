@@ -118,7 +118,7 @@ Abort on Error: ${settings.abortOnError}
 Excludes: "${settings.excludes.join('", "')}"
 Ignore Contents: ${settings.ignoreContents}
 Ignore End of Line: ${settings.ignoreEndOfLine}
-Ignore UTF BOM: ${settings.ignoreUTFBOM}
+Ignore Byte Order Mark: ${settings.ignoreByteOrderMark}
 Ignore Leading/Trailing Whitespace: ${settings.ignoreTrimWhitespace}
 Max File Size: ${settings.maxFileSize ? `${settings.maxFileSize} MB` : '0'}
 Use Case Sensitive: ${settings.useCaseSensitive}`;

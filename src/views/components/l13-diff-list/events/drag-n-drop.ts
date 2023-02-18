@@ -130,7 +130,7 @@ export function init ({ list }: DragNDropEventsInit) {
 					status: 'modified',
 					type: typeA,
 					ignoredEOL: false,
-					ignoredUTFBOM: false,
+					ignoredBOM: false,
 					ignoredWhitespace: false,
 					fileA,
 					fileB,

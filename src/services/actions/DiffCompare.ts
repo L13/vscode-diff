@@ -221,7 +221,7 @@ async function getDiffSettings (dirnameA: string, dirnameB: string): Promise<Dif
 		excludes: settings.getExcludes(dirnameA, dirnameB),
 		ignoreContents: settings.get('ignoreContents', false),
 		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
-		ignoreUTFBOM: settings.get('ignoreUTFBOM', false),
+		ignoreByteOrderMark: settings.get('ignoreByteOrderMark', false),
 		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
 		maxFileSize: settings.maxFileSize(),
 		useCaseSensitive,
@@ -267,7 +267,7 @@ function compareWithListB (diffs: Dictionary<Diff>, result: StatsMap, diffSettin
 	
 }
 
-function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreUTFBOM }: DiffSettings) {
+function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreByteOrderMark }: DiffSettings) {
 	
 	const fileA = diff.fileA;
 	const fileB = diff.fileB;
@@ -288,7 +288,7 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 	if (typeA === 'file') {
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreUTFBOM)
+		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreByteOrderMark)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
@@ -310,10 +310,10 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			
 			const bom = bomA || bomB;
 			
-			if (ignoreUTFBOM && bom) {
+			if (ignoreByteOrderMark && bom) {
 				if (bomA) bufferA = removeUTFBOM(bufferA, bomA);
 				if (bomB) bufferB = removeUTFBOM(bufferB, bomB);
-				diff.ignoredUTFBOM = true;
+				diff.ignoredBOM = true;
 			}
 			
 			if (ignoreEndOfLine) {
@@ -357,7 +357,7 @@ function addFile (diffs: Dictionary<Diff>, id: string, fileA: DiffFile, fileB: D
 		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
 		type: file.type,
 		ignoredEOL: false,
-		ignoredUTFBOM: false,
+		ignoredBOM: false,
 		ignoredWhitespace: false,
 		fileA,
 		fileB,

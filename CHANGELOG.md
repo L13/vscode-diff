@@ -5,7 +5,8 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Added
 
-- Added `l13Diff.ignoreUTFBOM` to ignore UTF-8, UTF-16BE or UTF-16LE BOM in text files.
+- Added `l13Diff.ignoreByteOrderMark` to ignore UTF-8, UTF-16BE or UTF-16LE BOM in text files.
+- Added visual context for drag'n drop in the list view.
 
 ### Fixed
 
