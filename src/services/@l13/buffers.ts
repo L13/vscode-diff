@@ -12,24 +12,6 @@ import type { BOM } from '../@types/file';
 
 //	Exports ____________________________________________________________________
 
-export function hasUTF8BOM (buffer: Buffer) {
-	
-	return buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191;
-	
-}
-
-export function hasUTF16BEBOM (buffer: Buffer) {
-	
-	return buffer[0] === 254 && buffer[1] === 255;
-	
-}
-
-export function hasUTF16LEBOM (buffer: Buffer) {
-	
-	return buffer[0] === 255 && buffer[1] === 254;
-	
-}
-
 export function detectUTFBOM (buffer: Buffer) {
 	
 	if (hasUTF16BEBOM(buffer)) return 'utf-16be';
@@ -65,6 +47,24 @@ export function trimWhitespace (buffer: Buffer, bom?: BOM): Buffer {
 }
 
 //	Functions __________________________________________________________________
+
+function hasUTF8BOM (buffer: Buffer) {
+	
+	return buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191;
+	
+}
+
+function hasUTF16BEBOM (buffer: Buffer) {
+	
+	return buffer[0] === 254 && buffer[1] === 255;
+	
+}
+
+function hasUTF16LEBOM (buffer: Buffer) {
+	
+	return buffer[0] === 255 && buffer[1] === 254;
+	
+}
 
 function normalizeAscii (buffer: Buffer) {
 	
@@ -176,10 +176,12 @@ function trimAscii (buffer: Buffer): Buffer {
 
 function trimUTF16BE (buffer: Buffer): Buffer {
 	
+	const hasBOM = hasUTF16BEBOM(buffer);
 	const length = buffer.length;
-	const newBuffer = [buffer[0], buffer[1]];
+	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
-	let i = 2;
+	let i = hasBOM ? 2 : 0;
+	const vscodeFix = i;
 	
 	stream: while (i < length) {
 		const valueA = buffer[i++];
@@ -198,7 +200,7 @@ function trimUTF16BE (buffer: Buffer): Buffer {
 				break start;
 			}
 			if (j === k) {
-				if (cache.length === length - 2) { // Fixes VS Code single space and tab line bug
+				if (cache.length === length - vscodeFix) { // Fixes VS Code single space and tab line bug
 					const cacheLengthA = cache.length;
 					for (let l = 0; l < cacheLengthA; l++) newBuffer.push(cache[l]);
 				} else if (valueA === 0 && (valueB === 10 || valueB === 13)) newBuffer.push(valueA, valueB);
@@ -228,10 +230,12 @@ function trimUTF16BE (buffer: Buffer): Buffer {
 
 function trimUTF16LE (buffer: Buffer): Buffer {
 	
+	const hasBOM = hasUTF16LEBOM(buffer);
 	const length = buffer.length;
-	const newBuffer = [buffer[0], buffer[1]];
+	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
-	let i = 2;
+	let i = hasBOM ? 2 : 0;
+	const vscodeFix = i;
 	
 	stream: while (i < length) {
 		const valueA = buffer[i++];
@@ -250,7 +254,7 @@ function trimUTF16LE (buffer: Buffer): Buffer {
 				break start;
 			}
 			if (j === k) {
-				if (cache.length === length - 2) { // Fixes VS Code single space and tab line bug
+				if (cache.length === length - vscodeFix) { // Fixes VS Code single space and tab line bug
 					const cacheLengthA = cache.length;
 					for (let l = 0; l < cacheLengthA; l++) newBuffer.push(cache[l]);
 				} else if (valueB === 0 && (valueA === 10 || valueA === 13)) newBuffer.push(valueA, valueB);
