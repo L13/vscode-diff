@@ -115,13 +115,13 @@
 			"error",
 			{
 				"selector": "default",
-				"format": [
-					"camelCase",
-					"PascalCase",
-					"UPPER_CASE"
-				],
+				"format": null,
 				"leadingUnderscore": "allow",
-				"trailingUnderscore": "forbid"
+				"trailingUnderscore": "forbid",
+				"custom": {
+					"regex": "^(?:[A-Za-z](?:[A-Za-z0-9]+)*|[A-Z]+(?:_[A-Z]+)*|l13Diff(?:\\.[A-Za-z0-9]+)+|\\d+|(?:-[a-z0-9]+)+)$",
+					"match": true
+				}
 			}
 		],
 		"@typescript-eslint/no-dupe-class-members": "error",
@@ -156,6 +156,7 @@
 		],
 		"no-throw-literal": "off",
 		"@typescript-eslint/no-throw-literal": "error",
+		"@typescript-eslint/no-unsafe-argument": "off",
 		"@typescript-eslint/no-unsafe-assignment": "off",
 		"@typescript-eslint/no-unsafe-member-access": "off",
 		"@typescript-eslint/no-unsafe-return": "off",
