@@ -312,7 +312,7 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			
 			const bom = bomA || bomB;
 			
-			if (ignoreByteOrderMark && bom) {
+			if (ignoreByteOrderMark && bomA !== bomB) {
 				if (bomA) bufferA = removeUTFBOM(bufferA, bomA);
 				if (bomB) bufferB = removeUTFBOM(bufferB, bomB);
 				diff.ignoredBOM = true;
