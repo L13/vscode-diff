@@ -12,7 +12,7 @@
 
 //	Exports ____________________________________________________________________
 
-export enum BOM {
+export const enum BOM {
 	NONE = 0,
 	UTF_8,
 	UTF_16BE,
