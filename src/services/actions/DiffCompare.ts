@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { detectUTFBOM, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
+import { BOM, detectUTFBOM, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -303,7 +303,9 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			const bomA = detectUTFBOM(bufferA);
 			const bomB = detectUTFBOM(bufferB);
 			
-			if (bomA && bomB && bomA !== bomB) {
+			if (bomA && bomB && bomA !== bomB
+				|| bomA === BOM.UTF_16LE && bomB !== BOM.UTF_16LE // UTF-16LE without BOM is not valid
+				|| bomA !== BOM.UTF_16LE && bomB === BOM.UTF_16LE) {
 				diff.status = 'modified';
 				return;
 			}

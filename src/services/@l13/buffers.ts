@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { BOM } from '../@types/file';
+
 
 //	Variables __________________________________________________________________
 
@@ -12,26 +12,33 @@ import type { BOM } from '../@types/file';
 
 //	Exports ____________________________________________________________________
 
+export enum BOM {
+	NONE = 0,
+	UTF_8,
+	UTF_16BE,
+	UTF_16LE,
+}
+
 export function detectUTFBOM (buffer: Buffer) {
 	
-	if (hasUTF16BEBOM(buffer)) return 'utf-16be';
-	if (hasUTF16LEBOM(buffer)) return 'utf-16le';
-	if (hasUTF8BOM(buffer)) return 'utf-8';
+	if (hasUTF16BEBOM(buffer)) return BOM.UTF_16BE;
+	if (hasUTF16LEBOM(buffer)) return BOM.UTF_16LE;
+	if (hasUTF8BOM(buffer)) return BOM.UTF_8;
 	
-	return null;
+	return BOM.NONE;
 	
 }
 
 export function removeUTFBOM (buffer: Buffer, bom: BOM) {
 	
-	return bom ? buffer.subarray(bom === 'utf-8' ? 3 : 2) : buffer;
+	return bom ? buffer.subarray(bom === BOM.UTF_8 ? 3 : 2) : buffer;
 	
 }
 
 export function normalizeLineEnding (buffer: Buffer, bom?: BOM) {
 	
-	if (hasUTF16BEBOM(buffer) || bom === 'utf-16be') return normalizeUTF16BE(buffer);
-	if (hasUTF16LEBOM(buffer) || bom === 'utf-16le') return normalizeUTF16LE(buffer);
+	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer);
+	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer);
 	
 	return normalizeAscii(buffer);
 	
@@ -39,8 +46,8 @@ export function normalizeLineEnding (buffer: Buffer, bom?: BOM) {
 
 export function trimWhitespace (buffer: Buffer, bom?: BOM): Buffer {
 	
-	if (hasUTF16BEBOM(buffer) || bom === 'utf-16be') return trimUTF16BE(buffer);
-	if (hasUTF16LEBOM(buffer) || bom === 'utf-16le') return trimUTF16LE(buffer);
+	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return trimUTF16BE(buffer);
+	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return trimUTF16LE(buffer);
 	
 	return trimAscii(buffer);
 	

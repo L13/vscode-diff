@@ -3,9 +3,8 @@
 import * as assert from 'assert';
 
 import type { Test } from '../../types';
-import { BOM } from '../@types/file';
 
-import { detectUTFBOM, normalizeLineEnding, trimWhitespace } from './buffers';
+import { BOM, detectUTFBOM, normalizeLineEnding, trimWhitespace } from './buffers';
 
 //	Variables __________________________________________________________________
 
@@ -31,19 +30,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [239, 187, 191],
-					toBe: 'utf-8',
+					toBe: BOM.UTF_8,
 				},
 				{
 					desc: 'just \\n',
 					expect: [239, 187, 191, 10],
-					toBe: 'utf-8',
+					toBe: BOM.UTF_8,
 				},
 			]);
 			
 			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.strictEqual(detectUTFBOM(Buffer.from([239, 187, 191, i])), 'utf-8');
+					assert.strictEqual(detectUTFBOM(Buffer.from([239, 187, 191, i])), BOM.UTF_8);
 				}
 				
 			});
@@ -56,19 +55,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [],
-					toBe: null,
+					toBe: BOM.NONE,
 				},
 				{
 					desc: 'just \\n',
 					expect: [10],
-					toBe: null,
+					toBe: BOM.NONE,
 				},
 			]);
 			
 			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.deepStrictEqual(detectUTFBOM(Buffer.from([i])), null);
+					assert.deepStrictEqual(detectUTFBOM(Buffer.from([i])), BOM.NONE);
 				}
 				
 			});
@@ -81,19 +80,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [254, 255],
-					toBe: 'utf-16be',
+					toBe: BOM.UTF_16BE,
 				},
 				{
 					desc: 'just \\n',
 					expect: [254, 255, 10],
-					toBe: 'utf-16be',
+					toBe: BOM.UTF_16BE,
 				},
 			]);
 			
 			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.strictEqual(detectUTFBOM(Buffer.from([254, 255, i])), 'utf-16be');
+					assert.strictEqual(detectUTFBOM(Buffer.from([254, 255, i])), BOM.UTF_16BE);
 				}
 				
 			});
@@ -106,19 +105,19 @@ describe('buffers', () => {
 				{
 					desc: 'empty',
 					expect: [255, 254],
-					toBe: 'utf-16le',
+					toBe: BOM.UTF_16LE,
 				},
 				{
 					desc: 'just \\n',
 					expect: [255, 254, 10],
-					toBe: 'utf-16le',
+					toBe: BOM.UTF_16LE,
 				},
 			]);
 			
 			it('all 255 chars', () => {
 				
 				for (let i = 0; i <= 0xff; i++) {
-					assert.strictEqual(detectUTFBOM(Buffer.from([255, 254, i])), 'utf-16le');
+					assert.strictEqual(detectUTFBOM(Buffer.from([255, 254, i])), BOM.UTF_16LE);
 				}
 				
 			});
@@ -838,14 +837,14 @@ describe('buffers', () => {
 					expect: [0, 32, 0, 65, 0, 32, 0, 65, 0, 32],
 					toBe: [0, 65, 0, 32, 0, 65],
 				},
-			], 'utf-16be');
+			], BOM.UTF_16BE);
 			
 			it('ignore all chars except \\t and space', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), 'utf-16be'), Buffer.from([i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), BOM.UTF_16BE), Buffer.from([i, j]));
 						}
 					}
 				}
@@ -1036,14 +1035,14 @@ describe('buffers', () => {
 					expect: [32, 0, 65, 0, 32, 0, 65, 0, 32, 0],
 					toBe: [65, 0, 32, 0, 65, 0],
 				},
-			], 'utf-16le');
+			], BOM.UTF_16LE);
 			
 			it('ignore all chars except \\t and space', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), 'utf-16le'), Buffer.from([i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), BOM.UTF_16LE), Buffer.from([i, j]));
 						}
 					}
 				}
