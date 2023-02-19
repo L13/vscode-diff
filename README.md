@@ -6,7 +6,7 @@ Compare two folders in Visual Studio Code.
 
 ## What's new in Diff Folders 1.1.0
 
-- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM of UTF-8 and UTF-16BE text files.
+- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
 - Added visual context for drag'n drop in the list view.
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
