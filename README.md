@@ -10,6 +10,7 @@ Compare two folders in Visual Studio Code.
 - Added visual context for drag'n drop in the list view.
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
+- Fixed overwrite existing favorite.
 
 ## Index
 

@@ -51,13 +51,13 @@ export class FavoritesState {
 		
 	}
 	
-	public add (label: string, fileA: string, fileB: string) {
+	public add (label: string, fileA: string, fileB: string, groupId?: number) {
 		
 		if (this.getByName(label)) return;
 		
 		const favorites = this.get();
 		
-		favorites.push({ label, fileA, fileB });
+		favorites.push({ label, fileA, fileB, groupId });
 		
 		favorites.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
 		

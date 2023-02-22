@@ -39,11 +39,14 @@ export class FavoritesDialog {
 		
 		if (!label) return;
 		
-		if (this.favoriteState.getByName(label)) {
+		const favorite = this.favoriteState.getByName(label);
+		
+		if (favorite) {
 			if (!await dialogs.confirm(`Overwrite favorite "${label}"?`, 'Ok')) return;
+			this.favoriteState.remove(favorite);
 		}
 		
-		this.favoriteState.add(label, fileA, fileB);
+		this.favoriteState.add(label, fileA, fileB, favorite?.groupId);
 		
 	}
 	

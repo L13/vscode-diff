@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
-## [1.1.0] - 2023-02-12
+## [1.1.0] - 2023-02-26
 
 ### Added
 
@@ -12,6 +12,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
+- Fixed overwrite existing favorite.
 
 ## [1.0.3] - 2021-06-23
 
