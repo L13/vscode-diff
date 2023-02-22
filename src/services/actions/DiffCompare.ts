@@ -313,21 +313,18 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			const bom = bomA || bomB;
 			
 			if (ignoreByteOrderMark && bomA !== bomB) {
-				if (bomA) bufferA = removeUTFBOM(bufferA, bomA);
-				if (bomB) bufferB = removeUTFBOM(bufferB, bomB);
-				diff.ignoredBOM = true;
+				if (bomA) bufferA = removeUTFBOM(bufferA, diff, bomA);
+				if (bomB) bufferB = removeUTFBOM(bufferB, diff, bomB);
 			}
 			
 			if (ignoreEndOfLine) {
-				bufferA = normalizeLineEnding(bufferA, bom);
-				bufferB = normalizeLineEnding(bufferB, bom);
-				diff.ignoredEOL = true;
+				bufferA = normalizeLineEnding(bufferA, diff, bom);
+				bufferB = normalizeLineEnding(bufferB, diff, bom);
 			}
 			
 			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA, bom);
-				bufferB = trimWhitespace(bufferB, bom);
-				diff.ignoredWhitespace = true;
+				bufferA = trimWhitespace(bufferA, diff, bom);
+				bufferB = trimWhitespace(bufferB, diff, bom);
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';

@@ -8,6 +8,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 - Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
 - Added visual context for drag'n drop in the list view.
 
+### Changed
+
+- Changed default setting for `l13Diff.ignoreEndfLine` to true to match Visuals Studio Code's Diff Viewer.
+
 ### Fixed
 
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)

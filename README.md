@@ -8,6 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
 - Added visual context for drag'n drop in the list view.
+- Changed default setting for `l13Diff.ignoreEndfLine` to true to match Visuals Studio Code's Diff Viewer.
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
 - Fixed overwrite existing favorite.
@@ -412,23 +413,13 @@ Right now it is not possible to show a message if files will be copied from an u
 
 ## Recommended Settings
 
-The two fastest ways to compare files accurate are
+The fastest and most accurate way to compare files is
 
 ```json
 {
 	"l13Diff.ignoreEndOfLine": false,
 	"l13Diff.ignoreTrimWhitespace": "default",
 	"diffEditor.ignoreTrimWhitespace": false,
-	"l13Diff.ignoreByteOrderMark": false
-}
-```
-
-or
-
-```json
-{
-	"l13Diff.ignoreEndOfLine": false,
-	"l13Diff.ignoreTrimWhitespace": "off",
 	"l13Diff.ignoreByteOrderMark": false
 }
 ```

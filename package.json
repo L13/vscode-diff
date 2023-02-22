@@ -1164,12 +1164,12 @@
 				},
 				"l13Diff.ignoreEndOfLine": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Should CR/LF be ignored in text files?"
 				},
 				"l13Diff.ignoreByteOrderMark": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Should the UTF-8 and UTF-16BE BOM be ignored in text files?"
 				},
 				"l13Diff.ignoreContents": {

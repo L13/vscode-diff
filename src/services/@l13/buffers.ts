@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import { Diff } from '../../types';
 
 //	Variables __________________________________________________________________
 
@@ -29,27 +29,33 @@ export function detectUTFBOM (buffer: Buffer) {
 	
 }
 
-export function removeUTFBOM (buffer: Buffer, bom: BOM) {
+export function removeUTFBOM (buffer: Buffer, diff: Diff, bom?: BOM) {
 	
-	return bom ? buffer.subarray(bom === BOM.UTF_8 ? 3 : 2) : buffer;
+	const currentBOM = bom || detectUTFBOM(buffer);
 	
-}
-
-export function normalizeLineEnding (buffer: Buffer, bom?: BOM) {
-	
-	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer);
-	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer);
-	
-	return normalizeAscii(buffer);
+	if (currentBOM) {
+		diff.ignoredBOM = true;
+		return buffer.subarray(currentBOM === BOM.UTF_8 ? 3 : 2);
+	}
+	return buffer;
 	
 }
 
-export function trimWhitespace (buffer: Buffer, bom?: BOM): Buffer {
+export function normalizeLineEnding (buffer: Buffer, diff: Diff, bom?: BOM) {
 	
-	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return trimUTF16BE(buffer);
-	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return trimUTF16LE(buffer);
+	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer, diff);
+	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer, diff);
 	
-	return trimAscii(buffer);
+	return normalizeAscii(buffer, diff);
+	
+}
+
+export function trimWhitespace (buffer: Buffer, diff: Diff, bom?: BOM): Buffer {
+	
+	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return trimUTF16BE(buffer, diff);
+	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return trimUTF16LE(buffer, diff);
+	
+	return trimAscii(buffer, diff);
 	
 }
 
@@ -73,27 +79,35 @@ function hasUTF16LEBOM (buffer: Buffer) {
 	
 }
 
-function normalizeAscii (buffer: Buffer) {
+function normalizeAscii (buffer: Buffer, diff: Diff) {
 	
 	const length = buffer.length;
 	const cache = [];
+	let ignoredEOL = false;
 	let i = 0;
 	
 	while (i < length) {
 		const value = buffer[i++];
 		if (value === 13) {
 			if (buffer[i] !== 10) cache.push(10);
+			if (!ignoredEOL) ignoredEOL = true;
 		} else cache.push(value);
 	}
 	
-	return Buffer.from(cache);
+	if (ignoredEOL) {
+		diff.ignoredEOL = true;
+		return Buffer.from(cache);
+	}
+	
+	return buffer;
 	
 }
 
-function normalizeUTF16BE (buffer: Buffer) {
+function normalizeUTF16BE (buffer: Buffer, diff: Diff) {
 	
 	const length = buffer.length;
 	const cache = [];
+	let ignoredEOL = false;
 	let i = 0;
 	
 	while (i < length) {
@@ -101,17 +115,24 @@ function normalizeUTF16BE (buffer: Buffer) {
 		const valueB = buffer[i++];
 		if (valueA === 0 && valueB === 13) {
 			if (!(buffer[i] === 0 && buffer[i + 1] === 10)) cache.push(0, 10);
+			if (!ignoredEOL) ignoredEOL = true;
 		} else cache.push(valueA, valueB);
 	}
 	
-	return Buffer.from(cache);
+	if (ignoredEOL) {
+		diff.ignoredEOL = true;
+		return Buffer.from(cache);
+	}
+	
+	return buffer;
 	
 }
 
-function normalizeUTF16LE (buffer: Buffer) {
+function normalizeUTF16LE (buffer: Buffer, diff: Diff) {
 	
 	const length = buffer.length;
 	const cache = [];
+	let ignoredEOL = false;
 	let i = 0;
 	
 	while (i < length) {
@@ -119,18 +140,25 @@ function normalizeUTF16LE (buffer: Buffer) {
 		const valueB = buffer[i++];
 		if (valueA === 13 && valueB === 0) {
 			if (!(buffer[i] === 10 && buffer[i + 1] === 0)) cache.push(10, 0);
+			if (!ignoredEOL) ignoredEOL = true;
 		} else cache.push(valueA, valueB);
 	}
 	
-	return Buffer.from(cache);
+	if (ignoredEOL) {
+		diff.ignoredEOL = true;
+		return Buffer.from(cache);
+	}
+	
+	return buffer;
 	
 }
 
-function trimAscii (buffer: Buffer): Buffer {
+function trimAscii (buffer: Buffer, diff: Diff): Buffer {
 	
 	const length = buffer.length;
 	const newBuffer = [];
 	let cache = [];
+	let ignoredWhitespace = false;
 	let fixBOM = 0;
 	let i = 0;
 	
@@ -148,6 +176,7 @@ function trimAscii (buffer: Buffer): Buffer {
 			start: while (j < k) {
 				const cacheValue = cache[j];
 				if (cacheValue === 9 || cacheValue === 32) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					j++;
 					continue start;
 				}
@@ -164,6 +193,7 @@ function trimAscii (buffer: Buffer): Buffer {
 			end: while (k > j) {
 				const cacheValue = cache[k - 1];
 				if (cacheValue === 9 || cacheValue === 32) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					k--;
 					continue end;
 				}
@@ -177,16 +207,22 @@ function trimAscii (buffer: Buffer): Buffer {
 		} else cache.push(value);
 	}
 	
-	return Buffer.from(newBuffer);
+	if (ignoredWhitespace) {
+		diff.ignoredWhitespace = true;
+		return Buffer.from(newBuffer);
+	}
+	
+	return buffer;
 	
 }
 
-function trimUTF16BE (buffer: Buffer): Buffer {
+function trimUTF16BE (buffer: Buffer, diff: Diff): Buffer {
 	
 	const hasBOM = hasUTF16BEBOM(buffer);
 	const length = buffer.length;
 	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
+	let ignoredWhitespace = false;
 	let i = hasBOM ? 2 : 0;
 	const vscodeFix = i;
 	
@@ -201,6 +237,7 @@ function trimUTF16BE (buffer: Buffer): Buffer {
 				const cacheValueA = cache[j];
 				const cacheValueB = cache[j + 1];
 				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 32)) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					j += 2;
 					continue start;
 				}
@@ -218,6 +255,7 @@ function trimUTF16BE (buffer: Buffer): Buffer {
 				const cacheValueA = cache[k - 2];
 				const cacheValueB = cache[k - 1];
 				if (cacheValueA === 0 && (cacheValueB === 9 || cacheValueB === 32)) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					k -= 2;
 					continue end;
 				}
@@ -231,16 +269,22 @@ function trimUTF16BE (buffer: Buffer): Buffer {
 		} else cache.push(valueA, valueB);
 	}
 	
-	return Buffer.from(newBuffer);
+	if (ignoredWhitespace) {
+		diff.ignoredWhitespace = true;
+		return Buffer.from(newBuffer);
+	}
+	
+	return buffer;
 	
 }
 
-function trimUTF16LE (buffer: Buffer): Buffer {
+function trimUTF16LE (buffer: Buffer, diff: Diff): Buffer {
 	
 	const hasBOM = hasUTF16LEBOM(buffer);
 	const length = buffer.length;
 	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
+	let ignoredWhitespace = false;
 	let i = hasBOM ? 2 : 0;
 	const vscodeFix = i;
 	
@@ -255,6 +299,7 @@ function trimUTF16LE (buffer: Buffer): Buffer {
 				const cacheValueA = cache[j];
 				const cacheValueB = cache[j + 1];
 				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 32)) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					j += 2;
 					continue start;
 				}
@@ -272,6 +317,7 @@ function trimUTF16LE (buffer: Buffer): Buffer {
 				const cacheValueA = cache[k - 2];
 				const cacheValueB = cache[k - 1];
 				if (cacheValueB === 0 && (cacheValueA === 9 || cacheValueA === 32)) {
+					if (!ignoredWhitespace) ignoredWhitespace = true;
 					k -= 2;
 					continue end;
 				}
@@ -285,6 +331,11 @@ function trimUTF16LE (buffer: Buffer): Buffer {
 		} else cache.push(valueA, valueB);
 	}
 	
-	return Buffer.from(newBuffer);
+	if (ignoredWhitespace) {
+		diff.ignoredWhitespace = true;
+		return Buffer.from(newBuffer);
+	}
+	
+	return buffer;
 	
 }
