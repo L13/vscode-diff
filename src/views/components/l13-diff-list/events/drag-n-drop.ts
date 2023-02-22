@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { MODIFIED } from '../../../../services/@l13/buffers';
 import type { DiffFile, DiffOpenMessage, DragNDropEventsInit } from '../../../../types';
 
 import { msg } from '../../../common';
@@ -129,9 +130,9 @@ export function init ({ list }: DragNDropEventsInit) {
 					id: null,
 					status: 'modified',
 					type: typeA,
-					ignoredEOL: false,
-					ignoredBOM: false,
-					ignoredWhitespace: false,
+					ignoredEOL: MODIFIED.NONE,
+					ignoredBOM: MODIFIED.NONE,
+					ignoredWhitespace: MODIFIED.NONE,
 					fileA,
 					fileB,
 				},

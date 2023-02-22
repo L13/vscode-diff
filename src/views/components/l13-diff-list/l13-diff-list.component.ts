@@ -5,6 +5,8 @@ import type { Dictionary, Diff, DiffFile, DiffStatus } from '../../../types';
 import { remove } from '../../../@l13/arrays';
 import { formatDate, formatFileSize, formatList } from '../../../@l13/formats';
 
+import { MODIFIED } from '../../../services/@l13/buffers';
+
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { disableContextMenu, isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
@@ -755,15 +757,18 @@ Modified: ${formatDate(new Date(stat.mtime))}`;
 		basename.classList.add('-basename');
 		path.appendChild(basename);
 		
-		if (diff.status === 'unchanged' && (diff.ignoredEOL || diff.ignoredBOM || diff.ignoredWhitespace)) {
+		if (diff.status === 'unchanged' && (diff.ignoredBOM || diff.ignoredEOL || diff.ignoredWhitespace)) {
 			const ignored = document.createElement('SPAN');
+			const modified = diff.fileA === file ? MODIFIED.LEFT : MODIFIED.RIGHT;
 			const values = [];
-			if (diff.ignoredEOL) values.push('EOL');
-			if (diff.ignoredBOM) values.push('BOM');
-			if (diff.ignoredWhitespace) values.push('Whitespace');
-			ignored.textContent = `(ignored ${formatList(values)})`;
-			ignored.classList.add('-info');
-			path.appendChild(ignored);
+			if (diff.ignoredBOM === MODIFIED.BOTH || diff.ignoredBOM === modified) values.push('BOM');
+			if (diff.ignoredEOL === MODIFIED.BOTH || diff.ignoredEOL === modified) values.push('EOL');
+			if (diff.ignoredWhitespace === MODIFIED.BOTH || diff.ignoredWhitespace === modified) values.push('Whitespace');
+			if (values.length) {
+				ignored.textContent = `(ignored ${formatList(values)})`;
+				ignored.classList.add('-info');
+				path.appendChild(ignored);
+			}
 		}
 	}
 	

@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { BOM, detectUTFBOM, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
+import { BOM, detectUTFBOM, MODIFIED, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -288,7 +288,7 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 	if (typeA === 'file') {
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace || ignoreByteOrderMark)
+		} else if ((ignoreByteOrderMark || ignoreEndOfLine || ignoreTrimWhitespace)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
@@ -313,18 +313,18 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			const bom = bomA || bomB;
 			
 			if (ignoreByteOrderMark && bomA !== bomB) {
-				if (bomA) bufferA = removeUTFBOM(bufferA, diff, bomA);
-				if (bomB) bufferB = removeUTFBOM(bufferB, diff, bomB);
+				if (bomA) bufferA = removeUTFBOM(bufferA, diff, MODIFIED.LEFT, bomA);
+				if (bomB) bufferB = removeUTFBOM(bufferB, diff, MODIFIED.RIGHT, bomB);
 			}
 			
 			if (ignoreEndOfLine) {
-				bufferA = normalizeLineEnding(bufferA, diff, bom);
-				bufferB = normalizeLineEnding(bufferB, diff, bom);
+				bufferA = normalizeLineEnding(bufferA, diff, MODIFIED.LEFT, bom);
+				bufferB = normalizeLineEnding(bufferB, diff, MODIFIED.RIGHT, bom);
 			}
 			
 			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA, diff, bom);
-				bufferB = trimWhitespace(bufferB, diff, bom);
+				bufferA = trimWhitespace(bufferA, diff, MODIFIED.LEFT, bom);
+				bufferB = trimWhitespace(bufferB, diff, MODIFIED.RIGHT, bom);
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
@@ -355,9 +355,9 @@ function addFile (diffs: Dictionary<Diff>, id: string, fileA: DiffFile, fileB: D
 		id,
 		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
 		type: file.type,
-		ignoredEOL: false,
-		ignoredBOM: false,
-		ignoredWhitespace: false,
+		ignoredEOL: MODIFIED.NONE,
+		ignoredBOM: MODIFIED.NONE,
+		ignoredWhitespace: MODIFIED.NONE,
 		fileA,
 		fileB,
 	};

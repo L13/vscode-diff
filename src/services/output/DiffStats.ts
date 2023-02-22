@@ -1,9 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { formatAmount, formatFileSize } from '../../@l13/formats';
+import { formatAmount, formatFileSize, formatList } from '../../@l13/formats';
 import { pluralErrors, pluralFiles, pluralFolders, pluralOthers, pluralSymlinks } from '../../@l13/units/files';
 
 import type { Diff, DiffFile, DiffSettings } from '../../types';
+
+import { MODIFIED } from '../@l13/buffers';
 
 import type { DiffResult } from './DiffResult';
 
@@ -159,8 +161,9 @@ function countDetailStats (stats: DetailStats, diff: Diff) {
 	
 	stats.total++;
 	
-	if (diff.ignoredEOL) stats.ignoredEOL++;
-	if (diff.ignoredWhitespace) stats.ignoredWhitespace++;
+	if (diff.ignoredEOL) stats.ignoredEOL += diff.ignoredEOL === MODIFIED.BOTH ? 2 : 1;
+	if (diff.ignoredBOM) stats.ignoredBOM += diff.ignoredBOM === MODIFIED.BOTH ? 2 : 1;
+	if (diff.ignoredWhitespace) stats.ignoredWhitespace += diff.ignoredWhitespace === MODIFIED.BOTH ? 2 : 1;
 	
 	if (diff.fileA) countFileStats(stats, diff.fileA);
 	if (diff.fileB) countFileStats(stats, diff.fileB);
@@ -179,13 +182,14 @@ function formatTotal (stats: DetailStats) {
 	
 	const ignored: string[] = [];
 	
-	if (stats.ignoredEOL) ignored.push('eol');
-	if (stats.ignoredWhitespace) ignored.push('whitespace');
+	if (stats.ignoredBOM) ignored.push(`BOM in ${formatAmount(stats.ignoredBOM, pluralFiles)}`);
+	if (stats.ignoredEOL) ignored.push(`EOL in ${formatAmount(stats.ignoredEOL, pluralFiles)}`);
+	if (stats.ignoredWhitespace) ignored.push(`Whitespace in ${formatAmount(stats.ignoredWhitespace, pluralFiles)}`);
 	
-	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
-	const entries: string[] = formatDetails(stats, info);
+	const info = ignored.length ? ` [Ignored ${formatList(ignored)}]` : '';
+	const entries: string[] = formatDetails(stats);
 	
-	return entries.length ? `${stats.total} (${entries.join(', ')})` : '0';
+	return entries.length ? `${stats.total} (${entries.join(', ')})${info}` : '0';
 	
 }
 
@@ -197,11 +201,11 @@ function formatEntries (stats: DetailStats | FolderStats) {
 	
 }
 
-function formatDetails (stats: DetailStats | FolderStats, info = '') {
+function formatDetails (stats: DetailStats | FolderStats) {
 	
 	const entries: string[] = [];
 	
-	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}`);
 	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
 	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
 	if (stats.errors) entries.push(`${formatAmount(stats.errors, pluralErrors)}`);

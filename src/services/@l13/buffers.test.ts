@@ -4,7 +4,7 @@ import * as assert from 'assert';
 
 import type { Diff, Test } from '../../types';
 
-import { BOM, detectUTFBOM, normalizeLineEnding, trimWhitespace } from './buffers';
+import { BOM, detectUTFBOM, MODIFIED, normalizeLineEnding, trimWhitespace } from './buffers';
 
 //	Variables __________________________________________________________________
 
@@ -12,9 +12,9 @@ const diff: Diff = {
 	id: '',
 	status: 'untracked',
 	type: 'unknown',
-	ignoredBOM: false,
-	ignoredEOL: false,
-	ignoredWhitespace: false,
+	ignoredBOM: MODIFIED.NONE,
+	ignoredEOL: MODIFIED.NONE,
+	ignoredWhitespace: MODIFIED.NONE,
 	fileA: null,
 	fileB: null,
 };
@@ -140,7 +140,7 @@ describe('buffers', () => {
 		function runTests (tests: Test[], bom?: BOM) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, bom), Buffer.from(test.toBe)));
+				it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
 			}
 			
 		}
@@ -213,7 +213,7 @@ describe('buffers', () => {
 			it('ignore all chars except \\r and \\n', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
-					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([i]), diff), Buffer.from([i]));
+					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
 				}
 				
 			});
@@ -289,7 +289,7 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					// eslint-disable-next-line max-len
-					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i]), diff), Buffer.from([239, 187, 191, i]));
+					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
 				}
 				
 			});
@@ -366,7 +366,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) {
-							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([254, 255, i, j]), diff), Buffer.from([254, 255, i, j]));
+							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
 						}
 					}
 				}
@@ -445,7 +445,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) {
-							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([255, 254, i, j]), diff), Buffer.from([255, 254, i, j]));
+							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
 						}
 					}
 				}
@@ -461,7 +461,7 @@ describe('buffers', () => {
 		function runTests (tests: Test[], bom?: BOM) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, bom), Buffer.from(test.toBe)));
+				it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
 			}
 			
 		}
@@ -560,7 +560,7 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepStrictEqual(trimWhitespace(Buffer.from([i]), diff), Buffer.from([i]));
+						assert.deepStrictEqual(trimWhitespace(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
 					}
 				}
 				
@@ -657,7 +657,7 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepStrictEqual(trimWhitespace(Buffer.from([239, 187, 191, i]), diff), Buffer.from([239, 187, 191, i]));
+						assert.deepStrictEqual(trimWhitespace(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
 					}
 				}
 				
@@ -755,7 +755,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([254, 255, i, j]), diff), Buffer.from([254, 255, i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
 						}
 					}
 				}
@@ -854,7 +854,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, BOM.UTF_16BE), Buffer.from([i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16BE), Buffer.from([i, j]));
 						}
 					}
 				}
@@ -953,7 +953,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([255, 254, i, j]), diff), Buffer.from([255, 254, i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
 						}
 					}
 				}
@@ -1052,7 +1052,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, BOM.UTF_16LE), Buffer.from([i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16LE), Buffer.from([i, j]));
 						}
 					}
 				}

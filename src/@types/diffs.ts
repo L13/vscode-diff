@@ -2,6 +2,8 @@
 
 import * as fs from 'fs';
 
+import { MODIFIED } from '../services/@l13/buffers';
+
 //	Variables __________________________________________________________________
 
 
@@ -18,9 +20,9 @@ export type Diff = {
 	id: string,
 	status: DiffStatus,
 	type: DiffFileTypes | 'mixed',
-	ignoredEOL: boolean,
-	ignoredBOM: boolean,
-	ignoredWhitespace: boolean,
+	ignoredEOL: MODIFIED,
+	ignoredBOM: MODIFIED,
+	ignoredWhitespace: MODIFIED,
 	fileA: null | DiffFile,
 	fileB: null | DiffFile,
 };
