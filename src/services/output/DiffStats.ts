@@ -186,7 +186,7 @@ function formatTotal (stats: DetailStats) {
 	if (stats.ignoredEOL) ignored.push(`EOL in ${formatAmount(stats.ignoredEOL, pluralFiles)}`);
 	if (stats.ignoredWhitespace) ignored.push(`Whitespace in ${formatAmount(stats.ignoredWhitespace, pluralFiles)}`);
 	
-	const info = ignored.length ? ` [Ignored ${formatList(ignored)}]` : '';
+	const info = ignored.length ? `, Ignored ${formatList(ignored)}` : '';
 	const entries: string[] = formatDetails(stats);
 	
 	return entries.length ? `${stats.total} (${entries.join(', ')})${info}` : '0';

@@ -317,11 +317,7 @@
 			},
 			{
 				"command": "l13Diff.action.search.open",
-				"title": "Filter",
-				"icon": {
-					"light": "images/panels/filter-list-light.svg",
-					"dark": "images/panels/filter-list-dark.svg"
-				}
+				"title": "Filter"
 			},
 			{
 				"command": "l13Diff.action.actions.selectCreatedEntries",
@@ -1043,11 +1039,6 @@
 					"command": "l13Diff.action.panel.addToFavorites",
 					"when": "l13DiffFocus",
 					"group": "navigation@1"
-				},
-				{
-					"command": "l13Diff.action.search.open",
-					"when": "l13DiffFocus",
-					"group": "navigation@2"
 				},
 				{
 					"command": "l13Diff.action.settings.ignoreCaseSensitive",
