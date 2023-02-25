@@ -10,7 +10,7 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Changed
 
-- Changed default setting for `l13Diff.ignoreEndfLine` to true to match Visuals Studio Code's Diff Viewer.
+- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
 
 ### Fixed
 

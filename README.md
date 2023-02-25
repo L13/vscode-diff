@@ -8,7 +8,7 @@ Compare two folders in Visual Studio Code.
 
 - Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
 - Added visual context for drag'n drop in the list view.
-- Changed default setting for `l13Diff.ignoreEndfLine` to true to match Visuals Studio Code's Diff Viewer.
+- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
 - Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
 - Fixed JSONC parser for trailing comma in an object or array.
 - Fixed overwrite existing favorite.
@@ -285,6 +285,14 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 ### List Tooltip
 
 * Shows the full path, the size, the creation and modification time and date of a file.
+
+### List Info
+
+If `l13Diff.ignoreByteOrderMark`, `l13Diff.ignoreEndOfLine` or `l13Diff.ignoreTrimWhitespace` is true a file will be modified for a comparison. An info appears on the right side of the filename in the list view to see which changes has been done. The information is only visible for files where the modification results in **unchanged**.
+
+* `Ignored EOL` - Line endings have been converted from Windows to Unix.
+* `Ignored BOM` - Byte Order Mark for a UTF-8 and UTF-16BE file has been removed.
+* `Ignored Whitespace` - Leading and trailing whitespaces have been removed.
 
 ### Search Widget
 
