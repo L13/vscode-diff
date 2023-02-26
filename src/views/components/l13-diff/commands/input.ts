@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ leftVM, rightVM }:InputCommandsInit) {
+export function init ({ leftVM, rightVM }: InputCommandsInit) {
 	
 	msg.on('l13Diff.action.input.pickLeftFolder', () => leftVM.pick());
 	

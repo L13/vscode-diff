@@ -12,7 +12,7 @@ import type { SearchEventsInit } from '../../../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, navigator, search }:SearchEventsInit) {
+export function init ({ diff, list, navigator, search }: SearchEventsInit) {
 	
 	search.addEventListener('close', () => {
 		

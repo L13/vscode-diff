@@ -15,7 +15,7 @@ import type { Dictionary } from '../../types';
 export type ContextStates = Dictionary<boolean>;
 
 export type Uri = {
-	fsPath:string,
+	fsPath: string,
 };
 
 //	Functions __________________________________________________________________

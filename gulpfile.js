@@ -6,7 +6,7 @@ const fs = require('fs');
 const glob = require('glob');
 const gulp = require('gulp');
 const { ESLint } = require('eslint');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 const rollup = require('rollup');
 
 const file2json = require('./plugins/gulp-file2json');

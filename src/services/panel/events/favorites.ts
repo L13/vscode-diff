@@ -18,12 +18,12 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
 	const favoritesState = FavoritesState.create(currentDiffPanel.context);
 	const favoritesDialog = FavoritesDialog.create(favoritesState);
 	
-	currentDiffPanel.msg.on('save:favorite', (data:DiffFavoriteMessage) => {
+	currentDiffPanel.msg.on('save:favorite', (data: DiffFavoriteMessage) => {
 		
 		favoritesDialog.add(data.pathA, data.pathB);
 		

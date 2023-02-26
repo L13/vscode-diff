@@ -31,7 +31,7 @@ export class FavoriteTreeItem extends vscode.TreeItem {
 	
 	public contextValue = 'favorite';
 	
-	public constructor (public readonly favorite:Favorite) {
+	public constructor (public readonly favorite: Favorite) {
 		
 		super(favorite.label);
 		

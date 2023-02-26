@@ -31,7 +31,7 @@ import type { L13DiffMenuViewModel } from './l13-diff-menu.viewmodel';
 export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 	@L13Query('l13-diff-menu-lists')
-	private lists:HTMLElement;
+	private lists: HTMLElement;
 
 	public isCursorInMenu = false;
 
@@ -47,7 +47,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 		this.addEventListener('mouseenter', () => this.isCursorInMenu = true);
 		this.addEventListener('mouseleave', () => this.isCursorInMenu = false);
 
-		this.lists.addEventListener('click', (event:Event) => {
+		this.lists.addEventListener('click', (event: Event) => {
 
 			const item = (<HTMLElement>event.target).closest('li');
 			const parentNode = this.parentNode;
@@ -80,7 +80,7 @@ export class L13DiffMenuComponent extends L13Element<L13DiffMenuViewModel> {
 
 	}
 
-	public updateList (list:HTMLElement, entries:string[], info:string) {
+	public updateList (list: HTMLElement, entries: string[], info: string) {
 
 		const fragment = document.createDocumentFragment();
 

@@ -22,15 +22,15 @@ import type { FavoritesState } from '../states/FavoritesState';
 
 export class FavoriteGroupsDialog {
 	
-	private static current:FavoriteGroupsDialog = null;
+	private static current: FavoriteGroupsDialog = null;
 	
-	public static create (favoriteGroupsState:FavoriteGroupsState, favoritesState:FavoritesState) {
+	public static create (favoriteGroupsState: FavoriteGroupsState, favoritesState: FavoritesState) {
 		
 		return FavoriteGroupsDialog.current || (FavoriteGroupsDialog.current = new FavoriteGroupsDialog(favoriteGroupsState, favoritesState));
 		
 	}
 	
-	private constructor (private readonly favoriteGroupsState:FavoriteGroupsState, private readonly favoritesState:FavoritesState) {}
+	private constructor (private readonly favoriteGroupsState: FavoriteGroupsState, private readonly favoritesState: FavoritesState) {}
 	
 	public async add () {
 		
@@ -51,10 +51,10 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public async addFavoriteToGroup (favorite:Favorite) {
+	public async addFavoriteToGroup (favorite: Favorite) {
 		
 		const favoriteGroups = this.favoriteGroupsState.get();
-		let favoriteGroup:FavoriteGroup = null;
+		let favoriteGroup: FavoriteGroup = null;
 		
 		if (favoriteGroups.length) {
 			const newFavoriteGroupItem = { label: '$(add) New Group...' };
@@ -76,7 +76,7 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public async openMultipleDiffPanels (favoriteGroup:FavoriteGroup) {
+	public async openMultipleDiffPanels (favoriteGroup: FavoriteGroup) {
 		
 		const favorites = this.favoritesState.getFavoritesByGroup(favoriteGroup);
 		
@@ -92,7 +92,7 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public async rename (favoriteGroup:FavoriteGroup) {
+	public async rename (favoriteGroup: FavoriteGroup) {
 		
 		const label = await vscode.window.showInputBox({
 			placeHolder: 'Please enter a new name for the group.',
@@ -110,7 +110,7 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	public async remove (favoriteGroup:FavoriteGroup) {
+	public async remove (favoriteGroup: FavoriteGroup) {
 		
 		const buttonDeleteGroupAndFavorites = 'Delete Group and Favorites';
 		const buttons = ['Delete'];

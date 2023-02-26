@@ -10,9 +10,9 @@ import type { PackageLanguage } from '../../types';
 const findRegExpChars = /([\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,])/g;
 const findStartDot = /^\./;
 
-let findExtensions:RegExp = null;
-let filenames:string[] = [];
-let findAssociations:RegExp = null;
+let findExtensions: RegExp = null;
+let filenames: string[] = [];
+let findAssociations: RegExp = null;
 
 //	Initialize _________________________________________________________________
 
@@ -20,7 +20,7 @@ let findAssociations:RegExp = null;
 
 //	Exports ____________________________________________________________________
 
-export function isTextFile (basename:string) {
+export function isTextFile (basename: string) {
 	
 	return findExtensions.test(basename)
 	|| filenames.includes(basename)
@@ -40,7 +40,7 @@ export function buildWhitelistForTextFiles () {
 		
 		(<PackageLanguage[]>packageJSON.contributes?.languages)?.forEach((language) => {
 			
-			language.extensions?.forEach((extname:string) => {
+			language.extensions?.forEach((extname: string) => {
 				
 				extensions.push((findStartDot.test(extname) ? '*' : '') + extname);
 				
@@ -64,13 +64,13 @@ export function buildWhitelistForTextFiles () {
 
 //	Functions __________________________________________________________________
 
-function createFindGlob (ignore:string[]) {
+function createFindGlob (ignore: string[]) {
 	
 	return new RegExp(`^(${ignore.map((value) => escapeForRegExp(value)).join('|')})$`, 'i');
 	
 }
 
-function escapeForRegExp (text:string) {
+function escapeForRegExp (text: string) {
 	
 	return `${text}`.replace(findRegExpChars, (match) => {
 		

@@ -31,35 +31,35 @@ import type { L13DiffSearchViewModel } from './l13-diff-search.viewmodel';
 export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 	
 	@L13Query('#l13_resizer')
-	private resizer:HTMLElement;
+	private resizer: HTMLElement;
 	
 	@L13Query('#l13_searchterm')
 	@L13Class({ '-error': 'error' })
-	private inputSearchterm:HTMLInputElement;
+	private inputSearchterm: HTMLInputElement;
 	
 	@L13Query('#l13_case_sensitive')
-	private inputCaseSensitive:HTMLInputElement;
+	private inputCaseSensitive: HTMLInputElement;
 	
 	@L13Query('#l13_use_regexp')
-	private inputRegExp:HTMLInputElement;
+	private inputRegExp: HTMLInputElement;
 	
 	@L13Query('#l13_use_files')
-	private inputFiles:HTMLInputElement;
+	private inputFiles: HTMLInputElement;
 	
 	@L13Query('#l13_use_folders')
-	private inputFolders:HTMLInputElement;
+	private inputFolders: HTMLInputElement;
 	
 	@L13Query('#l13_use_symlinks')
-	private inputSymlinks:HTMLInputElement;
+	private inputSymlinks: HTMLInputElement;
 	
 	@L13Query('#l13_use_conflicts')
-	private inputConflicts:HTMLInputElement;
+	private inputConflicts: HTMLInputElement;
 	
 	@L13Query('#l13_use_others')
-	private inputOthers:HTMLInputElement;
+	private inputOthers: HTMLInputElement;
 	
 	@L13Query('button')
-	private button:HTMLButtonElement;
+	private button: HTMLButtonElement;
 		
 	private right = 0;
 	
@@ -112,7 +112,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 		this.inputSearchterm.addEventListener('dragover', (event) => event.preventDefault());
 		
-		this.inputSearchterm.addEventListener('drop', ({ dataTransfer }:DragEvent) => {
+		this.inputSearchterm.addEventListener('drop', ({ dataTransfer }: DragEvent) => {
 			
 			if (dataTransfer) {
 				const file = dataTransfer.getData('data-diff-file');
@@ -127,7 +127,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 	}
 		
-	private resizeDown = (event:MouseEvent) => {
+	private resizeDown = (event: MouseEvent) => {
 		
 		document.documentElement.classList.add('-unselectable');
 		document.body.style.cursor = 'col-resize';
@@ -142,7 +142,7 @@ export class L13DiffSearchComponent extends L13Element<L13DiffSearchViewModel> {
 		
 	};
 	
-	private resizeMove = (event:MouseEvent) => {
+	private resizeMove = (event: MouseEvent) => {
 		
 		if (!event.which) return this.resizeUp();
 		

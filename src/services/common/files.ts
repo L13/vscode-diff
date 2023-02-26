@@ -14,7 +14,7 @@ import { lstatSync } from '../@l13/fse';
 
 //	Exports ____________________________________________________________________
 	
-export function reveal (pathname:string) {
+export function reveal (pathname: string) {
 	
 	if (lstatSync(pathname)) {
 		vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(pathname));

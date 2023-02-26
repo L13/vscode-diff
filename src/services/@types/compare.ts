@@ -13,10 +13,10 @@ import { DiffSettings } from '../../@types/diffs';
 //	Exports ____________________________________________________________________
 
 export type DiffError = {
-	diffSettings?:DiffSettings,
-	error:string|Error,
-	pathA:string,
-	pathB:string,
+	diffSettings?: DiffSettings,
+	error: string | Error,
+	pathA: string,
+	pathB: string,
 };
 
 //	Functions __________________________________________________________________

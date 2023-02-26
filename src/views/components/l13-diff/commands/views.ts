@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ viewsVM }:ViewsCommandsInit) {
+export function init ({ viewsVM }: ViewsCommandsInit) {
 	
 	msg.on('l13Diff.action.views.toggleShowAllCreated', () => {
 		

@@ -18,13 +18,13 @@ const logKB = log(KB);
 
 //	Exports ____________________________________________________________________
 
-export function formatAmount (value:number, units:Plural) {
+export function formatAmount (value: number, units: Plural) {
 	
 	return `${value} ${units[value] || units.size}`;
 	
 }
 
-export function formatFileSize (size:number) {
+export function formatFileSize (size: number) {
 	
 	const bytes = formatAmount(size, pluralBytes);
 	
@@ -38,16 +38,24 @@ export function formatFileSize (size:number) {
 	
 }
 
-export function formatDate (date:Date) {
+export function formatDate (date: Date) {
 	
 	// eslint-disable-next-line max-len
 	return `${date.getFullYear()}-${formatDigit(date.getMonth() + 1)}-${formatDigit(date.getDate())} ${date.getHours()}:${formatDigit(date.getMinutes())}:${formatDigit(date.getSeconds())}`;
 	
 }
 
+export function formatList (values: string[]) {
+	
+	const length = values.length;
+	
+	return length > 2 ? `${values.slice(0, -1).join(', ')} and ${values[length - 1]}` : values.join(' and ');
+	
+}
+
 //	Functions __________________________________________________________________
 
-function formatDigit (digit:number) {
+function formatDigit (digit: number) {
 	
 	return `${digit}`.padStart(2, '0');
 	

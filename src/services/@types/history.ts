@@ -13,19 +13,19 @@
 //	Exports ____________________________________________________________________
 
 export type Comparison = {
-	fileA:string,
-	fileB:string,
-	label:string,
-	desc:string,
-	type:'file'|'folder'|'symlink',
+	fileA: string,
+	fileB: string,
+	label: string,
+	desc: string,
+	type: 'file' | 'folder' | 'symlink',
 };
 
 export type HistoryStates = {
-	comparisons:Comparison[],
+	comparisons: Comparison[],
 };
 
 export type RefreshHistoryStates = {
-	comparisons?:Comparison[],
+	comparisons?: Comparison[],
 };
 
 //	Functions __________________________________________________________________

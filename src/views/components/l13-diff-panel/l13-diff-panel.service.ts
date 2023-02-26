@@ -20,7 +20,7 @@ export class L13DiffPanelViewModelService extends ViewModelService<L13DiffPanelV
 	
 	public name = 'l13-diff-panel';
 	
-	public vmc:ViewModelConstructor<L13DiffPanelViewModel> = L13DiffPanelViewModel;
+	public vmc: ViewModelConstructor<L13DiffPanelViewModel> = L13DiffPanelViewModel;
 	
 }
 

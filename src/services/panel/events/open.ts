@@ -19,9 +19,9 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
-	currentDiffPanel.msg.on('open:diff', async ({ diffs, openToSide }:DiffOpenMessage) => {
+	currentDiffPanel.msg.on('open:diff', async ({ diffs, openToSide }: DiffOpenMessage) => {
 			
 		openToSide = settings.get('openToSide', false) || openToSide;
 		
@@ -29,7 +29,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	});
 	
-	currentDiffPanel.msg.on('goto:file', async ({ files: diffFiles, openToSide }:DiffGoToMessage) => {
+	currentDiffPanel.msg.on('goto:file', async ({ files: diffFiles, openToSide }: DiffGoToMessage) => {
 		
 		openToSide = settings.get('openToSide', false) || openToSide;
 		
@@ -37,7 +37,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	});
 	
-	currentDiffPanel.msg.on('reveal:file', (fsPath:string) => files.reveal(fsPath));
+	currentDiffPanel.msg.on('reveal:file', (fsPath: string) => files.reveal(fsPath));
 	
 }
 

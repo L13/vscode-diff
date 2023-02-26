@@ -42,7 +42,7 @@ export class L13DiffViewsViewModel extends ViewModel {
 	
 	public ignoredChecked = false;
 	
-	public getState ():ViewsState {
+	public getState (): ViewsState {
 		
 		return {
 			unchangedChecked: this.unchangedChecked,
@@ -54,7 +54,7 @@ export class L13DiffViewsViewModel extends ViewModel {
 		
 	}
 	
-	public setState (state:ViewsState) {
+	public setState (state: ViewsState) {
 		
 		this.unchangedChecked = state.unchangedChecked;
 		this.deletedChecked = state.deletedChecked;

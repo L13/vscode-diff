@@ -18,11 +18,11 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.projects.compareWithWorkspace': async ({ project }:ProjectTreeItem) => {
+		'l13Diff.action.projects.compareWithWorkspace': async ({ project }: ProjectTreeItem) => {
 			
 			const workspaces = workspaceFoldersQuickPickItems();
 			
@@ -35,7 +35,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.projects.open': ({ project }:ProjectTreeItem) => {
+		'l13Diff.action.projects.open': ({ project }: ProjectTreeItem) => {
 			
 			DiffPanel.createOrShow(context, [{ fsPath: project.path }, { fsPath: '' }]);
 			
@@ -47,7 +47,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function workspaceFoldersQuickPickItems () :Array<{ label:string, description:string }> {
+function workspaceFoldersQuickPickItems (): Array<{ label: string, description: string }> {
 	
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	

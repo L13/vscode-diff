@@ -25,12 +25,12 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
 	const historyState = HistoryState.create(currentDiffPanel.context);
 	const menuState = MenuState.create(currentDiffPanel.context);
 	
-	currentDiffPanel.msg.on('create:diffs', (data:DiffResult) => {
+	currentDiffPanel.msg.on('create:diffs', (data: DiffResult) => {
 		
 		currentDiffPanel.compare.initCompare(data);
 		
@@ -67,7 +67,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidCompareFiles((data:DiffResult) => {
+	currentDiffPanel.compare.onDidCompareFiles((data: DiffResult) => {
 		
 		currentDiffPanel.msg.send('create:diffs', data);
 		
@@ -84,13 +84,13 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onWillScanFolder((pathname:string) => {
+	currentDiffPanel.compare.onWillScanFolder((pathname: string) => {
 		
 		currentDiffPanel.output.log(`Scanning "${pathname}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidScanFolder((result:StatsMap) => {
+	currentDiffPanel.compare.onDidScanFolder((result: StatsMap) => {
 		
 		const total = Object.entries(result).length;
 		
@@ -98,7 +98,7 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidCompareFolders((data:DiffResult) => {
+	currentDiffPanel.compare.onDidCompareFolders((data: DiffResult) => {
 		
 		currentDiffPanel.output.log('Creating stats for diff result');
 		

@@ -8,8 +8,8 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 //	Variables __________________________________________________________________
 
-let updateFiles:string[] = [];
-let timeoutId:NodeJS.Timeout = null;
+let updateFiles: string[] = [];
+let timeoutId: NodeJS.Timeout = null;
 
 //	Initialize _________________________________________________________________
 
@@ -17,13 +17,13 @@ let timeoutId:NodeJS.Timeout = null;
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
 		'l13Diff.action.panel.open': () => DiffPanel.create(context),
 		
-		'l13Diff.action.panel.openAndCompare': (left:vscode.Uri, right:vscode.Uri, newPanel:boolean, openToSide:boolean) => {
+		'l13Diff.action.panel.openAndCompare': (left: vscode.Uri, right: vscode.Uri, newPanel: boolean, openToSide: boolean) => {
 			
 			if (newPanel) DiffPanel.create(context, [left, right], true, openToSide);
 			else DiffPanel.createOrShow(context, [left, right], true);
@@ -36,7 +36,7 @@ export function activate (context:vscode.ExtensionContext) {
 		vscode.window.registerWebviewPanelSerializer(DiffPanel.viewType, {
 			
 			// eslint-disable-next-line @typescript-eslint/require-await
-			async deserializeWebviewPanel (webviewPanel:vscode.WebviewPanel) {
+			async deserializeWebviewPanel (webviewPanel: vscode.WebviewPanel) {
 				
 				DiffPanel.revive(webviewPanel, context);
 				

@@ -20,7 +20,7 @@ export class L13DiffMenuViewModelService extends ViewModelService<L13DiffMenuVie
 	
 	public name = 'l13-diff-menu';
 	
-	public vmc:ViewModelConstructor<L13DiffMenuViewModel> = L13DiffMenuViewModel;
+	public vmc: ViewModelConstructor<L13DiffMenuViewModel> = L13DiffMenuViewModel;
 	
 }
 

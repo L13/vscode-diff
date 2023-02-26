@@ -22,13 +22,13 @@ const findColon = /:/g;
 
 //	Exports ____________________________________________________________________
 
-export function createDirectory (pathname:string) {
+export function createDirectory (pathname: string) {
 	
 	fs.mkdirSync(pathname, { recursive: true });
 	
 }
 
-export function copyFile (sourcePath:string, destPath:string) :Promise<undefined|Error> {
+export function copyFile (sourcePath: string, destPath: string): Promise<undefined | Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -43,14 +43,14 @@ export function copyFile (sourcePath:string, destPath:string) :Promise<undefined
 		
 		source.pipe(dest);
 		
-		source.on('error', (error:Error) => reject(error));
+		source.on('error', (error: Error) => reject(error));
 		source.on('end', () => resolve(undefined));
 		
 	});
 	
 }
 
-export function copySymbolicLink (sourcePath:string, destPath:string) :Promise<undefined|Error> {
+export function copySymbolicLink (sourcePath: string, destPath: string): Promise<undefined | Error> {
 	
 	destPath = path.resolve(sourcePath, destPath);
 	
@@ -60,7 +60,7 @@ export function copySymbolicLink (sourcePath:string, destPath:string) :Promise<u
 	
 	return new Promise((resolve, reject) => {
 		
-		fs.symlink(fs.readlinkSync(sourcePath), destPath, (error:Error) => {
+		fs.symlink(fs.readlinkSync(sourcePath), destPath, (error: Error) => {
 						
 			if (error) reject(error);
 			else resolve(undefined);
@@ -71,18 +71,18 @@ export function copySymbolicLink (sourcePath:string, destPath:string) :Promise<u
 	
 }
 
-export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap> {
+export function walkTree (cwd: string, options: WalkTreeOptions): Promise<StatsMap> {
 	
 	return new Promise((resolve, reject) => {
 		
-		const job:WalkTreeJob = {
+		const job: WalkTreeJob = {
 			error: null,
 			ignore: Array.isArray(options.excludes) ? createFindGlob(options.excludes, options.useCaseSensitive) : null,
 			result: {},
 			tasks: 1,
 			maxSize: options.maxFileSize || 0,
 			abort: options.abortOnError ?? true,
-			done: (error?:Error) => {
+			done: (error?: Error) => {
 				
 				if (error) {
 					job.error = error;
@@ -98,7 +98,7 @@ export function walkTree (cwd:string, options:WalkTreeOptions) :Promise<StatsMap
 	
 }
 
-export function walkUp (dirname:string, filename:string) :string {
+export function walkUp (dirname: string, filename: string): string {
 	
 	return dirname.split(path.sep).some(() => {
 		
@@ -111,7 +111,7 @@ export function walkUp (dirname:string, filename:string) :string {
 	
 }
 
-export function lstatSync (pathname:string) {
+export function lstatSync (pathname: string) {
 	
 	try {
 		return fs.lstatSync(pathname);
@@ -121,7 +121,7 @@ export function lstatSync (pathname:string) {
 	
 }
 
-export function lstat (pathname:string) :Promise<fs.Stats> {
+export function lstat (pathname: string): Promise<fs.Stats> {
 	
 	return new Promise((resolve) => {
 		
@@ -131,13 +131,13 @@ export function lstat (pathname:string) :Promise<fs.Stats> {
 	
 }
 
-export function createFindGlob (ignore:string[], useCaseSensitive:boolean) {
+export function createFindGlob (ignore: string[], useCaseSensitive: boolean) {
 	
 	return new RegExp(`^(${ignore.map((pattern) => escapeGlobForRegExp(pattern)).join('|')})$`, useCaseSensitive ? '' : 'i');
 	
 }
 
-export function sanitize (pathname:string) {
+export function sanitize (pathname: string) {
 	
 	let name = `${pathname}`.replace(findIllegalAndControlChars, '');
 	
@@ -149,7 +149,7 @@ export function sanitize (pathname:string) {
 
 //	Functions __________________________________________________________________
 
-function escapeGlobForRegExp (text:any) :string {
+function escapeGlobForRegExp (text: any): string {
 	
 	return `${text}`.replace(findRegExpChars, (match) => {
 		
@@ -167,7 +167,7 @@ function escapeGlobForRegExp (text:any) :string {
 	
 }
 
-function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:string, root:string, relative:string, dirname:string, ignore:boolean) {
+function addFile (result: StatsMap, type: DiffFileTypes, stat: fs.Stats, fsPath: string, root: string, relative: string, dirname: string, ignore: boolean) {
 	
 	const sep = type === 'folder' ? path.sep : '';
 	
@@ -188,7 +188,7 @@ function addFile (result:StatsMap, type:DiffFileTypes, stat:fs.Stats, fsPath:str
 	
 }
 
-function _walktree (job:WalkTreeJob, cwd:string, relative = '') {
+function _walktree (job: WalkTreeJob, cwd: string, relative = '') {
 	
 	if (job.abort && job.error) return; // If error no further actions
 	

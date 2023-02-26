@@ -1,9 +1,11 @@
 //	Imports ____________________________________________________________________
 
-import { formatAmount, formatFileSize } from '../../@l13/formats';
+import { formatAmount, formatFileSize, formatList } from '../../@l13/formats';
 import { pluralErrors, pluralFiles, pluralFolders, pluralOthers, pluralSymlinks } from '../../@l13/units/files';
 
 import type { Diff, DiffFile, DiffSettings } from '../../types';
+
+import { MODIFIED } from '../@l13/buffers';
 
 import type { DiffResult } from './DiffResult';
 
@@ -22,25 +24,25 @@ import { FolderStats } from './stats/FolderStats';
 
 export class DiffStats {
 	
-	public pathA:FolderStats = new FolderStats();
+	public pathA: FolderStats = new FolderStats();
 	
-	public pathB:FolderStats = new FolderStats();
+	public pathB: FolderStats = new FolderStats();
 	
-	public all:DetailStats = new DetailStats();
+	public all: DetailStats = new DetailStats();
 	
-	public conflicting:DetailStats = new DetailStats();
+	public conflicting: DetailStats = new DetailStats();
 	
-	public deleted:DetailStats = new DetailStats();
+	public deleted: DetailStats = new DetailStats();
 	
-	public modified:DetailStats = new DetailStats();
+	public modified: DetailStats = new DetailStats();
 	
-	public unchanged:DetailStats = new DetailStats();
+	public unchanged: DetailStats = new DetailStats();
 	
-	public untracked:DetailStats = new DetailStats();
+	public untracked: DetailStats = new DetailStats();
 	
-	public ignored:DetailStats = new DetailStats();
+	public ignored: DetailStats = new DetailStats();
 	
-	public constructor (private result:DiffResult) {
+	public constructor (private result: DiffResult) {
 		
 		this.createStats();
 		
@@ -53,7 +55,7 @@ export class DiffStats {
 		this.pathA.pathname = result.pathA;
 		this.pathB.pathname = result.pathB;
 		
-		result.diffs.forEach((diff:Diff) => {
+		result.diffs.forEach((diff: Diff) => {
 			
 			if (diff.fileA) countFileStats(this.pathA, diff.fileA);
 			if (diff.fileB) countFileStats(this.pathB, diff.fileB);
@@ -110,7 +112,7 @@ UPDATES
 		
 	}
 	
-	public static formatSettings (settings:DiffSettings) {
+	public static formatSettings (settings: DiffSettings) {
 		
 		return `SETTINGS
 
@@ -118,6 +120,7 @@ Abort on Error: ${settings.abortOnError}
 Excludes: "${settings.excludes.join('", "')}"
 Ignore Contents: ${settings.ignoreContents}
 Ignore End of Line: ${settings.ignoreEndOfLine}
+Ignore Byte Order Mark: ${settings.ignoreByteOrderMark}
 Ignore Leading/Trailing Whitespace: ${settings.ignoreTrimWhitespace}
 Max File Size: ${settings.maxFileSize ? `${settings.maxFileSize} MB` : '0'}
 Use Case Sensitive: ${settings.useCaseSensitive}`;
@@ -128,7 +131,7 @@ Use Case Sensitive: ${settings.useCaseSensitive}`;
 
 //	Functions __________________________________________________________________
 
-function countFileStats (stats:DetailStats|FolderStats, file:DiffFile) {
+function countFileStats (stats: DetailStats | FolderStats, file: DiffFile) {
 	
 	stats.entries++;
 	
@@ -142,7 +145,7 @@ function countFileStats (stats:DetailStats|FolderStats, file:DiffFile) {
 	
 }
 
-function countAllStats (stats:DetailStats, pathA:FolderStats, pathB:FolderStats) {
+function countAllStats (stats: DetailStats, pathA: FolderStats, pathB: FolderStats) {
 	
 	stats.entries = pathA.entries + pathB.entries;
 	stats.size = pathA.size + pathB.size;
@@ -154,19 +157,20 @@ function countAllStats (stats:DetailStats, pathA:FolderStats, pathB:FolderStats)
 	
 }
 
-function countDetailStats (stats:DetailStats, diff:Diff) {
+function countDetailStats (stats: DetailStats, diff: Diff) {
 	
 	stats.total++;
 	
-	if (diff.ignoredEOL) stats.ignoredEOL++;
-	if (diff.ignoredWhitespace) stats.ignoredWhitespace++;
+	if (diff.ignoredEOL) stats.ignoredEOL += diff.ignoredEOL === MODIFIED.BOTH ? 2 : 1;
+	if (diff.ignoredBOM) stats.ignoredBOM += diff.ignoredBOM === MODIFIED.BOTH ? 2 : 1;
+	if (diff.ignoredWhitespace) stats.ignoredWhitespace += diff.ignoredWhitespace === MODIFIED.BOTH ? 2 : 1;
 	
 	if (diff.fileA) countFileStats(stats, diff.fileA);
 	if (diff.fileB) countFileStats(stats, diff.fileB);
 	
 }
 
-function formatFileStats (name:string, stats:DetailStats|FolderStats) {
+function formatFileStats (name: string, stats: DetailStats | FolderStats) {
 	
 	return `"${name}"
 Entries:     ${formatEntries(stats)}
@@ -174,33 +178,34 @@ Size:        ${formatFileSize(stats.size)}`;
 	
 }
 
-function formatTotal (stats:DetailStats) {
+function formatTotal (stats: DetailStats) {
 	
-	const ignored:string[] = [];
+	const ignored: string[] = [];
 	
-	if (stats.ignoredEOL) ignored.push('eol');
-	if (stats.ignoredWhitespace) ignored.push('whitespace');
+	if (stats.ignoredBOM) ignored.push(`BOM in ${formatAmount(stats.ignoredBOM, pluralFiles)}`);
+	if (stats.ignoredEOL) ignored.push(`EOL in ${formatAmount(stats.ignoredEOL, pluralFiles)}`);
+	if (stats.ignoredWhitespace) ignored.push(`Whitespace in ${formatAmount(stats.ignoredWhitespace, pluralFiles)}`);
 	
-	const info = ignored.length ? ` [Ignored ${ignored.join(' and ')} in ${formatAmount(stats.files, pluralFiles)}]` : '';
-	const entries:string[] = formatDetails(stats, info);
+	const info = ignored.length ? `, Ignored ${formatList(ignored)}` : '';
+	const entries: string[] = formatDetails(stats);
 	
-	return entries.length ? `${stats.total} (${entries.join(', ')})` : '0';
+	return entries.length ? `${stats.total} (${entries.join(', ')})${info}` : '0';
 	
 }
 
-function formatEntries (stats:DetailStats|FolderStats) {
+function formatEntries (stats: DetailStats | FolderStats) {
 	
-	const entries:string[] = formatDetails(stats);
+	const entries: string[] = formatDetails(stats);
 	
 	return entries.length > 1 ? `${stats.entries} (${entries.join(', ')})` : entries[0] || '0';
 	
 }
 
-function formatDetails (stats:DetailStats|FolderStats, info = '') {
+function formatDetails (stats: DetailStats | FolderStats) {
 	
-	const entries:string[] = [];
+	const entries: string[] = [];
 	
-	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}${info}`);
+	if (stats.files) entries.push(`${formatAmount(stats.files, pluralFiles)}`);
 	if (stats.folders) entries.push(`${formatAmount(stats.folders, pluralFolders)}`);
 	if (stats.symlinks) entries.push(`${formatAmount(stats.symlinks, pluralSymlinks)}`);
 	if (stats.errors) entries.push(`${formatAmount(stats.errors, pluralErrors)}`);

@@ -16,7 +16,7 @@ describe('formats', () => {
 	
 	describe(`.${formatAmount.name}()`, () => {
 		
-		function runTests (tests:Test[], measure:Plural) {
+		function runTests (tests: Test[], measure: Plural) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.equal(formatAmount(test.expect, measure), test.toBe));
@@ -82,7 +82,7 @@ describe('formats', () => {
 	
 	describe(`.${formatFileSize.name}()`, () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.equal(formatFileSize(test.expect), test.toBe));

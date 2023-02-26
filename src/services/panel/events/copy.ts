@@ -14,27 +14,27 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
-	currentDiffPanel.msg.on('copy:left', (data:DiffCopyMessage) => {
+	currentDiffPanel.msg.on('copy:left', (data: DiffCopyMessage) => {
 		
 		currentDiffPanel.copy.showCopyFromToDialog(data, 'A', 'B');
 		
 	});
 	
-	currentDiffPanel.msg.on('copy:right', (data:DiffCopyMessage) => {
+	currentDiffPanel.msg.on('copy:right', (data: DiffCopyMessage) => {
 		
 		currentDiffPanel.copy.showCopyFromToDialog(data, 'B', 'A');
 		
 	});
 	
-	currentDiffPanel.msg.on('multi-copy:left', (data:DiffMultiCopyMessage) => {
+	currentDiffPanel.msg.on('multi-copy:left', (data: DiffMultiCopyMessage) => {
 		
 		currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'left');
 		
 	});
 	
-	currentDiffPanel.msg.on('multi-copy:right', (data:DiffMultiCopyMessage) => {
+	currentDiffPanel.msg.on('multi-copy:right', (data: DiffMultiCopyMessage) => {
 		
 		currentDiffPanel.copy.showMultiCopyFromToDialog(data, 'right');
 		

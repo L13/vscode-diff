@@ -1,6 +1,23 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.1.0] - 2023-02-26
+
+### Added
+
+- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
+- Added visual context for drag'n drop in the list view.
+
+### Changed
+
+- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
+
+### Fixed
+
+- Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
+- Fixed JSONC parser for trailing comma in an object or array.
+- Fixed overwrite existing favorite.
+
 ## [1.0.3] - 2021-06-23
 
 ### Changed

@@ -15,101 +15,101 @@ import type { Diff, DiffFile, DiffSettings } from './diffs';
 //	Exports ____________________________________________________________________
 
 export type DeletedFilesMessage = {
-	files:string[],
+	files: string[],
 };
 
 export type DiffCopyMessage = {
-	diffs:Diff[],
-	multi:boolean,
-	pathA:string,
-	pathB:string,
+	diffs: Diff[],
+	multi: boolean,
+	pathA: string,
+	pathB: string,
 };
 
 export type DiffDialogMessage = {
-	fsPath:string,
+	fsPath: string,
 };
 
 export type DiffFavoriteMessage = {
-	pathA:string,
-	pathB:string,
+	pathA: string,
+	pathB: string,
 };
 
 export type DiffGoToMessage = {
-	files:DiffFile[],
-	openToSide:boolean,
+	files: DiffFile[],
+	openToSide: boolean,
 };
 
 export type DiffInitMessage = {
-	pathA:string,
-	pathB:string,
+	pathA: string,
+	pathB: string,
 };
 
 export type DiffInitViewMessage = {
-	panel:DiffPanelStateMessage,
-	uris:Uri[],
-	workspaces:string[],
-	compare:boolean,
+	panel: DiffPanelStateMessage,
+	uris: Uri[],
+	workspaces: string[],
+	compare: boolean,
 };
 
 export type DiffMenuMessage = {
-	history:string[],
-	workspaces:string[],
+	history: string[],
+	workspaces: string[],
 };
 
 export type DiffMultiCopyMessage = {
-	ids:string[],
-	pathA:string,
-	pathB:string,
+	ids: string[],
+	pathA: string,
+	pathB: string,
 };
 
 export type DiffOpenMessage = {
-	diffs:Diff[],
-	pathA:string,
-	pathB:string,
-	openToSide:boolean,
+	diffs: Diff[],
+	pathA: string,
+	pathB: string,
+	openToSide: boolean,
 };
 
 export type DiffPanelStateMessage = {
-	views:{
-		unchangedChecked:boolean,
-		deletedChecked:boolean,
-		modifiedChecked:boolean,
-		untrackedChecked:boolean,
-		ignoredChecked:boolean,
+	views: {
+		unchangedChecked: boolean,
+		deletedChecked: boolean,
+		modifiedChecked: boolean,
+		untrackedChecked: boolean,
+		ignoredChecked: boolean,
 	},
-	search:{
-		searchterm:string,
-		useRegExp:boolean,
-		useCaseSensitive:boolean,
-		useFiles:boolean,
-		useFolders:boolean,
-		useSymlinks:boolean,
-		useConflicts:boolean,
-		useOthers:boolean,
+	search: {
+		searchterm: string,
+		useRegExp: boolean,
+		useCaseSensitive: boolean,
+		useFiles: boolean,
+		useFolders: boolean,
+		useSymlinks: boolean,
+		useConflicts: boolean,
+		useOthers: boolean,
 	},
 };
 
 export type DiffResultMessage = {
-	diffs:Diff[],
-	pathA:string,
-	pathB:string,
-	settings:DiffSettings,
+	diffs: Diff[],
+	pathA: string,
+	pathB: string,
+	settings: DiffSettings,
 };
 
 export type DiffUpdatePathsMessage = {
-	uris:Uri[],
-	compare:boolean,
+	uris: Uri[],
+	compare: boolean,
 };
 
 export type Message = {
-	command:string,
-	data:JSONValue,
+	command: string,
+	data: JSONValue,
 };
 
-export type MessageListener = (...args:any[]) => void;
+export type MessageListener = (...args: any[]) => void;
 
 export type UpdatedFilesMessage = {
-	files:string[],
+	files: string[],
 };
 
 //	Functions __________________________________________________________________

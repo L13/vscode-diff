@@ -29,22 +29,22 @@ import type { L13DiffActionsViewModel } from './l13-diff-actions.viewmodel';
 export class L13DiffActionsComponent extends L13Element<L13DiffActionsViewModel> {
 	
 	@L13Query('#l13_copy_right')
-	public copyRight:HTMLButtonElement;
+	public copyRight: HTMLButtonElement;
 	
 	@L13Query('#l13_select_deleted')
-	public selectDeleted:HTMLButtonElement;
+	public selectDeleted: HTMLButtonElement;
 	
 	@L13Query('#l13_select_modified')
-	public selectModified:HTMLButtonElement;
+	public selectModified: HTMLButtonElement;
 	
 	@L13Query('#l13_select_untracked')
-	public selectUntracked:HTMLButtonElement;
+	public selectUntracked: HTMLButtonElement;
 	
 	@L13Query('#l13_select_all')
-	public selectAll:HTMLButtonElement;
+	public selectAll: HTMLButtonElement;
 	
 	@L13Query('#l13_copy_left')
-	public copyLeft:HTMLButtonElement;
+	public copyLeft: HTMLButtonElement;
 	
 	public constructor () {
 		

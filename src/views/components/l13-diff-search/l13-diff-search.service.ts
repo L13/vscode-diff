@@ -20,7 +20,7 @@ export class L13DiffSearchViewModelService extends ViewModelService<L13DiffSearc
 	
 	public name = 'l13-diff-search';
 	
-	public vmc:ViewModelConstructor<L13DiffSearchViewModel> = L13DiffSearchViewModel;
+	public vmc: ViewModelConstructor<L13DiffSearchViewModel> = L13DiffSearchViewModel;
 	
 }
 

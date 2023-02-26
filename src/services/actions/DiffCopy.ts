@@ -34,19 +34,19 @@ import * as settings from '../common/settings';
 
 export class DiffCopy {
 	
-	private _onDidCopyFile:vscode.EventEmitter<CopyFileEvent> = new vscode.EventEmitter<CopyFileEvent>();
-	public readonly onDidCopyFile:vscode.Event<CopyFileEvent> = this._onDidCopyFile.event;
+	private _onDidCopyFile: vscode.EventEmitter<CopyFileEvent> = new vscode.EventEmitter<CopyFileEvent>();
+	public readonly onDidCopyFile: vscode.Event<CopyFileEvent> = this._onDidCopyFile.event;
 	
-	private _onDidCopyFiles:vscode.EventEmitter<CopyFilesEvent> = new vscode.EventEmitter<CopyFilesEvent>();
-	public readonly onDidCopyFiles:vscode.Event<CopyFilesEvent> = this._onDidCopyFiles.event;
+	private _onDidCopyFiles: vscode.EventEmitter<CopyFilesEvent> = new vscode.EventEmitter<CopyFilesEvent>();
+	public readonly onDidCopyFiles: vscode.Event<CopyFilesEvent> = this._onDidCopyFiles.event;
 	
-	private _onInitMultiCopy:vscode.EventEmitter<MultiCopyEvent> = new vscode.EventEmitter<MultiCopyEvent>();
-	public readonly onInitMultiCopy:vscode.Event<MultiCopyEvent> = this._onInitMultiCopy.event;
+	private _onInitMultiCopy: vscode.EventEmitter<MultiCopyEvent> = new vscode.EventEmitter<MultiCopyEvent>();
+	public readonly onInitMultiCopy: vscode.Event<MultiCopyEvent> = this._onInitMultiCopy.event;
 	
-	private _onDidCancel:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onDidCancel:vscode.Event<undefined> = this._onDidCancel.event;
+	private _onDidCancel: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidCancel: vscode.Event<undefined> = this._onDidCancel.event;
 	
-	private async copy (file:DiffFile, dest:string):Promise<undefined|Error> {
+	private async copy (file: DiffFile, dest: string): Promise<undefined | Error> {
 		
 		const stat = await lstat(file.fsPath);
 		
@@ -73,7 +73,7 @@ export class DiffCopy {
 		
 	}
 	
-	public async showCopyFromToDialog (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
+	public async showCopyFromToDialog (data: DiffCopyMessage, from: 'A' | 'B', to: 'A' | 'B') {
 		
 		const confirmCopy = settings.get('confirmCopy', true);
 		const length = data.diffs.length;
@@ -93,9 +93,9 @@ export class DiffCopy {
 		
 	}
 	
-	public async showMultiCopyFromToDialog (data:DiffMultiCopyMessage, from:'left'|'right') {
+	public async showMultiCopyFromToDialog (data: DiffMultiCopyMessage, from: 'left' | 'right') {
 		
-		const ids:string[] = data.ids;
+		const ids: string[] = data.ids;
 		const length = ids.length;
 		
 		if (!length) return;
@@ -109,32 +109,32 @@ export class DiffCopy {
 		
 	}
 	
-	private copyFromTo (data:DiffCopyMessage, from:'A'|'B', to:'A'|'B') {
+	private copyFromTo (data: DiffCopyMessage, from: 'A' | 'B', to: 'A' | 'B') {
 		
 		const folderTo = to === 'A' ? data.pathA : data.pathB;
-		const diffs:Diff[] = data.diffs;
-		const job:CopyFilesJob = {
+		const diffs: Diff[] = data.diffs;
+		const job: CopyFilesJob = {
 			error: null,
 			tasks: diffs.length,
 			done: () => this._onDidCopyFiles.fire({ data, from, to }),
 		};
 		
-		diffs.forEach(async (diff:Diff) => {
+		diffs.forEach(async (diff: Diff) => {
 			
-			const fileFrom:DiffFile = from === 'A' ? diff.fileA : diff.fileB;
+			const fileFrom: DiffFile = from === 'A' ? diff.fileA : diff.fileB;
 			
 			if (fileFrom) {
 				const fsPath = fileFrom.fsPath;
 				
-				if (fs.existsSync(fsPath)) {
+				if (await lstat(fsPath)) {
 					let fileTo = to === 'A' ? diff.fileA : diff.fileB;
 					const relative = fileTo?.relative || fileFrom.relative;
 					const dest = path.join(folderTo, relative);
-					let copy = null;
+					let copy: boolean = null;
 					
 					if (!fileTo) copy = await existsCaseInsensitiveFileAndCopy(fsPath, folderTo, relative, dest);
 					
-					if (copy === null || copy) {
+					if (copy !== false) {
 						try {
 							await this.copy(fileFrom, dest);
 							
@@ -168,7 +168,7 @@ export class DiffCopy {
 
 //	Functions __________________________________________________________________
 
-function copyDiffFile (fileFrom:DiffFile, root:string, dest:string) :DiffFile {
+function copyDiffFile (fileFrom: DiffFile, root: string, dest: string): DiffFile {
 	
 	return {
 		root,
@@ -187,7 +187,7 @@ function copyDiffFile (fileFrom:DiffFile, root:string, dest:string) :DiffFile {
 	
 }
 
-function getRealRelative (root:string, relative:string) {
+function getRealRelative (root: string, relative: string) {
 	
 	const names = relative.split(path.sep);
 	let cwd = root;
@@ -211,7 +211,7 @@ function getRealRelative (root:string, relative:string) {
 	
 }
 
-async function existsCaseInsensitiveFileAndCopy (fsPath:string, folderTo:string, relative:string, dest:string) :Promise<boolean> {
+async function existsCaseInsensitiveFileAndCopy (fsPath: string, folderTo: string, relative: string, dest: string): Promise<boolean> {
 	
 	if (!settings.hasCaseSensitiveFileSystem && fs.existsSync(dest)) {
 		if (!settings.get('confirmCaseInsensitiveCopy', true)) return true;

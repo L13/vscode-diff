@@ -1,5 +1,6 @@
 //	Imports ____________________________________________________________________
 
+import { MODIFIED } from '../../../../services/@l13/buffers';
 import type { DiffFile, DiffOpenMessage, DragNDropEventsInit } from '../../../../types';
 
 import { msg } from '../../../common';
@@ -14,10 +15,10 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ list }:DragNDropEventsInit) {
+export function init ({ list }: DragNDropEventsInit) {
 	
-	let dragSrcElement:HTMLElement = null;
-	let dropHoverElement:HTMLElement = null;
+	let dragSrcElement: HTMLElement = null;
+	let dropHoverElement: HTMLElement = null;
 	
 	list.content.addEventListener('dragstart', (event) => {
 		
@@ -31,6 +32,7 @@ export function init ({ list }:DragNDropEventsInit) {
 		const diff = list.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
 		const file = columnNode.nextElementSibling ? diff.fileA : diff.fileB;
 		
+		list.content.classList.add(`-drag-n-drop-${file.type}`);
 		dragSrcElement.style.opacity = '0.4';
 		event.dataTransfer.setData('data-diff-file', JSON.stringify(file));
 		
@@ -42,11 +44,14 @@ export function init ({ list }:DragNDropEventsInit) {
 		
 		event.preventDefault();
 		
-		const element:HTMLElement = <HTMLElement>event.target;
+		const element: HTMLElement = <HTMLElement>event.target;
 		
 		if (element) {
-			const dropable:HTMLElement = element.closest('l13-diff-list-file');
-			if (dropable && !dropable.classList.contains('-error') && !dropable.classList.contains('-unknown')) {
+			const dropable: HTMLElement = element.closest('l13-diff-list-file');
+			if (dropable
+				&& !dropable.classList.contains('-error')
+				&& !dropable.classList.contains('-unknown')
+				&& dropable.getAttribute('data-type') === dragSrcElement.parentElement?.getAttribute('data-type')) {
 				if (dropHoverElement && dropHoverElement !== dropable) {
 					dropHoverElement.classList.remove('-draghover');
 				}
@@ -64,6 +69,7 @@ export function init ({ list }:DragNDropEventsInit) {
 		event.preventDefault();
 		
 		dragSrcElement.style.opacity = '1';
+		removeClassesByPrefix(list.content, '-drag-n-drop');
 		list.dragSrcRowElement = null;
 		dragSrcElement = null;
 		
@@ -79,6 +85,7 @@ export function init ({ list }:DragNDropEventsInit) {
 		event.preventDefault();
 		
 		dragSrcElement.style.opacity = '1';
+		removeClassesByPrefix(list.content, '-drag-n-drop');
 		list.dragSrcRowElement = null;
 		dragSrcElement = null;
 		
@@ -109,8 +116,8 @@ export function init ({ list }:DragNDropEventsInit) {
 		const target = (<HTMLElement>event.target).closest('l13-diff-list-file');
 		const rowNode = target.closest('l13-diff-list-row');
 		const diff = list.viewmodel.getDiffById(rowNode.getAttribute('data-id'));
-		const fileA:DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
-		const fileB:DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
+		const fileA: DiffFile = <DiffFile>JSON.parse(event.dataTransfer.getData('data-diff-file'));
+		const fileB: DiffFile = target.nextElementSibling ? diff.fileA : diff.fileB;
 		const typeA = fileA.type;
 		
 		if (fileA.fsPath === fileB.fsPath || typeA !== fileB.type) return;
@@ -123,8 +130,9 @@ export function init ({ list }:DragNDropEventsInit) {
 					id: null,
 					status: 'modified',
 					type: typeA,
-					ignoredWhitespace: false,
-					ignoredEOL: false,
+					ignoredEOL: MODIFIED.NONE,
+					ignoredBOM: MODIFIED.NONE,
+					ignoredWhitespace: MODIFIED.NONE,
 					fileA,
 					fileB,
 				},
@@ -138,3 +146,14 @@ export function init ({ list }:DragNDropEventsInit) {
 
 //	Functions __________________________________________________________________
 
+function removeClassesByPrefix (element: HTMLElement, prefix: string) {
+	
+	const classList = element.classList;
+	let i = 0;
+	
+	while (i < classList.length) {
+		if (classList[i].startsWith(prefix)) classList.remove(classList[i]);
+		else i++;
+	}
+	
+}

@@ -14,9 +14,9 @@ import type { Diff, DiffSettings } from '../../types';
 
 export class DiffResult {
 	
-	public diffs:Diff[] = [];
+	public diffs: Diff[] = [];
 	
-	public constructor (public pathA:string, public pathB:string, public settings:DiffSettings) {
+	public constructor (public pathA: string, public pathB: string, public settings: DiffSettings) {
 		
 		
 		

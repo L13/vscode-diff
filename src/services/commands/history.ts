@@ -29,7 +29,7 @@ import { MenuState } from '../states/MenuState';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	const subscriptions = context.subscriptions;
 	
@@ -56,20 +56,20 @@ export function activate (context:vscode.ExtensionContext) {
 	
 	commands.register(context, {
 		
-		'l13Diff.action.history.compare': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel(), historyState),
-		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, false, historyState),
-		'l13Diff.action.history.compareInNewPanel': ({ comparison }:HistoryTreeItem) => openComparison(context, comparison, true, historyState),
+		'l13Diff.action.history.compare': ({ comparison }: HistoryTreeItem) => openComparison(context, comparison, settings.openInNewPanel(), historyState),
+		'l13Diff.action.history.compareInCurrentPanel': ({ comparison }: HistoryTreeItem) => openComparison(context, comparison, false, historyState),
+		'l13Diff.action.history.compareInNewPanel': ({ comparison }: HistoryTreeItem) => openComparison(context, comparison, true, historyState),
 		
-		'l13Diff.action.history.addToFavorites': ({ comparison }:HistoryTreeItem) => {
+		'l13Diff.action.history.addToFavorites': ({ comparison }: HistoryTreeItem) => {
 			
 			favoritesDialog.add(comparison.fileA, comparison.fileB);
 			
 		},
 		
-		'l13Diff.action.history.copyLeftPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileA),
-		'l13Diff.action.history.copyRightPath': ({ comparison }:HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileB),
+		'l13Diff.action.history.copyLeftPath': ({ comparison }: HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileA),
+		'l13Diff.action.history.copyRightPath': ({ comparison }: HistoryTreeItem) => vscode.env.clipboard.writeText(comparison.fileB),
 		
-		'l13Diff.action.history.remove': ({ comparison }:HistoryTreeItem) => historyDialog.remove(comparison),
+		'l13Diff.action.history.remove': ({ comparison }: HistoryTreeItem) => historyDialog.remove(comparison),
 		
 		'l13Diff.action.history.clear': async () => historyDialog.clear(),
 		
@@ -79,7 +79,7 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function openComparison (context:vscode.ExtensionContext, comparison:Comparison, openInNewPanel:boolean, historyState:HistoryState) {
+function openComparison (context: vscode.ExtensionContext, comparison: Comparison, openInNewPanel: boolean, historyState: HistoryState) {
 	
 	if (comparison.type === 'file') {
 		const left = vscode.Uri.file(comparison.fileA);

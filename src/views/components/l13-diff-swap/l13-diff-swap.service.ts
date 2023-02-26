@@ -20,7 +20,7 @@ export class L13DiffSwapViewModelService extends ViewModelService<L13DiffSwapVie
 	
 	public name = 'l13-diff-swap';
 	
-	public vmc:ViewModelConstructor<L13DiffSwapViewModel> = L13DiffSwapViewModel;
+	public vmc: ViewModelConstructor<L13DiffSwapViewModel> = L13DiffSwapViewModel;
 	
 }
 

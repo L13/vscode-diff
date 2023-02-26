@@ -31,7 +31,7 @@ export class L13DiffContextViewModel extends ViewModel {
 		
 	}
 	
-	set copyDisabled (value:boolean) {
+	set copyDisabled (value: boolean) {
 		
 		this[COPY_DISABLED] = value;
 		this.requestUpdate();
@@ -44,7 +44,7 @@ export class L13DiffContextViewModel extends ViewModel {
 		
 	}
 	
-	set gotoDisabled (value:boolean) {
+	set gotoDisabled (value: boolean) {
 		
 		this[GOTO_DISABLED] = value;
 		this.requestUpdate();
@@ -57,7 +57,7 @@ export class L13DiffContextViewModel extends ViewModel {
 		
 	}
 	
-	set revealDisabled (value:boolean) {
+	set revealDisabled (value: boolean) {
 		
 		this[REVEAL_DISABLED] = value;
 		this.requestUpdate();
@@ -70,7 +70,7 @@ export class L13DiffContextViewModel extends ViewModel {
 		
 	}
 	
-	set deleteDisabled (value:boolean) {
+	set deleteDisabled (value: boolean) {
 		
 		this[DELETE_DISABLED] = value;
 		this.requestUpdate();

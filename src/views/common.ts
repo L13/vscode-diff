@@ -31,15 +31,15 @@ export const vscode = acquireVsCodeApi();
 
 export const msg = new Message(vscode);
 
-export function isMetaKey (ctrlKey:boolean, metaKey:boolean) :boolean {
+export function isMetaKey (ctrlKey: boolean, metaKey: boolean): boolean {
 	
 	return isMacOs && metaKey || !isMacOs && ctrlKey;
 	
 }
 
-export function parseIcons (text:string) {
+export function parseIcons (text: string) {
 	
-	return text.replace(findStyleUrl, (match:string, url:string) => {
+	return text.replace(findStyleUrl, (match: string, url: string) => {
 		
 		const image = (<Dictionary<string>>icons)[url];
 		
@@ -51,7 +51,7 @@ export function parseIcons (text:string) {
 	
 }
 
-export function removeChildren (node:Node) {
+export function removeChildren (node: Node) {
 	
 	let child;
 	
@@ -59,7 +59,7 @@ export function removeChildren (node:Node) {
 	
 }
 
-export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) {
+export function scrollElementIntoView (parent: HTMLElement, element: HTMLElement) {
 	
 	const offsetTop = element.offsetTop;
 	const offsetHeight = parent.offsetHeight;
@@ -73,7 +73,7 @@ export function scrollElementIntoView (parent:HTMLElement, element:HTMLElement) 
 	
 }
 
-export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputElement) {
+export function addButtonActiveStyleEvents (element: HTMLButtonElement | HTMLInputElement) {
 	
 	element.addEventListener('mousedown', () => element.classList.add('-active'));
 	element.addEventListener('mouseup', () => element.classList.remove('-active'));
@@ -81,16 +81,16 @@ export function addButtonActiveStyleEvents (element:HTMLButtonElement|HTMLInputE
 	
 }
 
-export function setLabel (element:HTMLElement, title:string) {
+export function setLabel (element: HTMLElement, title: string) {
 	
 	element.setAttribute('aria-label', title);
 	element.setAttribute('title', title);
 	
 }
 
-export function disableContextMenu (element:HTMLElement) {
+export function disableContextMenu (element: HTMLElement) {
 	
-	element.addEventListener('contextmenu', (event:MouseEvent) => {
+	element.addEventListener('contextmenu', (event: MouseEvent) => {
 		
 		event.preventDefault();
 		return false;

@@ -14,9 +14,9 @@ import type { ViewModel } from '../../@l13/component/view-model.abstract';
 
 export interface L13DiffListPipe<T> {
 	
-	vm:ViewModel;
+	vm: ViewModel;
 	
-	transform:(items:T[]) => T[];
+	transform: (items: T[]) => T[];
 	
 }
 

@@ -19,17 +19,17 @@ import type { MenuState } from '../states/MenuState';
 
 export class HistoryDialog {
 	
-	private static current:HistoryDialog = null;
+	private static current: HistoryDialog = null;
 	
-	public static create (historyState:HistoryState, menuState:MenuState) {
+	public static create (historyState: HistoryState, menuState: MenuState) {
 		
 		return HistoryDialog.current || (HistoryDialog.current = new HistoryDialog(historyState, menuState));
 		
 	}
 	
-	private constructor (private readonly historyState:HistoryState, private readonly menuState:MenuState) {}
+	private constructor (private readonly historyState: HistoryState, private readonly menuState: MenuState) {}
 	
-	public async remove (comparison:Comparison) {
+	public async remove (comparison: Comparison) {
 		
 		const text = `Delete comparison '${`${comparison.label}${comparison.desc ? ` (${comparison.desc})` : ''}`}'?`;
 		

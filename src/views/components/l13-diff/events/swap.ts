@@ -12,9 +12,9 @@ import type { SwapEventsInit } from '../../../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, swap }:SwapEventsInit) {
+export function init ({ diff, swap }: SwapEventsInit) {
 	
-	swap.addEventListener('swap', ({ detail }:any) => diff.swapInputs(detail.altKey));
+	swap.addEventListener('swap', ({ detail }: any) => diff.swapInputs(detail.altKey));
 	
 }
 

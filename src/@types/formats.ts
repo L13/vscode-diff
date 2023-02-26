@@ -13,8 +13,8 @@
 //	Exports ____________________________________________________________________
 
 export type Plural = {
-	size:string,
-	[index:number]:string,
+	size: string,
+	[index: number]: string,
 };
 
 //	Functions __________________________________________________________________

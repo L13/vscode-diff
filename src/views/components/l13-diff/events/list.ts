@@ -12,7 +12,7 @@ import type { ListEventsInit } from '../../../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, listVM, navigator, actionsVM, result, intro }:ListEventsInit) {
+export function init ({ diff, list, listVM, navigator, actionsVM, result, intro }: ListEventsInit) {
 	
 	listVM.on('cancel', () => diff.enable());
 	listVM.on('compared', () => diff.enable());

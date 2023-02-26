@@ -4,9 +4,14 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-Welcome to version 1.0 of the extension Diff Folders. All of the features on my to-do list are done, but that doesn't mean the extension's development is finished. There are more ideas for the future.
+## What's new in Diff Folders 1.1.0
 
-I also want to say thank you to all reviewers on the Visual Studio Code Marketplace and Github for the positive feedback. I never expected that so many people would download or use the extension. Thank you very much.
+- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
+- Added visual context for drag'n drop in the list view.
+- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
+- Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
+- Fixed JSONC parser for trailing comma in an object or array.
+- Fixed overwrite existing favorite.
 
 ## Index
 
@@ -110,6 +115,7 @@ I also want to say thank you to all reviewers on the Visual Studio Code Marketpl
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
+* `l13Diff.ignoreByteOrderMark` [1] - Set true if a comparison for text files should ignore the UTF-8 BOM.
 * `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
 	* `default` - (default) Uses the value of `files.enableTrash`.
 	* `on` - Moves files and folders to the OS trash.
@@ -280,6 +286,14 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 
 * Shows the full path, the size, the creation and modification time and date of a file.
 
+### List Info
+
+If `l13Diff.ignoreByteOrderMark`, `l13Diff.ignoreEndOfLine` or `l13Diff.ignoreTrimWhitespace` is true a file will be modified for a comparison. An info appears on the right side of the filename in the list view to see which changes has been done. The information is only visible for files where the modification results in **unchanged**.
+
+* `Ignored EOL` - Line endings have been converted from Windows to Unix.
+* `Ignored BOM` - Byte Order Mark for a UTF-8 and UTF-16BE file has been removed.
+* `Ignored Whitespace` - Leading and trailing whitespaces have been removed.
+
 ### Search Widget
 
 #### All Platforms
@@ -407,22 +421,14 @@ Right now it is not possible to show a message if files will be copied from an u
 
 ## Recommended Settings
 
-The two fastest ways to compare files accurate are
+The fastest and most accurate way to compare files is
 
 ```json
 {
 	"l13Diff.ignoreEndOfLine": false,
 	"l13Diff.ignoreTrimWhitespace": "default",
-	"diffEditor.ignoreTrimWhitespace": false
-}
-```
-
-or
-
-```json
-{
-	"l13Diff.ignoreEndOfLine": false,
-	"l13Diff.ignoreTrimWhitespace": "off"
+	"diffEditor.ignoreTrimWhitespace": false,
+	"l13Diff.ignoreByteOrderMark": false
 }
 ```
 

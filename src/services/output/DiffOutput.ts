@@ -16,13 +16,13 @@ import { remove } from '../../@l13/arrays';
 
 export class DiffOutput {
 	
-	private static output:vscode.OutputChannel|undefined;
+	private static output: vscode.OutputChannel | undefined;
 	
-	public static currentOutput:DiffOutput|undefined;
+	public static currentOutput: DiffOutput | undefined;
 	
-	private static outputs:DiffOutput[] = [];
+	private static outputs: DiffOutput[] = [];
 	
-	private lines:string[] = [];
+	private lines: string[] = [];
 	
 	public constructor () {
 		
@@ -47,7 +47,7 @@ export class DiffOutput {
 		
 	}
 	
-	public log (text:string) {
+	public log (text: string) {
 		
 		this.msg(`[${createTimestamp()}] ${text}`);
 		
@@ -108,7 +108,7 @@ function createTimestamp () {
 	
 }
 
-function padStart (str:string, length:number, pad:string) {
+function padStart (str: string, length: number, pad: string) {
 	
 	while (str.length < length) str = pad + str;
 	
