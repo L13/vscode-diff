@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.1.1] - 2023-03-05
+
+### Fixed
+
+- Fixed Light High Contrast Theme.
+
 ## [1.1.0] - 2023-02-26
 
 ### Added

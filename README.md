@@ -4,14 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 1.1.0
+## What's new in Diff Folders 1.1.1
 
-- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
-- Added visual context for drag'n drop in the list view.
-- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
-- Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
-- Fixed JSONC parser for trailing comma in an object or array.
-- Fixed overwrite existing favorite.
+- Fixed Light High Contrast Theme.
 
 ## Index
 
