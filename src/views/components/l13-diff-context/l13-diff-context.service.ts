@@ -20,7 +20,7 @@ export class L13DiffContextViewModelService extends ViewModelService<L13DiffCont
 	
 	public name = 'l13-diff-context';
 	
-	public vmc:ViewModelConstructor<L13DiffContextViewModel> = L13DiffContextViewModel;
+	public vmc: ViewModelConstructor<L13DiffContextViewModel> = L13DiffContextViewModel;
 	
 }
 

@@ -40,30 +40,30 @@ if (!/^[a-z]{2,3}(-[A-Z]{2,3})?$/.test(language)) language = 'en';
 
 export class DiffPanel {
 	
-	public readonly msg:DiffMessage;
-	public readonly compare:DiffCompare;
-	public readonly copy:DiffCopy;
-	public readonly delete:DiffDelete;
+	public readonly msg: DiffMessage;
+	public readonly compare: DiffCompare;
+	public readonly copy: DiffCopy;
+	public readonly delete: DiffDelete;
 	
-	public readonly status:DiffStatusBar;
-	public readonly output:DiffOutput;
+	public readonly status: DiffStatusBar;
+	public readonly output: DiffOutput;
 	
-	public readonly panel:vscode.WebviewPanel;
-	public readonly context:vscode.ExtensionContext;
+	public readonly panel: vscode.WebviewPanel;
+	public readonly context: vscode.ExtensionContext;
 	
-	public readonly contextStates:ContextStates = {};
+	public readonly contextStates: ContextStates = {};
 	
-	public disposables:vscode.Disposable[] = [];
+	public disposables: vscode.Disposable[] = [];
 	
-	private readonly _onDidInit:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onDidInit:vscode.Event<undefined> = this._onDidInit.event;
+	private readonly _onDidInit: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onDidInit: vscode.Event<undefined> = this._onDidInit.event;
 	
-	public static currentPanel:DiffPanel|undefined;
-	public static currentPanels:DiffPanel[] = [];
+	public static currentPanel: DiffPanel | undefined;
+	public static currentPanels: DiffPanel[] = [];
 	
 	public static readonly viewType = 'l13DiffPanel';
 	
-	private constructor (panel:vscode.WebviewPanel, context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
+	private constructor (panel: vscode.WebviewPanel, context: vscode.ExtensionContext, uris: null | Uri[] | vscode.Uri[] = null, compare?: boolean) {
 		
 		this.panel = panel;
 		this.context = context;
@@ -169,7 +169,7 @@ export class DiffPanel {
 		
 	}
 	
-	public setTitle (pathA?:string, pathB?:string) {
+	public setTitle (pathA?: string, pathB?: string) {
 		
 		const labelFormat = settings.get('labelFormat');
 		let title = 'Diff Folders';
@@ -185,19 +185,19 @@ export class DiffPanel {
 		
 	}
 	
-	public getPanelState ():DiffPanelStateMessage {
+	public getPanelState (): DiffPanelStateMessage {
 		
 		return this.context.globalState.get(PANEL_STATE);
 		
 	}
 	
-	public savePanelState (data:DiffPanelStateMessage) {
+	public savePanelState (data: DiffPanelStateMessage) {
 		
 		this.context.globalState.update(PANEL_STATE, data);
 		
 	}
 	
-	public setContext (name:string, value:boolean) {
+	public setContext (name: string, value: boolean) {
 		
 		this.contextStates[name] = value;
 		
@@ -205,25 +205,25 @@ export class DiffPanel {
 		
 	}
 	
-	public setContextFocus (value:boolean) {
+	public setContextFocus (value: boolean) {
 		
 		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
 	}
 	
-	public send <T> (name:string, data?:T) {
+	public send <T> (name: string, data?: T) {
 		
 		this.msg.send<T>(name, data);
 		
 	}
 	
-	public sendAll <T> (name:string, data?:T) {
+	public sendAll <T> (name: string, data?: T) {
 		
 		DiffPanel.sendAll<T>(name, data);
 		
 	}
 	
-	public sendOthers <T> (name:string, data?:T) {
+	public sendOthers <T> (name: string, data?: T) {
 		
 		DiffPanel.currentPanels.forEach((diffPanel) => {
 				
@@ -233,7 +233,7 @@ export class DiffPanel {
 		
 	}
 	
-	public static async create (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean, openToSide?:boolean) {
+	public static async create (context: vscode.ExtensionContext, uris: null | Uri[] | vscode.Uri[] = null, compare?: boolean, openToSide?: boolean) {
 		
 		const mediaPath = path.join(context.extensionPath, 'media');
 		const iconsPath = path.join(mediaPath, 'icons');
@@ -275,7 +275,7 @@ export class DiffPanel {
 		
 	}
 	
-	public static createOrShow (context:vscode.ExtensionContext, uris:null|Uri[]|vscode.Uri[] = null, compare?:boolean) {
+	public static createOrShow (context: vscode.ExtensionContext, uris: null | Uri[] | vscode.Uri[] = null, compare?: boolean) {
 		
 		if (DiffPanel.currentPanel) {
 			DiffPanel.currentPanel.panel.reveal();
@@ -292,7 +292,7 @@ export class DiffPanel {
 		
 	}
 	
-	public static revive (panel:vscode.WebviewPanel, context:vscode.ExtensionContext) {
+	public static revive (panel: vscode.WebviewPanel, context: vscode.ExtensionContext) {
 		
 		const diffPanel = new DiffPanel(panel, context);
 		
@@ -301,13 +301,13 @@ export class DiffPanel {
 		
 	}
 	
-	public static send <T> (name:string, data?:T) {
+	public static send <T> (name: string, data?: T) {
 		
 		DiffPanel.currentPanel?.send<T>(name, data);
 		
 	}
 	
-	public static sendAll <T> (name:string, data?:T) {
+	public static sendAll <T> (name: string, data?: T) {
 		
 		DiffPanel.currentPanels.forEach((diffPanel) => diffPanel.send<T>(name, data));
 		
@@ -331,7 +331,7 @@ function nonce () {
 	
 }
 
-function getHTMLforDiffPanel (context:vscode.ExtensionContext, webview:vscode.Webview) {
+function getHTMLforDiffPanel (context: vscode.ExtensionContext, webview: vscode.Webview) {
 		
 	const mediaPath = path.join(context.extensionPath, 'media');
 	const scriptUri = vscode.Uri.file(path.join(mediaPath, 'main.js'));
@@ -365,7 +365,7 @@ function getHTMLforDiffPanel (context:vscode.ExtensionContext, webview:vscode.We
 	
 }
 
-function mapUris (uris:null|Uri[]|vscode.Uri[]) :Uri[] {
+function mapUris (uris: null | Uri[] | vscode.Uri[]): Uri[] {
 	
 	return (uris || []).map((uri) => ({ fsPath: uri.fsPath }));
 	

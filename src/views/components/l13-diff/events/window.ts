@@ -12,7 +12,7 @@ import type { WindowEventsInit } from '../../../../types';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, list, left, right, search }:WindowEventsInit) {
+export function init ({ diff, list, left, right, search }: WindowEventsInit) {
 	
 	document.addEventListener('mouseup', ({ target }) => {
 		

@@ -13,9 +13,9 @@
 //	Exports ____________________________________________________________________
 
 export type Test = {
-	desc:string,
-	expect:any,
-	toBe:any,
+	desc: string,
+	expect: any,
+	toBe: any,
 };
 
 //	Functions __________________________________________________________________

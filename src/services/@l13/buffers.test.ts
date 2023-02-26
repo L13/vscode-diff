@@ -2,24 +2,145 @@
 
 import * as assert from 'assert';
 
-import type { Test } from '../../types';
+import type { Diff, Test } from '../../types';
 
-import { normalizeLineEnding, trimWhitespace } from './buffers';
+import { BOM, detectUTFBOM, MODIFIED, normalizeLineEnding, trimWhitespace } from './buffers';
 
 //	Variables __________________________________________________________________
 
-
+const diff: Diff = {
+	id: '',
+	status: 'untracked',
+	type: 'unknown',
+	ignoredBOM: MODIFIED.NONE,
+	ignoredEOL: MODIFIED.NONE,
+	ignoredWhitespace: MODIFIED.NONE,
+	fileA: null,
+	fileB: null,
+};
 
 //	Initialize _________________________________________________________________
 
 describe('buffers', () => {
 	
-	describe('.normalizeLineEnding()', () => {
+	describe('.detectUTFBOM()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepEqual(normalizeLineEnding(Buffer.from(test.expect)), Buffer.from(test.toBe)));
+				it(test.desc, () => assert.strictEqual(detectUTFBOM(Buffer.from(test.expect)), test.toBe));
+			}
+			
+		}
+		
+		describe('UTF-8 with BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [239, 187, 191],
+					toBe: BOM.UTF_8,
+				},
+				{
+					desc: 'just \\n',
+					expect: [239, 187, 191, 10],
+					toBe: BOM.UTF_8,
+				},
+			]);
+			
+			it('all 255 chars', () => {
+				
+				for (let i = 0; i <= 0xff; i++) {
+					assert.strictEqual(detectUTFBOM(Buffer.from([239, 187, 191, i])), BOM.UTF_8);
+				}
+				
+			});
+			
+		});
+		
+		describe('UTF-8 without BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [],
+					toBe: BOM.NONE,
+				},
+				{
+					desc: 'just \\n',
+					expect: [10],
+					toBe: BOM.NONE,
+				},
+			]);
+			
+			it('all 255 chars', () => {
+				
+				for (let i = 0; i <= 0xff; i++) {
+					assert.deepStrictEqual(detectUTFBOM(Buffer.from([i])), BOM.NONE);
+				}
+				
+			});
+			
+		});
+		
+		describe('UTF-16BE with BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [254, 255],
+					toBe: BOM.UTF_16BE,
+				},
+				{
+					desc: 'just \\n',
+					expect: [254, 255, 10],
+					toBe: BOM.UTF_16BE,
+				},
+			]);
+			
+			it('all 255 chars', () => {
+				
+				for (let i = 0; i <= 0xff; i++) {
+					assert.strictEqual(detectUTFBOM(Buffer.from([254, 255, i])), BOM.UTF_16BE);
+				}
+				
+			});
+			
+		});
+		
+		describe('UTF-16LE with BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [255, 254],
+					toBe: BOM.UTF_16LE,
+				},
+				{
+					desc: 'just \\n',
+					expect: [255, 254, 10],
+					toBe: BOM.UTF_16LE,
+				},
+			]);
+			
+			it('all 255 chars', () => {
+				
+				for (let i = 0; i <= 0xff; i++) {
+					assert.strictEqual(detectUTFBOM(Buffer.from([255, 254, i])), BOM.UTF_16LE);
+				}
+				
+			});
+			
+		});
+		
+	});
+	
+	describe('.normalizeLineEnding()', () => {
+		
+		function runTests (tests: Test[], bom?: BOM) {
+			
+			for (const test of tests) {
+				it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
 			}
 			
 		}
@@ -92,7 +213,7 @@ describe('buffers', () => {
 			it('ignore all chars except \\r and \\n', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
-					if (i !== 10 && i !== 13) assert.deepEqual(normalizeLineEnding(Buffer.from([i])), Buffer.from([i]));
+					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
 				}
 				
 			});
@@ -167,7 +288,8 @@ describe('buffers', () => {
 			it('ignore all chars except \\r and \\n', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
-					if (i !== 10 && i !== 13) assert.deepEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i])), Buffer.from([239, 187, 191, i]));
+					// eslint-disable-next-line max-len
+					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
 				}
 				
 			});
@@ -244,7 +366,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) {
-							assert.deepEqual(normalizeLineEnding(Buffer.from([254, 255, i, j])), Buffer.from([254, 255, i, j]));
+							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
 						}
 					}
 				}
@@ -323,7 +445,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) {
-							assert.deepEqual(normalizeLineEnding(Buffer.from([255, 254, i, j])), Buffer.from([255, 254, i, j]));
+							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
 						}
 					}
 				}
@@ -336,10 +458,10 @@ describe('buffers', () => {
 	
 	describe('.trimWhitespace()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[], bom?: BOM) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepEqual(trimWhitespace(Buffer.from(test.expect)), Buffer.from(test.toBe)));
+				it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
 			}
 			
 		}
@@ -438,7 +560,7 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepEqual(trimWhitespace(Buffer.from([i])), Buffer.from([i]));
+						assert.deepStrictEqual(trimWhitespace(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
 					}
 				}
 				
@@ -535,7 +657,7 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepEqual(trimWhitespace(Buffer.from([239, 187, 191, i])), Buffer.from([239, 187, 191, i]));
+						assert.deepStrictEqual(trimWhitespace(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
 					}
 				}
 				
@@ -633,7 +755,106 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepEqual(trimWhitespace(Buffer.from([254, 255, i, j])), Buffer.from([254, 255, i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
+						}
+					}
+				}
+				
+			});
+			
+		});
+		
+		describe('UTF-16BE without BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [],
+					toBe: [],
+				},
+				{
+					desc: 'ignore single line tab',
+					expect: [0, 9],
+					toBe: [0, 9],
+				},
+				{
+					desc: 'ignore single line space',
+					expect: [0, 32],
+					toBe: [0, 32],
+				},
+				{
+					desc: 'ignore single line tabs',
+					expect: [0, 9, 0, 9, 0, 9],
+					toBe: [0, 9, 0, 9, 0, 9],
+				},
+				{
+					desc: 'ignore single line  spaces',
+					expect: [0, 32, 0, 32, 0, 32],
+					toBe: [0, 32, 0, 32, 0, 32],
+				},
+				{
+					desc: 'ignore line feed',
+					expect: [0, 10],
+					toBe: [0, 10],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [0, 13],
+					toBe: [0, 13],
+				},
+				{
+					desc: 'ignore multiple line feed',
+					expect: [0, 10, 0, 10, 0, 10],
+					toBe: [0, 10, 0, 10, 0, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return',
+					expect: [0, 13, 0, 13, 0, 13],
+					toBe: [0, 13, 0, 13, 0, 13],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+					toBe: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				},
+				{
+					desc: 'remove trailing tab',
+					expect: [0, 9, 0, 65, 0, 9],
+					toBe: [0, 65],
+				},
+				{
+					desc: 'remove trailing space',
+					expect: [0, 32, 0, 65, 0, 32],
+					toBe: [0, 65],
+				},
+				{
+					desc: 'remove multiple trailing tab',
+					expect: [0, 9, 0, 9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0, 9],
+					toBe: [0, 65],
+				},
+				{
+					desc: 'remove multiple trailing space',
+					expect: [0, 32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0, 32],
+					toBe: [0, 65],
+				},
+				{
+					desc: 'ignore tab in between',
+					expect: [0, 9, 0, 65, 0, 9, 0, 65, 0, 9],
+					toBe: [0, 65, 0, 9, 0, 65],
+				},
+				{
+					desc: 'ignore space in between',
+					expect: [0, 32, 0, 65, 0, 32, 0, 65, 0, 32],
+					toBe: [0, 65, 0, 32, 0, 65],
+				},
+			], BOM.UTF_16BE);
+			
+			it('ignore all chars except \\t and space', () => {
+				
+				for (let i = 0; i < 0xff; i++) {
+					for (let j = 0; j < 0xff; j++) {
+						if (!(i === 0 && (j === 9 || j === 32))) {
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16BE), Buffer.from([i, j]));
 						}
 					}
 				}
@@ -732,7 +953,106 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepEqual(trimWhitespace(Buffer.from([255, 254, i, j])), Buffer.from([255, 254, i, j]));
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
+						}
+					}
+				}
+				
+			});
+			
+		});
+		
+		describe('UTF-16LE without BOM', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [],
+					toBe: [],
+				},
+				{
+					desc: 'ignore single line tab',
+					expect: [9, 0],
+					toBe: [9, 0],
+				},
+				{
+					desc: 'ignore single line space',
+					expect: [32, 0],
+					toBe: [32, 0],
+				},
+				{
+					desc: 'ignore single line tabs',
+					expect: [9, 0, 9, 0, 9, 0],
+					toBe: [9, 0, 9, 0, 9, 0],
+				},
+				{
+					desc: 'ignore single line  spaces',
+					expect: [32, 0, 32, 0, 32, 0],
+					toBe: [32, 0, 32, 0, 32, 0],
+				},
+				{
+					desc: 'ignore line feed',
+					expect: [10, 0],
+					toBe: [10, 0],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [13, 0],
+					toBe: [13, 0],
+				},
+				{
+					desc: 'ignore multiple line feed',
+					expect: [10, 0, 10, 0, 10, 0],
+					toBe: [10, 0, 10, 0, 10, 0],
+				},
+				{
+					desc: 'ignore multiple carriage return',
+					expect: [13, 0, 13, 0, 13, 0],
+					toBe: [13, 0, 13, 0, 13, 0],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+					toBe: [13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+				},
+				{
+					desc: 'remove trailing tab',
+					expect: [9, 0, 65, 0, 9, 0],
+					toBe: [65, 0],
+				},
+				{
+					desc: 'remove trailing space',
+					expect: [32, 0, 65, 0, 32, 0],
+					toBe: [65, 0],
+				},
+				{
+					desc: 'remove multiple trailing tab',
+					expect: [9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0],
+					toBe: [65, 0],
+				},
+				{
+					desc: 'remove multiple trailing space',
+					expect: [32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0, 32, 0],
+					toBe: [65, 0],
+				},
+				{
+					desc: 'ignore tab in between',
+					expect: [9, 0, 65, 0, 9, 0, 65, 0, 9, 0],
+					toBe: [65, 0, 9, 0, 65, 0],
+				},
+				{
+					desc: 'ignore space in between',
+					expect: [32, 0, 65, 0, 32, 0, 65, 0, 32, 0],
+					toBe: [65, 0, 32, 0, 65, 0],
+				},
+			], BOM.UTF_16LE);
+			
+			it('ignore all chars except \\t and space', () => {
+				
+				for (let i = 0; i < 0xff; i++) {
+					for (let j = 0; j < 0xff; j++) {
+						if (!(j === 0 && (i === 9 || i === 32))) {
+							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16LE), Buffer.from([i, j]));
 						}
 					}
 				}

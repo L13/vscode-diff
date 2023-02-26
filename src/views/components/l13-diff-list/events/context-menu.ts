@@ -14,12 +14,12 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ context, list }:ContextEventsInit) {
+export function init ({ context, list }: ContextEventsInit) {
 	
 	context.addEventListener('click', (event) => event.stopImmediatePropagation());
 	context.addEventListener('dblclick', (event) => event.stopImmediatePropagation());
 	
-	context.addEventListener('copy', ({ target, detail }:any) => {
+	context.addEventListener('copy', ({ target, detail }: any) => {
 		
 		if (list.disabled) return;
 		
@@ -38,7 +38,7 @@ export function init ({ context, list }:ContextEventsInit) {
 		
 	});
 	
-	context.addEventListener('goto', ({ target, detail }:any) => {
+	context.addEventListener('goto', ({ target, detail }: any) => {
 		
 		if (list.disabled) return;
 		
@@ -91,7 +91,7 @@ export function init ({ context, list }:ContextEventsInit) {
 		
 		if (target === context) return;
 		
-		const element:HTMLElement = target.closest('l13-diff-list-file');
+		const element: HTMLElement = target.closest('l13-diff-list-file');
 		
 		if (element) {
 			const contextParentNode = context.parentNode;

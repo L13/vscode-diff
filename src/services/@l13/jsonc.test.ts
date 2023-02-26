@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 //	Imports ____________________________________________________________________
 
 import * as assert from 'assert';
@@ -16,7 +17,7 @@ describe('jsonc', () => {
 	
 	describe('.parse()', () => {
 		
-		function runTests (tests:Test[]) {
+		function runTests (tests: Test[]) {
 			
 			for (const test of tests) {
 				it(test.desc, () => assert.deepEqual(parse(test.expect), test.toBe));
@@ -512,6 +513,70 @@ describe('jsonc', () => {
 						"a\\"\\"\\"": "1\\"\\"\\""
 					}`,
 					toBe: { 'a"""': '1"""' },
+				},
+			]);
+			
+		});
+		
+		describe('remove trailing comma in objects', () => {
+			
+			runTests([
+				{
+					desc: 'trailing comma in singleline object',
+					expect: '{"a":1,}',
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in singleline object with space',
+					expect: '{"a":1, }',
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in singleline object with tab',
+					expect: '{"a":1,\t}',
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in multiline object',
+					expect: `{
+						"a":1,
+					}`,
+					toBe: { a: 1 },
+				},
+			]);
+			
+		});
+		
+		describe('remove trailing comma in arrays', () => {
+			
+			runTests([
+				{
+					desc: 'trailing comma in singleline array',
+					expect: '[1,]',
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in singleline array with space',
+					expect: '[1, ]',
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in singleline array with tab',
+					expect: '[1,\t]',
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in multiline array',
+					expect: `[
+						1,
+					]`,
+					toBe: [1],
 				},
 			]);
 			

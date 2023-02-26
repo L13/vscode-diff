@@ -29,7 +29,7 @@ import type { L13DiffSwapViewModel } from './l13-diff-swap.viewmodel';
 export class L13DiffSwapComponent extends L13Element<L13DiffSwapViewModel> {
 	
 	@L13Query('button')
-	public button:HTMLButtonElement;
+	public button: HTMLButtonElement;
 	
 	public constructor () {
 		

@@ -19,20 +19,20 @@ import { HistoryTreeItem } from './trees/HistoryTreeItem';
 
 export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem> {
 	
-	private _onDidChangeTreeData:vscode.EventEmitter<HistoryTreeItem|undefined> = new vscode.EventEmitter<HistoryTreeItem|undefined>();
-	public readonly onDidChangeTreeData:vscode.Event<HistoryTreeItem|undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<HistoryTreeItem | undefined> = new vscode.EventEmitter<HistoryTreeItem | undefined>();
+	public readonly onDidChangeTreeData: vscode.Event<HistoryTreeItem | undefined> = this._onDidChangeTreeData.event;
 	
-	public comparisons:Comparison[] = [];
+	public comparisons: Comparison[] = [];
 	
-	public static current:HistoryProvider|undefined;
+	public static current: HistoryProvider | undefined;
 	
-	public static create (states:HistoryStates) {
+	public static create (states: HistoryStates) {
 		
 		return HistoryProvider.current || (HistoryProvider.current = new HistoryProvider(states));
 		
 	}
 	
-	private constructor (states:HistoryStates) {
+	private constructor (states: HistoryStates) {
 		
 		this.comparisons = states.comparisons;
 		
@@ -44,7 +44,7 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 		
 	}
 	
-	public refresh (states?:RefreshHistoryStates) {
+	public refresh (states?: RefreshHistoryStates) {
 		
 		if (states?.comparisons) this.comparisons = states.comparisons;
 		
@@ -52,15 +52,15 @@ export class HistoryProvider implements vscode.TreeDataProvider<HistoryTreeItem>
 		
 	}
 	
-	public getTreeItem (element:HistoryTreeItem):vscode.TreeItem {
+	public getTreeItem (element: HistoryTreeItem): vscode.TreeItem {
 		
 		return element;
 		
 	}
 	
-	public getChildren ():Thenable<HistoryTreeItem[]> {
+	public getChildren (): Thenable<HistoryTreeItem[]> {
 		
-		const list:HistoryTreeItem[] = [];
+		const list: HistoryTreeItem[] = [];
 		
 		this.comparisons.forEach((comparison) => list.push(new HistoryTreeItem(comparison)));
 		

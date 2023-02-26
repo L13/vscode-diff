@@ -20,7 +20,7 @@ export class L13DiffNavigatorViewModelService extends ViewModelService<L13DiffNa
 	
 	public name = 'l13-diff-navigator';
 	
-	public vmc:ViewModelConstructor<L13DiffNavigatorViewModel> = L13DiffNavigatorViewModel;
+	public vmc: ViewModelConstructor<L13DiffNavigatorViewModel> = L13DiffNavigatorViewModel;
 	
 }
 

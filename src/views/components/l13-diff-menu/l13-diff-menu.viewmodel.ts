@@ -18,15 +18,15 @@ import { msg } from '../../common';
 
 export class L13DiffMenuViewModel extends ViewModel {
 	
-	public history:string[] = [];
+	public history: string[] = [];
 	
-	public workspaces:string[] = [];
+	public workspaces: string[] = [];
 	
 	public update () {
 			
 		return new Promise((resolve) => {
 			
-			msg.on('update:menu', (data:DiffMenuMessage) => {
+			msg.on('update:menu', (data: DiffMenuMessage) => {
 				
 				this.updateHistory(data.history);
 				this.updateWorkspaces(data.workspaces);
@@ -42,7 +42,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 		
 	}
 		
-	private updateHistory (history:string[]) {
+	private updateHistory (history: string[]) {
 		
 		if (history) {
 			if (`${history}` !== `${this.history}`) {
@@ -53,7 +53,7 @@ export class L13DiffMenuViewModel extends ViewModel {
 		
 	}
 	
-	private updateWorkspaces (workspaces:string[]) {
+	private updateWorkspaces (workspaces: string[]) {
 		
 		if (workspaces) {
 			if (`${workspaces}` !== `${this.workspaces}`) {

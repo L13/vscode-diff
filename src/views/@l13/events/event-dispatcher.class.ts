@@ -18,25 +18,25 @@ const LISTENERS = Symbol.for('listeners');
 
 export class EventDispatcher {
 	
-	private [LISTENERS]:Dictionary<EventListener[]> = Object.create(null);
+	private [LISTENERS]: Dictionary<EventListener[]> = Object.create(null);
 	
-	public on (name:string, listener:EventListener) {
+	public on (name: string, listener: EventListener) {
 		
-		const listeners:EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
+		const listeners: EventListener[] = this[LISTENERS][name] || (this[LISTENERS][name] = []);
 		
 		listeners[listeners.length] = listener;
 		
 	}
 	
-	public hasEvent (name:string) {
+	public hasEvent (name: string) {
 		
 		return !!this[LISTENERS][name];
 		
 	}
 	
-	public hasEventListener (name:string, listener:EventListener) {
+	public hasEventListener (name: string, listener: EventListener) {
 		
-		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
+		const listeners: null | EventListener[] = this[LISTENERS][name] || null;
 		
 		if (!listeners) return false;
 		
@@ -44,17 +44,17 @@ export class EventDispatcher {
 		
 	}
 	
-	public dispatchEvent (nameOrEvent:string|Event, ...args:any[]) {
+	public dispatchEvent (nameOrEvent: string | Event, ...args: any[]) {
 		
-		let event:null|Event = nameOrEvent instanceof Event ? nameOrEvent : null;
+		let event: null | Event = nameOrEvent instanceof Event ? nameOrEvent : null;
 		const name = <string>(event ? event.type : nameOrEvent);
-		let listeners:null|EventListener[] = this[LISTENERS][name] || null;
+		let listeners: null | EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 		//	Copy listeners to prevent stuttering if a listener will be deleted
 		//	during propagation.
 			listeners = listeners.slice(0);
-			const values:[Event] = [event || (event = new Event({ type: name }))];
+			const values: [Event] = [event || (event = new Event({ type: name }))];
 			let i = 0;
 			let listener;
 			
@@ -72,9 +72,9 @@ export class EventDispatcher {
 		
 	}
 	
-	public removeEventListener (name:string, listener:EventListener) {
+	public removeEventListener (name: string, listener: EventListener) {
 		
-		const listeners:null|EventListener[] = this[LISTENERS][name] || null;
+		const listeners: null | EventListener[] = this[LISTENERS][name] || null;
 		
 		if (listeners) {
 			remove(listeners, listener);

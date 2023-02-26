@@ -20,17 +20,17 @@ import type { FavoritesState } from '../states/FavoritesState';
 
 export class FavoritesDialog {
 	
-	private static current:FavoritesDialog = null;
+	private static current: FavoritesDialog = null;
 	
-	public static create (favoriteState:FavoritesState) {
+	public static create (favoriteState: FavoritesState) {
 		
 		return FavoritesDialog.current || (FavoritesDialog.current = new FavoritesDialog(favoriteState));
 		
 	}
 	
-	private constructor (private readonly favoriteState:FavoritesState) {}
+	private constructor (private readonly favoriteState: FavoritesState) {}
 	
-	public async add (fileA:string, fileB:string) {
+	public async add (fileA: string, fileB: string) {
 		
 		const label = await vscode.window.showInputBox({
 			placeHolder: 'Please enter a name for the diff',
@@ -39,15 +39,18 @@ export class FavoritesDialog {
 		
 		if (!label) return;
 		
-		if (this.favoriteState.getByName(label)) {
+		const favorite = this.favoriteState.getByName(label);
+		
+		if (favorite) {
 			if (!await dialogs.confirm(`Overwrite favorite "${label}"?`, 'Ok')) return;
+			this.favoriteState.remove(favorite);
 		}
 		
-		this.favoriteState.add(label, fileA, fileB);
+		this.favoriteState.add(label, fileA, fileB, favorite?.groupId);
 		
 	}
 	
-	public async rename (favorite:Favorite) {
+	public async rename (favorite: Favorite) {
 		
 		const label = await vscode.window.showInputBox({
 			placeHolder: 'Please enter a new name for the diff',
@@ -65,7 +68,7 @@ export class FavoritesDialog {
 		
 	}
 	
-	public async remove (favorite:Favorite) {
+	public async remove (favorite: Favorite) {
 		
 		if (await dialogs.confirm(`Delete favorite "${favorite.label}"?`, 'Delete')) {
 			this.favoriteState.remove(favorite);

@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ search, searchVM, widgets }:SearchCommandsInit) {
+export function init ({ search, searchVM, widgets }: SearchCommandsInit) {
 	
 	msg.on('l13Diff.action.search.open', () => {
 		

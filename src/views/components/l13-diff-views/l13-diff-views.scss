@@ -50,19 +50,13 @@
 		}
 		
 		&:checked::after {
-			background: var(--l13-icon-background);
+			background: var(--vscode-inputOption-activeBorder);
 			content: '';
-			height: 11px;
-			-webkit-mask-image: url('checked.svg');
-			mask-image: url('checked.svg');
-			-webkit-mask-position: 50% 50%;
-			mask-position: 50% 50%;
-			-webkit-mask-repeat: no-repeat;
-			mask-repeat: no-repeat;
-			right: -3px;
+			height: 2px;
+			left: 4px;
 			position: absolute;
-			bottom: -4px;
-			width: 11px;
+			bottom: 0;
+			width: 18px;
 		}
 		
 		&#l13_show_unchanged {

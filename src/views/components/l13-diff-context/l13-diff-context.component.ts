@@ -29,16 +29,16 @@ import type { L13DiffContextViewModel } from './l13-diff-context.viewmodel';
 export class L13DiffContextComponent extends L13Element<L13DiffContextViewModel> {
 	
 	@L13Query('#copy')
-	public buttonCopy:HTMLButtonElement;
+	public buttonCopy: HTMLButtonElement;
 	
 	@L13Query('#goto')
-	public buttonGoto:HTMLButtonElement;
+	public buttonGoto: HTMLButtonElement;
 	
 	@L13Query('#reveal')
-	public buttonReveal:HTMLButtonElement;
+	public buttonReveal: HTMLButtonElement;
 	
 	@L13Query('#delete')
-	public buttonDelete:HTMLButtonElement;
+	public buttonDelete: HTMLButtonElement;
 		
 	public constructor () {
 	

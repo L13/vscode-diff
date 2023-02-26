@@ -20,19 +20,19 @@ const COMPARISONS_HISTORY = 'comparisons';
 
 //	Exports ____________________________________________________________________
 
-export function getStateInfo (context:vscode.ExtensionContext) :StateInfo {
+export function getStateInfo (context: vscode.ExtensionContext): StateInfo {
 		
 	return context.globalState.get(STATE_INFO, { lastModified: 0 });
 	
 }
 
-export function getFavorites (context:vscode.ExtensionContext) :Favorite[] {
+export function getFavorites (context: vscode.ExtensionContext): Favorite[] {
 		
 	return context.globalState.get(FAVORITES, []);
 	
 }
 
-export function updateFavorites (context:vscode.ExtensionContext, favorites:Favorite[]) {
+export function updateFavorites (context: vscode.ExtensionContext, favorites: Favorite[]) {
 	
 	context.globalState.update(FAVORITES, favorites);
 	
@@ -40,13 +40,13 @@ export function updateFavorites (context:vscode.ExtensionContext, favorites:Favo
 	
 }
 
-export function getFavoriteGroups (context:vscode.ExtensionContext) :FavoriteGroup[] {
+export function getFavoriteGroups (context: vscode.ExtensionContext): FavoriteGroup[] {
 		
 	return context.globalState.get(FAVORITE_GROUPS, []);
 	
 }
 
-export function updateFavoriteGroups (context:vscode.ExtensionContext, favoriteGroups:FavoriteGroup[]) {
+export function updateFavoriteGroups (context: vscode.ExtensionContext, favoriteGroups: FavoriteGroup[]) {
 	
 	context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 	
@@ -54,13 +54,13 @@ export function updateFavoriteGroups (context:vscode.ExtensionContext, favoriteG
 	
 }
 
-export function getHistory (context:vscode.ExtensionContext) :string[] {
+export function getHistory (context: vscode.ExtensionContext): string[] {
 		
 	return context.globalState.get(MENU_HISTORY, []);
 	
 }
 
-export function updateHistory (context:vscode.ExtensionContext, history:string[]) {
+export function updateHistory (context: vscode.ExtensionContext, history: string[]) {
 	
 	context.globalState.update(MENU_HISTORY, history);
 	
@@ -68,13 +68,13 @@ export function updateHistory (context:vscode.ExtensionContext, history:string[]
 	
 }
 
-export function getComparisons (context:vscode.ExtensionContext) :Comparison[] {
+export function getComparisons (context: vscode.ExtensionContext): Comparison[] {
 	
 	return context.globalState.get(COMPARISONS_HISTORY, []);
 	
 }
 
-export function updateComparisons (context:vscode.ExtensionContext, comparisons:Comparison[]) {
+export function updateComparisons (context: vscode.ExtensionContext, comparisons: Comparison[]) {
 	
 	context.globalState.update(COMPARISONS_HISTORY, comparisons);
 	
@@ -82,7 +82,7 @@ export function updateComparisons (context:vscode.ExtensionContext, comparisons:
 	
 }
 
-export function updateCollapseState (context:vscode.ExtensionContext, favoriteGroups:FavoriteGroup[]) {
+export function updateCollapseState (context: vscode.ExtensionContext, favoriteGroups: FavoriteGroup[]) {
 	
 	context.globalState.update(FAVORITE_GROUPS, favoriteGroups);
 	
@@ -90,7 +90,7 @@ export function updateCollapseState (context:vscode.ExtensionContext, favoriteGr
 
 //	Functions __________________________________________________________________
 
-function updateStateInfo (context:vscode.ExtensionContext) {
+function updateStateInfo (context: vscode.ExtensionContext) {
 	
 	context.globalState.update(STATE_INFO, {
 		lastModified: +new Date(),

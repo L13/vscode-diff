@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ leftVM, rightVM }:FavoritesCommandsInit) {
+export function init ({ leftVM, rightVM }: FavoritesCommandsInit) {
 	
 	msg.on('l13Diff.action.panel.addToFavorites', () => {
 		

@@ -6,7 +6,7 @@ import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
-import { normalizeLineEnding, trimWhitespace } from '../@l13/buffers';
+import { BOM, detectUTFBOM, MODIFIED, normalizeLineEnding, removeUTFBOM, trimWhitespace } from '../@l13/buffers';
 import { lstatSync, sanitize, walkTree } from '../@l13/fse';
 
 import type {
@@ -41,37 +41,37 @@ const MAX_CACHE_BUFFER_LENGTH = 33554432; // 32 MB
 
 export class DiffCompare {
 	
-	private _onWillCompare:vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
-	public readonly onWillCompare:vscode.Event<undefined> = this._onWillCompare.event;
+	private _onWillCompare: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+	public readonly onWillCompare: vscode.Event<undefined> = this._onWillCompare.event;
 	
-	private _onDidNotCompare:vscode.EventEmitter<DiffError> = new vscode.EventEmitter<DiffError>();
-	public readonly onDidNotCompare:vscode.Event<DiffError> = this._onDidNotCompare.event;
+	private _onDidNotCompare: vscode.EventEmitter<DiffError> = new vscode.EventEmitter<DiffError>();
+	public readonly onDidNotCompare: vscode.Event<DiffError> = this._onDidNotCompare.event;
 	
-	private _onWillCompareFiles:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
-	public readonly onWillCompareFiles:vscode.Event<StartEvent> = this._onWillCompareFiles.event;
+	private _onWillCompareFiles: vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onWillCompareFiles: vscode.Event<StartEvent> = this._onWillCompareFiles.event;
 	
-	private _onDidCompareFiles:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidCompareFiles:vscode.Event<DiffResult> = this._onDidCompareFiles.event;
+	private _onDidCompareFiles: vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidCompareFiles: vscode.Event<DiffResult> = this._onDidCompareFiles.event;
 	
-	private _onWillCompareFolders:vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
-	public readonly onWillCompareFolders:vscode.Event<StartEvent> = this._onWillCompareFolders.event;
+	private _onWillCompareFolders: vscode.EventEmitter<StartEvent> = new vscode.EventEmitter<StartEvent>();
+	public readonly onWillCompareFolders: vscode.Event<StartEvent> = this._onWillCompareFolders.event;
 	
-	private _onDidCompareFolders:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidCompareFolders:vscode.Event<DiffResult> = this._onDidCompareFolders.event;
+	private _onDidCompareFolders: vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidCompareFolders: vscode.Event<DiffResult> = this._onDidCompareFolders.event;
 	
-	private _onDidUpdateDiff:vscode.EventEmitter<Diff> = new vscode.EventEmitter<Diff>();
-	public readonly onDidUpdateDiff:vscode.Event<Diff> = this._onDidUpdateDiff.event;
+	private _onDidUpdateDiff: vscode.EventEmitter<Diff> = new vscode.EventEmitter<Diff>();
+	public readonly onDidUpdateDiff: vscode.Event<Diff> = this._onDidUpdateDiff.event;
 	
-	private _onDidUpdateAllDiffs:vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
-	public readonly onDidUpdateAllDiffs:vscode.Event<DiffResult> = this._onDidUpdateAllDiffs.event;
+	private _onDidUpdateAllDiffs: vscode.EventEmitter<DiffResult> = new vscode.EventEmitter<DiffResult>();
+	public readonly onDidUpdateAllDiffs: vscode.Event<DiffResult> = this._onDidUpdateAllDiffs.event;
 	
-	private _onWillScanFolder:vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
-	public readonly onWillScanFolder:vscode.Event<string> = this._onWillScanFolder.event;
+	private _onWillScanFolder: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
+	public readonly onWillScanFolder: vscode.Event<string> = this._onWillScanFolder.event;
 	
-	private _onDidScanFolder:vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
-	public readonly onDidScanFolder:vscode.Event<StatsMap> = this._onDidScanFolder.event;
+	private _onDidScanFolder: vscode.EventEmitter<StatsMap> = new vscode.EventEmitter<StatsMap>();
+	public readonly onDidScanFolder: vscode.Event<StatsMap> = this._onDidScanFolder.event;
 	
-	public initCompare (data:DiffInitMessage) {
+	public initCompare (data: DiffInitMessage) {
 		
 		this._onWillCompare.fire(undefined);
 		
@@ -104,9 +104,9 @@ export class DiffCompare {
 		
 	}
 	
-	public updateDiffs (data:DiffResult) {
+	public updateDiffs (data: DiffResult) {
 		
-		data.diffs.forEach((diff:Diff) => {
+		data.diffs.forEach((diff: Diff) => {
 			
 			diff.fileA.stat = lstatSync(diff.fileA.fsPath);
 			diff.fileB.stat = lstatSync(diff.fileB.fsPath);
@@ -121,7 +121,7 @@ export class DiffCompare {
 		
 	}
 	
-	private compareFiles (data:DiffInitMessage, pathA:string, pathB:string) {
+	private compareFiles (data: DiffInitMessage, pathA: string, pathB: string) {
 		
 		const left = vscode.Uri.file(pathA);
 		const right = vscode.Uri.file(pathB);
@@ -138,7 +138,7 @@ export class DiffCompare {
 		
 	}
 	
-	private async compareFolders (data:DiffInitMessage, pathA:string, pathB:string) {
+	private async compareFolders (data: DiffInitMessage, pathA: string, pathB: string) {
 		
 		this._onWillCompareFolders.fire({ data, pathA, pathB });
 		
@@ -153,7 +153,7 @@ export class DiffCompare {
 		
 	}
 	
-	private onError (error:string|Error, pathA:string, pathB:string, diffSettings?:DiffSettings) {
+	private onError (error: string | Error, pathA: string, pathB: string, diffSettings?: DiffSettings) {
 		
 		const buttons = [];
 		
@@ -169,7 +169,7 @@ export class DiffCompare {
 		
 	}
 	
-	public async scanFolder (dirname:string, { abortOnError, excludes, useCaseSensitive, maxFileSize }:DiffSettings) {
+	public async scanFolder (dirname: string, { abortOnError, excludes, useCaseSensitive, maxFileSize }: DiffSettings) {
 		
 		this._onWillScanFolder.fire(dirname);
 		
@@ -181,12 +181,12 @@ export class DiffCompare {
 		
 	}
 	
-	private async createDiffs (dirnameA:string, dirnameB:string, diffSettings:DiffSettings):Promise<DiffResult> {
+	private async createDiffs (dirnameA: string, dirnameB: string, diffSettings: DiffSettings): Promise<DiffResult> {
 		
-		const diffResult:DiffResult = new DiffResult(dirnameA, dirnameB, diffSettings);
-		const resultA:StatsMap = await this.scanFolder(dirnameA, diffSettings);
-		const resultB:StatsMap = await this.scanFolder(dirnameB, diffSettings);
-		const diffs:Dictionary<Diff> = {};
+		const diffResult: DiffResult = new DiffResult(dirnameA, dirnameB, diffSettings);
+		const resultA: StatsMap = await this.scanFolder(dirnameA, diffSettings);
+		const resultB: StatsMap = await this.scanFolder(dirnameB, diffSettings);
+		const diffs: Dictionary<Diff> = {};
 		
 		createListA(diffs, resultA, diffSettings);
 		compareWithListB(diffs, resultB, diffSettings);
@@ -200,7 +200,7 @@ export class DiffCompare {
 
 //	Functions __________________________________________________________________
 
-async function getDiffSettings (dirnameA:string, dirnameB:string) :Promise<DiffSettings> {
+async function getDiffSettings (dirnameA: string, dirnameB: string): Promise<DiffSettings> {
 	
 	const useCaseSensitiveFileName = settings.get('useCaseSensitiveFileName', 'detect');
 	let useCaseSensitive = useCaseSensitiveFileName === 'detect' ? settings.hasCaseSensitiveFileSystem : useCaseSensitiveFileName === 'on';
@@ -221,6 +221,7 @@ async function getDiffSettings (dirnameA:string, dirnameB:string) :Promise<DiffS
 		excludes: settings.getExcludes(dirnameA, dirnameB),
 		ignoreContents: settings.get('ignoreContents', false),
 		ignoreEndOfLine: settings.get('ignoreEndOfLine', false),
+		ignoreByteOrderMark: settings.get('ignoreByteOrderMark', false),
 		ignoreTrimWhitespace: settings.ignoreTrimWhitespace(),
 		maxFileSize: settings.maxFileSize(),
 		useCaseSensitive,
@@ -228,7 +229,7 @@ async function getDiffSettings (dirnameA:string, dirnameB:string) :Promise<DiffS
 	
 }
 
-function createListA (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:DiffSettings) {
+function createListA (diffs: Dictionary<Diff>, result: StatsMap, diffSettings: DiffSettings) {
 	
 	const useCaseSensitive = diffSettings.useCaseSensitive;
 	
@@ -244,7 +245,7 @@ function createListA (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:Diff
 	
 }
 
-function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, diffSettings:DiffSettings) {
+function compareWithListB (diffs: Dictionary<Diff>, result: StatsMap, diffSettings: DiffSettings) {
 	
 	const useCaseSensitive = diffSettings.useCaseSensitive;
 	
@@ -266,7 +267,7 @@ function compareWithListB (diffs:Dictionary<Diff>, result:StatsMap, diffSettings
 	
 }
 
-function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace }:DiffSettings) {
+function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWhitespace, ignoreByteOrderMark }: DiffSettings) {
 	
 	const fileA = diff.fileA;
 	const fileB = diff.fileB;
@@ -287,7 +288,7 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	if (typeA === 'file') {
 		if (ignoreContents) {
 			if (sizeA !== sizeB) diff.status = 'modified';
-		} else if ((ignoreEndOfLine || ignoreTrimWhitespace)
+		} else if ((ignoreByteOrderMark || ignoreEndOfLine || ignoreTrimWhitespace)
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
@@ -299,16 +300,31 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 			//	If files are equal normalizing is not necessary
 			if (sizeA === sizeB && bufferA.equals(bufferB)) return;
 			
-			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA);
-				bufferB = trimWhitespace(bufferB);
-				diff.ignoredWhitespace = true;
+			const bomA = detectUTFBOM(bufferA);
+			const bomB = detectUTFBOM(bufferB);
+			
+			if (bomA && bomB && bomA !== bomB
+				|| bomA === BOM.UTF_16LE && bomB !== BOM.UTF_16LE // UTF-16LE without BOM is not valid
+				|| bomA !== BOM.UTF_16LE && bomB === BOM.UTF_16LE) {
+				diff.status = 'modified';
+				return;
+			}
+			
+			const bom = bomA || bomB;
+			
+			if (ignoreByteOrderMark && bomA !== bomB) {
+				if (bomA) bufferA = removeUTFBOM(bufferA, diff, MODIFIED.LEFT, bomA);
+				if (bomB) bufferB = removeUTFBOM(bufferB, diff, MODIFIED.RIGHT, bomB);
 			}
 			
 			if (ignoreEndOfLine) {
-				bufferA = normalizeLineEnding(bufferA);
-				bufferB = normalizeLineEnding(bufferB);
-				diff.ignoredEOL = true;
+				bufferA = normalizeLineEnding(bufferA, diff, MODIFIED.LEFT, bom);
+				bufferB = normalizeLineEnding(bufferB, diff, MODIFIED.RIGHT, bom);
+			}
+			
+			if (ignoreTrimWhitespace) {
+				bufferA = trimWhitespace(bufferA, diff, MODIFIED.LEFT, bom);
+				bufferB = trimWhitespace(bufferB, diff, MODIFIED.RIGHT, bom);
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';
@@ -331,7 +347,7 @@ function compareDiff (diff:Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimWh
 	
 }
 
-function addFile (diffs:Dictionary<Diff>, id:string, fileA:DiffFile, fileB:DiffFile) {
+function addFile (diffs: Dictionary<Diff>, id: string, fileA: DiffFile, fileB: DiffFile) {
 	
 	const file = fileA || fileB;
 	
@@ -339,15 +355,16 @@ function addFile (diffs:Dictionary<Diff>, id:string, fileA:DiffFile, fileB:DiffF
 		id,
 		status: file.ignore ? 'ignored' : fileA ? 'deleted' : 'untracked',
 		type: file.type,
-		ignoredEOL: false,
-		ignoredWhitespace: false,
+		ignoredEOL: MODIFIED.NONE,
+		ignoredBOM: MODIFIED.NONE,
+		ignoredWhitespace: MODIFIED.NONE,
 		fileA,
 		fileB,
 	};
 	
 }
 
-function hasSameContents (pathA:string, pathB:string) {
+function hasSameContents (pathA: string, pathB: string) {
 	
 	let fdA;
 	let fdB;

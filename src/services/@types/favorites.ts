@@ -13,31 +13,31 @@ import type { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
 
 //	Exports ____________________________________________________________________
 
-export type FavoriteTreeItems = FavoriteTreeItem|FavoriteGroupTreeItem;
+export type FavoriteTreeItems = FavoriteTreeItem | FavoriteGroupTreeItem;
 
 export type Favorite = {
-	fileA:string;
-	fileB:string;
-	label:string;
-	groupId?:number;
+	fileA: string;
+	fileB: string;
+	label: string;
+	groupId?: number;
 };
 
 export type FavoriteGroup = {
-	label:string;
-	id:number;
-	collapsed:boolean;
+	label: string;
+	id: number;
+	collapsed: boolean;
 };
 
-export type InitialState = 'collapsed'|'expanded'|'remember';
+export type InitialState = 'collapsed' | 'expanded' | 'remember';
 
 export type FavoritesStates = {
-	favorites:Favorite[],
-	favoriteGroups:FavoriteGroup[],
+	favorites: Favorite[],
+	favoriteGroups: FavoriteGroup[],
 };
 
 export type RefreshFavoritesStates = {
-	favorites?:Favorite[],
-	favoriteGroups?:FavoriteGroup[],
+	favorites?: Favorite[],
+	favoriteGroups?: FavoriteGroup[],
 };
 
 //	Functions __________________________________________________________________

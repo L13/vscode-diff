@@ -13,17 +13,17 @@ import type { Diff } from '../../types';
 //	Exports ____________________________________________________________________
 
 export type SearchCache = {
-	searchterm:string,
-	useRegExp:boolean,
-	useCaseSensitive:boolean,
-	useFiles:boolean,
-	useFolders:boolean,
-	useSymlinks:boolean,
-	useConflicts:boolean,
-	useOthers:boolean,
-	regexp:RegExp,
-	items:Diff[],
-	filteredItems:Diff[],
+	searchterm: string,
+	useRegExp: boolean,
+	useCaseSensitive: boolean,
+	useFiles: boolean,
+	useFolders: boolean,
+	useSymlinks: boolean,
+	useConflicts: boolean,
+	useOthers: boolean,
+	regexp: RegExp,
+	items: Diff[],
+	filteredItems: Diff[],
 };
 
 //	Functions __________________________________________________________________

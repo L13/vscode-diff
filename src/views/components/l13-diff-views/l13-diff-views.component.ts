@@ -29,19 +29,19 @@ import type { L13DiffViewsViewModel } from './l13-diff-views.viewmodel';
 export class L13DiffViewsComponent extends L13Element<L13DiffViewsViewModel> {
 	
 	@L13Query('#l13_show_unchanged')
-	public unchanged:HTMLInputElement;
+	public unchanged: HTMLInputElement;
 	
 	@L13Query('#l13_show_deleted')
-	public deleted:HTMLInputElement;
+	public deleted: HTMLInputElement;
 	
 	@L13Query('#l13_show_modified')
-	public modified:HTMLInputElement;
+	public modified: HTMLInputElement;
 	
 	@L13Query('#l13_show_untracked')
-	public untracked:HTMLInputElement;
+	public untracked: HTMLInputElement;
 	
 	@L13Query('#l13_show_ignored')
-	public ignored:HTMLInputElement;
+	public ignored: HTMLInputElement;
 	
 	public constructor () {
 		

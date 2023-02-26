@@ -33,12 +33,12 @@ import type { L13DiffInputViewModel } from './l13-diff-input.viewmodel';
 export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 	
 	@L13Query('input')
-	private input:HTMLInputElement;
+	private input: HTMLInputElement;
 	
 	@L13Query('button')
-	private button:HTMLInputElement;
+	private button: HTMLInputElement;
 	
-	public menu:L13DiffMenuComponent;
+	public menu: L13DiffMenuComponent;
 	
 	public focused = false;
 	
@@ -139,7 +139,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		this.input.addEventListener('dragover', (event) => event.preventDefault());
 		
-		this.input.addEventListener('drop', ({ dataTransfer }:DragEvent) => {
+		this.input.addEventListener('drop', ({ dataTransfer }: DragEvent) => {
 			
 			this.input.removeAttribute('data-value');
 			
@@ -156,7 +156,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		addButtonActiveStyleEvents(this.button);
 		
-		this.button.addEventListener('click', (event:MouseEvent) => {
+		this.button.addEventListener('click', (event: MouseEvent) => {
 			
 			this.viewmodel.pick(event.altKey);
 			

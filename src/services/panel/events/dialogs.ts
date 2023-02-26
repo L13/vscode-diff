@@ -14,7 +14,7 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
 	currentDiffPanel.msg.on('dialog:file', async () => {
 		

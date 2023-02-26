@@ -20,7 +20,7 @@ export class L13DiffCompareViewModelService extends ViewModelService<L13DiffComp
 	
 	public name = 'l13-diff-compare';
 	
-	public vmc:ViewModelConstructor<L13DiffCompareViewModel> = L13DiffCompareViewModel;
+	public vmc: ViewModelConstructor<L13DiffCompareViewModel> = L13DiffCompareViewModel;
 	
 }
 

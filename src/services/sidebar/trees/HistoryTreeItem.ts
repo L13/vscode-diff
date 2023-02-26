@@ -25,7 +25,7 @@ export class HistoryTreeItem extends vscode.TreeItem {
 	
 	public contextValue = 'history';
 	
-	public constructor (public readonly comparison:Comparison) {
+	public constructor (public readonly comparison: Comparison) {
 		
 		super(comparison.label);
 		

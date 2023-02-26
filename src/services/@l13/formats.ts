@@ -12,12 +12,12 @@ import { basename, normalize, sep } from 'path';
 
 //	Exports ____________________________________________________________________
 
-export function formatNameAndDesc (pathA:string, pathB:string) :[string, string] {
+export function formatNameAndDesc (pathA: string, pathB: string): [string, string] {
 	
-	const namesA:string[] = normalize(pathA).split(sep);
-	const namesB:string[] = normalize(pathB).split(sep);
+	const namesA: string[] = normalize(pathA).split(sep);
+	const namesB: string[] = normalize(pathB).split(sep);
 	
-	const desc:string[] = [];
+	const desc: string[] = [];
 	
 //	Remove last entry if path has a slash/backslash at the end
 	if (!namesA[namesA.length - 1]) namesA.pop();
@@ -46,7 +46,7 @@ export function formatNameAndDesc (pathA:string, pathB:string) :[string, string]
 	
 }
 
-export function formatName (pathA:string, pathB:string) {
+export function formatName (pathA: string, pathB: string) {
 	
 	return `${basename(pathA)} ↔ ${basename(pathB)}`;
 	

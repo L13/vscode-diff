@@ -22,7 +22,7 @@ export class L13DiffPanelViewModel extends ViewModel {
 		
 	}
 	
-	public set loading (value:boolean) {
+	public set loading (value: boolean) {
 		
 		this[LOADING] = value;
 		this.requestUpdate();

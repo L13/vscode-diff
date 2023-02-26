@@ -16,21 +16,21 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
-	currentDiffPanel.msg.on('delete:both', (data:DiffResult) => {
+	currentDiffPanel.msg.on('delete:both', (data: DiffResult) => {
 		
 		currentDiffPanel.delete.showDeleteFilesDialog(data);
 		
 	});
 	
-	currentDiffPanel.msg.on('delete:left', (data:DiffResult) => {
+	currentDiffPanel.msg.on('delete:left', (data: DiffResult) => {
 		
 		currentDiffPanel.delete.showDeleteFileDialog(data, 'left');
 		
 	});
 	
-	currentDiffPanel.msg.on('delete:right', (data:DiffResult) => {
+	currentDiffPanel.msg.on('delete:right', (data: DiffResult) => {
 		
 		currentDiffPanel.delete.showDeleteFileDialog(data, 'right');
 		
@@ -42,13 +42,13 @@ export function init (currentDiffPanel:DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.delete.onDidDeleteFile((file:DiffFile) => {
+	currentDiffPanel.delete.onDidDeleteFile((file: DiffFile) => {
 		
 		currentDiffPanel.output.log(`Deleted ${file.type} "${file.path}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.delete.onDidDeleteFiles((data:DiffResult) => {
+	currentDiffPanel.delete.onDidDeleteFiles((data: DiffResult) => {
 		
 		currentDiffPanel.msg.send('delete:files', data);
 		currentDiffPanel.sendOthers('update:multi', data);

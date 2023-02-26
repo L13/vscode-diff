@@ -16,14 +16,14 @@ import type { ViewModelService } from '../@l13/core';
 //	Exports ____________________________________________________________________
 
 export type ComponentOptions = {
-	name:string,
-	service:ViewModelServiceConstructor<ViewModelService<ViewModel>>,
-	styles?:string[],
-	template?:string,
+	name: string,
+	service: ViewModelServiceConstructor<ViewModelService<ViewModel>>,
+	styles?: string[],
+	template?: string,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ViewModelConstructor<T extends ViewModel> = new (options?:Dictionary<any>) => T;
+export type ViewModelConstructor<T extends ViewModel> = new (options?: Dictionary<any>) => T;
 
 export type ViewModelServiceConstructor<T extends ViewModelService<ViewModel>> = new () => T;
 

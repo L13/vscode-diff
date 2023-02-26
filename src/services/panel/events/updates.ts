@@ -16,21 +16,21 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function init (currentDiffPanel:DiffPanel) {
+export function init (currentDiffPanel: DiffPanel) {
 	
-	currentDiffPanel.msg.on('update:diffs', (data:DiffResultMessage) => {
+	currentDiffPanel.msg.on('update:diffs', (data: DiffResultMessage) => {
 		
 		currentDiffPanel.compare.updateDiffs(data);
 		
 	});
 	
-	currentDiffPanel.compare.onDidUpdateDiff((diff:Diff) => {
+	currentDiffPanel.compare.onDidUpdateDiff((diff: Diff) => {
 		
 		currentDiffPanel.output.log(`Compared "${formatPath(diff)}" again. Status is now "${diff.status}"`);
 		
 	}, null, currentDiffPanel.disposables);
 	
-	currentDiffPanel.compare.onDidUpdateAllDiffs((diffResult:DiffResult) => {
+	currentDiffPanel.compare.onDidUpdateAllDiffs((diffResult: DiffResult) => {
 		
 		currentDiffPanel.msg.send('update:diffs', diffResult);
 		
@@ -40,7 +40,7 @@ export function init (currentDiffPanel:DiffPanel) {
 
 //	Functions __________________________________________________________________
 
-function formatPath (diff:Diff) {
+function formatPath (diff: Diff) {
 	
 	const relativeA = diff.fileA.relative;
 	const relativeB = diff.fileB.relative;

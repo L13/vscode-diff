@@ -7,17 +7,17 @@ import { createFindGlob } from './fse';
 //	Variables __________________________________________________________________
 
 type PositiveTest = {
-	platform:string,
-	useCaseSensitive?:boolean,
-	glob:string[],
-	matches:string,
+	platform: string,
+	useCaseSensitive?: boolean,
+	glob: string[],
+	matches: string,
 };
 
 type NegativeTest = {
-	platform:string,
-	useCaseSensitive?:boolean,
-	glob:string[],
-	doesNotMatch:string,
+	platform: string,
+	useCaseSensitive?: boolean,
+	glob: string[],
+	doesNotMatch: string,
 };
 
 //	Initialize _________________________________________________________________
@@ -26,7 +26,7 @@ describe('fse', () => {
 	
 	describe('.createFindGlob()', () => {
 		
-		function runPositiveCaseTests (tests:PositiveTest[]) {
+		function runPositiveCaseTests (tests: PositiveTest[]) {
 			
 			for (const test of tests) {
 				it(`"${test.glob}" matches "${test.matches}" (${test.platform}, case sensitive and insensitive)`, () => {
@@ -39,7 +39,7 @@ describe('fse', () => {
 			
 		}
 		
-		function runNegativeCaseTests (tests:NegativeTest[]) {
+		function runNegativeCaseTests (tests: NegativeTest[]) {
 			
 			for (const test of tests) {
 				it(`"${test.glob}" doesn't match "${test.doesNotMatch}" (${test.platform}, case sensitive and insensitive))`, () => {
@@ -52,7 +52,7 @@ describe('fse', () => {
 			
 		}
 		
-		function runPositiveTests (tests:PositiveTest[]) {
+		function runPositiveTests (tests: PositiveTest[]) {
 			
 			for (const test of tests) {
 				it(`"${test.glob}" matches "${test.matches}" (${test.platform}, case ${test.useCaseSensitive ? 'sensitive' : 'insensitive'})`, () => {
@@ -64,7 +64,7 @@ describe('fse', () => {
 			
 		}
 		
-		function runNegativeTests (tests:NegativeTest[]) {
+		function runNegativeTests (tests: NegativeTest[]) {
 			
 			for (const test of tests) {
 				// eslint-disable-next-line max-len

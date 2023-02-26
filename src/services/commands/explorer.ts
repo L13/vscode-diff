@@ -16,13 +16,13 @@ import * as commands from '../common/commands';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
-	let folderUri:vscode.Uri = null;
+	let folderUri: vscode.Uri = null;
 	
 	commands.register(context, {
 		
-		'l13Diff.action.explorer.selectForCompare': (uri:vscode.Uri) => {
+		'l13Diff.action.explorer.selectForCompare': (uri: vscode.Uri) => {
 			
 			if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
 			
@@ -30,19 +30,19 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.explorer.compareWithSelected': (uri:vscode.Uri) => {
+		'l13Diff.action.explorer.compareWithSelected': (uri: vscode.Uri) => {
 			
 			vscode.commands.executeCommand('l13Diff.action.panel.openAndCompare', folderUri, uri);
 			
 		},
 		
-		'l13Diff.action.explorer.compareSelected': (uri:vscode.Uri, uris:vscode.Uri[]) => {
+		'l13Diff.action.explorer.compareSelected': (uri: vscode.Uri, uris: vscode.Uri[]) => {
 			
 			vscode.commands.executeCommand('l13Diff.action.panel.openAndCompare', uris[0], uris[1]);
 			
 		},
 		
-		'l13Diff.action.projects.selectForCompare': ({ project }:ProjectTreeItem) => {
+		'l13Diff.action.projects.selectForCompare': ({ project }: ProjectTreeItem) => {
 			
 			if (!folderUri) vscode.commands.executeCommand('setContext', 'l13DiffSelectedFolder', true);
 			
@@ -50,7 +50,7 @@ export function activate (context:vscode.ExtensionContext) {
 			
 		},
 		
-		'l13Diff.action.projects.compareWithSelected': ({ project }:ProjectTreeItem) => {
+		'l13Diff.action.projects.compareWithSelected': ({ project }: ProjectTreeItem) => {
 			
 			vscode.commands.executeCommand('l13Diff.action.panel.openAndCompare', folderUri, vscode.Uri.file(project.path));
 			

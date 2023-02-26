@@ -13,8 +13,8 @@
 //	Exports ____________________________________________________________________
 
 export type PackageLanguage = {
-	extensions:string[],
-	filenames:string[],
+	extensions: string[],
+	filenames: string[],
 };
 
 //	Functions __________________________________________________________________

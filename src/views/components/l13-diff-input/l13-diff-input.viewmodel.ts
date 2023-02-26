@@ -49,9 +49,9 @@ export class L13DiffInputViewModel extends ViewModel {
 		
 	}
 	
-	private eventName:string = null;
+	private eventName: string = null;
 	
-	private dialogListener = (data:DiffDialogMessage) => {
+	private dialogListener = (data: DiffDialogMessage) => {
 	
 	
 		if (data.fsPath) this.value = data.fsPath;

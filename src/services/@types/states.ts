@@ -13,7 +13,7 @@
 //	Exports ____________________________________________________________________
 
 export type StateInfo = {
-	lastModified:number,
+	lastModified: number,
 };
 
 //	Functions __________________________________________________________________

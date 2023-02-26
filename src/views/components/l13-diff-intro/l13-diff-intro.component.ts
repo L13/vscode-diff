@@ -30,7 +30,7 @@ const macOSSymbols = {
 	Shift: SHIFT,
 };
 
-const keyboardShortcuts:DisplayShortcut[] = [
+const keyboardShortcuts: DisplayShortcut[] = [
 	{
 		description: 'Filter Diff Result',
 		key: 'Ctrl+F',
@@ -58,7 +58,7 @@ const keyboardShortcuts:DisplayShortcut[] = [
 export class L13DiffIntroComponent extends L13Element<L13DiffIntroViewModel> {
 	
 	@L13Query('l13-diff-shortcuts')
-	private shortcuts:HTMLElement;
+	private shortcuts: HTMLElement;
 	
 	public constructor () {
 		
@@ -74,19 +74,19 @@ export class L13DiffIntroComponent extends L13Element<L13DiffIntroViewModel> {
 
 //	Functions __________________________________________________________________
 
-export function detectKeybinding ({ key, mac, win }:Keybinding) {
+export function detectKeybinding ({ key, mac, win }: Keybinding) {
 	
 	return isMacOs && mac ? mac : isWindows && win ? win : key;
 	
 }
 
-export function getKeyLabel (key:string) {
+export function getKeyLabel (key: string) {
 	
 	return isMacOs ? (<any>macOSSymbols)[key] || key : key;
 	
 }
 
-function createShortcutViews (shortcuts:DisplayShortcut[]) {
+function createShortcutViews (shortcuts: DisplayShortcut[]) {
 	
 	const fragment = document.createDocumentFragment();
 	
@@ -96,7 +96,7 @@ function createShortcutViews (shortcuts:DisplayShortcut[]) {
 	
 }
 
-function createShortcutView ({ description, key, mac, win }:DisplayShortcut) {
+function createShortcutView ({ description, key, mac, win }: DisplayShortcut) {
 	
 	key = detectKeybinding({ key, mac, win });
 	
@@ -117,7 +117,7 @@ function createShortcutView ({ description, key, mac, win }:DisplayShortcut) {
 	
 }
 
-function createShortcutKeys (key:string) :DocumentFragment {
+function createShortcutKeys (key: string): DocumentFragment {
 	
 	const fragment = document.createDocumentFragment();
 	

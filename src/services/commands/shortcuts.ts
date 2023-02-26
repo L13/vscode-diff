@@ -18,7 +18,7 @@ import { DiffPanel } from '../panel/DiffPanel';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	commands.register(context, createDiffPanelLinks([
 		'l13Diff.action.panel.addToFavorites',
@@ -66,9 +66,9 @@ export function activate (context:vscode.ExtensionContext) {
 
 //	Functions __________________________________________________________________
 
-function createDiffPanelLinks (diffPanelCommands:string[]) {
+function createDiffPanelLinks (diffPanelCommands: string[]) {
 	
-	const map:Dictionary<() => void> = {};
+	const map: Dictionary<() => void> = {};
 	
 	diffPanelCommands.forEach((command) => {
 		

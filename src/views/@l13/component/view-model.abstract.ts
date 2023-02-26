@@ -23,9 +23,9 @@ const refreshComponents = new Map();
 
 export abstract class ViewModel extends EventDispatcher {
 	
-	private [COMPONENTS]:Array<L13Element<ViewModel>> = [];
+	private [COMPONENTS]: Array<L13Element<ViewModel>> = [];
 	
-	private [VM_ID]:string;
+	private [VM_ID]: string;
 	
 	public get id () {
 		
@@ -39,7 +39,7 @@ export abstract class ViewModel extends EventDispatcher {
 		
 	}
 	
-	public connect (component:L13Element<ViewModel>) {
+	public connect (component: L13Element<ViewModel>) {
 		
 		const components = this[COMPONENTS];
 		
@@ -47,15 +47,15 @@ export abstract class ViewModel extends EventDispatcher {
 		
 	}
 	
-	public dispose (component:L13Element<ViewModel>) {
+	public dispose (component: L13Element<ViewModel>) {
 		
 		remove(this[COMPONENTS], component);
 		
 	}
 	
-	public requestUpdate (args?:Dictionary) {
+	public requestUpdate (args?: Dictionary) {
 		
-		let request:[Promise<undefined>, Dictionary?] = refreshComponents.get(this);
+		let request: [Promise<undefined>, Dictionary?] = refreshComponents.get(this);
 		
 		if (!request) {
 			request = [new Promise((resolve) => {

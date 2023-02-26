@@ -16,15 +16,15 @@ import { remove } from '../../@l13/arrays';
 
 export class DiffStatusBar {
 	
-	private static statusBarItem:vscode.StatusBarItem|undefined;
+	private static statusBarItem: vscode.StatusBarItem | undefined;
 	
-	public static currentStatusBar:DiffStatusBar|undefined;
+	public static currentStatusBar: DiffStatusBar | undefined;
 	
-	private static activeStatusBars:DiffStatusBar[] = [];
+	private static activeStatusBars: DiffStatusBar[] = [];
 	
 	private currentText = '';
 	
-	public constructor (context:vscode.ExtensionContext) {
+	public constructor (context: vscode.ExtensionContext) {
 		
 		if (!DiffStatusBar.statusBarItem) {
 			DiffStatusBar.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);

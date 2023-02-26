@@ -14,7 +14,7 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ menu }:MenuCommandsInit) {
+export function init ({ menu }: MenuCommandsInit) {
 	
 	msg.on('l13Diff.action.menu.close', () => {
 		

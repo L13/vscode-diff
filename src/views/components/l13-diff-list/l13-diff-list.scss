@@ -53,6 +53,42 @@ l13-diff-list-content {
 			}
 		}
 	}
+	
+	&.-drag-n-drop {
+		
+		&#{-file} {
+			
+			l13-diff-list-file {
+				
+				&.-folder,
+				&.-symlink {
+					opacity: .3;
+				}
+			}
+		}
+		
+		&#{-folder} {
+			
+			l13-diff-list-file {
+				
+				&.-file,
+				&.-symlink {
+					opacity: .3;
+				}
+			}
+		}
+		
+		&#{-symlink} {
+			
+			l13-diff-list-file {
+				
+				&.-file,
+				&.-folder {
+					opacity: .3;
+				}
+			}
+		}
+	}
 }
 
 l13-diff-list-row {

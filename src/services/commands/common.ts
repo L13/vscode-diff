@@ -21,7 +21,7 @@ import { HistoryState } from '../states/HistoryState';
 
 //	Exports ____________________________________________________________________
 
-export function activate (context:vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext) {
 	
 	const favoritesState = FavoritesState.create(context);
 	const favoriteGroupsState = FavoriteGroupsState.create(context);

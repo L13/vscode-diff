@@ -14,13 +14,13 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, leftVM, rightVM }:DiffEventsInit) {
+export function init ({ diff, leftVM, rightVM }: DiffEventsInit) {
 	
 	msg.on('cancel', () => diff.enable());
 	
 	msg.on('focus', () => setTimeout(() => window.focus(), 0)); // Fixes losing focus if other tab has been closed
 	
-	msg.on('update:paths', (data:DiffUpdatePathsMessage) => {
+	msg.on('update:paths', (data: DiffUpdatePathsMessage) => {
 		
 		if (data.uris.length) {
 			leftVM.value = data.uris[0]?.fsPath || '';
@@ -30,7 +30,7 @@ export function init ({ diff, leftVM, rightVM }:DiffEventsInit) {
 		
 	});
 	
-	msg.on('init:view', (data:DiffInitViewMessage) => {
+	msg.on('init:view', (data: DiffInitViewMessage) => {
 		
 		msg.removeMessageListener('init:view');
 		

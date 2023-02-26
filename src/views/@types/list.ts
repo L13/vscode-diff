@@ -13,9 +13,9 @@ import type { DiffStatus } from '../../types';
 //	Exports ____________________________________________________________________
 
 export type ListItemInfo = {
-	selected:boolean,
-	status:DiffStatus,
-	offsetHeight:number,
+	selected: boolean,
+	status: DiffStatus,
+	offsetHeight: number,
 };
 
 //	Functions __________________________________________________________________

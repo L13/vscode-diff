@@ -66,41 +66,41 @@ listVM.pipe(new L13DiffViewsPipe(viewsVM))
 export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 	
 	@L13Query('l13-diff-panel')
-	private panel:L13DiffPanelComponent;
+	private panel: L13DiffPanelComponent;
 	
 	@L13Query('#left')
-	private left:L13DiffInputComponent;
+	private left: L13DiffInputComponent;
 	
 	@L13Query('l13-diff-swap')
-	private swap:L13DiffSwapComponent;
+	private swap: L13DiffSwapComponent;
 	
 	@L13Query('#right')
-	private right:L13DiffInputComponent;
+	private right: L13DiffInputComponent;
 	
 	@L13Query('l13-diff-actions')
-	private actions:L13DiffActionsComponent;
+	private actions: L13DiffActionsComponent;
 	
 	@L13Query('l13-diff-compare')
-	private compare:L13DiffCompareComponent;
+	private compare: L13DiffCompareComponent;
 	
 	@L13Query('l13-diff-navigator')
-	private navigator:L13DiffNavigatorComponent;
+	private navigator: L13DiffNavigatorComponent;
 	
 	@L13Query('l13-diff-list')
-	private list:L13DiffListComponent;
+	private list: L13DiffListComponent;
 	
 	@L13Query('l13-diff-intro')
-	private intro:L13DiffIntroComponent;
+	private intro: L13DiffIntroComponent;
 	
 	@L13Query('l13-diff-no-result')
-	private result:L13DiffIntroComponent;
+	private result: L13DiffIntroComponent;
 	
 	@L13Query('l13-diff-widgets')
-	private widgets:HTMLElement;
+	private widgets: HTMLElement;
 	
-	private search:L13DiffSearchComponent;
+	private search: L13DiffSearchComponent;
 	
-	private menu:L13DiffMenuComponent;
+	private menu: L13DiffMenuComponent;
 	
 	public constructor () {
 		
@@ -224,7 +224,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 	}
 	
-	public initPanelStates (panel:DiffPanelStateMessage) {
+	public initPanelStates (panel: DiffPanelStateMessage) {
 		
 		if (panel?.views) viewsVM.setState(panel.views);
 		if (panel?.search) searchVM.setState(panel.search);
@@ -246,7 +246,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		const rowHeight = this.list.rowHeight;
 			
-		const values:ListItemInfo[] = this.list.filteredListItemViews.map((element) => {
+		const values: ListItemInfo[] = this.list.filteredListItemViews.map((element) => {
 			
 			return {
 				selected: this.list.isSelectedItem(element),
