@@ -98,7 +98,7 @@ input[type=checkbox] {
 	}
 		
 	&::after {
-		background: var(--vscode-settings-checkboxForeground, var(--l13-icon-background));
+		background: var(--l13-icon-background);
 		content: '';
 		height: 100%;
 		left: 0;
