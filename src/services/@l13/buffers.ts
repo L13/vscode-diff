@@ -43,31 +43,30 @@ export function detectUTFBOM (buffer: Buffer) {
 	
 }
 
-export function removeUTFBOM (buffer: Buffer, diff: Diff, modified: MODIFIED, bom?: BOM) {
+export function removeUTFBOM (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM) {
 	
-	const currentBOM = bom || detectUTFBOM(buffer);
-	
-	if (currentBOM) {
+	if (bom) {
 		diff.ignoredBOM += modified;
-		return buffer.subarray(currentBOM === BOM.UTF_8 ? 3 : 2);
+		return buffer.subarray(bom === BOM.UTF_8 ? 3 : 2);
 	}
+	
 	return buffer;
 	
 }
 
-export function normalizeLineEnding (buffer: Buffer, diff: Diff, modified: MODIFIED, bom?: BOM) {
+export function normalizeLineEnding (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM) {
 	
-	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer, diff, modified);
-	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer, diff, modified);
+	if (bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer, diff, modified);
+	if (bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer, diff, modified);
 	
 	return normalizeAscii(buffer, diff, modified);
 	
 }
 
-export function trimWhitespace (buffer: Buffer, diff: Diff, modified: MODIFIED, bom?: BOM): Buffer {
+export function trimWhitespace (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM): Buffer {
 	
-	if (hasUTF16BEBOM(buffer) || bom === BOM.UTF_16BE) return trimUTF16BE(buffer, diff, modified);
-	if (hasUTF16LEBOM(buffer) || bom === BOM.UTF_16LE) return trimUTF16LE(buffer, diff, modified);
+	if (bom === BOM.UTF_16BE) return trimUTF16BE(buffer, diff, modified);
+	if (bom === BOM.UTF_16LE) return trimUTF16LE(buffer, diff, modified);
 	
 	return trimAscii(buffer, diff, modified);
 	

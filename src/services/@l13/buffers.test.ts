@@ -238,7 +238,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 10 && i !== 13) {
 						const buffer = Buffer.from([i]);
-						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.NONE), buffer);
 					}
 				}
 				
@@ -329,7 +329,7 @@ describe('buffers', () => {
 					// eslint-disable-next-line max-len
 					if (i !== 10 && i !== 13) {
 						const buffer = Buffer.from([239, 187, 191, i]);
-						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_8), buffer);
 					}
 				}
 				
@@ -417,7 +417,7 @@ describe('buffers', () => {
 					expect: [254, 255, 0, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65],
 					toBe: [254, 255, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65],
 				},
-			]);
+			], BOM.UTF_16BE);
 			
 			it('ignore all chars except \\r and \\n', () => {
 				
@@ -425,7 +425,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) {
 							const buffer = Buffer.from([254, 255, i, j]);
-							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
 						}
 					}
 				}
@@ -514,7 +514,7 @@ describe('buffers', () => {
 					expect: [255, 254, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65, 0, 13, 0, 10, 0, 65, 0],
 					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
 				},
-			]);
+			], BOM.UTF_16LE);
 			
 			it('ignore all chars except \\r and \\n', () => {
 				
@@ -522,7 +522,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) {
 							const buffer = Buffer.from([255, 254, i, j]);
-							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
 						}
 					}
 				}
@@ -535,7 +535,7 @@ describe('buffers', () => {
 	
 	describe('.trimWhitespace()', () => {
 		
-		function runTests (tests: Test[], bom?: BOM) {
+		function runTests (tests: Test[], bom: BOM) {
 			
 			for (const test of tests) {
 				if (typeof test.toBe !== 'undefined') {
@@ -665,14 +665,14 @@ describe('buffers', () => {
 					expect: [32, 65, 32, 65, 32],
 					toBe: [65, 32, 65],
 				},
-			]);
+			], BOM.NONE);
 			
 			it('ignore all chars except \\t and space', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						const buffer = Buffer.from([i]);
-						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
+						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.NONE), buffer);
 					}
 				}
 				
@@ -787,14 +787,14 @@ describe('buffers', () => {
 					expect: [239, 187, 191, 32, 65, 32, 65, 32],
 					toBe: [239, 187, 191, 65, 32, 65],
 				},
-			]);
+			], BOM.UTF_8);
 			
 			it('ignore all chars except \\t and space', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						const buffer = Buffer.from([239, 187, 191, i]);
-						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
+						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_8), buffer);
 					}
 				}
 				
@@ -919,7 +919,7 @@ describe('buffers', () => {
 					expect: [254, 255, 0, 32, 0, 65, 0, 32, 0, 65, 0, 32],
 					toBe: [254, 255, 0, 65, 0, 32, 0, 65],
 				},
-			]);
+			], BOM.UTF_16BE);
 			
 			it('ignore all chars except \\t and space', () => {
 				
@@ -927,7 +927,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
 							const buffer = Buffer.from([254, 255, i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
 						}
 					}
 				}
@@ -1070,6 +1070,140 @@ describe('buffers', () => {
 			
 		});
 		
+		describe('UTF-16BE without BOM wrong detection', () => {
+			
+			runTests([
+				{
+					desc: 'empty',
+					expect: [],
+					toBe: [],
+				},
+				{
+					desc: 'empty',
+					expect: [],
+				},
+				{
+					desc: 'wrong tab',
+					expect: [9, 0, 0, 65, 9, 0],
+					toBe: [0, 0, 65, 9, 0],
+				},
+				{
+					desc: 'wrong space',
+					expect: [32, 0, 0, 65, 32, 0],
+					toBe: [0, 0, 65, 32, 0],
+				},
+				{
+					desc: 'ignore single line tab',
+					expect: [0, 9],
+					toBe: [0],
+				},
+				{
+					desc: 'ignore single line space',
+					expect: [0, 32],
+					toBe: [0],
+				},
+				{
+					desc: 'ignore single line tabs',
+					expect: [0, 9, 0, 9, 0, 9],
+					toBe: [0, 9, 0, 9, 0],
+				},
+				{
+					desc: 'ignore single line spaces',
+					expect: [0, 32, 0, 32, 0, 32],
+					toBe: [0, 32, 0, 32, 0],
+				},
+				{
+					desc: 'ignore line feed',
+					expect: [0, 10],
+					toBe: [0, 10],
+				},
+				{
+					desc: 'ignore line feed',
+					expect: [0, 10],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [0, 13],
+					toBe: [0, 13],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [0, 13],
+				},
+				{
+					desc: 'ignore multiple line feed',
+					expect: [0, 10, 0, 10, 0, 10],
+					toBe: [0, 10, 0, 10, 0, 10],
+				},
+				{
+					desc: 'ignore multiple line feed',
+					expect: [0, 10, 0, 10, 0, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return',
+					expect: [0, 13, 0, 13, 0, 13],
+					toBe: [0, 13, 0, 13, 0, 13],
+				},
+				{
+					desc: 'ignore multiple carriage return',
+					expect: [0, 13, 0, 13, 0, 13],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+					toBe: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				},
+				{
+					desc: 'remove trailing tab',
+					expect: [0, 9, 0, 65, 0, 9],
+					toBe: [0, 9, 0, 65, 0],
+				},
+				{
+					desc: 'remove trailing space',
+					expect: [0, 32, 0, 65, 0, 32],
+					toBe: [0, 32, 0, 65, 0],
+				},
+				{
+					desc: 'remove multiple trailing tab',
+					expect: [0, 9, 0, 9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0, 9],
+					toBe: [0, 9, 0, 9, 0, 9, 0, 9, 0, 65, 0, 9, 0, 9, 0, 9, 0],
+				},
+				{
+					desc: 'remove multiple trailing space',
+					expect: [0, 32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0, 32],
+					toBe: [0, 32, 0, 32, 0, 32, 0, 65, 0, 32, 0, 32, 0],
+				},
+				{
+					desc: 'ignore tab in between',
+					expect: [0, 9, 0, 65, 0, 9, 0, 65, 0, 9],
+					toBe: [0, 9, 0, 65, 0, 9, 0, 65, 0],
+				},
+				{
+					desc: 'ignore space in between',
+					expect: [0, 32, 0, 65, 0, 32, 0, 65, 0, 32],
+					toBe: [0, 32, 0, 65, 0, 32, 0, 65, 0],
+				},
+			], BOM.NONE);
+			
+			// it('ignore all chars except \\t and space', () => {
+				
+			// 	for (let i = 0; i < 0xff; i++) {
+			// 		for (let j = 0; j < 0xff; j++) {
+			// 			if (!(i === 0 && (j === 9 || j === 32))) {
+			// 				const buffer = Buffer.from([i, j]);
+			// 				assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.NONE), buffer);
+			// 			}
+			// 		}
+			// 	}
+				
+			// });
+			
+		});
+		
 		describe('UTF-16LE', () => {
 			
 			runTests([
@@ -1187,7 +1321,7 @@ describe('buffers', () => {
 					expect: [255, 254, 32, 0, 65, 0, 32, 0, 65, 0, 32, 0],
 					toBe: [255, 254, 65, 0, 32, 0, 65, 0],
 				},
-			]);
+			], BOM.UTF_16LE);
 			
 			it('ignore all chars except \\t and space', () => {
 				
@@ -1195,7 +1329,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
 							const buffer = Buffer.from([255, 254, i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
 						}
 					}
 				}
