@@ -15,7 +15,7 @@
 export type Test = {
 	desc: string,
 	expect: any,
-	toBe: any,
+	toBe?: any,
 };
 
 //	Functions __________________________________________________________________

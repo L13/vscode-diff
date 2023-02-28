@@ -140,7 +140,18 @@ describe('buffers', () => {
 		function runTests (tests: Test[], bom?: BOM) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+				if (typeof test.toBe !== 'undefined') {
+					// eslint-disable-next-line max-len
+					it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+				} else {
+					it(`${test.desc} (same buffer)`, () => {
+						
+						const buffer = Buffer.from(test.expect);
+						
+						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, bom), buffer);
+						
+					});
+				}
 			}
 			
 		}
@@ -157,6 +168,10 @@ describe('buffers', () => {
 					desc: 'don\'t change \\n',
 					expect: [10],
 					toBe: [10],
+				},
+				{
+					desc: 'don\'t change \\n',
+					expect: [10],
 				},
 				{
 					desc: 'change \\r to \\n',
@@ -179,6 +194,10 @@ describe('buffers', () => {
 					toBe: [10, 10, 10],
 				},
 				{
+					desc: 'don\'t change multiple \\n',
+					expect: [10, 10, 10],
+				},
+				{
 					desc: 'change multiple \\r to \\n',
 					expect: [13, 13, 13],
 					toBe: [10, 10, 10],
@@ -199,6 +218,10 @@ describe('buffers', () => {
 					toBe: [65, 10, 65, 10, 65, 10, 65],
 				},
 				{
+					desc: 'don\'t change multiple \\n with content',
+					expect: [65, 10, 65, 10, 65, 10, 65],
+				},
+				{
 					desc: 'change multiple \\r to \\n with content',
 					expect: [65, 13, 65, 13, 65, 13, 65],
 					toBe: [65, 10, 65, 10, 65, 10, 65],
@@ -213,7 +236,10 @@ describe('buffers', () => {
 			it('ignore all chars except \\r and \\n', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
-					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
+					if (i !== 10 && i !== 13) {
+						const buffer = Buffer.from([i]);
+						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+					}
 				}
 				
 			});
@@ -232,6 +258,10 @@ describe('buffers', () => {
 					desc: 'don\'t change \\n',
 					expect: [239, 187, 191, 10],
 					toBe: [239, 187, 191, 10],
+				},
+				{
+					desc: 'don\'t change \\n',
+					expect: [239, 187, 191, 10],
 				},
 				{
 					desc: 'change \\r to \\n',
@@ -254,6 +284,10 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 10, 10, 10],
 				},
 				{
+					desc: 'don\'t change multiple \\n',
+					expect: [239, 187, 191, 10, 10, 10],
+				},
+				{
 					desc: 'change multiple \\r to \\n',
 					expect: [239, 187, 191, 13, 13, 13],
 					toBe: [239, 187, 191, 10, 10, 10],
@@ -274,6 +308,10 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 65, 10, 65, 10, 65, 10],
 				},
 				{
+					desc: 'don\'t change multiple \\n with content',
+					expect: [239, 187, 191, 65, 10, 65, 10, 65, 10],
+				},
+				{
 					desc: 'change multiple \\r to \\n with content',
 					expect: [239, 187, 191, 65, 13, 65, 13, 65, 13, 65],
 					toBe: [239, 187, 191, 65, 10, 65, 10, 65, 10, 65],
@@ -289,7 +327,10 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					// eslint-disable-next-line max-len
-					if (i !== 10 && i !== 13) assert.deepStrictEqual(normalizeLineEnding(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
+					if (i !== 10 && i !== 13) {
+						const buffer = Buffer.from([239, 187, 191, i]);
+						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
+					}
 				}
 				
 			});
@@ -315,6 +356,10 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 10],
 				},
 				{
+					desc: 'don\'t change \\n',
+					expect: [254, 255, 0, 10],
+				},
+				{
 					desc: 'change \\r to \\n',
 					expect: [254, 255, 0, 13],
 					toBe: [254, 255, 0, 10],
@@ -333,6 +378,10 @@ describe('buffers', () => {
 					desc: 'don\'t change multiple \\n',
 					expect: [254, 255, 0, 10, 0, 10, 0, 10],
 					toBe: [254, 255, 0, 10, 0, 10, 0, 10],
+				},
+				{
+					desc: 'don\'t change multiple \\n',
+					expect: [254, 255, 0, 10, 0, 10, 0, 10],
 				},
 				{
 					desc: 'change multiple \\r to \\n',
@@ -355,6 +404,10 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65],
 				},
 				{
+					desc: 'don\'t change multiple \\n with content',
+					expect: [254, 255, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65],
+				},
+				{
 					desc: 'change multiple \\r to \\n with content',
 					expect: [254, 255, 0, 65, 0, 13, 0, 65, 0, 13, 0, 65, 0, 13, 0, 65],
 					toBe: [254, 255, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65],
@@ -371,7 +424,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) {
-							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
+							const buffer = Buffer.from([254, 255, i, j]);
+							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -399,6 +453,10 @@ describe('buffers', () => {
 					toBe: [255, 254, 10, 0],
 				},
 				{
+					desc: 'don\'t change \\n',
+					expect: [255, 254, 10, 0],
+				},
+				{
 					desc: 'change \\r to \\n',
 					expect: [255, 254, 13, 0],
 					toBe: [255, 254, 10, 0],
@@ -417,6 +475,10 @@ describe('buffers', () => {
 					desc: 'don\'t change multiple \\n',
 					expect: [255, 254, 10, 0, 10, 0, 10, 0],
 					toBe: [255, 254, 10, 0, 10, 0, 10, 0],
+				},
+				{
+					desc: 'don\'t change multiple \\n',
+					expect: [255, 254, 10, 0, 10, 0, 10, 0],
 				},
 				{
 					desc: 'change multiple \\r to \\n',
@@ -439,6 +501,10 @@ describe('buffers', () => {
 					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
 				},
 				{
+					desc: 'don\'t change multiple \\n with content',
+					expect: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
+				},
+				{
 					desc: 'change multiple \\r to \\n with content',
 					expect: [255, 254, 65, 0, 13, 0, 65, 0, 13, 0, 65, 0, 13, 0, 65, 0],
 					toBe: [255, 254, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0, 10, 0, 65, 0],
@@ -455,7 +521,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) {
-							assert.deepStrictEqual(normalizeLineEnding(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
+							const buffer = Buffer.from([255, 254, i, j]);
+							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -471,7 +538,17 @@ describe('buffers', () => {
 		function runTests (tests: Test[], bom?: BOM) {
 			
 			for (const test of tests) {
-				it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+				if (typeof test.toBe !== 'undefined') {
+					it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+				} else {
+					it(`${test.desc} (same buffer)`, () => {
+						
+						const buffer = Buffer.from(test.expect);
+						
+						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, bom), buffer);
+						
+					});
+				}
 			}
 			
 		}
@@ -510,9 +587,17 @@ describe('buffers', () => {
 					toBe: [10],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [10],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [13],
 					toBe: [13],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [13],
 				},
 				{
 					desc: 'ignore carriage return and line feed',
@@ -520,9 +605,17 @@ describe('buffers', () => {
 					toBe: [13, 10],
 				},
 				{
+					desc: 'ignore carriage return and line feed',
+					expect: [13, 10],
+				},
+				{
 					desc: 'ignore multiple line feed',
 					expect: [10, 10, 10],
 					toBe: [10, 10, 10],
+				},
+				{
+					desc: 'ignore multiple line feed',
+					expect: [10, 10, 10],
 				},
 				{
 					desc: 'ignore multiple carriage return',
@@ -530,9 +623,17 @@ describe('buffers', () => {
 					toBe: [13, 13, 13],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [13, 13, 13],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [13, 10, 13, 10, 13, 10],
 					toBe: [13, 10, 13, 10, 13, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [13, 10, 13, 10, 13, 10],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -570,7 +671,8 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepStrictEqual(trimWhitespace(Buffer.from([i]), diff, MODIFIED.NONE), Buffer.from([i]));
+						const buffer = Buffer.from([i]);
+						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -585,6 +687,10 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [239, 187, 191],
 					toBe: [239, 187, 191],
+				},
+				{
+					desc: 'empty',
+					expect: [239, 187, 191],
 				},
 				{
 					desc: 'ignore single line tab',
@@ -612,9 +718,17 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 10],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [239, 187, 191, 10],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [239, 187, 191, 13],
 					toBe: [239, 187, 191, 13],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [239, 187, 191, 13],
 				},
 				{
 					desc: 'ignore multiple line feed',
@@ -622,14 +736,26 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 10, 10, 10],
 				},
 				{
+					desc: 'ignore multiple line feed',
+					expect: [239, 187, 191, 10, 10, 10],
+				},
+				{
 					desc: 'ignore multiple carriage return',
 					expect: [239, 187, 191, 13, 13, 13],
 					toBe: [239, 187, 191, 13, 13, 13],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [239, 187, 191, 13, 13, 13],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [239, 187, 191, 13, 10, 13, 10, 13, 10],
 					toBe: [239, 187, 191, 13, 10, 13, 10, 13, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [239, 187, 191, 13, 10, 13, 10, 13, 10],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -667,7 +793,8 @@ describe('buffers', () => {
 				
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
-						assert.deepStrictEqual(trimWhitespace(Buffer.from([239, 187, 191, i]), diff, MODIFIED.NONE), Buffer.from([239, 187, 191, i]));
+						const buffer = Buffer.from([239, 187, 191, i]);
+						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -682,6 +809,10 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [254, 255],
 					toBe: [254, 255],
+				},
+				{
+					desc: 'empty',
+					expect: [254, 255],
 				},
 				{
 					desc: 'wrong tab',
@@ -719,9 +850,17 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 10],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [254, 255, 0, 10],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [254, 255, 0, 13],
 					toBe: [254, 255, 0, 13],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [254, 255, 0, 13],
 				},
 				{
 					desc: 'ignore multiple line feed',
@@ -729,14 +868,26 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 10, 0, 10, 0, 10],
 				},
 				{
+					desc: 'ignore multiple line feed',
+					expect: [254, 255, 0, 10, 0, 10, 0, 10],
+				},
+				{
 					desc: 'ignore multiple carriage return',
 					expect: [254, 255, 0, 13, 0, 13, 0, 13],
 					toBe: [254, 255, 0, 13, 0, 13, 0, 13],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [254, 255, 0, 13, 0, 13, 0, 13],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [254, 255, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
 					toBe: [254, 255, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [254, 255, 0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -775,7 +926,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([254, 255, i, j]), diff, MODIFIED.NONE), Buffer.from([254, 255, i, j]));
+							const buffer = Buffer.from([254, 255, i, j]);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -791,6 +943,10 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [],
 					toBe: [],
+				},
+				{
+					desc: 'empty',
+					expect: [],
 				},
 				{
 					desc: 'wrong tab',
@@ -828,9 +984,17 @@ describe('buffers', () => {
 					toBe: [0, 10],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [0, 10],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [0, 13],
 					toBe: [0, 13],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [0, 13],
 				},
 				{
 					desc: 'ignore multiple line feed',
@@ -838,14 +1002,26 @@ describe('buffers', () => {
 					toBe: [0, 10, 0, 10, 0, 10],
 				},
 				{
+					desc: 'ignore multiple line feed',
+					expect: [0, 10, 0, 10, 0, 10],
+				},
+				{
 					desc: 'ignore multiple carriage return',
 					expect: [0, 13, 0, 13, 0, 13],
 					toBe: [0, 13, 0, 13, 0, 13],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [0, 13, 0, 13, 0, 13],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
 					toBe: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [0, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -884,7 +1060,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16BE), Buffer.from([i, j]));
+							const buffer = Buffer.from([i, j]);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
 						}
 					}
 				}
@@ -900,6 +1077,10 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [255, 254],
 					toBe: [255, 254],
+				},
+				{
+					desc: 'empty',
+					expect: [255, 254],
 				},
 				{
 					desc: 'wrong tab',
@@ -937,9 +1118,17 @@ describe('buffers', () => {
 					toBe: [255, 254, 10, 0],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [255, 254, 10, 0],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [255, 254, 13, 0],
 					toBe: [255, 254, 13, 0],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [255, 254, 13, 0],
 				},
 				{
 					desc: 'ignore multiple line feed',
@@ -947,14 +1136,26 @@ describe('buffers', () => {
 					toBe: [255, 254, 10, 0, 10, 0, 10, 0],
 				},
 				{
+					desc: 'ignore multiple line feed',
+					expect: [255, 254, 10, 0, 10, 0, 10, 0],
+				},
+				{
 					desc: 'ignore multiple carriage return',
 					expect: [255, 254, 13, 0, 13, 0, 13, 0],
 					toBe: [255, 254, 13, 0, 13, 0, 13, 0],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [255, 254, 13, 0, 13, 0, 13, 0],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [255, 254, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
 					toBe: [255, 254, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [255, 254, 13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -993,7 +1194,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([255, 254, i, j]), diff, MODIFIED.NONE), Buffer.from([255, 254, i, j]));
+							const buffer = Buffer.from([255, 254, i, j]);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -1009,6 +1211,10 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [],
 					toBe: [],
+				},
+				{
+					desc: 'empty',
+					expect: [],
 				},
 				{
 					desc: 'ignore single line tab',
@@ -1036,9 +1242,17 @@ describe('buffers', () => {
 					toBe: [10, 0],
 				},
 				{
+					desc: 'ignore line feed',
+					expect: [10, 0],
+				},
+				{
 					desc: 'ignore carriage return',
 					expect: [13, 0],
 					toBe: [13, 0],
+				},
+				{
+					desc: 'ignore carriage return',
+					expect: [13, 0],
 				},
 				{
 					desc: 'ignore multiple line feed',
@@ -1046,14 +1260,26 @@ describe('buffers', () => {
 					toBe: [10, 0, 10, 0, 10, 0],
 				},
 				{
+					desc: 'ignore multiple line feed',
+					expect: [10, 0, 10, 0, 10, 0],
+				},
+				{
 					desc: 'ignore multiple carriage return',
 					expect: [13, 0, 13, 0, 13, 0],
 					toBe: [13, 0, 13, 0, 13, 0],
 				},
 				{
+					desc: 'ignore multiple carriage return',
+					expect: [13, 0, 13, 0, 13, 0],
+				},
+				{
 					desc: 'ignore multiple carriage return and line feed',
 					expect: [13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
 					toBe: [13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
+				},
+				{
+					desc: 'ignore multiple carriage return and line feed',
+					expect: [13, 0, 10, 0, 13, 0, 10, 0, 13, 0, 10, 0],
 				},
 				{
 					desc: 'remove trailing tab',
@@ -1092,7 +1318,8 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
-							assert.deepStrictEqual(trimWhitespace(Buffer.from([i, j]), diff, MODIFIED.NONE, BOM.UTF_16LE), Buffer.from([i, j]));
+							const buffer = Buffer.from([i, j]);
+							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
 						}
 					}
 				}
