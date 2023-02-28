@@ -305,6 +305,11 @@ describe('buffers', () => {
 					toBe: [254, 255],
 				},
 				{
+					desc: 'wrong \\r',
+					expect: [254, 255, 13, 0, 0, 10],
+					toBe: [254, 255, 13, 0, 0, 10],
+				},
+				{
 					desc: 'don\'t change \\n',
 					expect: [254, 255, 0, 10],
 					toBe: [254, 255, 0, 10],
@@ -382,6 +387,11 @@ describe('buffers', () => {
 					desc: 'empty',
 					expect: [255, 254],
 					toBe: [255, 254],
+				},
+				{
+					desc: 'wrong \\r',
+					expect: [255, 254, 0, 13, 10, 0],
+					toBe: [255, 254, 0, 13, 10, 0],
 				},
 				{
 					desc: 'don\'t change \\n',
@@ -490,7 +500,7 @@ describe('buffers', () => {
 					toBe: [9, 9, 9],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [32, 32, 32],
 					toBe: [32, 32, 32],
 				},
@@ -592,7 +602,7 @@ describe('buffers', () => {
 					toBe: [239, 187, 191, 9, 9, 9],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [239, 187, 191, 32, 32, 32],
 					toBe: [239, 187, 191, 32, 32, 32],
 				},
@@ -674,6 +684,16 @@ describe('buffers', () => {
 					toBe: [254, 255],
 				},
 				{
+					desc: 'wrong tab',
+					expect: [254, 255, 9, 0, 0, 65, 9, 0],
+					toBe: [254, 255, 9, 0, 0, 65, 9, 0],
+				},
+				{
+					desc: 'wrong space',
+					expect: [254, 255, 32, 0, 0, 65, 32, 0],
+					toBe: [254, 255, 32, 0, 0, 65, 32, 0],
+				},
+				{
 					desc: 'ignore single line tab',
 					expect: [254, 255, 0, 9],
 					toBe: [254, 255, 0, 9],
@@ -689,7 +709,7 @@ describe('buffers', () => {
 					toBe: [254, 255, 0, 9, 0, 9, 0, 9],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [254, 255, 0, 32, 0, 32, 0, 32],
 					toBe: [254, 255, 0, 32, 0, 32, 0, 32],
 				},
@@ -773,6 +793,16 @@ describe('buffers', () => {
 					toBe: [],
 				},
 				{
+					desc: 'wrong tab',
+					expect: [9, 0, 0, 65, 9, 0],
+					toBe: [9, 0, 0, 65, 9, 0],
+				},
+				{
+					desc: 'wrong space',
+					expect: [32, 0, 0, 65, 32, 0],
+					toBe: [32, 0, 0, 65, 32, 0],
+				},
+				{
 					desc: 'ignore single line tab',
 					expect: [0, 9],
 					toBe: [0, 9],
@@ -788,7 +818,7 @@ describe('buffers', () => {
 					toBe: [0, 9, 0, 9, 0, 9],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [0, 32, 0, 32, 0, 32],
 					toBe: [0, 32, 0, 32, 0, 32],
 				},
@@ -872,6 +902,16 @@ describe('buffers', () => {
 					toBe: [255, 254],
 				},
 				{
+					desc: 'wrong tab',
+					expect: [255, 254, 0, 9, 65, 0, 0, 9],
+					toBe: [255, 254, 0, 9, 65, 0, 0, 9],
+				},
+				{
+					desc: 'wrong space',
+					expect: [255, 254, 0, 32, 65, 0, 0, 32],
+					toBe: [255, 254, 0, 32, 65, 0, 0, 32],
+				},
+				{
 					desc: 'ignore single line tab',
 					expect: [255, 254, 9, 0],
 					toBe: [255, 254, 9, 0],
@@ -887,7 +927,7 @@ describe('buffers', () => {
 					toBe: [255, 254, 9, 0, 9, 0, 9, 0],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [255, 254, 32, 0, 32, 0, 32, 0],
 					toBe: [255, 254, 32, 0, 32, 0, 32, 0],
 				},
@@ -962,7 +1002,7 @@ describe('buffers', () => {
 			
 		});
 		
-		describe('UTF-16LE without BOM', () => {
+		describe('UTF-16LE without BOM should not exist', () => {
 			
 			runTests([
 				{
@@ -986,7 +1026,7 @@ describe('buffers', () => {
 					toBe: [9, 0, 9, 0, 9, 0],
 				},
 				{
-					desc: 'ignore single line  spaces',
+					desc: 'ignore single line spaces',
 					expect: [32, 0, 32, 0, 32, 0],
 					toBe: [32, 0, 32, 0, 32, 0],
 				},
