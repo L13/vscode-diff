@@ -43,7 +43,7 @@ export function detectUTFBOM (buffer: Buffer) {
 	
 }
 
-export function removeUTFBOM (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM) {
+export function removeUTFBOM (buffer: Buffer, bom: BOM, diff: Diff, modified: MODIFIED) {
 	
 	if (bom) {
 		diff.ignoredBOM += modified;
@@ -54,7 +54,7 @@ export function removeUTFBOM (buffer: Buffer, diff: Diff, modified: MODIFIED, bo
 	
 }
 
-export function normalizeLineEnding (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM) {
+export function normalizeLineEnding (buffer: Buffer, bom: BOM, diff: Diff, modified: MODIFIED) {
 	
 	if (bom === BOM.UTF_16BE) return normalizeUTF16BE(buffer, diff, modified);
 	if (bom === BOM.UTF_16LE) return normalizeUTF16LE(buffer, diff, modified);
@@ -63,7 +63,7 @@ export function normalizeLineEnding (buffer: Buffer, diff: Diff, modified: MODIF
 	
 }
 
-export function trimWhitespace (buffer: Buffer, diff: Diff, modified: MODIFIED, bom: BOM): Buffer {
+export function trimWhitespace (buffer: Buffer, bom: BOM, diff: Diff, modified: MODIFIED): Buffer {
 	
 	if (bom === BOM.UTF_16BE) return trimUTF16BE(buffer, diff, modified);
 	if (bom === BOM.UTF_16LE) return trimUTF16LE(buffer, diff, modified);

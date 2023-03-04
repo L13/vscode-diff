@@ -142,13 +142,13 @@ describe('buffers', () => {
 			for (const test of tests) {
 				if (typeof test.toBe !== 'undefined') {
 					// eslint-disable-next-line max-len
-					it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+					it(test.desc, () => assert.deepStrictEqual(normalizeLineEnding(Buffer.from(test.expect), bom, diff, MODIFIED.NONE), Buffer.from(test.toBe)));
 				} else {
 					it(`${test.desc} (same buffer)`, () => {
 						
 						const buffer = Buffer.from(test.expect);
 						
-						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, bom), buffer);
+						assert.strictEqual(normalizeLineEnding(buffer, bom, diff, MODIFIED.NONE), buffer);
 						
 					});
 				}
@@ -238,7 +238,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 10 && i !== 13) {
 						const buffer = Buffer.from([i]);
-						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.NONE), buffer);
+						assert.strictEqual(normalizeLineEnding(buffer, BOM.NONE, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -329,7 +329,7 @@ describe('buffers', () => {
 					// eslint-disable-next-line max-len
 					if (i !== 10 && i !== 13) {
 						const buffer = Buffer.from([239, 187, 191, i]);
-						assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_8), buffer);
+						assert.strictEqual(normalizeLineEnding(buffer, BOM.UTF_8, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -425,7 +425,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 10 || j === 13))) {
 							const buffer = Buffer.from([254, 255, i, j]);
-							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
+							assert.strictEqual(normalizeLineEnding(buffer, BOM.UTF_16BE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -522,7 +522,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 10 || i === 13))) {
 							const buffer = Buffer.from([255, 254, i, j]);
-							assert.strictEqual(normalizeLineEnding(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
+							assert.strictEqual(normalizeLineEnding(buffer, BOM.UTF_16LE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -539,13 +539,13 @@ describe('buffers', () => {
 			
 			for (const test of tests) {
 				if (typeof test.toBe !== 'undefined') {
-					it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), diff, MODIFIED.NONE, bom), Buffer.from(test.toBe)));
+					it(test.desc, () => assert.deepStrictEqual(trimWhitespace(Buffer.from(test.expect), bom, diff, MODIFIED.NONE), Buffer.from(test.toBe)));
 				} else {
 					it(`${test.desc} (same buffer)`, () => {
 						
 						const buffer = Buffer.from(test.expect);
 						
-						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, bom), buffer);
+						assert.strictEqual(trimWhitespace(buffer, bom, diff, MODIFIED.NONE), buffer);
 						
 					});
 				}
@@ -672,7 +672,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						const buffer = Buffer.from([i]);
-						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.NONE), buffer);
+						assert.strictEqual(trimWhitespace(buffer, BOM.NONE, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -794,7 +794,7 @@ describe('buffers', () => {
 				for (let i = 0; i < 0xff; i++) {
 					if (i !== 9 && i !== 32) {
 						const buffer = Buffer.from([239, 187, 191, i]);
-						assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_8), buffer);
+						assert.strictEqual(trimWhitespace(buffer, BOM.UTF_8, diff, MODIFIED.NONE), buffer);
 					}
 				}
 				
@@ -927,7 +927,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
 							const buffer = Buffer.from([254, 255, i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, BOM.UTF_16BE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -1061,7 +1061,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(i === 0 && (j === 9 || j === 32))) {
 							const buffer = Buffer.from([i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16BE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, BOM.UTF_16BE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -1329,7 +1329,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
 							const buffer = Buffer.from([255, 254, i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, BOM.UTF_16LE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}
@@ -1453,7 +1453,7 @@ describe('buffers', () => {
 					for (let j = 0; j < 0xff; j++) {
 						if (!(j === 0 && (i === 9 || i === 32))) {
 							const buffer = Buffer.from([i, j]);
-							assert.strictEqual(trimWhitespace(buffer, diff, MODIFIED.NONE, BOM.UTF_16LE), buffer);
+							assert.strictEqual(trimWhitespace(buffer, BOM.UTF_16LE, diff, MODIFIED.NONE), buffer);
 						}
 					}
 				}

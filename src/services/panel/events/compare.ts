@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-import type { StatsMap } from '../../../types';
+import type { Diff, DiffStatus, StatsMap } from '../../../types';
 
 import { formatAmount } from '../../../@l13/formats';
 import { pluralEntries } from '../../../@l13/units/files';
@@ -17,7 +17,7 @@ import type { DiffPanel } from '../DiffPanel';
 
 //	Variables __________________________________________________________________
 
-
+const findFileOperator = /\[[!=+-]\]/;
 
 //	Initialize _________________________________________________________________
 
@@ -102,6 +102,8 @@ export function init (currentDiffPanel: DiffPanel) {
 		
 		currentDiffPanel.output.log('Creating stats for diff result');
 		
+		if (currentDiffPanel.context.extensionMode === vscode.ExtensionMode.Development) checkResult(data);
+		
 		const diffStats = new DiffStats(data);
 		const ignoredEntries = diffStats.ignored.entries;
 		const comparedEntries = diffStats.all.entries - ignoredEntries;
@@ -132,3 +134,32 @@ export function init (currentDiffPanel: DiffPanel) {
 
 //	Functions __________________________________________________________________
 
+function testStatus (diff: Diff, status: DiffStatus) {
+	
+	if (diff.status !== status) {
+		vscode.window.showErrorMessage(`The result for "${diff.id}" is not "${status}".`);
+	}
+	
+}
+
+function checkResult (data: DiffResult) {
+	
+	data.diffs.forEach((diff) => {
+				
+		const basenameA = diff.fileA?.basename;
+		const basenameB = diff.fileB?.basename;
+		
+		if (basenameA && findFileOperator.test(basenameA) || basenameB && findFileOperator.test(basenameB)) {
+			if (basenameA && basenameB) {
+				if (basenameA.includes('[=]') && basenameB.includes('[=]')) testStatus(diff, 'unchanged');
+				else if (basenameA.includes('[!]') && basenameB.includes('[!]')) testStatus(diff, 'modified');
+				else if (basenameA.includes('[~]') && basenameB.includes('[~]')) testStatus(diff, 'conflicting');
+				else vscode.window.showErrorMessage(`The result for "${diff.id}" does not match the requirements.`);
+			} else if (basenameA) {
+				if (basenameA.includes('[-]')) testStatus(diff, 'deleted');
+			} else if (basenameB.includes('[+]')) testStatus(diff, 'untracked');
+		}
+		
+	});
+	
+}
