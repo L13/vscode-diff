@@ -98,11 +98,17 @@ export function init (currentDiffPanel: DiffPanel) {
 		
 	}, null, currentDiffPanel.disposables);
 	
+	if (currentDiffPanel.context.extensionMode === vscode.ExtensionMode.Development) {
+		currentDiffPanel.compare.onDidCompareFolders((data: DiffResult) => {
+			
+			checkResult(data);
+			
+		}, null, currentDiffPanel.disposables);
+	}
+	
 	currentDiffPanel.compare.onDidCompareFolders((data: DiffResult) => {
 		
 		currentDiffPanel.output.log('Creating stats for diff result');
-		
-		if (currentDiffPanel.context.extensionMode === vscode.ExtensionMode.Development) checkResult(data);
 		
 		const diffStats = new DiffStats(data);
 		const ignoredEntries = diffStats.ignored.entries;
