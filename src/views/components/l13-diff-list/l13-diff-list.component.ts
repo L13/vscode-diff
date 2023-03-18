@@ -141,9 +141,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.content.addEventListener('click', ({ target, metaKey, ctrlKey, shiftKey, offsetX }) => {
+		this.content.addEventListener('click', ({ detail, target, metaKey, ctrlKey, shiftKey, offsetX }) => {
 			
-			if (this.disabled) return;
+			if (this.disabled || detail !== 1) return;
 			
 			if (this.content.firstChild && offsetX > (<HTMLElement> this.content.firstChild).offsetWidth) return;
 			
@@ -156,7 +156,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (enablePreview) {
 				const id = listRow.getAttribute('data-id');
-				this.viewmodel.openPreview(id);
+				const type = this.viewmodel.getDiffById(id).type;
+				if (type === 'file' || type === 'symlink') this.viewmodel.openPreview(id);
 			}
 			
 			if (this.cacheSelectionHistory.length) {
@@ -196,12 +197,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
 			
-			if (!enablePreview) {
-				this.viewmodel.open([id], altKey);
-			} else {
-				const diff = this.viewmodel.getDiffById(id);
-				if (diff.type === 'folder') this.viewmodel.open([id], altKey);
-			}
+			this.viewmodel.open([id], altKey || enablePreview);
 			
 		});
 		
