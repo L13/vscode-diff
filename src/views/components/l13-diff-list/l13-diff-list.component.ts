@@ -10,6 +10,7 @@ import { MODIFIED } from '../../../services/@l13/buffers';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { disableContextMenu, isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
+import { enablePreview } from '../../settings';
 
 import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
@@ -153,6 +154,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
+			if (enablePreview) {
+				const id = listRow.getAttribute('data-id');
+				this.viewmodel.openPreview(id);
+			}
+			
 			if (this.cacheSelectionHistory.length) {
 		//	On macOS metaKey overrides shiftKey if both keys are pressed
 				if (isMacOs && shiftKey && !metaKey || !isMacOs && shiftKey) {
@@ -190,7 +196,12 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
 			
-			this.viewmodel.open([id], altKey);
+			if (!enablePreview) {
+				this.viewmodel.open([id], altKey);
+			} else {
+				const diff = this.viewmodel.getDiffById(id);
+				if (diff.type === 'folder') this.viewmodel.open([id], altKey);
+			}
 			
 		});
 		

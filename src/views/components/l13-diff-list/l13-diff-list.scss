@@ -225,23 +225,27 @@ l13-diff-list-file {
 		color: var(--vscode-list-focusForeground);
 	}
 	
-	&.-error::before,
-	&.-file::before,
-	&.-folder::before,
-	&.-symlink::before,
-	&.-unknown::before {
-		background: var(--l13-icon-background);
-		content: '';
-		display: block;
-		height: 16px;
-		left: 15px;
-		-webkit-mask-position: 50% 50%;
-		mask-position: 50% 50%;
-		-webkit-mask-repeat: no-repeat;
-		mask-repeat: no-repeat;
-		position: absolute;
-		top: 2px;
-		width: 16px;
+	&.-error,
+	&.-file,
+	&.-folder,
+	&.-symlink,
+	&.-unknown {
+		cursor: pointer;
+		
+		&::before {
+			background: var(--l13-icon-background);
+			content: '';
+			display: block;
+			height: 16px;
+			left: 15px;
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 2px;
+			width: 16px;
+		}
 	}
 	
 	&.-error {

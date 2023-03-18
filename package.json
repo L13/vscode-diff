@@ -1118,6 +1118,11 @@
 					"default": false,
 					"description": "Should diff or file open to side?"
 				},
+				"l13Diff.enablePreview": {
+					"type": "boolean",
+					"default": false,
+					"description": "Indicates if a click in the list view opens a preview of the diff or file to the side."
+				},
 				"l13Diff.exclude": {
 					"type": "array",
 					"default": [

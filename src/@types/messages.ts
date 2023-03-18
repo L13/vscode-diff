@@ -69,6 +69,16 @@ export type DiffOpenMessage = {
 	openToSide: boolean,
 };
 
+export type DiffPreviewMessage = {
+	diff: Diff,
+	pathA: string,
+	pathB: string,
+};
+
+export type DiffPanelSettings = {
+	enablePreview: boolean,
+};
+
 export type DiffPanelStateMessage = {
 	views: {
 		unchangedChecked: boolean,

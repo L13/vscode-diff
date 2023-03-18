@@ -8,6 +8,7 @@ import type {
 	DiffFile,
 	DiffMultiCopyMessage,
 	DiffOpenMessage,
+	DiffPreviewMessage,
 	DiffResultMessage,
 	UpdatedFilesMessage,
 } from '../../../types';
@@ -335,6 +336,21 @@ export class L13DiffListViewModel extends ViewModel {
 		const diffResult = this.getDiffsByIds(ids);
 		
 		if (diffResult.diffs.length) msg.send<DiffOpenMessage>('open:diff', { ...diffResult, openToSide });
+		
+	}
+	
+	public openPreview (id: string) {
+		
+		const diffResult = this.getDiffsByIds([id]);
+		const diff = diffResult.diffs[0];
+		
+		if (diff) {
+			msg.send<DiffPreviewMessage>('preview:diff', {
+				diff,
+				pathA: diffResult.pathA,
+				pathB: diffResult.pathB,
+			});
+		}
 		
 	}
 	

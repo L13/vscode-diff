@@ -4,8 +4,9 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 1.1.1
+## What's new in Diff Folders 1.2.0
 
+- Added `l13Diff.enablePreview` to view a preview of a diff or file to the side.
 - Fixed Light High Contrast Theme.
 
 ## Index

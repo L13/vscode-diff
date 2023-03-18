@@ -348,6 +348,11 @@ function getHTMLforDiffPanel (context: vscode.ExtensionContext, webview: vscode.
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Diff Folders</title>
 		<script nonce="${nonceToken}">
+			window.l13Settings = {
+				enablePreview: ${!!settings.get('enablePreview', false)},
+			};
+		</script>
+		<script nonce="${nonceToken}">
 			window.l13TimeoutId = setTimeout(() => {
 				
 				acquireVsCodeApi().postMessage({
