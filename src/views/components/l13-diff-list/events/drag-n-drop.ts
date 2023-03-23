@@ -1,6 +1,7 @@
 //	Imports ____________________________________________________________________
 
 import { MODIFIED } from '../../../../services/@l13/buffers';
+
 import type { DiffFile, DiffOpenMessage, DragNDropEventsInit } from '../../../../types';
 
 import { msg } from '../../../common';

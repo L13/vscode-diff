@@ -20,13 +20,15 @@ import templates from '../templates';
 import * as context from './events/context-menu';
 import * as dragNDrop from './events/drag-n-drop';
 
-import { Direction } from './enums';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 
-const { PREVIOUS, NEXT } = Direction;
+const enum DIRECTION {
+	PREVIOUS,
+	NEXT,
+}
 
 //	Initialize _________________________________________________________________
 
@@ -119,18 +121,18 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
 					break;
 				case 'ArrowUp':
-					this.selectPreviousOrNext(PREVIOUS, event);
+					this.selectPreviousOrNext(DIRECTION.PREVIOUS, event);
 					break;
 				case 'ArrowDown':
-					this.selectPreviousOrNext(NEXT, event);
+					this.selectPreviousOrNext(DIRECTION.NEXT, event);
 					break;
 				case 'Home':
 				case 'PageUp':
-					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
+					if (!isMacOs) this.selectPreviousOrNext(DIRECTION.PREVIOUS, event);
 					break;
 				case 'End':
 				case 'PageDown':
-					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
+					if (!isMacOs) this.selectPreviousOrNext(DIRECTION.NEXT, event);
 					break;
 			}
 			
@@ -485,7 +487,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPreviousOrNext (direction: Direction, event: KeyboardEvent) {
+	private selectPreviousOrNext (direction: DIRECTION, event: KeyboardEvent) {
 		
 		if (!this.content.firstChild) return;
 		
@@ -494,7 +496,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 		
-		if (direction === NEXT) this.selectNext(event, lastSelection);
+		if (direction === DIRECTION.NEXT) this.selectNext(event, lastSelection);
 		else this.selectPrevious(event, lastSelection);
 		
 	}
