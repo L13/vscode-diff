@@ -115,7 +115,6 @@ export class DiffPanel {
 			
 			if (webviewPanel.active) {
 				DiffPanel.currentPanel = this;
-				this.msg.send('focus'); // Fixes losing focus if other tab has been closed
 				this.status.activate();
 				this.output.activate();
 				for (const name in this.contextStates) this.setContext(name, this.contextStates[name]);
@@ -208,6 +207,8 @@ export class DiffPanel {
 	public setContextFocus (value: boolean) {
 		
 		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
+		
+		this.msg.send<boolean>('focus', value);
 		
 	}
 	

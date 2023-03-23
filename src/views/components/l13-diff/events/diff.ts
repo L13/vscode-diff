@@ -18,8 +18,6 @@ export function init ({ diff, leftVM, rightVM }: DiffEventsInit) {
 	
 	msg.on('cancel', () => diff.enable());
 	
-	msg.on('focus', () => setTimeout(() => window.focus(), 0)); // Fixes losing focus if other tab has been closed
-	
 	msg.on('update:paths', (data: DiffUpdatePathsMessage) => {
 		
 		if (data.uris.length) {

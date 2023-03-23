@@ -71,6 +71,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public dragSrcRowElement: HTMLElement = null;
 	
+	private hasTabFocus = true;
+	
 	public constructor () {
 		
 		super();
@@ -141,7 +143,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.content.addEventListener('click', ({ detail, target, metaKey, ctrlKey, shiftKey, offsetX }) => {
+		this.content.addEventListener('click', async ({ detail, target, metaKey, ctrlKey, shiftKey, offsetX }) => {
 			
 			if (this.disabled || detail !== 1) return;
 			
@@ -151,6 +153,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				this.unselect();
 				return;
 			}
+			
+			await this.waitForFocus();
 			
 			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
@@ -191,19 +195,52 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.content.addEventListener('dblclick', ({ target, altKey }) => {
+		this.content.addEventListener('dblclick', async ({ target, altKey }) => {
 			
 			if (this.disabled) return;
 			
-			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
+			await this.waitForFocus();
 			
-			this.viewmodel.open([id], altKey || enablePreview);
+			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
+			const type = this.viewmodel.getDiffById(id).type;
+			
+			this.viewmodel.open([id], type === 'folder' ? altKey : altKey || enablePreview);
+			
+		});
+		
+		msg.on('focus', (value: boolean) => {
+			
+			this.hasTabFocus = value;
 			
 		});
 		
 		msg.on('cancel', () => {
 			
 			if (this.currentSelections.length) this.currentSelections = [];
+			
+		});
+		
+	}
+	
+	async waitForFocus () {
+		
+		if (this.hasTabFocus) return Promise.resolve(true);
+	
+		return new Promise((resolve) => {
+		
+			function focus (value: boolean) {
+				
+				if (value) {
+					clearTimeout(timeoutId);
+					msg.removeMessageListener('focus', focus);
+					resolve(true);
+				}
+				
+			}
+			
+			const timeoutId = setTimeout(() => focus(true), 500);
+			
+			msg.on('focus', focus);
 			
 		});
 		
