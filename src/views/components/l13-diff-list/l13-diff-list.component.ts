@@ -71,7 +71,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public dragSrcRowElement: HTMLElement = null;
 	
-	private hasTabFocus = true;
+	private hasPanelFocus = true;
 	
 	public constructor () {
 		
@@ -154,14 +154,16 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				return;
 			}
 			
-			await this.waitForFocus();
 			
 			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
 			if (enablePreview) {
 				const id = listRow.getAttribute('data-id');
 				const type = this.viewmodel.getDiffById(id).type;
-				if (type === 'file' || type === 'symlink') this.viewmodel.openPreview(id);
+				if (type === 'file' || type === 'symlink') {
+					await this.waitForPanelFocus();
+					this.viewmodel.openPreview(id);
+				}
 			}
 			
 			if (this.cacheSelectionHistory.length) {
@@ -199,10 +201,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 			if (this.disabled) return;
 			
-			await this.waitForFocus();
-			
 			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
 			const type = this.viewmodel.getDiffById(id).type;
+			
+			await this.waitForPanelFocus();
 			
 			this.viewmodel.open([id], type === 'folder' ? altKey : altKey || enablePreview);
 			
@@ -210,7 +212,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		msg.on('focus', (value: boolean) => {
 			
-			this.hasTabFocus = value;
+			this.hasPanelFocus = value;
 			
 		});
 		
@@ -222,9 +224,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	async waitForFocus () {
+	async waitForPanelFocus () { // Fixes the issue if panel has no focus for vscode.ViewColumn.Beside
 		
-		if (this.hasTabFocus) return Promise.resolve(true);
+		if (this.hasPanelFocus) return Promise.resolve(true);
 	
 		return new Promise((resolve) => {
 		

@@ -46,7 +46,7 @@ export class L13DiffInputComponent extends L13Element<L13DiffInputViewModel> {
 		
 		super();
 		
-		setLabel(this.button, 'Open Dialog to pick a File or Folder');
+		setLabel(this.button, 'Pick Folder (Click) or File (Alt + Click)');
 		
 		disableContextMenu(this.button);
 		
