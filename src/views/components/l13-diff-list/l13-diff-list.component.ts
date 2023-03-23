@@ -92,6 +92,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.addEventListener('focus', () => {
 			
 			this.content.classList.add('-focus');
+			
 			msg.send('context', { name: 'l13DiffListFocus', value: true });
 			
 		});
@@ -99,6 +100,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.addEventListener('blur', () => {
 			
 			this.content.classList.remove('-focus');
+			
 			msg.send('context', { name: 'l13DiffListFocus', value: false });
 			
 		});
