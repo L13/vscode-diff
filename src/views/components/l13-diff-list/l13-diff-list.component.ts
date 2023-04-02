@@ -117,6 +117,22 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'F12': // Debug Mode
 					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
+				case ' ':
+					if (enablePreview) {
+						const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+						if (lastSelection) {
+							const id = lastSelection.getAttribute('data-id');
+							const type = this.viewmodel.getDiffById(id).type;
+							if (type === 'file' || type === 'symlink') {
+								this.viewmodel.openPreview(id);
+							}
+							if (this.cacheSelectionHistory.length > 1) {
+								const ids = this.getIdsBySelection().filter((value) => value !== id);
+								if (ids.length) this.viewmodel.open(ids, true);
+							}
+						}
+					}
+					break;
 				case 'Enter':
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
 					break;
