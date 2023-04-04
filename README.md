@@ -204,6 +204,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Enter` - Same as `Double Click`.
 * `Ctrl + Enter` - Same as `Alt + Double Click`.
 * `Escape` - Unselect all items in the list view.
+* `Space` - Show preview of diff or file to side if `l13Diff.enablePreview` is true. If multiple files are selected the last selection will be opened as a preview and the rest will be opened like `Double Click`.
 
 #### macOS
 

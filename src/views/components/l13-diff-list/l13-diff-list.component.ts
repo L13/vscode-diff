@@ -132,9 +132,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 							}
 						}
 					}
+					event.preventDefault();
 					break;
 				case 'Enter':
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
+					event.preventDefault();
 					break;
 				case 'ArrowUp':
 					this.selectPreviousOrNext(DIRECTION.PREVIOUS, event);
