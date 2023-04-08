@@ -59,8 +59,8 @@ input[type="text"] {
 	z-index: 0;
 	
 	&::selection {
-		color: var(--vscode-selection-foreground, var(--l13-selection-foreground));
-		background: var(--vscode-selection-background, var(--l13-selection-background));
+		color: var(--l13-selection-foreground);
+		background: var(--l13-selection-background);
 	}
 	
 	&:focus {
