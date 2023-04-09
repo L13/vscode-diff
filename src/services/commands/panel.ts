@@ -2,7 +2,10 @@
 
 import * as vscode from 'vscode';
 
+import type { DiffPanelSettings } from '../../types';
+
 import * as commands from '../common/commands';
+import * as settings from '../common/settings';
 
 import { DiffPanel } from '../panel/DiffPanel';
 
@@ -60,6 +63,16 @@ export function activate (context: vscode.ExtensionContext) {
 		if (files.length && DiffPanel.currentPanel) {
 			const fsPaths = files.map((uri) => uri.fsPath);
 			DiffPanel.sendAll('remove:files', { files: fsPaths });
+		}
+		
+	}));
+	
+	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((event) => {
+		
+		if (event.affectsConfiguration('l13Diff.enablePreview')) {
+			DiffPanel.sendAll<DiffPanelSettings>('change:settings', {
+				enablePreview: !!settings.get('enablePreview'),
+			});
 		}
 		
 	}));

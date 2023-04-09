@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -1117,6 +1117,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Should diff or file open to side?"
+				},
+				"l13Diff.enablePreview": {
+					"type": "boolean",
+					"default": false,
+					"description": "Indicates if a click in the list view opens a preview of the diff or file to the side."
 				},
 				"l13Diff.exclude": {
 					"type": "array",

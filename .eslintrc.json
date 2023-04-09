@@ -119,7 +119,7 @@
 				"leadingUnderscore": "allow",
 				"trailingUnderscore": "forbid",
 				"custom": {
-					"regex": "^(?:[A-Za-z](?:[A-Za-z0-9]+)*|[A-Z]+(?:_[A-Z0-9]+)*|l13Diff(?:\\.[A-Za-z0-9]+)+|\\d+|(?:-[a-z0-9]+)+)$",
+					"regex": "^(?:[A-Za-z](?:[A-Za-z0-9]+)*|[A-Z](?:[A-Z0-9]*?)(?:_[A-Z0-9]+)*|l13Diff(?:\\.[A-Za-z0-9]+)+|\\d+|(?:-[a-z0-9]+)+)$",
 					"match": true
 				}
 			}

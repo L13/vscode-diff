@@ -59,7 +59,8 @@ input[type="text"] {
 	z-index: 0;
 	
 	&::selection {
-		background: var(--vscode-selection-background, var(--l13-selection-background));
+		color: var(--l13-selection-foreground);
+		background: var(--l13-selection-background);
 	}
 	
 	&:focus {
@@ -98,7 +99,7 @@ input[type=checkbox] {
 	}
 		
 	&::after {
-		background: var(--vscode-settings-checkboxForeground, var(--l13-icon-background));
+		background: var(--l13-icon-background);
 		content: '';
 		height: 100%;
 		left: 0;

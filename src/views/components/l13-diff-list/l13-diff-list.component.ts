@@ -10,6 +10,7 @@ import { MODIFIED } from '../../../services/@l13/buffers';
 import { changePlatform, isLinux, isMacOs, isWindows, L13Component, L13Element, L13Query } from '../../@l13/core';
 
 import { disableContextMenu, isMetaKey, msg, parseIcons, removeChildren, scrollElementIntoView } from '../../common';
+import { enablePreview } from '../../settings';
 
 import type { L13DiffContextComponent } from '../l13-diff-context/l13-diff-context.component';
 
@@ -19,13 +20,15 @@ import templates from '../templates';
 import * as context from './events/context-menu';
 import * as dragNDrop from './events/drag-n-drop';
 
-import { Direction } from './enums';
 import { L13DiffListViewModelService } from './l13-diff-list.service';
 import type { L13DiffListViewModel } from './l13-diff-list.viewmodel';
 
 //	Variables __________________________________________________________________
 
-const { PREVIOUS, NEXT } = Direction;
+const enum DIRECTION {
+	PREVIOUS,
+	NEXT,
+}
 
 //	Initialize _________________________________________________________________
 
@@ -70,6 +73,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	public dragSrcRowElement: HTMLElement = null;
 	
+	private hasPanelFocus = true;
+	
 	public constructor () {
 		
 		super();
@@ -89,6 +94,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.addEventListener('focus', () => {
 			
 			this.content.classList.add('-focus');
+			
 			msg.send('context', { name: 'l13DiffListFocus', value: true });
 			
 		});
@@ -96,6 +102,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		this.addEventListener('blur', () => {
 			
 			this.content.classList.remove('-focus');
+			
 			msg.send('context', { name: 'l13DiffListFocus', value: false });
 			
 		});
@@ -110,22 +117,40 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				case 'F12': // Debug Mode
 					if (metaKey && ctrlKey && altKey && shiftKey) changePlatform();
 					break;
+				case ' ':
+					if (enablePreview) {
+						const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
+						if (lastSelection) {
+							const id = lastSelection.getAttribute('data-id');
+							const type = this.viewmodel.getDiffById(id).type;
+							if (type === 'file' || type === 'symlink') {
+								this.viewmodel.openPreview(id);
+							}
+							if (this.cacheSelectionHistory.length > 1) {
+								const ids = this.getIdsBySelection().filter((value) => value !== id);
+								if (ids.length) this.viewmodel.open(ids, true);
+							}
+						}
+					}
+					event.preventDefault();
+					break;
 				case 'Enter':
 					this.viewmodel.open(this.getIdsBySelection(), ctrlKey);
+					event.preventDefault();
 					break;
 				case 'ArrowUp':
-					this.selectPreviousOrNext(PREVIOUS, event);
+					this.selectPreviousOrNext(DIRECTION.PREVIOUS, event);
 					break;
 				case 'ArrowDown':
-					this.selectPreviousOrNext(NEXT, event);
+					this.selectPreviousOrNext(DIRECTION.NEXT, event);
 					break;
 				case 'Home':
 				case 'PageUp':
-					if (!isMacOs) this.selectPreviousOrNext(PREVIOUS, event);
+					if (!isMacOs) this.selectPreviousOrNext(DIRECTION.PREVIOUS, event);
 					break;
 				case 'End':
 				case 'PageDown':
-					if (!isMacOs) this.selectPreviousOrNext(NEXT, event);
+					if (!isMacOs) this.selectPreviousOrNext(DIRECTION.NEXT, event);
 					break;
 			}
 			
@@ -140,9 +165,9 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.content.addEventListener('click', ({ target, metaKey, ctrlKey, shiftKey, offsetX }) => {
+		this.content.addEventListener('click', async ({ detail, target, metaKey, ctrlKey, shiftKey, offsetX }) => {
 			
-			if (this.disabled) return;
+			if (this.disabled || detail !== 1) return;
 			
 			if (this.content.firstChild && offsetX > (<HTMLElement> this.content.firstChild).offsetWidth) return;
 			
@@ -151,7 +176,17 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				return;
 			}
 			
+			
 			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
+			
+			if (enablePreview) {
+				const id = listRow.getAttribute('data-id');
+				const type = this.viewmodel.getDiffById(id).type;
+				if (type === 'file' || type === 'symlink') {
+					await this.waitForPanelFocus();
+					this.viewmodel.openPreview(id);
+				}
+			}
 			
 			if (this.cacheSelectionHistory.length) {
 		//	On macOS metaKey overrides shiftKey if both keys are pressed
@@ -184,19 +219,52 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 			
 		});
 		
-		this.content.addEventListener('dblclick', ({ target, altKey }) => {
+		this.content.addEventListener('dblclick', async ({ target, altKey }) => {
 			
 			if (this.disabled) return;
 			
 			const id = (<HTMLElement>target).closest('l13-diff-list-row').getAttribute('data-id');
+			const type = this.viewmodel.getDiffById(id).type;
 			
-			this.viewmodel.open([id], altKey);
+			await this.waitForPanelFocus();
+			
+			this.viewmodel.open([id], type === 'folder' ? altKey : altKey || enablePreview);
+			
+		});
+		
+		msg.on('focus', (value: boolean) => {
+			
+			this.hasPanelFocus = value;
 			
 		});
 		
 		msg.on('cancel', () => {
 			
 			if (this.currentSelections.length) this.currentSelections = [];
+			
+		});
+		
+	}
+	
+	async waitForPanelFocus () { // Fixes the issue if panel has no focus for vscode.ViewColumn.Beside
+		
+		if (this.hasPanelFocus) return Promise.resolve(true);
+	
+		return new Promise((resolve) => {
+		
+			function focus (value: boolean) {
+				
+				if (value) {
+					clearTimeout(timeoutId);
+					msg.removeMessageListener('focus', focus);
+					resolve(true);
+				}
+				
+			}
+			
+			const timeoutId = setTimeout(() => focus(true), 500);
+			
+			msg.on('focus', focus);
 			
 		});
 		
@@ -437,7 +505,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private selectPreviousOrNext (direction: Direction, event: KeyboardEvent) {
+	private selectPreviousOrNext (direction: DIRECTION, event: KeyboardEvent) {
 		
 		if (!this.content.firstChild) return;
 		
@@ -446,7 +514,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 		const lastSelection = this.cacheSelectionHistory[this.cacheSelectionHistory.length - 1];
 		
-		if (direction === NEXT) this.selectNext(event, lastSelection);
+		if (direction === DIRECTION.NEXT) this.selectNext(event, lastSelection);
 		else this.selectPrevious(event, lastSelection);
 		
 	}

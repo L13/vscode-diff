@@ -4,18 +4,13 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 1.1.0
+## What's new in Diff Folders 1.2.0
 
-- Added `l13Diff.ignoreByteOrderMark` to ignore the BOM in UTF-8 and UTF-16BE text files.
-- Added visual context for drag'n drop in the list view.
-- Changed default value for `l13Diff.ignoreEndOfLine` to true to match Visual Studio Code's Diff Viewer.
-- Fixed copy symlink if file or folder does not exist [Issue #104](https://github.com/L13/vscode-diff/issues/104)
-- Fixed JSONC parser for trailing comma in an object or array.
-- Fixed overwrite existing favorite.
+- Added `l13Diff.enablePreview` to view a preview of a diff or file to the side.
+- Fixed Light High Contrast Theme.
 
 ## Index
 
-1. [Features](#features)
 1. [Available Commands](#available-commands)
 1. [Available Settings](#available-settings)
 1. [Predefined Variables](#predefined-variables)
@@ -24,30 +19,6 @@ Compare two folders in Visual Studio Code.
 1. [Workspace Trust](#workspace-trust)
 1. [Recommended Settings](#recommended-settings)
 1. [Recommended Extensions](#recommended-extensions)
-
-## Features
-
-* Supports extension [Projects](https://marketplace.visualstudio.com/items?itemName=L13RARY.l13-projects)
-* Supports a history for recently used files, folders and previous comparisons.
-* Auto detects current workspaces.
-* Select folders with the context menu in the VS Code Explorer or the open dialog.
-* Drag'n drop files and folders from the Finder/Explorer into the input fields.
-* Copy files and folders from left to right or vi­ce ver­sa. Symbolic links on Windows can only be copied if Visual Studio Code runs in administrator mode otherwise an error occurs.
-* Select all files, folders and symlinks by status.
-* Toggle the visiblity of list items by status.
-* Double click a file item in the list to open the diff or the file.
-* Mouse and keyboard support for selecting items in the list view.
-* Search for pathnames to filter diff result.
-* Save your favorite diffs and start a comparison immediately.
-* Use predefined variables for dynamic pathnames.
-* Provides logging and stats for the current diff.
-* Get a quick overview with the navigator of the current diff.
-* Delete files and folders in the list view.
-* Provides a context menu for list items to copy, delete or reveal a file.
-* Ignores line endings and/or leading and trailing whitespace in text files.
-* Auto updates the list view if a file has been saved or deleted in the same window as the comparison.
-* Open multiple panels by click on the icon in the favorites view.
-* Copy the same files from the same location to multiple folders at once.
 
 ### Basics
 
@@ -115,8 +86,8 @@ Compare two folders in Visual Studio Code.
 	* `default` - (default) Uses the value of `diffEditor.ignoreTrimWhitespace`.
 	* `on` - Ignores leading and trailing whitespace for a comparison in a text file.
 	* `off` - Does not ignore leading and trailing whitespace for a comparison in a text file.
-* `l13Diff.ignoreByteOrderMark` [1] - Set true if a comparison for text files should ignore the UTF-8 BOM.
-* `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or will delete files and folders permanently.
+* `l13Diff.ignoreByteOrderMark` [1] - Set true if a comparison should ignore the BOM in UTF-8 or UTF-16BE text files.
+* `l13Diff.enableTrash` - Moves files and folders to the OS trash when deleting or delete files and folders permanently.
 	* `default` - (default) Uses the value of `files.enableTrash`.
 	* `on` - Moves files and folders to the OS trash.
 	* `off` - Deletes files and folders permanently.
@@ -125,8 +96,8 @@ Compare two folders in Visual Studio Code.
 
 ## Predefined Variables
 
-* `${workspaceFolder}` - Use the current workspace folder for the diff e.g. '${workspaceFolder}/path/to/folder'
-* `${workspaceFolder:NAME}` - Use a specific workspace folder by name for the diff e.g. '${workspaceFolder:workspace-a}/path/to/folder'. If a folder has a closing brace '}' in its name, then the char has to be escaped e.g. '${workspaceFolder:name-{1\\}}'.
+* `${workspaceFolder}` - Use the current workspace folder for the diff e.g. `${workspaceFolder}/path/to/folder`
+* `${workspaceFolder:NAME}` - Use a specific workspace folder by name for the diff e.g. `${workspaceFolder:workspace-a}/path/to/folder`. If a folder has a closing brace `}` in its name the char has to be escaped like `${workspaceFolder:name-{1\}}`.
 
 ## Mouse and Keyboard Shortcuts
 
@@ -233,6 +204,7 @@ If the key bindings don't work, please check `Preferences -> Keyboard Shortcuts`
 * `Enter` - Same as `Double Click`.
 * `Ctrl + Enter` - Same as `Alt + Double Click`.
 * `Escape` - Unselect all items in the list view.
+* `Space` - Show preview of diff or file to side if `l13Diff.enablePreview` is true. If multiple files are selected the last selection will be opened as a preview and the rest will be opened like `Double Click`.
 
 #### macOS
 

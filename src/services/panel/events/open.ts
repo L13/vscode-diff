@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-import type { DiffGoToMessage, DiffOpenMessage } from '../../../types';
+import type { DiffGoToMessage, DiffOpenMessage, DiffPreviewMessage } from '../../../types';
 
 import { DiffOpen } from '../../actions/DiffOpen';
 
@@ -29,11 +29,17 @@ export function init (currentDiffPanel: DiffPanel) {
 		
 	});
 	
+	currentDiffPanel.msg.on('preview:diff', async ({ diff }: DiffPreviewMessage) => {
+			
+		await DiffOpen.open(diff, true, true);
+		
+	});
+	
 	currentDiffPanel.msg.on('goto:file', async ({ files: diffFiles, openToSide }: DiffGoToMessage) => {
 		
 		openToSide = settings.get('openToSide', false) || openToSide;
 		
-		for (let i = 0; i < diffFiles.length; i++) await DiffOpen.openFile(diffFiles[i], i === 0 && openToSide);
+		for (let i = 0; i < diffFiles.length; i++) await DiffOpen.openFile(diffFiles[i], i === 0 && openToSide, false);
 		
 	});
 	
