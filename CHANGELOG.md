@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.2.0] - 2023-04-09
+
+### Added
+
+- Added `l13Diff.enablePreview` to show a preview of a diff or file to the side.
+
+### Fixed
+
+- Fixed Light High Contrast Theme.
+
 ## [1.1.0] - 2023-02-26
 
 ### Added

@@ -292,8 +292,6 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			&& isTextFile(fileA.basename)
 			&& sizeA <= BUFFER_MAX_LENGTH
 			&& sizeB <= BUFFER_MAX_LENGTH) {
-			// if (sizeA === sizeB && sizeA > MAX_CACHE_BUFFER_LENGTH && hasSameContents(fileA.fsPath, fileB.fsPath)) return;
-				
 			let bufferA = fs.readFileSync(fileA.fsPath);
 			let bufferB = fs.readFileSync(fileB.fsPath);
 			
@@ -313,18 +311,18 @@ function compareDiff (diff: Diff, { ignoreContents, ignoreEndOfLine, ignoreTrimW
 			const bom = bomA || bomB;
 			
 			if (ignoreByteOrderMark && bomA !== bomB) {
-				if (bomA) bufferA = removeUTFBOM(bufferA, diff, MODIFIED.LEFT, bomA);
-				if (bomB) bufferB = removeUTFBOM(bufferB, diff, MODIFIED.RIGHT, bomB);
+				if (bomA) bufferA = removeUTFBOM(bufferA, bomA, diff, MODIFIED.LEFT);
+				if (bomB) bufferB = removeUTFBOM(bufferB, bomB, diff, MODIFIED.RIGHT);
 			}
 			
 			if (ignoreEndOfLine) {
-				bufferA = normalizeLineEnding(bufferA, diff, MODIFIED.LEFT, bom);
-				bufferB = normalizeLineEnding(bufferB, diff, MODIFIED.RIGHT, bom);
+				bufferA = normalizeLineEnding(bufferA, bom, diff, MODIFIED.LEFT);
+				bufferB = normalizeLineEnding(bufferB, bom, diff, MODIFIED.RIGHT);
 			}
 			
 			if (ignoreTrimWhitespace) {
-				bufferA = trimWhitespace(bufferA, diff, MODIFIED.LEFT, bom);
-				bufferB = trimWhitespace(bufferB, diff, MODIFIED.RIGHT, bom);
+				bufferA = trimWhitespace(bufferA, bom, diff, MODIFIED.LEFT);
+				bufferB = trimWhitespace(bufferB, bom, diff, MODIFIED.RIGHT);
 			}
 			
 			if (!bufferA.equals(bufferB)) diff.status = 'modified';

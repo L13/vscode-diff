@@ -44,12 +44,6 @@ l13-diff-list-content {
 						}
 					}
 				}
-				
-				l13-diff-context {
-					background: var(--l13-context-active-background) !important;
-					--l13-icon-background: var(--vscode-list-activeSelectionForeground);
-					--l13-icon-activeBackground: var(--vscode-list-activeSelectionForeground);
-				}
 			}
 		}
 	}
@@ -104,10 +98,6 @@ l13-diff-list-row {
 		background: var(--vscode-list-hoverBackground);
 		color: var(--vscode-list-hoverForeground);
 		outline: var(--l13-list-hover-outline, none);
-		
-		l13-diff-context {
-			background: var(--l13-context-hover-background);
-		}
 	}
 	
 	&.-selected {
@@ -119,7 +109,7 @@ l13-diff-list-row {
 			
 			& ::before {
 				// Fixes icon which disappears if list loses focus ?!?
-				background: var(--vscode-list-inactiveSelectionForeground, var(--l13-icon-background));
+				background: var(--l13-icon-background);
 			}
 					
 			// span {
@@ -128,10 +118,6 @@ l13-diff-list-row {
 					// color: var(--vscode-list-inactiveSelectionForeground, var(--vscode-foreground));
 				// }
 			// }
-		}
-		
-		l13-diff-context {
-			background: var(--l13-context-inactive-background);
 		}
 	}
 	
@@ -239,23 +225,27 @@ l13-diff-list-file {
 		color: var(--vscode-list-focusForeground);
 	}
 	
-	&.-error::before,
-	&.-file::before,
-	&.-folder::before,
-	&.-symlink::before,
-	&.-unknown::before {
-		background: var(--l13-icon-background);
-		content: '';
-		display: block;
-		height: 16px;
-		left: 15px;
-		-webkit-mask-position: 50% 50%;
-		mask-position: 50% 50%;
-		-webkit-mask-repeat: no-repeat;
-		mask-repeat: no-repeat;
-		position: absolute;
-		top: 2px;
-		width: 16px;
+	&.-error,
+	&.-file,
+	&.-folder,
+	&.-symlink,
+	&.-unknown {
+		cursor: pointer;
+		
+		&::before {
+			background: var(--l13-icon-background);
+			content: '';
+			display: block;
+			height: 16px;
+			left: 15px;
+			-webkit-mask-position: 50% 50%;
+			mask-position: 50% 50%;
+			-webkit-mask-repeat: no-repeat;
+			mask-repeat: no-repeat;
+			position: absolute;
+			top: 2px;
+			width: 16px;
+		}
 	}
 	
 	&.-error {
