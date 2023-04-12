@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.0] - 2023-04-23
+
+### Added
+
+- Added `Export/Import Favorites`.
+
 ## [1.2.0] - 2023-04-09
 
 ### Added

@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"publisher": "L13RARY",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -185,6 +185,16 @@
 				"command": "l13Diff.action.favorites.clear",
 				"category": "Diff Folders",
 				"title": "Delete All Favorites"
+			},
+			{
+				"command": "l13Diff.action.favorites.export",
+				"category": "Diff Folders",
+				"title": "Export Favorites"
+			},
+			{
+				"command": "l13Diff.action.favorites.import",
+				"category": "Diff Folders",
+				"title": "Import Favorites"
 			},
 			{
 				"command": "l13Diff.action.history.compare",
