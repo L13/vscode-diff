@@ -184,17 +184,17 @@
 			{
 				"command": "l13Diff.action.favorites.clear",
 				"category": "Diff Folders",
-				"title": "Delete All Favorites"
+				"title": "Delete All Favorites..."
 			},
 			{
 				"command": "l13Diff.action.favorites.export",
 				"category": "Diff Folders",
-				"title": "Export Favorites"
+				"title": "Export Favorites..."
 			},
 			{
 				"command": "l13Diff.action.favorites.import",
 				"category": "Diff Folders",
-				"title": "Import Favorites"
+				"title": "Import Favorites..."
 			},
 			{
 				"command": "l13Diff.action.history.compare",

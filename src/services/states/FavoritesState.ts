@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import { sortCaseInsensitive } from '../../@l13/arrays';
 
-import type { Favorite, FavoriteGroup } from '../@types/favorites';
+import type { Favorite, FavoriteGroup, FavoriteImport } from '../@types/favorites';
 
 import * as states from '../common/states';
 
@@ -41,7 +41,13 @@ export class FavoritesState {
 	
 	public getByName (label: string) {
 		
-		return this.get().find((favorite) => favorite.label === label) || null;
+		const favorites = this.get();
+		
+		for (const favorite of favorites) {
+			if (favorite.label === label) return favorite;
+		}
+		
+		return null;
 		
 	}
 	
@@ -136,6 +142,38 @@ export class FavoritesState {
 				break;
 			}
 		}
+		
+	}
+	
+	public import (items: FavoriteImport[]) {
+		
+		const favorites = this.get();
+		
+		for (const item of items) {
+			let label = item.label;
+			if (favorites.some((favorite) => favorite.label === label)) {
+				let count = 1;
+				// eslint-disable-next-line no-constant-condition
+				loop: while (true) {
+					label = `${item.label} (${count++})`;
+					for (const favorite of favorites) {
+						if (favorite.label === label) continue loop;
+					}
+					break;
+				}
+			}
+			favorites.push({
+				label,
+				fileA: item.pathA,
+				fileB: item.pathB,
+				groupId: item.groupId,
+			});
+		}
+		
+		favorites.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
+		
+		this.save(favorites);
+		this._onDidChangeFavorites.fire(favorites);
 		
 	}
 	

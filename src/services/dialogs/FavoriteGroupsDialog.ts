@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 
-import type { Favorite, FavoriteGroup } from '../../types';
+import type { Favorite, FavoriteGroup, FavoriteImport, ValidFavoriteImport } from '../../types';
 
 import { sanitize } from '../@l13/fse';
 
@@ -14,6 +14,9 @@ import type { FavoriteGroupsState } from '../states/FavoriteGroupsState';
 import type { FavoritesState } from '../states/FavoritesState';
 
 //	Variables __________________________________________________________________
+
+const MAX_TOTAL_IMPORT = 1000;
+const MAX_FILE_SIZE = 1024 * 1024;
 
 const findJSONExt = /\.json$/i;
 
@@ -167,53 +170,67 @@ export class FavoriteGroupsDialog {
 		
 	}
 	
-	private importFavorite (label: string, pathA: string, pathB: string, groupId?: number) {
-		
-		let favorite = this.favoritesState.getByName(label);
-		let favoriteLabel = label;
-		
-		if (favorite) {
-			let count = 1;
-			while (favorite) {
-				favoriteLabel = `${label} (${count++})`;
-				favorite = this.favoritesState.getByName(favoriteLabel);
-			}
-		}
-		
-		this.favoritesState.add(favoriteLabel, sanatizePath(pathA), sanatizePath(pathB), groupId);
-		
-	}
-	
 	public async import () {
 		
 		const fsPath = await dialogs.openFile(options);
 		
 		if (fsPath) {
-			const buttonClearAndImport = 'Clear & Import';
-			const result = await dialogs.confirm(`Import favorites from "${fsPath}"?`, 'Import', buttonClearAndImport);
+			const buttonDeleteAllAndImport = 'Delete All & Import';
+			const result = await dialogs.confirm(`Import favorites from "${fsPath}"?`, 'Import', buttonDeleteAllAndImport);
+			
 			if (!result) return;
-			if (result === buttonClearAndImport) this.favoritesState.clear();
-			const json = JSON.parse(fs.readFileSync(fsPath, 'utf-8'));
+			if (result === buttonDeleteAllAndImport) this.favoritesState.clear();
+			
+			try {
+				const stat = fs.statSync(fsPath);
+				if (stat.size > MAX_FILE_SIZE) {
+					vscode.window.showErrorMessage(`The file "${fsPath}" exceeds the size of 1 MB.`);
+					return;
+				}
+			} catch (error) {
+				vscode.window.showErrorMessage(`Cannot find file "${fsPath}".`);
+				return;
+			}
+			
+			let content: string = null;
+			
+			try {
+				content = fs.readFileSync(fsPath, 'utf-8');
+			} catch (error) {
+				vscode.window.showErrorMessage(`Cannot read file "${fsPath}".`);
+				return;
+			}
+			
+			let json: unknown = null;
+			
+			try {
+				json = JSON.parse(content);
+			} catch (error) {
+				vscode.window.showErrorMessage(`Cannot parse JSON for file "${fsPath}".`);
+				return;
+			}
+			
 			if (Array.isArray(json)) {
-				json.forEach((item) => {
-					
-					const label = item.label;
-					const favorites: any[] = item.favorites;
-					
-					if (Array.isArray(favorites)) {
-						let favoriteGroup = this.favoriteGroupsState.getByName(label);
-						
-						if (!favoriteGroup) {
-							this.favoriteGroupsState.add(label);
-							favoriteGroup = this.favoriteGroupsState.getByName(label);
+				const favorites: FavoriteImport[] = [];
+				let count = 0;
+				loop: for (const item of <unknown[]> json) {
+					if (!isValidFavoriteImport(item)) continue loop;
+					if (exceedsImportRangeLimit(++count)) break loop;
+					if (Array.isArray(item.favorites)) {
+						const groupId = this.favoriteGroupsState.import(item.label).id;
+						subloop: for (const favorite of <unknown[]> item.favorites) {
+							if (!isValidFavoriteImport(favorite)) continue subloop;
+							if (exceedsImportRangeLimit(++count)) break loop;
+							prepareImportFavorite(favorites, favorite, groupId);
 						}
-						
-						favorites.forEach((subitem) => this.importFavorite(subitem.label, subitem.pathA, subitem.pathB, favoriteGroup.id));
-					} else this.importFavorite(label, item.pathA, item.pathB);
-					
-				});
+					} else prepareImportFavorite(favorites, item);
+				}
 				
-				vscode.window.showInformationMessage(`Imported favorites from "${fsPath}"`);
+				this.favoritesState.import(favorites);
+				
+				vscode.window.showInformationMessage(`Imported ${count} favorites and groups from "${fsPath}".`);
+			} else {
+				vscode.window.showErrorMessage('The JSON data is not an array.');
 			}
 		}
 		
@@ -223,7 +240,35 @@ export class FavoriteGroupsDialog {
 
 //	Functions __________________________________________________________________
 
-function sanatizePath (path: string) {
+function isValidFavoriteImport (item: unknown): item is ValidFavoriteImport {
+	
+	return item && typeof item === 'object' && (<any> item).label && typeof (<any> item).label === 'string';
+	
+}
+
+function prepareImportFavorite (favorites: FavoriteImport[], favorite: ValidFavoriteImport, groupId?: number) {
+	
+	favorites.push({
+		label: favorite.label,
+		pathA: sanatizePath(favorite.pathA),
+		pathB: sanatizePath(favorite.pathB),
+		groupId,
+	});
+	
+}
+
+function exceedsImportRangeLimit (total: number) {
+	
+	if (total > MAX_TOTAL_IMPORT) {
+		vscode.window.showWarningMessage(`Import exceeds the limit of ${MAX_TOTAL_IMPORT} favorites or groups.`);
+		return true;
+	}
+	
+	return false;
+	
+}
+
+function sanatizePath (path: unknown) {
 		
 	return typeof path === 'string' ? sanitize(path) : '';
 	

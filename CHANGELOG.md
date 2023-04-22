@@ -7,6 +7,10 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 - Added `Export/Import Favorites`.
 
+### Fixed
+
+- Fixed `Delete All Favorites`.
+
 ## [1.2.0] - 2023-04-09
 
 ### Added
