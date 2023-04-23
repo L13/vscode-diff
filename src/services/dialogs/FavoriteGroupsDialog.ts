@@ -206,7 +206,7 @@ export class FavoriteGroupsDialog {
 			try {
 				json = JSON.parse(content);
 			} catch (error) {
-				vscode.window.showErrorMessage(`Cannot parse JSON for file "${fsPath}".`);
+				vscode.window.showErrorMessage(`Cannot parse JSON in file "${fsPath}".`);
 				return;
 			}
 			
