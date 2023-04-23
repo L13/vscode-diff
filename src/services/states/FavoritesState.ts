@@ -148,19 +148,18 @@ export class FavoritesState {
 	public import (items: FavoriteImport[]) {
 		
 		const favorites = this.get();
+		const labels = Object.create(null);
+		
+		for (const favorite of favorites) labels[favorite.label] = true;
 		
 		for (const item of items) {
 			let label = item.label;
-			if (favorites.some((favorite) => favorite.label === label)) {
+			if (labels[label]) {
 				let count = 1;
-				// eslint-disable-next-line no-constant-condition
-				loop: while (true) {
+				do {
 					label = `${item.label} (${count++})`;
-					for (const favorite of favorites) {
-						if (favorite.label === label) continue loop;
-					}
-					break;
-				}
+				} while (labels[label]);
+				labels[label] = true;
 			}
 			favorites.push({
 				label,
