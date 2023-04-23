@@ -64,6 +64,7 @@ export function activate (context: vscode.ExtensionContext) {
 		
 		favoritesProvider.refresh({
 			favorites,
+			favoriteGroups: favoriteGroupsState.get(),
 		});
 		
 	}));
@@ -126,6 +127,9 @@ export function activate (context: vscode.ExtensionContext) {
 		
 		'l13Diff.action.favoriteGroups.rename': ({ favoriteGroup }: FavoriteGroupTreeItem) => favoriteGroupsDialog.rename(favoriteGroup),
 		'l13Diff.action.favoriteGroups.remove': ({ favoriteGroup }: FavoriteGroupTreeItem) => favoriteGroupsDialog.remove(favoriteGroup),
+		
+		'l13Diff.action.favorites.export': () => favoriteGroupsDialog.export(),
+		'l13Diff.action.favorites.import': () => favoriteGroupsDialog.import(),
 		
 		'l13Diff.action.favorites.clear': () => favoritesDialog.clear(),
 		

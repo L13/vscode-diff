@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.0] - 2023-04-23
+
+### Added
+
+- Added `Export Favorites` to export favorites and groups as a JSON file.
+- Added `Import Favorites` to import favorites and groups from a JSON file.
+
+### Fixed
+
+- Fixed `Delete All Favorites`.
+
 ## [1.2.0] - 2023-04-09
 
 ### Added

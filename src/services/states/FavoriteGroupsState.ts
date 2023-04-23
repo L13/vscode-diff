@@ -82,6 +82,25 @@ export class FavoriteGroupsState {
 		
 	}
 	
+	public import (label: string) {
+		
+		let group = this.getByName(label);
+						
+		if (!group) {
+			const favoriteGroups = this.get();
+			
+			group = { label, id: getNextGroupId(favoriteGroups), collapsed: false };
+			
+			favoriteGroups.push({ label, id: getNextGroupId(favoriteGroups), collapsed: false });
+			favoriteGroups.sort(({ label: a }, { label: b }) => sortCaseInsensitive(a, b));
+			
+			this.save(favoriteGroups);
+		}
+		
+		return group;
+		
+	}
+	
 	public remove (favoriteGroup: FavoriteGroup, removeItems: boolean) {
 		
 		const favoriteGroups = states.getFavoriteGroups(this.context);
