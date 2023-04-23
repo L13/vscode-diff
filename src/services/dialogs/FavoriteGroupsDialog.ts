@@ -228,7 +228,7 @@ export class FavoriteGroupsDialog {
 				
 				this.favoritesState.import(favorites);
 				
-				vscode.window.showInformationMessage(`Imported ${count} favorites and groups from "${fsPath}".`);
+				vscode.window.showInformationMessage(`Imported ${count > MAX_TOTAL_IMPORT ? MAX_TOTAL_IMPORT : count} favorites and groups from "${fsPath}".`);
 			} else {
 				vscode.window.showErrorMessage('The JSON data is not an array.');
 			}

@@ -5,7 +5,8 @@ All notable changes to the "Diff Folders" extension will be documented in this f
 
 ### Added
 
-- Added `Export/Import Favorites`.
+- Added `Export Favorites` to export favorites and groups as a JSON file.
+- Added `Import Favorites` to import favorites and groups from a JSON file.
 
 ### Fixed
 
