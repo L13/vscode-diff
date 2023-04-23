@@ -4,10 +4,10 @@ Compare two folders in Visual Studio Code.
 
 ![Diff Folders](images/previews/preview.png)
 
-## What's new in Diff Folders 1.2.0
+## What's new in Diff Folders 1.3.0
 
-- Added `l13Diff.enablePreview` to view a preview of a diff or file to the side.
-- Fixed Light High Contrast Theme.
+- Added `Export Favorites` to export favorites and groups as a JSON file.
+- Added `Import Favorites` to import favorites and groups from a JSON file.
 
 ## Index
 
@@ -50,6 +50,8 @@ Compare two folders in Visual Studio Code.
 * `Clear History` - Clear the history of recently used files, folders and previous comparisons.
 * `Delete All Favorites` - Delete all favorites.
 * `Show Output Channel` - Open the output channel for the current comparison.
+* `Export Favorites` - Export all favorites and groups to a JSON file.
+* `Import Favorites` - Import favorites and groups from a JSON file. The limit is 1000 entries.
 
 ## Available Settings
 

@@ -16,16 +16,28 @@ import type { FavoriteTreeItem } from '../sidebar/trees/FavoriteTreeItem';
 export type FavoriteTreeItems = FavoriteTreeItem | FavoriteGroupTreeItem;
 
 export type Favorite = {
-	fileA: string;
-	fileB: string;
-	label: string;
-	groupId?: number;
+	label: string,
+	fileA: string,
+	fileB: string,
+	groupId?: number,
+};
+
+export type FavoriteImport = {
+	label: string,
+	pathA: string,
+	pathB: string,
+	groupId?: number,
+};
+
+export type ValidFavoriteImport = {
+	label: string,
+	[key: string]: unknown,
 };
 
 export type FavoriteGroup = {
-	label: string;
-	id: number;
-	collapsed: boolean;
+	label: string,
+	id: number,
+	collapsed: boolean,
 };
 
 export type InitialState = 'collapsed' | 'expanded' | 'remember';
