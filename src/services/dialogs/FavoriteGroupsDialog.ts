@@ -5,8 +5,6 @@ import * as vscode from 'vscode';
 
 import type { Favorite, FavoriteGroup, FavoriteImport, ValidFavoriteImport } from '../../types';
 
-import { sanitize } from '../@l13/fse';
-
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';
 
@@ -250,8 +248,8 @@ function prepareImportFavorite (favorites: FavoriteImport[], favorite: ValidFavo
 	
 	favorites.push({
 		label: favorite.label,
-		pathA: sanatizePath(favorite.pathA),
-		pathB: sanatizePath(favorite.pathB),
+		pathA: typeof favorite.pathA === 'string' ? favorite.pathA : '',
+		pathB: typeof favorite.pathB === 'string' ? favorite.pathB : '',
 		groupId,
 	});
 	
@@ -265,11 +263,5 @@ function exceedsImportRangeLimit (total: number) {
 	}
 	
 	return false;
-	
-}
-
-function sanatizePath (path: unknown) {
-		
-	return typeof path === 'string' ? sanitize(path) : '';
 	
 }
