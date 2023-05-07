@@ -164,7 +164,7 @@ export class DiffPanel {
 				this.setContextFocus(true);
 				for (const name in this.contextStates) this.setContext(name, this.contextStates[name]);
 			}
-		} else this.setContextFocus(false);
+		} else this.setContextFocus(false, false);
 		
 	}
 	
@@ -204,11 +204,11 @@ export class DiffPanel {
 		
 	}
 	
-	public setContextFocus (value: boolean) {
+	public setContextFocus (value: boolean, send = true) {
 		
 		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
-		this.msg.send<boolean>('focus', value);
+		if (send) this.msg.send<boolean>('focus', value);
 		
 	}
 	
