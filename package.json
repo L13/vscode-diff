@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"publisher": "L13RARY",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",

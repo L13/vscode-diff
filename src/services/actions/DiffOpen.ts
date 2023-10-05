@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 
 import type { Diff, DiffFile } from '../../types';
 
-import { formatName, formatNameAndDesc } from '../@l13/formats';
+import { formatError, formatName, formatNameAndDesc } from '../@l13/formats';
 import { lstat } from '../@l13/fse';
 
 import * as settings from '../common/settings';
@@ -34,7 +34,7 @@ export class DiffOpen {
 			else if (stat.isSymbolicLink()) await openFile(SymlinkContentProvider.parse(fsPath), openToSide, preview);
 			else vscode.window.showErrorMessage(`File can't be opened. "${fsPath}" is not a file.`);
 		} catch (error) {
-			vscode.window.showErrorMessage(error.message);
+			vscode.window.showErrorMessage(formatError(error));
 		}
 		
 	}
@@ -65,7 +65,7 @@ export class DiffOpen {
 				await openDiff(left, right, title, openToSide, preview);
 			}
 		} catch (error) {
-			vscode.window.showErrorMessage(error.message);
+			vscode.window.showErrorMessage(formatError(error));
 		}
 		
 	}

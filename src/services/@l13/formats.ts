@@ -51,6 +51,11 @@ export function formatName (pathA: string, pathB: string) {
 	return `${basename(pathA)} ↔ ${basename(pathB)}`;
 	
 }
+export function formatError (error: Error) {
+	
+	return `${error.message}\n${error.stack}`;
+	
+}
 
 //	Functions __________________________________________________________________
 
