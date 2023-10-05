@@ -19,6 +19,8 @@ import type {
 	MultiCopyEvent,
 } from '../../types';
 
+import { formatError } from '../@l13/formats';
+
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';
 
@@ -150,7 +152,7 @@ export class DiffCopy {
 							
 							this._onDidCopyFile.fire({ from: fileFrom, to: fileTo });
 						} catch (error) {
-							vscode.window.showErrorMessage(error.message);
+							vscode.window.showErrorMessage(formatError(error));
 						}
 					}
 				}
