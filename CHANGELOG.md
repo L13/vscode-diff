@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.3] - 2023-10-05
+
+### Added
+
+- Added error formatter for more infos.
+
 ## [1.3.2] - 2023-05-07
 
 ### Fixed

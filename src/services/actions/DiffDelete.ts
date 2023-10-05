@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 
 import type { DeleteDialog, Diff, DiffFile } from '../../types';
 
+import { formatError } from '../@l13/formats';
+
 import * as dialogs from '../common/dialogs';
 import * as settings from '../common/settings';
 
@@ -133,7 +135,7 @@ export class DiffDelete {
 				useTrash,
 			});
 		} catch (error) {
-			return vscode.window.showErrorMessage(error.message);
+			return vscode.window.showErrorMessage(formatError(error));
 		}
 		
 		let file: DiffFile = null;
