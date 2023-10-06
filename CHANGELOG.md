@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.4] - 2023-10-06
+
+### Fixed
+
+- Fixed error for multiple disposed panels.
+
 ## [1.3.3] - 2023-10-05
 
 ### Added
