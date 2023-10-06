@@ -53,6 +53,7 @@ export class DiffPanel {
 	
 	public readonly contextStates: ContextStates = {};
 	
+	private disposed = false;
 	public disposables: vscode.Disposable[] = [];
 	
 	private readonly _onDidInit: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
@@ -138,6 +139,7 @@ export class DiffPanel {
 		remove(currentPanels, this);
 		
 		this.panel.dispose();
+		this.disposed = true;
 		
 		while (this.disposables.length) {
 			const disposable = this.disposables.pop();
@@ -164,7 +166,7 @@ export class DiffPanel {
 				this.setContextFocus(true);
 				for (const name in this.contextStates) this.setContext(name, this.contextStates[name]);
 			}
-		} else this.setContextFocus(false, false);
+		} else this.setContextFocus(false);
 		
 	}
 	
@@ -204,11 +206,11 @@ export class DiffPanel {
 		
 	}
 	
-	public setContextFocus (value: boolean, send = true) {
+	public setContextFocus (value: boolean) {
 		
 		vscode.commands.executeCommand('setContext', 'l13DiffFocus', value);
 		
-		if (send) this.msg.send<boolean>('focus', value);
+		if (!this.disposed) this.msg.send<boolean>('focus', value);
 		
 	}
 	
