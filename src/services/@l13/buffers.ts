@@ -115,9 +115,7 @@ function normalizeAscii (buffer: Buffer, diff: Diff, modified: MODIFIED) {
 
 function normalizeUTF16BE (buffer: Buffer, diff: Diff, modified: MODIFIED) {
 	
-	const index = buffer.indexOf(UTF16BE_EOL);
-	
-	if (index === -1 || index % 2 !== 0) return buffer;
+	if (buffer.indexOf(UTF16BE_EOL) === -1) return buffer;
 	
 	const length = buffer.length;
 	const cache = [];
@@ -139,9 +137,7 @@ function normalizeUTF16BE (buffer: Buffer, diff: Diff, modified: MODIFIED) {
 
 function normalizeUTF16LE (buffer: Buffer, diff: Diff, modified: MODIFIED) {
 	
-	const index = buffer.indexOf(UTF16LE_EOL);
-	
-	if (index === -1 || index % 2 !== 0) return buffer;
+	if (buffer.indexOf(UTF16LE_EOL) === -1) return buffer;
 	
 	const length = buffer.length;
 	const cache = [];
@@ -166,15 +162,10 @@ function trimAscii (buffer: Buffer, diff: Diff, modified: MODIFIED): Buffer {
 	if (!(buffer.includes(9) || buffer.includes(32))) return buffer;
 	
 	const length = buffer.length;
-	const newBuffer = [];
+	const newBuffer = hasUTF8BOM(buffer) ? [239, 187, 191] : [];
 	let cache = [];
-	let fixBOM = 0;
-	let i = 0;
-	
-	if (hasUTF8BOM(buffer)) {
-		newBuffer.push(239, 187, 191);
-		i = fixBOM = 3;
-	}
+	let i = newBuffer.length;
+	const fixBOM = i;
 	
 	stream: while (i < length) {
 		const value = buffer[i++];
@@ -222,16 +213,12 @@ function trimAscii (buffer: Buffer, diff: Diff, modified: MODIFIED): Buffer {
 
 function trimUTF16BE (buffer: Buffer, diff: Diff, modified: MODIFIED): Buffer {
 	
-	const indexTab = buffer.indexOf(UTF16BE_TAB);
-	const indexSpace = buffer.indexOf(UTF16BE_SPACE);
+	if (buffer.indexOf(UTF16BE_TAB) === -1 && buffer.indexOf(UTF16BE_SPACE) === -1) return buffer;
 	
-	if (indexTab === -1 && indexSpace === -1 || indexTab % 2 !== 0 && indexSpace % 2 !== 0) return buffer;
-	
-	const hasBOM = hasUTF16BEBOM(buffer);
+	const newBuffer = hasUTF16BEBOM(buffer) ? [buffer[0], buffer[1]] : [];
 	const length = buffer.length;
-	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
-	let i = hasBOM ? 2 : 0;
+	let i = newBuffer.length;
 	const vscodeFix = i;
 	
 	stream: while (i < length) {
@@ -283,16 +270,12 @@ function trimUTF16BE (buffer: Buffer, diff: Diff, modified: MODIFIED): Buffer {
 
 function trimUTF16LE (buffer: Buffer, diff: Diff, modified: MODIFIED): Buffer {
 	
-	const indexTab = buffer.indexOf(UTF16LE_TAB);
-	const indexSpace = buffer.indexOf(UTF16LE_SPACE);
+	if (buffer.indexOf(UTF16LE_TAB) === -1 && buffer.indexOf(UTF16LE_SPACE) === -1) return buffer;
 	
-	if (indexTab === -1 && indexSpace === -1 || indexTab % 2 !== 0 && indexSpace % 2 !== 0) return buffer;
-	
-	const hasBOM = hasUTF16LEBOM(buffer);
+	const newBuffer = hasUTF16LEBOM(buffer) ? [buffer[0], buffer[1]] : [];
 	const length = buffer.length;
-	const newBuffer = hasBOM ? [buffer[0], buffer[1]] : [];
 	let cache = [];
-	let i = hasBOM ? 2 : 0;
+	let i = newBuffer.length;
 	const vscodeFix = i;
 	
 	stream: while (i < length) {

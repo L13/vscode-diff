@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.5] - 2023-11-05
+
+### Fixed
+
+- Fixed UTF-16 optimization.
+
 ## [1.3.4] - 2023-10-06
 
 ### Fixed
