@@ -82,12 +82,12 @@
 		"viewsWelcome": [
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [Ctrl+L Ctrl+L](command:l13Diff.action.panel.open) if no editor has a text focus.",
 				"when": "!isMac"
 			},
 			{
 				"view": "l13DiffFavorites",
-				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open)",
+				"contents": "No favorite diffs found.\n[New Diff Panel](command:l13Diff.action.panel.open)\nYou can also quickly open the diff panel with the keyboard shortcut [⌘L ⌘L](command:l13Diff.action.panel.open) if no editor has a text focus.",
 				"when": "isMac"
 			},
 			{
@@ -454,7 +454,8 @@
 			{
 				"mac": "meta+l meta+l",
 				"key": "ctrl+l ctrl+l",
-				"command": "l13Diff.action.panel.open"
+				"command": "l13Diff.action.panel.open",
+				"when": "!textInputFocus"
 			},
 			{
 				"mac": "meta+d",
@@ -465,7 +466,8 @@
 			{
 				"mac": "meta+l meta+f",
 				"key": "ctrl+l ctrl+f",
-				"command": "workbench.view.extension.l13Diff"
+				"command": "workbench.view.extension.l13Diff",
+				"when": "viewContainer.workbench.view.extension.l13Diff.enabled && !textInputFocus"
 			},
 			{
 				"mac": "meta+l meta+o",

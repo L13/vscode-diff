@@ -163,7 +163,15 @@ function checkResult (data: DiffResult) {
 				else vscode.window.showErrorMessage(`The result for "${diff.id}" does not match the requirements.`);
 			} else if (basenameA) {
 				if (basenameA.includes('[-]')) testStatus(diff, 'deleted');
-			} else if (basenameB.includes('[+]')) testStatus(diff, 'untracked');
+				else if (basenameA.includes('[+]') || basenameA.includes('[=]') || basenameA.includes('[!]') || basenameA.includes('[~]')) {
+					vscode.window.showErrorMessage(`The result for "${diff.id}" does not match the requirements.`);
+				}
+			} else if (basenameB) {
+				if (basenameB.includes('[+]')) testStatus(diff, 'untracked');
+				else if (basenameB.includes('[-]') || basenameB.includes('[=]') || basenameB.includes('[!]') || basenameB.includes('[~]')) {
+					vscode.window.showErrorMessage(`The result for "${diff.id}" does not match the requirements.`);
+				}
+			}
 		}
 		
 	});
