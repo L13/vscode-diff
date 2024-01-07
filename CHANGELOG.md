@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.5] - 2024-01-07
+
+### Fixed
+
+- Fixed UTF-16 optimization.
+- Fixed override for system keyboard shortcut `Cmd + L` / `Ctrl + L`. [Issue #145](https://github.com/L13/vscode-diff/issues/145)
+
 ## [1.3.4] - 2023-10-06
 
 ### Fixed

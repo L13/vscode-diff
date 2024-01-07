@@ -5,17 +5,22 @@
 	"tasks": [
 		{
 			"type": "gulp",
+			"task": "build & watch",
+			"problemMatcher": []
+		},
+		{
+			"type": "gulp",
+			"task": "build",
+			"problemMatcher": []
+		},
+		{
+			"type": "gulp",
 			"task": "watch",
 			"problemMatcher": []
 		},
 		{
 			"type": "gulp",
 			"task": "clean",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "build",
 			"problemMatcher": []
 		},
 		{
@@ -26,16 +31,6 @@
 		{
 			"type": "gulp",
 			"task": "icons:fix",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "watch",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "build & watch",
 			"problemMatcher": []
 		}
 	]
