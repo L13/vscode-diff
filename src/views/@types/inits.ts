@@ -10,6 +10,7 @@ import type { L13DiffListComponent } from '../components/l13-diff-list/l13-diff-
 import type { L13DiffListViewModel } from '../components/l13-diff-list/l13-diff-list.viewmodel';
 import type { L13DiffMenuComponent } from '../components/l13-diff-menu/l13-diff-menu.component';
 import type { L13DiffNavigatorComponent } from '../components/l13-diff-navigator/l13-diff-navigator.component';
+import type { L13DiffPanelViewModel } from '../components/l13-diff-panel/l13-diff-panel.viewmodel';
 import type { L13DiffSearchComponent } from '../components/l13-diff-search/l13-diff-search.component';
 import type { L13DiffSearchViewModel } from '../components/l13-diff-search/l13-diff-search.viewmodel';
 import type { L13DiffSwapComponent } from '../components/l13-diff-swap/l13-diff-swap.component';
@@ -57,6 +58,8 @@ export type DiffEventsInit = {
 	diff: L13DiffComponent,
 	leftVM: L13DiffInputViewModel,
 	rightVM: L13DiffInputViewModel,
+	panelVM: L13DiffPanelViewModel,
+	listVM: L13DiffListViewModel,
 };
 
 export type DragNDropEventsInit = {

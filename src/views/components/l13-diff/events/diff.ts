@@ -14,11 +14,13 @@ import { msg } from '../../../common';
 
 //	Exports ____________________________________________________________________
 
-export function init ({ diff, leftVM, rightVM }: DiffEventsInit) {
+export function init ({ diff, leftVM, rightVM, panelVM, listVM }: DiffEventsInit) {
 	
 	msg.on('cancel', () => diff.enable());
 	
 	msg.on('update:paths', (data: DiffUpdatePathsMessage) => {
+		
+		if (panelVM.loading || listVM.hasUpdateRequest()) return;
 		
 		if (data.uris.length) {
 			leftVM.value = data.uris[0]?.fsPath || '';

@@ -546,6 +546,44 @@ describe('jsonc', () => {
 					}`,
 					toBe: { a: 1 },
 				},
+				
+				{
+					desc: 'trailing comma in multiline object with single line comment',
+					expect: `{
+						"a":1,
+						//
+					}`,
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in multiline object with multiple single line comments',
+					expect: `{
+						"a":1,
+						//
+						//
+					}`,
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in multiline object with multi line comment in one line',
+					expect: `{
+						"a":1,
+						/**/
+					}`,
+					toBe: { a: 1 },
+				},
+				
+				{
+					desc: 'trailing comma in multiline object with multi line comment',
+					expect: `{
+						"a":1,
+						/*
+						*/
+					}`,
+					toBe: { a: 1 },
+				},
 			]);
 			
 		});
@@ -575,6 +613,44 @@ describe('jsonc', () => {
 					desc: 'trailing comma in multiline array',
 					expect: `[
 						1,
+					]`,
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in multiline array with single line comment',
+					expect: `[
+						1,
+						//
+					]`,
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in multiline array with multiple single line comments',
+					expect: `[
+						1,
+						//
+						//
+					]`,
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in multiline array with multi line comment in one line',
+					expect: `[
+						1,
+						/**/
+					]`,
+					toBe: [1],
+				},
+				
+				{
+					desc: 'trailing comma in multiline array with multi line comment',
+					expect: `[
+						1,
+						/*
+						*/
 					]`,
 					toBe: [1],
 				},
