@@ -155,7 +155,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		events.swap.init({ diff, swap });
 		events.window.init({ diff, list, left, right, search });
 		
-		events.diff.init({ diff, leftVM, rightVM });
+		events.diff.init({ diff, leftVM, rightVM, panelVM, listVM });
 		
 	}
 	

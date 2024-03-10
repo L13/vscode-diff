@@ -4,7 +4,8 @@ const _parse = JSON.parse;
 
 //	Variables __________________________________________________________________
 
-const findComments = /"(?:[^"\r\n\\]*(?:\\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)|,[\s\r\n]*?([\]}])/g;
+const findComments = /"(?:[^"\r\n\\]*(?:\\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\r\n]*)/g;
+const findTrailingCommas = /,[\s\r\n]*?([\]}])/g;
 
 //	Initialize _________________________________________________________________
 
@@ -12,9 +13,13 @@ const findComments = /"(?:[^"\r\n\\]*(?:\\.)*)*"|(\/\*(?:.|[\r\n])*?\*\/|\/\/[^\
 
 //	Exports ____________________________________________________________________
 
-export function parse (json: string, ...args: any[]) {
+export function parse (jsonc: string, ...args: any[]) {
 	
-	return _parse(json.replace(findComments, (match, comment, close) => comment ? '' : close || match), ...args);
+	const json = jsonc
+		.replace(findComments, (match, comment) => comment ? '' : match)
+		.replace(findTrailingCommas, (match, close) => close);
+	
+	return _parse(json, ...args);
 	
 }
 
