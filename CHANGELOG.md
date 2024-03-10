@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.6] - 2024-03-10
+
+### Fixed
+
+- Fixed double click for favorite diff [Issue #137](https://github.com/L13/vscode-diff/issues/137)
+- Fixed trailing commas in JSONC if comment was after comma.
+
 ## [1.3.5] - 2024-01-07
 
 ### Fixed

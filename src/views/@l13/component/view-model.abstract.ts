@@ -53,6 +53,12 @@ export abstract class ViewModel extends EventDispatcher {
 		
 	}
 	
+	public hasUpdateRequest () {
+		
+		return refreshComponents.has(this);
+		
+	}
+	
 	public requestUpdate (args?: Dictionary) {
 		
 		let request: [Promise<undefined>, Dictionary?] = refreshComponents.get(this);
