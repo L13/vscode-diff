@@ -2,6 +2,8 @@
 
 import type { NavigatorEventsInit } from '../../../../types';
 
+import { isMacOs } from '../../../@l13/core';
+
 //	Variables __________________________________________________________________
 
 const { floor } = Math;
@@ -31,6 +33,14 @@ export function init ({ navigator, list }: NavigatorEventsInit) {
 	
 	navigator.addEventListener('mousedownscroll', () => list.classList.add('-active'));
 	navigator.addEventListener('mouseupscroll', () => list.classList.remove('-active'));
+	
+	if (isMacOs) {
+		navigator.addEventListener('wheel', (event: WheelEvent) => {
+			
+			if (list.scrollHeight > list.clientHeight) list.scrollTop += event.deltaY;
+			
+		});
+	}
 	
 }
 

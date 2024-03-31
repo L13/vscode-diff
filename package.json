@@ -2,7 +2,7 @@
 	"name": "l13-diff",
 	"displayName": "Diff Folders",
 	"description": "Compare two folders in Visual Studio Code",
-	"version": "1.3.6",
+	"version": "1.3.7",
 	"publisher": "L13RARY",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"homepage": "https://github.com/l13/vscode-diff/blob/master/README.md",
@@ -235,7 +235,7 @@
 			},
 			{
 				"command": "l13Diff.action.projects.open",
-				"title": "Open in Diff Folders"
+				"title": "Open in Diff Panel"
 			},
 			{
 				"command": "l13Diff.action.projects.selectForCompare",
@@ -1026,24 +1026,9 @@
 					"when": "view == l13DiffHistory && viewItem =~ /^history(-file|-folder)?$/"
 				},
 				{
-					"command": "l13Diff.action.projects.compareWithSelected",
+					"submenu": "viewItemContextProjects",
 					"group": "3_compare@1",
-					"when": "l13DiffSelectedFolder && view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(current-)?(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
-				},
-				{
-					"command": "l13Diff.action.projects.selectForCompare",
-					"group": "3_compare@2",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(current-)?(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
-				},
-				{
-					"command": "l13Diff.action.projects.compareWithWorkspace",
-					"group": "3_compare@3",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
-				},
-				{
-					"command": "l13Diff.action.projects.open",
-					"group": "3_compare@4",
-					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(favorite|project|subfavorite|subproject)-(folder|git|vscode)$/"
+					"when": "view =~ /^l13Projects(Favorites|Workspaces)$/ && viewItem =~ /^(current-)?(sub)?(favorite|project)-(folder|git|subfolder|vscode)$/"
 				}
 			],
 			"editor/title": [
@@ -1092,8 +1077,33 @@
 					"when": "l13DiffFocus && config.l13Diff.ignoreTrimWhitespace == 'on'",
 					"group": "navigation@5"
 				}
+			],
+			"viewItemContextProjects": [
+				{
+					"command": "l13Diff.action.projects.compareWithSelected",
+					"group": "3_compare@1",
+					"when": "l13DiffSelectedFolder"
+				},
+				{
+					"command": "l13Diff.action.projects.selectForCompare",
+					"group": "3_compare@2"
+				},
+				{
+					"command": "l13Diff.action.projects.compareWithWorkspace",
+					"group": "3_compare@3"
+				},
+				{
+					"command": "l13Diff.action.projects.open",
+					"group": "3_compare@4"
+				}
 			]
 		},
+		"submenus": [
+			{
+				"id": "viewItemContextProjects",
+				"label": "Diff Folders"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "Diff Folders",
@@ -1272,7 +1282,7 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "gulp build",
 		"watch": "gulp watch",
-		"test": "mocha",
+		"test": "node test/index.js",
 		"update": "rm -rf node_modules && rm package-lock.json && npm install",
 		"check-lint-rules": "node ./plugins/check-lint-rules"
 	},

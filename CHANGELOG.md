@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.7] - 2024-03-31
+
+### Fixed
+
+- Fixed missing context menu entries for subfolders in Projects extension.
+- Fixed missing mouse wheel for macOS on navigator.
+
+### Changed
+
+- Changed context menu entries to submenu in Projects extension.
+
 ## [1.3.6] - 2024-03-10
 
 ### Fixed
