@@ -1,33 +1,35 @@
 //	Imports ____________________________________________________________________
 
-import * as path from 'path';
-import * as glob from 'glob';
-import Mocha from 'mocha';
+const file2json = require('../plugins/gulp-file2json');
 
 //	Variables __________________________________________________________________
 
-const mocha = new Mocha({
-	ui: 'bdd',
-	color: true,
-});
 
-const files = glob.sync('**/*.test.js', {
-	cwd: __dirname,
-});
 
 //	Initialize _________________________________________________________________
 
-files.forEach((file) => mocha.addFile(path.resolve(__dirname, file)));
 
-mocha.run(() => {
-	
-	//
-	
-});
 
 //	Exports ____________________________________________________________________
 
-
+module.exports = [
+	{
+		name: 'json',
+		src: 'src/views/components/**/*.html',
+		dest: 'src/views/components',
+		watch: true,
+		task: (stream) => {
+	
+			return stream
+				.pipe(file2json({
+					path: 'templates.ts',
+					indent: '\t',
+					template: '/* eslint-disable */\nexport default __CONTENT__;',
+				}));
+			
+		},
+	},
+];
 
 //	Functions __________________________________________________________________
 

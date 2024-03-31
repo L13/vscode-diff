@@ -238,7 +238,7 @@ export class L13DiffComponent extends L13Element<L13DiffViewModel> {
 		
 		const list = this.list;
 		
-		this.navigator.setScrollbarPosition(list.scrollTop / list.scrollHeight);
+		this.navigator.setSliderY(list.scrollTop / list.scrollHeight);
 		
 	}
 	
