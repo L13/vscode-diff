@@ -4,4 +4,6 @@ images/
 media/
 out/
 plugins/
+tasks/
+test/
 gulpfile.js

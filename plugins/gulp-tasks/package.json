@@ -1,0 +1,11 @@
+{
+	"name": "gulp-tasks",
+	"version": "0.13.0",
+	"description": "Manage gulp tasks more simple.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "L13RARY",
+	"license": "SEE LICENSE IN LICENSE.md"
+}
