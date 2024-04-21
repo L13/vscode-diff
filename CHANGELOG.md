@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.8] - 2024-04-21
+
+### Fixed
+
+- Fixed trailing commas in JSONC if comma with whitespace and closing brace/bracket is in a string.
+
 ## [1.3.7] - 2024-03-31
 
 ### Fixed
