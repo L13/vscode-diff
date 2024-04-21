@@ -584,6 +584,30 @@ describe('jsonc', () => {
 					}`,
 					toBe: { a: 1 },
 				},
+				
+				{
+					desc: 'ignore comma and closing brace in string',
+					expect: `{
+						"a":",}",
+					}`,
+					toBe: { a: ',}' },
+				},
+				
+				{
+					desc: 'ignore comma with space and closing brace in string',
+					expect: `{
+						"a":", }",
+					}`,
+					toBe: { a: ', }' },
+				},
+				
+				{
+					desc: 'ignore comma with multiple spaces and closing brace in string',
+					expect: `{
+						"a":",   }",
+					}`,
+					toBe: { a: ',   }' },
+				},
 			]);
 			
 		});
@@ -653,6 +677,30 @@ describe('jsonc', () => {
 						*/
 					]`,
 					toBe: [1],
+				},
+				
+				{
+					desc: 'ignore comma and closing bracket in string',
+					expect: `{
+						"a":",]",
+					}`,
+					toBe: { a: ',]' },
+				},
+				
+				{
+					desc: 'ignore comma with space and closing bracket in string',
+					expect: `{
+						"a":", ]",
+					}`,
+					toBe: { a: ', ]' },
+				},
+				
+				{
+					desc: 'ignore comma with multiple spaces and closing bracket in string',
+					expect: `{
+						"a":",   ]",
+					}`,
+					toBe: { a: ',   ]' },
 				},
 			]);
 			
