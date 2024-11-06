@@ -100,7 +100,8 @@ export class DiffCompare {
 		
 		if (statA.isFile() && statB.isFile()) this.compareFiles(data, pathA, pathB);
 		else if (statA.isDirectory() && statB.isDirectory()) this.compareFolders(data, pathA, pathB);
-		else this.onError('The left and right path can\'t be compared!', pathA, pathB);
+		// eslint-disable-next-line max-len
+		else this.onError(`The left path (${getFileType(statA)}) and right path (${getFileType(statB)}) can't be compared! You can only compare a folder with a folder or a file with a file.`, pathA, pathB);
 		
 	}
 	
@@ -394,5 +395,15 @@ function hasSameContents (pathA: string, pathB: string) {
 		if (fdA) fs.closeSync(fdA);
 		if (fdB) fs.closeSync(fdB);
 	}
+	
+}
+
+function getFileType (stat: fs.Stats) {
+	
+	if (stat.isFile()) return 'file';
+	if (stat.isDirectory()) return 'folder';
+	if (stat.isSymbolicLink()) return 'symlink';
+	
+	return 'unknown';
 	
 }

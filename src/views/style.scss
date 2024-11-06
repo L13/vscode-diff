@@ -4,6 +4,12 @@ html {
 	height: 100%;
 }
 
+@supports selector(::-webkit-scrollbar) {
+	html {
+		scrollbar-color: unset;
+	}
+}
+
 html.-unselectable body * {
 	-webkit-user-select: none;
 	-moz-user-select: none;
