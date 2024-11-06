@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.9] - 2024-11-06
+
+### Fixed
+
+- Fixed extension crash in VS Code 1.96 [Issue 160](https://github.com/L13/vscode-diff/issues/160)
+- Fixed scrollbar style in list view. [VS Code Issue #213045](https://github.com/microsoft/vscode/issues/213045#issuecomment-2211442905)
+
+### Changed
+
+- Changed error message if paths couldn't be compared.
+
 ## [1.3.8] - 2024-04-21
 
 ### Fixed

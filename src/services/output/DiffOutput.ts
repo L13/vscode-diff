@@ -86,7 +86,6 @@ export class DiffOutput {
 		remove(DiffOutput.outputs, this);
 		
 		if (!DiffOutput.outputs.length && DiffOutput.output) {
-			DiffOutput.output.clear(); // Fixes uncleared output panel
 			DiffOutput.output.dispose();
 			DiffOutput.output = undefined;
 		}
