@@ -1,6 +1,6 @@
 //	Imports ____________________________________________________________________
 
-
+import type { Platform } from '../../../@types/platforms';
 
 //	Variables __________________________________________________________________
 
@@ -13,7 +13,9 @@
 //	Exports ____________________________________________________________________
 
 export let isMacOs = false;
+
 export let isWindows = false;
+
 export let isLinux = false;
 
 export function detectPlatform () {
@@ -30,7 +32,7 @@ export function detectPlatform () {
 
 export function changePlatform () {
 	
-	let platform;
+	let platform: Platform;
 	
 	if (isMacOs) {
 		isMacOs = false;

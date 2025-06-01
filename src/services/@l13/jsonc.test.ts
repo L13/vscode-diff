@@ -290,7 +290,7 @@ describe('jsonc', () => {
 			
 		});
 		
-		describe('ignnore single line comment inside', () => {
+		describe('ignore single line comment inside', () => {
 			
 			runTests([
 				{

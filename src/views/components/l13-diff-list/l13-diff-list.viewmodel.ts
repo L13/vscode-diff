@@ -236,7 +236,7 @@ export class L13DiffListViewModel extends ViewModel {
 	public updateDiffList (diffResult: DiffResultMessage) {
 		
 		this.updateItems(diffResult.diffs);
-		this.filter(true);
+		this.filter(true, true);
 		this.dispatchEvent('updated');
 		
 	}
@@ -269,12 +269,12 @@ export class L13DiffListViewModel extends ViewModel {
 			
 		});
 		
-		this.filter(true);
+		this.filter(true, true);
 		this.dispatchEvent('swapped');
 		
 	}
 	
-	public filter (keepPosition?: boolean) {
+	public filter (keepPosition?: boolean, keepSelection?: boolean) {
 		
 		let filteredItems = this.items;
 		
@@ -282,7 +282,7 @@ export class L13DiffListViewModel extends ViewModel {
 		
 		this.filteredItems = filteredItems;
 		
-		this.requestUpdate({ keepPosition });
+		this.requestUpdate({ keepPosition, keepSelection });
 		
 		this.dispatchEvent('filtered');
 		
