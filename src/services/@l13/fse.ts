@@ -13,8 +13,8 @@ import { isWindows } from './platforms';
 const findRegExpChars = /\\[*?]|\*\*\/|\/\*\*|[\/\\\[\]\.\*\^\$\|\+\-\{\}\(\)\?\!\=\:\,]/g;
 
 // eslint-disable-next-line no-control-regex, no-useless-escape
-const findIllegalAndControlChars = /[\x00-\x1f"\*<>\?\|\x80-\x9f]/g;
-const findColon = /:/g;
+const findControlAndIllegalChars = /[\x00-\x1f\x80-\x9f]/g;
+const findWindowsSpecialChars = /"\*<>\?\|/g;
 
 //	Initialize _________________________________________________________________
 
@@ -139,9 +139,9 @@ export function createFindGlob (ignore: string[], useCaseSensitive: boolean) {
 
 export function sanitize (pathname: string) {
 	
-	let name = `${pathname}`.replace(findIllegalAndControlChars, '');
+	let name = `${pathname}`.replace(findControlAndIllegalChars, '');
 	
-	if (!isWindows) name = name.replace(findColon, '');
+	if (isWindows) name = name.replace(findWindowsSpecialChars, '');
 	
 	return name;
 	

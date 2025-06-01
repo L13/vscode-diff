@@ -57,8 +57,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 	
 	private previousScrollTop = 0;
 	
-	public currentSelections: string[] = [];
-	
 	private cacheSelectionHistory: HTMLElement[] = [];
 	
 	private cacheSelectedListItems: HTMLElement[] = [];
@@ -176,7 +174,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 				return;
 			}
 			
-			
 			const listRow: HTMLElement = (<HTMLElement>target).closest('l13-diff-list-row');
 			
 			if (enablePreview) {
@@ -195,11 +192,10 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 					if (lastSelection) {
 				//	On Windows selection works exactly like macOS if shiftKey and ctrlKey is pressed
 				//	Otherwise Windows removes previous selection
-						if (isWindows && !ctrlKey || isLinux) {
+						if (isWindows && !ctrlKey || isLinux && !ctrlKey) {
 							this.unselect();
-						//	On Windows previous selection will be remembered
-						//	On Linux always last clicked item will be remembered
-							this.cacheSelectionHistory = [isWindows ? lastSelection : listRow];
+						//	On Windows and Linux previous selection will be remembered
+							this.cacheSelectionHistory = [lastSelection];
 						}
 						if (this.cacheSelectedListItems.length) this.unselectItems(this.cacheSelectedListItems);
 						this.cacheSelectedListItems = this.selectRange(listRow, lastSelection);
@@ -235,12 +231,6 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		msg.on('focus', (value: boolean) => {
 			
 			this.hasPanelFocus = value;
-			
-		});
-		
-		msg.on('cancel', () => {
-			
-			if (this.currentSelections.length) this.currentSelections = [];
 			
 		});
 		
@@ -626,7 +616,7 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	public update (options?: { keepPosition: boolean }) {
+	public update (options?: { keepPosition?: boolean, keepSelection?: boolean }) {
 		
 		super.update();
 		
@@ -675,9 +665,11 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private createFilteredListItemViews (options?: { keepPosition: boolean }) {
+	private createFilteredListItemViews (options?: { keepPosition?: boolean, keepSelection?: boolean }) {
 		
-		this.unselect();
+		const currentSelections = options?.keepSelection === true ? this.getIdsBySelection() : null;
+		
+		if (!currentSelections) this.unselect();
 		
 		removeChildren(this.content);
 		
@@ -701,7 +693,8 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		}
 		
 		this.showVisibleListViewItems(true);
-		this.restoreSelections();
+		
+		if (currentSelections) this.restoreSelections(currentSelections);
 		
 		this.cacheFilteredListItems = this.viewmodel.filteredItems;
 		
@@ -747,21 +740,28 @@ export class L13DiffListComponent extends L13Element<L13DiffListViewModel> {
 		
 	}
 	
-	private restoreSelections () {
+	private mapListViewItemsById (elements: HTMLElement[]) {
 		
-		const cacheCurrentSelections = this.currentSelections;
+		return elements
+			.map((element) => this.cacheListItemViews[element.getAttribute('data-id')])
+			.filter((element) => element);
 		
-		if (cacheCurrentSelections.length) {
-			cacheCurrentSelections.forEach((id) => {
-				
-				const element = this.cacheListItemViews[id];
-				
-				if (element.parentNode) this.addItemSelection(element);
-				
-			});
-			this.currentSelections = [];
-			this.dispatchEventSelected();
-		}
+	}
+	
+	private restoreSelections (currentSelections: string[]) {
+		
+		this.cacheSelectionHistory = this.mapListViewItemsById(this.cacheSelectionHistory);
+		this.cacheSelectedListItems = this.mapListViewItemsById(this.cacheSelectedListItems);
+		
+		currentSelections.forEach((id) => {
+			
+			const element = this.cacheListItemViews[id];
+			
+			if (element) this.addItemSelection(element);
+			
+		});
+		
+		this.dispatchEventSelected();
 		
 	}
 	

@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.10] - 2025-06-01
+
+### Fixed
+
+- Fixed a bug where all items in the list view were deselected when a file or diff was modified. [Issue 166](https://github.com/L13/vscode-diff/issues/166)
+
+### Removed
+
+- Removed special characters in the sanitizer for Linux and macOS because they are valid path characters. [Issue 167](https://github.com/L13/vscode-diff/issues/167)
+
 ## [1.3.9] - 2024-11-06
 
 ### Fixed
