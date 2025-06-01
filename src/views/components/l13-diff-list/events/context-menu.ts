@@ -26,10 +26,7 @@ export function init ({ context, list }: ContextEventsInit) {
 		const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
 		const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 		const isSelected = rowNode.classList.contains('-selected');
-		const selections = list.getIdsBySelection();
-		const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-		
-		if (!isSelected) list.currentSelections = selections;
+		const ids = isSelected ? list.getIdsBySelection() : [rowNode.getAttribute('data-id')];
 		
 		list.dispatchCustomEvent('copy');
 		
@@ -45,10 +42,7 @@ export function init ({ context, list }: ContextEventsInit) {
 		const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
 		const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 		const isSelected = rowNode.classList.contains('-selected');
-		const selections = list.getIdsBySelection();
-		const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-		
-		if (!isSelected) list.currentSelections = selections;
+		const ids = isSelected ? list.getIdsBySelection() : [rowNode.getAttribute('data-id')];
 		
 		// this.dispatchCustomEvent('goto');
 		list.viewmodel.goto(ids, fileNode.nextElementSibling ? 'left' : 'right', detail.altKey);
@@ -72,10 +66,7 @@ export function init ({ context, list }: ContextEventsInit) {
 		const fileNode = (<HTMLElement>target).closest('l13-diff-list-file');
 		const rowNode = (<HTMLElement>target).closest('l13-diff-list-row');
 		const isSelected = rowNode.classList.contains('-selected');
-		const selections = list.getIdsBySelection();
-		const ids = isSelected ? selections : [rowNode.getAttribute('data-id')];
-		
-		if (!isSelected) list.currentSelections = selections;
+		const ids = isSelected ? list.getIdsBySelection() : [rowNode.getAttribute('data-id')];
 		
 		list.dispatchCustomEvent('delete');
 		list.viewmodel.delete(ids, isSelected ? 'both' : fileNode.nextElementSibling ? 'left' : 'right');

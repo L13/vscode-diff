@@ -2,7 +2,11 @@
 
 import * as assert from 'assert';
 
-import { createFindGlob } from './fse';
+import type { Platform } from '../../@types/platforms';
+import type { Test } from '../../@types/tests';
+
+import { createFindGlob, sanitize } from './fse';
+import { isWindows, restoreDefaultPlatform, setPlatform } from './platforms';
 
 //	Variables __________________________________________________________________
 
@@ -575,6 +579,83 @@ describe('fse', () => {
 			]);
 			
 		});
+		
+	});
+	
+	describe('.sanitize()', () => {
+		
+		function runTests (platform: Platform, tests: Test[]) {
+			
+			for (const test of tests) {
+				it(test.desc, () => {
+					
+					setPlatform(platform);
+					
+					assert.strictEqual(sanitize(test.expect), test.toBe);
+				
+					restoreDefaultPlatform();
+					
+				});
+			}
+			
+		}
+		
+		function runPlatformTest (platform: Platform) {
+			
+			const specialChars = isWindows ? '"*<>?|' : '';
+			const asciiChars = Array(96)
+				.fill('')
+				.map((value, index) => {
+						
+					const char = String.fromCharCode(index + 32);
+						
+					return specialChars.includes(char) ? '' : char;
+						
+				})
+				.join('');
+				
+			runTests(platform, [
+				{
+					desc: 'remove ASCII control characters',
+					expect: '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f',
+					toBe: '',
+				},
+				{
+					desc: specialChars ? `remove special characters ${specialChars}` : 'no special characters',
+					expect: specialChars,
+					toBe: '',
+				},
+				{
+					desc: 'remove illegal characters',
+					expect: '\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f',
+					toBe: '',
+				},
+				{
+					desc: 'keep ASCII characters',
+					expect: asciiChars,
+					toBe: asciiChars,
+				},
+			]);
+			
+		}
+		
+		function runPlatformTests (platform: Platform) {
+			
+			describe(platform, () => {
+				
+				setPlatform(platform);
+				
+				runPlatformTest(platform);
+				
+				restoreDefaultPlatform();
+				
+			});
+			
+		}
+		
+		const platforms: Platform[] = ['Linux', 'macOS', 'Windows'];
+		
+		platforms.forEach((platform) => runPlatformTests(platform));
 		
 	});
 	
