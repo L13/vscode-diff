@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to the "Diff Folders" extension will be documented in this file.
 
+## [1.3.11] - 2025-06-30
+
+### Fixed
+
+- Fixed tooltip in list view for created and modified date. [Issue 170](https://github.com/L13/vscode-diff/issues/170)
+
 ## [1.3.10] - 2025-06-01
 
 ### Fixed

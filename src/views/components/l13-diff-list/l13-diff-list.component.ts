@@ -786,8 +786,8 @@ function appendColumn (parent: HTMLElement, diff: Diff, file: DiffFile, exists: 
 			const stat = file.stat;
 			column.title += `
 Size: ${formatFileSize(stat.size)}
-Created: ${formatDate(new Date(stat.birthtime))}
-Modified: ${formatDate(new Date(stat.mtime))}`;
+Created: ${formatDate(new Date(stat.birthtime || stat.birthtimeMs))}
+Modified: ${formatDate(new Date(stat.mtime || stat.mtimeMs))}`;
 		}
 		
 		if (file.ignore) {
